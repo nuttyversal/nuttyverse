@@ -1,0 +1,6 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<!-- Fill the canvas with absolute darkness. -->
+	<rect width="64" height="64" fill="black" />
+	<!-- Paint the versal. An 𝕹 from PragmataPro Fraktur. -->
+	<path d="M34.6953 19.1328H30.1719V46.1328L30.8047 48.4766L24.5234 50.4688L23.5859 47.4453V20L22.1328 14.4219L28.4141 12.4531L29.6094 16.25L33.4297 12.4531L41.2812 15.5938V46.1328L41.9141 48.4766L35.6328 50.4688L34.6953 47.4453V19.1328Z" fill="white" />
+</svg>
