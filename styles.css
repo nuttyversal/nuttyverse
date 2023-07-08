@@ -1,0 +1,23 @@
+* {
+	padding: 0;
+}
+
+body {
+	display: flex;
+	align-items: center;
+	line-height: 1.5em;
+	height: 100vh;
+	margin: 0;
+}
+
+main {
+	margin: auto;
+	width: 400px;
+}
+
+h1 {
+	text-transform: lowercase;
+	letter-spacing: 0.1em;
+	font-weight: 400;
+	line-height: 1.2em;
+}
