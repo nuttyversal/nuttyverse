@@ -8,4 +8,23 @@
 	"terminal.integrated.lineHeight": 1.25,
 	"debug.console.fontSize": 14,
 	"debug.console.lineHeight": 1.25,
+
+	// 𝔳𝔦𝔪 𝔟𝔦𝔫𝔡𝔦𝔫𝔤𝔰
+	"vim.leader": "<Space>",
+	"vim.normalModeKeyBindings": [
+		{
+			"before": ["leader", "leader"],
+			"commands": ["workbench.action.quickOpen"]
+		},
+		{
+			"before": ["leader", "w"],
+			"commands": ["workbench.action.files.save"]
+		}
+	],
+	"vim.visualModeKeyBindings": [
+		{
+			"before": ["leader", "leader"],
+			"commands": ["workbench.action.showCommands"]
+		}
+	]
 }
