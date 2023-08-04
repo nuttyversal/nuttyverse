@@ -1,0 +1,11 @@
+{
+	// 𝔗𝔶𝔭𝔬𝔤𝔯𝔞𝔭𝔥𝔶
+	"editor.fontFamily": "PragmataPro Mono Liga",
+	"editor.fontLigatures": true,
+	"editor.fontSize": 14,
+	"editor.lineHeight": 1.5,
+	"terminal.integrated.fontSize": 14,
+	"terminal.integrated.lineHeight": 1.25,
+	"debug.console.fontSize": 14,
+	"debug.console.lineHeight": 1.25,
+}
