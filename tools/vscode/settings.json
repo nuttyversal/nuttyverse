@@ -43,7 +43,14 @@
 		"size": 32
 	},
 
+	// ╒══════════════╕
+	// │ 𝔳𝔦𝔪 𝔟𝔦𝔫𝔡𝔦𝔫𝔤𝔰 │
+	// ╘══════════════╛
+
+	"vim.surround": true,
+	"vim.useSystemClipboard": true,
 	"vim.leader": "<Space>",
+
 	"vim.normalModeKeyBindings": [
 		{
 			"before": ["leader", "leader"],
@@ -54,6 +61,7 @@
 			"commands": ["workbench.action.files.save"]
 		}
 	],
+
 	"vim.visualModeKeyBindings": [
 		{
 			"before": ["leader", "leader"],
