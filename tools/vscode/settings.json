@@ -1,6 +1,27 @@
 {
-	// 𝔗𝔶𝔭𝔬𝔤𝔯𝔞𝔭𝔥𝔶
+	// ╒════════════╕
+	// │ 𝔱𝔶𝔭𝔬𝔤𝔯𝔞𝔭𝔥𝔶 │
+	// ╘════════════╛
+
 	"editor.fontFamily": "PragmataPro Mono Liga",
+	"editor.inlayHints.fontFamily": "PragmataPro Mono Liga",
+	"editor.codeLensFontFamily": "PragmataPro Mono Liga",
+	"apc.monospace.font.family": "PragmataPro Mono Liga",
+	"notebook.output.fontFamily": "PragmataPro Mono Liga",
+	"scm.inputFontFamily": "PragmataPro Mono Liga",
+
+	"apc.font.family": "Nure",
+	"chat.editor.fontFamily": "Nure",
+	"markdown.preview.fontFamily": "Nure",
+
+	"apc.stylesheet": {
+		":root": {
+			"font-weight": 400,
+			"font-variation-settings": "'opsz' 18, 'wdth' 80",
+			"letter-spacing": "0.3px"
+		}
+	},
+
 	"editor.fontLigatures": true,
 	"editor.fontSize": 14,
 	"editor.lineHeight": 1.5,
