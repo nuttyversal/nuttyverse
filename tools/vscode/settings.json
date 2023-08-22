@@ -53,6 +53,9 @@
 
 	"vim.normalModeKeyBindings": [
 		{
+			// If you are on macOS, make sure to disable the "Add period with
+			// double-space" keyboard setting; otherwise, this key binding might
+			// not get triggered when the spacebar is double tapped.
 			"before": ["leader", "leader"],
 			"commands": ["workbench.action.quickOpen"]
 		},
