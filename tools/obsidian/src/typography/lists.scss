@@ -2,6 +2,10 @@ body {
 	--list-spacing: 0.25em;
 }
 
+ul {
+	padding-top: var(--list-spacing);
+}
+
 ol {
 	list-style: none;
 	counter-reset: ordered-list;
