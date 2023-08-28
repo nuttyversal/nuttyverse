@@ -1,4 +1,13 @@
 {
 	"name": "nutty-obsidian-theme",
-	"version": "0.1.0"
+	"version": "0.1.0",
+	"scripts": {
+		"build": "./scripts/build-theme.fish",
+		"watch": "./scripts/build-theme-and-watch.fish"
+	},
+	"devDependencies": {
+		"@types/node": "^20.5.6",
+		"sass": "^1.66.1",
+		"vite": "^4.4.9"
+	}
 }
