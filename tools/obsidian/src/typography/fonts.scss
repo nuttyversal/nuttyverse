@@ -1,0 +1,18 @@
+:root {
+	font-weight: 400;
+	font-variation-settings: 'opsz' 18, 'wdth' 85 !important;
+
+	/* Enable kerning and optional ligatures. */
+	text-rendering: optimizeLegibility;
+	font-feature-settings: 'kern' 1;
+}
+
+body {
+	--font-text-theme: 'Nure';
+	--font-interface-theme: 'Nure';
+	--font-monospace-theme: 'PragmataPro Liga';
+
+	--code-size: 14px;
+	--line-height-normal: 1.5rem;
+	--file-line-width: 30rem;
+}

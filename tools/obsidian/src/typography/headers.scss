@@ -1,0 +1,33 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.inline-title {
+	text-transform: uppercase;
+	font-weight: 300 !important;
+	font-variation-settings: 'opsz' 10, 'wdth' 75 !important;
+	letter-spacing: 0.5pt !important;
+	margin-top: 16px;
+	padding-bottom: 4px;
+
+	padding-left: calc(var(--size-4-2) * 2) !important;
+	padding-right: calc(var(--size-4-2) * 2) !important;
+	margin-left: calc(var(--size-4-2) * -2) !important;
+	margin-right: calc(var(--size-4-2) * -2) !important;
+}
+
+.inline-title {
+	font-variation-settings: 'opsz' 10, 'wdth' 75 !important;
+	font-weight: 300 !important;
+	font-size: 2em;
+	padding-top: 8px;
+	margin-bottom: 1em;
+	border: 2px solid var(--text-normal) !important;
+}
+
+h1,
+h2 {
+	border-bottom: 1px solid var(--text-normal);
+}

@@ -1,0 +1,15 @@
+div[data-tag-name="pre"] > pre {
+	margin-left: calc(var(--size-4-2) * -2);
+	margin-right: calc(var(--size-4-2) * -2);
+}
+
+.markdown-preview-view :is(div + div) {
+	margin-top: 1.2em;
+}
+
+code[class*="language-"] {
+	padding: 8px 0 !important;
+	white-space: pre;
+	line-height: 1.5em;
+	background: yellow;
+}

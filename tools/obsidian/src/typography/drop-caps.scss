@@ -1,0 +1,11 @@
+div.mod-header + div > p:first-letter,
+div[data-tag-name="h1"] + div > p:first-letter {
+	float: left;
+	font-family: 'PragmataPro Fraktur';
+	font-variant-ligatures: none;
+	font-size: 2.7em;
+	font-weight: bold;
+	line-height: 1em;
+	margin-right: 6px;
+	margin-top: 4px;
+}

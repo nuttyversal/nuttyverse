@@ -1,0 +1,13 @@
+body {
+	hyphens: auto;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+}
+
+/* Override the text justification that the hyphenation extension applies by
+ * default. */
+.markdown-preview-view *,
+.markdown-source-view * {
+	text-align: left !important;
+	text-justify: none;
+}
