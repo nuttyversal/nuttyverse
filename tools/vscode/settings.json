@@ -1,4 +1,12 @@
 {
+	// ╒══════════════╕
+	// │ color scheme │
+	// ╘══════════════╛
+
+	"window.autoDetectColorScheme": true,
+	"workbench.preferredLightColorTheme": "GitHub Light",
+	"workbench.preferredDarkColorTheme": "Aramok's Black",
+
 	// ╒════════════╕
 	// │ typography │
 	// ╘════════════╛
