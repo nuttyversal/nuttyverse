@@ -4,7 +4,7 @@
 // 	3. After the inline title & metadata container.
 div[data-tag-name="h1"] + div > p:first-letter,
 div.mod-header + div > p:first-letter,
-div.mod-header + div + div > p:first-letter {
+div.mod-header + div:not([data-tag-name="p"]) + div > p:first-letter {
 	float: left;
 	font-family: 'PragmataPro Fraktur';
 	font-variant-ligatures: none;
