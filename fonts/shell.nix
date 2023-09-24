@@ -3,6 +3,7 @@ in nixpkgs.stdenv.mkDerivation {
 	name = "nuttyverse-fonts";
 
 	buildInputs = with nixpkgs; [
+		libiconv
 		rustup
 	];
 
