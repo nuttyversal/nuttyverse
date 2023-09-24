@@ -1,6 +1,6 @@
 let nixpkgs = import <nixpkgs> {};
 in nixpkgs.stdenv.mkDerivation {
-	name = "nuttyverse-space";
+	name = "nuttyverse-fonts";
 
 	buildInputs = with nixpkgs; [
 		rustup
