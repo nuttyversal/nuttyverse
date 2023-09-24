@@ -93,5 +93,21 @@
 				"workbench.action.showCommands"
 			]
 		}
-	]
+	],
+
+	// ╒═══════════════╕
+	// │ rust settings │
+	// ╘═══════════════╛
+
+	"editor.inlayHints.enabled": "offUnlessPressed",
+
+	// ╒═══════════════════╕
+	// │ unstable settings │
+	// ╘═══════════════════╛
+
+	"workbench.colorTheme": "GitHub Light",
+	"editor.formatOnSave": true,
+	"github.copilot.enable": {
+		"*": true
+	}
 }
