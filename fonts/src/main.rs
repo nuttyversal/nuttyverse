@@ -1,5 +1,6 @@
 use std::env;
 use warp::http::header::ORIGIN;
+use warp::http::header::REFERER;
 use warp::{Filter, Rejection, Reply};
 
 #[derive(Debug, serde::Serialize)]
@@ -69,8 +70,14 @@ async fn main() {
 		.and_then(is_nutty_origin)
 		.untuple_one();
 
+	// Protect against direct downloads.
+	let referer_origins = warp::header::optional::<String>(REFERER.as_str())
+		.and_then(is_nutty_origin)
+		.untuple_one();
+
 	let routes = fonts
 		.and(allowed_origins)
+		.and(referer_origins)
 		.with(cors)
 		.or(root)
 		.recover(handle_rejection);
