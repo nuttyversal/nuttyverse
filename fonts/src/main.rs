@@ -1,5 +1,4 @@
 use std::env;
-use warp::http::header::ORIGIN;
 use warp::http::header::REFERER;
 use warp::{Filter, Rejection, Reply};
 
@@ -59,16 +58,16 @@ async fn main() {
 		env::var("FONT_DIRECTORY").expect("FONT_DIRECTORY environment variable not set");
 	let fonts = warp::fs::dir(font_directory);
 
-	// Enable CORS.
+	// Protect against hotlinking.
 	let cors = warp::cors()
 		.allow_methods(vec!["GET"])
-		.allow_headers(vec!["Content-Type"])
+		.allow_origins(vec![
+			"http://localhost",
+			"https://nuttyver.se",
+			"https://nuttyverse.com",
+			"https://nuttyverse.neocities.org",
+		])
 		.build();
-
-	// Protect against hotlinking.
-	let allowed_origins = warp::header::optional::<String>(ORIGIN.as_str())
-		.and_then(is_nutty_origin)
-		.untuple_one();
 
 	// Protect against direct downloads.
 	let referer_origins = warp::header::optional::<String>(REFERER.as_str())
@@ -76,7 +75,6 @@ async fn main() {
 		.untuple_one();
 
 	let routes = fonts
-		.and(allowed_origins)
 		.and(referer_origins)
 		.with(cors)
 		.or(root)
