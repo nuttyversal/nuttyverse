@@ -3,16 +3,22 @@ in nixpkgs.stdenv.mkDerivation {
 	name = "nuttyverse-fonts";
 
 	buildInputs = with nixpkgs; [
+		# Used for server dependencies
 		libiconv
+		rustup
+
+		# Used for font subsetting
 		python3
 		python3.pkgs.fonttools
-		rustup
+		python3.pkgs.brotli
 	];
 
 	shellHook = ''
+		# Setup Rust
 		export PATH=$PATH:''${CARGO_HOME:-~/.cargo}/bin
 		export PATH=$PATH:''${RUSTUP_HOME:-~/.rustup}/toolchains/$RUSTC_VERSION-x86_64-unknown-linux-gnu/bin/
 
+		# Setup Python
 		export PIP_PREFIX=$(pwd)/_build/pip_packages
 		export PYTHONPATH="$PIP_PREFIX/${nixpkgs.python3.sitePackages}:$PYTHONPATH"
 		export PATH="$PIP_PREFIX/bin:$PATH"
