@@ -1,0 +1,64 @@
+(defcfg
+	input (iokit-name)
+	output (kext)
+	fallthrough true
+)
+
+(defalias
+	ext (layer-toggle extension)
+	num (layer-toggle number)
+	sym (layer-toggle symbol)
+
+	cc (tap-hold-next-release 200 c @sym)
+	,, (tap-hold-next-release 200 , @sym)
+
+	sc (sticky-key 500 lctrl)
+	ss (sticky-key 500 lsft)
+	sa (sticky-key 500 lalt)
+	sm (sticky-key 500 lmet)
+)
+
+(defsrc
+	esc  f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
+	grv  1    2    3    4    5    6    7    8    9    0    -    =    bspc
+	tab  q    w    e    r    t    y    u    i    o    p    [    ]    \
+	caps a    s    d    f    g    h    j    k    l    ;    '    ret
+	lsft z    x    c    v    b    n    m    ,    .    /    rsft up
+	fn   lctl lalt lmet           spc            rmet ralt left down rght
+)
+
+(deflayer colemak-dh
+	_    _    _    _    _    _    _    _    _    _    _    _    _
+	_    _    _    _    _    _    _    _    _    _    _    _    _    _
+	_    q    w    f    p    b    j    l    u    y    ;    _    _    lctl
+	@ext a    r    s    t    g    m    n    e    i    o    _    _
+	_    z    x    @cc  d    v    k    h    @,,  _    -    _    _
+	_    _    _    _              _              @sym _    _    _    _
+)
+
+(deflayer extension
+	_    brdn brup lp   mctl bldn blup prev pp   next mute vold volu
+	_    _    _    _    _    _    _    _    _    _    _    _    _    _
+	_    _    _    _    esc  _    _    del  bspc _    _    _    _    _
+	_    @sm  @sa  @ss  @sc  @num left down up   rght @ss  _    _
+	_    _    _    _    @sym _    home pgdn pgup end  _    _    _
+	_    _    _    _              _              _    _    _    _    _
+)
+
+(deflayer number
+	_    _    _    _    _    _    _    _    _    _    _    _    _
+	_    _    _    _    _    _    _    _    _    _    _    _    _    _
+	_    _    _    _    _    _    _    7    8    9    _    _    _    _
+	_    _    _    _    _    _    0    4    5    6    _    _    _
+	_    _    _    _    _    _    _    1    2    3    _    _    _
+	_    _    _    _              _              _    _    _    _    _
+)
+
+(deflayer symbol
+	_    _    _    _    _    _    _    _    _    _    _    _    _
+	_    _    _    _    _    _    _    _    _    _    _    _    _    _
+	_    `    ~    {    }    /    |    &    *    =    :    _    _    _
+	_    <    >    \(   \)   esc  +    $    %    ^    ent  "    _
+	_    @    ?    [    ]    \    -    #    ?    !    \_   _    _
+	_    _    _    _              _              _    _    _    _    _
+)
