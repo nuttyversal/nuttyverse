@@ -1,6 +1,6 @@
 let nixpkgs = import <nixpkgs> {};
 in nixpkgs.stdenv.mkDerivation {
-	name = "nuttyverse-fonts";
+	name = "font-force-field";
 
 	buildInputs = with nixpkgs; [
 		# Used for server dependencies
