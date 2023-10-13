@@ -4,6 +4,7 @@ with lib;
 {
 	imports = [
 		# System Configuration
+		./docker.nix
 		./networking.nix
 		./ssh.nix
 		./users.nix
