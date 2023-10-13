@@ -9,6 +9,9 @@ with lib;
 		./system/ssh.nix
 		./system/users.nix
 		./system/zfs.nix
+
+		# Service Containers
+		./containers/font-force-field.nix
 	];
 
 	time = {
