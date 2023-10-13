@@ -4,11 +4,11 @@ with lib;
 {
 	imports = [
 		# System Configuration
-		./docker.nix
-		./networking.nix
-		./ssh.nix
-		./users.nix
-		./zfs.nix
+		./system/docker.nix
+		./system/networking.nix
+		./system/ssh.nix
+		./system/users.nix
+		./system/zfs.nix
 	];
 
 	time = {
