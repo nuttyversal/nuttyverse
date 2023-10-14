@@ -10,7 +10,10 @@ with lib;
 		./system/users.nix
 		./system/zfs.nix
 
-		# Service Containers
+		# Service Configuration
+		./services/postgresql.nix
+
+		# Container Configuration
 		./containers/font-force-field.nix
 	];
 
