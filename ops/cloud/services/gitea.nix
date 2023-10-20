@@ -50,6 +50,16 @@
 				};
 			};
 		};
+
+		caddy = {
+			virtualHosts = {
+				"code.nuttyver.se" = {
+					extraConfig = ''
+						reverse_proxy :44832
+					'';
+				};
+			};
+		};
 	};
 
 	age = {
