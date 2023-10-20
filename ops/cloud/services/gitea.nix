@@ -35,8 +35,8 @@
 				};
 
 				server = {
-					DOMAIN = "code.nuttyverse.com";
-					ROOT_URL = "https://code.nuttyverse.com/";
+					DOMAIN = "code.nuttyver.se";
+					ROOT_URL = "https://code.nuttyver.se/";
 					HTTP_ADDR = "127.0.0.1";
 					HTTP_PORT = 44832;
 				};
