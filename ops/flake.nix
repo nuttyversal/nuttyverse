@@ -26,7 +26,7 @@
 			modules = [
 				./cloud/configuration.nix
 				./cloud/configuration.hardware.nix
-				agenix.nixosModules.agenix
+				agenix.nixosModules.default
 			];
 
 			specialArgs = {
