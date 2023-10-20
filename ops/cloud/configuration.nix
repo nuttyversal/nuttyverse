@@ -11,8 +11,9 @@ with lib;
 		./system/zfs.nix
 
 		# Service Configuration
-		./services/postgresql.nix
+		./services/caddy.nix
 		./services/gitea.nix
+		./services/postgresql.nix
 
 		# Container Configuration
 		./containers/font-force-field.nix
