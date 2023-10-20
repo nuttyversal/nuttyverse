@@ -12,6 +12,7 @@ with lib;
 
 		# Service Configuration
 		./services/postgresql.nix
+		./services/gitea.nix
 
 		# Container Configuration
 		./containers/font-force-field.nix
