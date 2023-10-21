@@ -12,17 +12,19 @@ struct ErrorMessage {
 struct InvalidOrigin;
 impl warp::reject::Reject for InvalidOrigin {}
 
-async fn is_nutty_origin(origin: Option<String>) -> Result<(), Rejection> {
-	match origin {
-		Some(o)
-			if o.ends_with(".nuttyver.se")
-				|| o.ends_with(".nuttyverse.com")
-				|| o == "nuttyver.se"
-				|| o == "nuttyverse.com"
-				|| o == "nuttyverse.neocities.org" =>
-		{
-			Ok(())
-		}
+async fn is_nutty_host(uri: Option<String>) -> Result<(), Rejection> {
+	let origin = uri.ok_or_else(|| warp::reject::custom(InvalidOrigin))?;
+
+	let uri = origin
+		.parse::<http::Uri>()
+		.map_err(|_| warp::reject::custom(InvalidOrigin))?;
+
+	let host = uri
+		.host()
+		.ok_or_else(|| warp::reject::custom(InvalidOrigin))?;
+
+	match host {
+		"nuttyver.se" | "nuttyverse.com" | "nuttyverse.neocities.org" => Ok(()),
 		_ => Err(warp::reject::custom(InvalidOrigin)),
 	}
 }
@@ -62,7 +64,6 @@ async fn main() {
 	let cors = warp::cors()
 		.allow_methods(vec!["GET"])
 		.allow_origins(vec![
-			"http://localhost",
 			"https://nuttyver.se",
 			"https://nuttyverse.com",
 			"https://nuttyverse.neocities.org",
@@ -71,7 +72,7 @@ async fn main() {
 
 	// Protect against direct downloads.
 	let referer_origins = warp::header::optional::<String>(REFERER.as_str())
-		.and_then(is_nutty_origin)
+		.and_then(is_nutty_host)
 		.untuple_one();
 
 	let routes = fonts
@@ -83,4 +84,38 @@ async fn main() {
 	println!("Font Force Field 🛡️");
 	println!("Starting server at http://0.0.0.0:3030");
 	warp::serve(routes).run(([0, 0, 0, 0], 3030)).await;
+}
+
+#[tokio::test]
+async fn test_valid_uris() {
+	let valid_uris = vec![
+		"nuttyver.se",
+		"http://nuttyver.se",
+		"https://nuttyverse.com/path?query=value",
+		"https://nuttyverse.neocities.org",
+	];
+
+	for uri in valid_uris {
+		assert!(is_nutty_host(Some(uri.to_string())).await.is_ok());
+	}
+}
+
+#[tokio::test]
+async fn test_invalid_uris() {
+	let invalid_uris = vec![
+		"this is not a uri",
+		"spoof-attempt-nuttyver.se",
+		"http://nuttyverse.not.com",
+		"https://not-nuttyverse.com",
+		"https://nuttyverse.neocities.org",
+	];
+
+	for uri in invalid_uris {
+		assert!(is_nutty_host(Some(uri.to_string())).await.is_err());
+	}
+}
+
+#[tokio::test]
+async fn test_no_uri() {
+	assert!(is_nutty_host(None).await.is_err());
 }

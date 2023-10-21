@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+http = "0.2.9"
 serde = { version = "1", features = ["serde_derive"] }
 tokio = { version = "1", features = ["full"] }
 warp = "0.3"
