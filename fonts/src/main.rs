@@ -81,6 +81,6 @@ async fn main() {
 		.recover(handle_rejection);
 
 	println!("Font Force Field 🛡️");
-	println!("Starting server at http://localhost:3030");
-	warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
+	println!("Starting server at http://0.0.0.0:3030");
+	warp::serve(routes).run(([0, 0, 0, 0], 3030)).await;
 }
