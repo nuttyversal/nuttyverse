@@ -22,4 +22,16 @@
 			};
 		};
 	};
+
+	services = {
+		caddy = {
+			virtualHosts = {
+				"fonts.nuttyver.se" = {
+					extraConfig = ''
+						reverse_proxy :3668
+					'';
+				};
+			};
+		};
+	};
 }
