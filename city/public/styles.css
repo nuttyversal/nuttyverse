@@ -1,8 +1,20 @@
+@font-face {
+	font-family: 'Nure-foo';
+	src: url('https://fonts.nuttyver.se/nure-foo.woff2') format('woff2');
+}
+
 * {
 	padding: 0;
 }
 
 body {
+	font-family: 'Nure-foo', sans-serif;
+	font-variation-settings: 'opsz' 18, 'wdth' 85 !important;
+
+	/* Enable kerning and optional ligatures. */
+	text-rendering: optimizeLegibility;
+	font-feature-settings: 'kern' 1;
+
 	display: flex;
 	align-items: center;
 	line-height: 1.5em;
