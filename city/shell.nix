@@ -1,7 +1,12 @@
 let nixpkgs = import <nixpkgs> {};
 in nixpkgs.stdenv.mkDerivation {
 	name = "neocities-cli";
-	buildInputs = with nixpkgs; [ ruby ];
+
+	buildInputs = with nixpkgs; [
+		nodePackages.pnpm
+		ruby
+	];
+
 	shellHook = ''
 		export GEM_HOME="$PWD/.gem"
 		export PATH="$GEM_HOME/bin:$PATH"
