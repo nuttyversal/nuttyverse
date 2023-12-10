@@ -29,7 +29,8 @@ body {
 
 main {
 	margin: auto;
-	width: 400px;
+	width: 30em;
+	padding: 1em 2em;
 }
 
 h1 {
