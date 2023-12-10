@@ -8,12 +8,17 @@
 }
 
 body {
-	font-family: 'Nure-foo', sans-serif;
+	/* Reconstruct font faces from the set of metasyntactical horcruxes.
+	 * Fallback to the system font stack for local development since the
+	 * Font Force Field has a CORS policy that prevents access. */
+	font-family: 'Nure-foo', 'Nure', sans-serif;
 	font-variation-settings: 'opsz' 18, 'wdth' 85 !important;
+	font-weight: 300;
 
-	/* Enable kerning and optional ligatures. */
 	text-rendering: optimizeLegibility;
 	font-feature-settings: 'kern' 1;
+	hyphens: auto;
+	color: #333;
 
 	display: flex;
 	align-items: center;
