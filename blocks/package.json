@@ -1,7 +1,16 @@
 {
 	"name": "@nuttyverse/blocks",
 	"version": "1.0.0",
-	"main": "index.ts",
+	"main": "src/index.ts",
+	"scripts": {
+		"storybook": "storybook dev -p 6006",
+		"build-storybook": "storybook build"
+	},
+	"dependencies": {
+		"@vanilla-extract/css": "^1.14.0",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
+	},
 	"devDependencies": {
 		"@storybook/addon-essentials": "^7.6.4",
 		"@storybook/addon-interactions": "^7.6.4",
@@ -11,13 +20,13 @@
 		"@storybook/react": "^7.6.4",
 		"@storybook/react-vite": "^7.6.4",
 		"@storybook/test": "^7.6.4",
+		"@types/react": "^18.2.45",
+		"@types/react-dom": "^18.2.18",
+		"@vanilla-extract/vite-plugin": "^3.9.3",
+		"@vitejs/plugin-react": "^4.2.1",
 		"prop-types": "^15.8.1",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"storybook": "^7.6.4"
-	},
-	"scripts": {
-		"storybook": "storybook dev -p 6006",
-		"build-storybook": "storybook build"
+		"storybook": "^7.6.4",
+		"typescript": "^5.3.3",
+		"vite": "^4.5.1"
 	}
 }
