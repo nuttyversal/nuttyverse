@@ -35,7 +35,7 @@ async fn is_nutty_host(uri: Option<String>) -> Result<(), Rejection> {
 			} else {
 				Err(warp::reject::custom(InvalidOrigin))
 			}
-		},
+		}
 	}
 }
 
@@ -77,6 +77,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 			"https://nuttyver.se",
 			"https://nuttyverse.com",
 			"https://nuttyverse.neocities.org",
+			// The CORS specification does not support wildcards, so we will
+			// have to exhaustively list out all of the subdomains below.
+			"https://blocks.nuttyver.se",
+			"https://fonts.nuttyver.se",
 		])
 		.build();
 
