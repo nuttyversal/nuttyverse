@@ -24,8 +24,17 @@ async fn is_nutty_host(uri: Option<String>) -> Result<(), Rejection> {
 		.ok_or_else(|| warp::reject::custom(InvalidOrigin))?;
 
 	match host {
+		// Check for exact matches first.
 		"nuttyver.se" | "nuttyverse.com" | "nuttyverse.neocities.org" => Ok(()),
-		_ => Err(warp::reject::custom(InvalidOrigin)),
+		_ => {
+			// Check for wildcard subdomains.
+			let host = host.split('.').collect::<Vec<&str>>();
+			if host.len() > 2 && host[1..].join(".") == "nuttyver.se" {
+				Ok(())
+			} else {
+				Err(warp::reject::custom(InvalidOrigin))
+			}
+		},
 	}
 }
 
@@ -91,6 +100,7 @@ async fn test_valid_uris() {
 	let valid_uris = vec![
 		"nuttyver.se",
 		"http://nuttyver.se",
+		"https://blocks.nuttyver.se",
 		"https://nuttyverse.com/path?query=value",
 		"https://nuttyverse.neocities.org",
 	];
@@ -107,7 +117,6 @@ async fn test_invalid_uris() {
 		"spoof-attempt-nuttyver.se",
 		"http://nuttyverse.not.com",
 		"https://not-nuttyverse.com",
-		"https://nuttyverse.neocities.org",
 	];
 
 	for uri in invalid_uris {
