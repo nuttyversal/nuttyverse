@@ -16,6 +16,7 @@ with lib;
 		./services/postgresql.nix
 
 		# Container Configuration
+		./containers/blocks.nix
 		./containers/font-force-field.nix
 	];
 
