@@ -1,4 +1,5 @@
 use std::env;
+use tokio::signal::unix::SignalKind;
 use warp::http::header::REFERER;
 use warp::{Filter, Rejection, Reply};
 
@@ -60,7 +61,7 @@ async fn handle_rejection(err: Rejection) -> Result<impl Reply, Rejection> {
 }
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
 	// GET / => index.html
 	let root = warp::path::end().map(|| format!("Font Force Field 🛡️"));
 
@@ -92,7 +93,19 @@ async fn main() {
 
 	println!("Font Force Field 🛡️");
 	println!("Starting server at http://0.0.0.0:3030");
-	warp::serve(routes).run(([0, 0, 0, 0], 3030)).await;
+
+	// Docker watchtower will attempt to terminate this server with a SIGTERM,
+	// so we need to catch it and "gracefully" shut down.
+	let mut sigterm = tokio::signal::unix::signal(SignalKind::terminate())?;
+
+	let (_, server) =
+		warp::serve(routes).bind_with_graceful_shutdown(([0, 0, 0, 0], 3030), async move {
+			sigterm.recv().await;
+			println!("Committing sudoku... 🗡️");
+		});
+
+	server.await;
+	Ok(())
 }
 
 #[tokio::test]
