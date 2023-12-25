@@ -1,6 +1,9 @@
 # dependencies
 node_modules/
 
+# build output
+storybook-static/
+
 # logs
 npm-debug.log*
 yarn-debug.log*
