@@ -17,6 +17,30 @@ const meta: Meta<typeof Text> = {
 			},
 			options: Object.keys(text.classNames.variants.size),
 		},
+		opsz: {
+			control: {
+				type: 'range',
+				min: 12,
+				max: 72,
+				step: 1,
+			},
+		},
+		wdth: {
+			control: {
+				type: 'range',
+				min: 75,
+				max: 125,
+				step: 1,
+			},
+		},
+		weight: {
+			control: {
+				type: 'range',
+				min: 100,
+				max: 900,
+				step: 1,
+			},
+		},
 	},
 };
 
@@ -28,5 +52,8 @@ export const Component: Story = {
 	args: {
 		children: 'Hello, world!',
 		size: 'body',
+		opsz: 18,
+		wdth: 85,
+		weight: 400,
 	},
 };
