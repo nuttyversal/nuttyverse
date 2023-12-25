@@ -13,6 +13,11 @@
 				watchtower = {
 					image = "containrrr/watchtower";
 					volumes = [ "/var/run/docker.sock:/var/run/docker.sock" ];
+
+					environment = {
+						# Check for new updates every minute.
+						WATCHTOWER_POLL_INTERVAL = "60";
+					};
 				};
 			};
 		};
