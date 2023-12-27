@@ -21,8 +21,8 @@ type TextProps = {
 
 export const Text: React.FC<TextProps> = (props) => {
 	const Component = props.as ?? DEFAULT_COMPONENT;
+	let inferredFontSize: NonNullable<TextVariants>['size'];
 
-	let inferredFontSize: NonNullable<TextVariants>['size'] | undefined;
 	if (!props.size) {
 		if (typeof Component === 'string') {
 			inferredFontSize = {
