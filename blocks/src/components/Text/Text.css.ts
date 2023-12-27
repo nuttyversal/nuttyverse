@@ -1,7 +1,6 @@
 import { globalFontFace, globalStyle } from '@vanilla-extract/css';
 import { RecipeVariants, recipe } from '@vanilla-extract/recipes';
 import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles'
-import { createFontVariationSettings } from './Text';
 
 globalFontFace('Nure', {
 	src: [
@@ -11,7 +10,7 @@ globalFontFace('Nure', {
 
 globalStyle('*', {
 	fontFamily: 'Nure',
-	fontVariationSettings: createFontVariationSettings({ opsz: 18, wdth: 85 }),
+	fontVariationSettings: `"opsz" 18, "wdth" 85`,
 	lineHeight: 1.5,
 });
 
