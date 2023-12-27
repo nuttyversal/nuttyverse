@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { Text } from './Text';
@@ -56,4 +57,39 @@ export const Component: Story = {
 		wdth: 85,
 		weight: 400,
 	},
+};
+
+export const PolymorphicExample: Story = {
+	render: (args) => (
+		<section>
+			<Text as="h1" {...args}>
+				Text as a polymorphic component (h1)
+			</Text>
+
+			<Text as="h2" {...args}>
+				This is a subheading (h2)
+			</Text>
+
+			<Text as="p" {...args}>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+				euismod, nisl eget ultricies aliquam, neque diam aliquet nisi,
+				nec tincidunt elit urna nec quam. Aliquam erat volutpat. Nulla
+				facilisi. Nulla facilisi. Donec quis ligula sit amet nibh
+				aliquet ultricies. Nulla facilisi. Sed non magna id magna ornare
+				aliquet. Sed sit amet ipsum mauris. (p)
+			</Text>
+
+			<Text as="p" {...args}>
+				Aliquam erat volutpat. Nulla facilisi. Nulla facilisi. Donec
+				quis ligula sit amet nibh aliquet ultricies. Nulla facilisi.
+				Sed non magna id magna ornare aliquet. Sed sit amet ipsum
+				mauris. Nullam euismod, nisl eget ultricies aliquam, neque diam
+				aliquet nisi, nec tincidunt elit urna nec quam. (p)
+			</Text>
+
+			<Text as="span" {...args}>
+				— Nuttyverse Blocks (span)
+			</Text>
+		</section>
+	),
 };
