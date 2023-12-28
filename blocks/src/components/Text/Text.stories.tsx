@@ -87,6 +87,11 @@ export const PolymorphicExample: Story = {
 				aliquet nisi, nec tincidunt elit urna nec quam. (p)
 			</Text>
 
+			<Text as="p" {...args}>
+				This is a <Text as="a" href="https://nuttyver.se">link
+					(a)</Text> inside of a paragraph. (p)
+			</Text>
+
 			<Text as="span" {...args}>
 				— Nuttyverse Blocks (span)
 			</Text>

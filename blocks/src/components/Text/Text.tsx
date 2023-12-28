@@ -7,20 +7,27 @@ const DEFAULT_WEIGHT = 400;
 const DEFAULT_SIZE = 'body';
 const DEFAULT_COMPONENT = 'p';
 
-type TextProps = {
+type TextProps<Component extends React.ElementType> = {
 	children: React.ReactNode;
-	// [TODO] Strongly type the polymorphic "as" prop to make illegal states
-	// unrepresentable. For example, "a" should only be allowed if "href" is
-	// specified.
-	as?: React.ElementType;
+	as?: Component;
 	size?: NonNullable<TextVariants>['size'];
 	opsz?: number;
 	wdth?: number;
 	weight?: number;
-};
+} & React.ComponentPropsWithoutRef<Component>;
 
-export const Text: React.FC<TextProps> = (props) => {
-	const Component = props.as ?? DEFAULT_COMPONENT;
+export const Text = <Component extends React.ElementType>(props: TextProps<Component>) => {
+	const {
+		as,
+		size,
+		opsz,
+		wdth,
+		weight,
+		children,
+		...polymorphicProps
+	} = props;
+
+	const Component = as ?? DEFAULT_COMPONENT;
 	let inferredFontSize: NonNullable<TextVariants>['size'];
 
 	if (!props.size) {
@@ -33,26 +40,27 @@ export const Text: React.FC<TextProps> = (props) => {
 				h5: 'h5',
 				h6: 'h6',
 				p: 'body',
-			}[Component];
+			}[Component as keyof typeof inferredFontSize];
 		}
 	}
 
-	const opsz = props.opsz ?? DEFAULT_OPSZ;
-	const wdth = props.wdth ?? DEFAULT_WDTH;
-	const fontVariationSettings = `"opsz" ${opsz}, "wdth" ${wdth}`;
+	const fontOpsz = opsz ?? DEFAULT_OPSZ;
+	const fontWdth = wdth ?? DEFAULT_WDTH;
+	const fontVariationSettings = `"opsz" ${fontOpsz}, "wdth" ${fontWdth}`;
 
-	const fontWeight = props.weight ?? DEFAULT_WEIGHT;
-	const fontSize = props.size ?? inferredFontSize ?? DEFAULT_SIZE;
+	const fontWeight = weight ?? DEFAULT_WEIGHT;
+	const fontSize = size ?? inferredFontSize ?? DEFAULT_SIZE;
 
 	// [TODO] Should the transition be applied to all CSS properties?
 	const transition = 'all 0.2s ease-out';
 
 	return (
 		<Component
+			{...polymorphicProps}
 			style={{ fontVariationSettings, fontWeight, transition }}
 			className={text({ size: fontSize })}
 		>
-			{props.children}
+			{children}
 		</Component>
 	);
 };
