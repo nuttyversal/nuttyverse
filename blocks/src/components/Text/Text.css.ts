@@ -8,6 +8,58 @@ globalFontFace('Nure', {
 	].join(', '),
 });
 
+globalFontFace('PragmataPro Liga', {
+	fontWeight: "normal",
+	fontStyle: "normal",
+	src: [
+		'url("https://fonts.nuttyver.se/pragmatapro-liga-regular-foo.woff2") format("woff2")',
+	].join(', '),
+});
+
+globalFontFace('PragmataPro Liga', {
+	fontWeight: "bold",
+	fontStyle: "normal",
+	src: [
+		'url("https://fonts.nuttyver.se/pragmatapro-liga-bold-foo.woff2") format("woff2")',
+	].join(', '),
+});
+
+globalFontFace('PragmataPro Liga', {
+	fontWeight: "normal",
+	fontStyle: "italic",
+	src: [
+		'url("https://fonts.nuttyver.se/pragmatapro-liga-italic-foo.woff2") format("woff2")',
+	].join(', '),
+});
+
+globalFontFace('PragmataPro Liga', {
+	fontWeight: "bold",
+	fontStyle: "italic",
+	src: [
+		'url("https://fonts.nuttyver.se/pragmatapro-liga-bold-italic-foo.woff2") format("woff2")',
+	].join(', '),
+});
+
+globalFontFace('PragmataPro Fraktur', {
+	fontWeight: "normal",
+	src: [
+		'url("https://fonts.nuttyver.se/pragmatapro-fraktur-regular-foo.woff2") format("woff2")',
+	].join(', '),
+});
+
+globalFontFace('PragmataPro Fraktur', {
+	fontWeight: "bold",
+	src: [
+		'url("https://fonts.nuttyver.se/pragmatapro-fraktur-bold-foo.woff2") format("woff2")',
+	].join(', '),
+});
+
+globalFontFace('FSD Emoji', {
+	src: [
+		'url("https://fonts.nuttyver.se/fsd-emoji-foo.woff2") format("woff2")',
+	].join(', '),
+});
+
 globalStyle('*', {
 	fontFamily: 'Nure',
 	fontVariationSettings: `"opsz" 18, "wdth" 85`,
