@@ -1,4 +1,4 @@
-import { globalFontFace, globalStyle } from '@vanilla-extract/css';
+import { globalFontFace, globalStyle, style } from '@vanilla-extract/css';
 import { RecipeVariants, recipe } from '@vanilla-extract/recipes';
 import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles'
 
@@ -64,6 +64,26 @@ globalStyle('*', {
 	fontFamily: 'Nure',
 	fontVariationSettings: `"opsz" 18, "wdth" 85`,
 	lineHeight: 1.5,
+});
+
+export const withDropCap = style({
+	selectors: {
+		'&::first-letter': {
+			float: 'left',
+			fontFamily: 'PragmataPro Fraktur',
+			fontVariantLigatures: 'none',
+			fontSize: '3em',
+			fontWeight: 'bold',
+			lineHeight: '1em',
+			marginRight: 4,
+			marginTop: -1,
+			color: 'transparent',
+			background: 'linear-gradient(180deg, #000 0%, #760063 100%)',
+			backgroundClip: 'text',
+			WebkitBackgroundClip: 'text',
+			WebkitTextFillColor: 'transparent',
+		},
+	},
 });
 
 const typographicProperties = defineProperties({
