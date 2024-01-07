@@ -51,6 +51,21 @@
 			};
 		};
 
+		gitea-actions-runner = {
+			instances = {
+				runner = {
+					enable = true;
+					name = "runner";
+					url = "https://code.nuttyver.se";
+					tokenFile = "/run/secrets/gitea-actions-runner-token";
+
+					labels = [
+						"nix:docker://gitea-runner-nix"
+					];
+				};
+			};
+		};
+
 		caddy = {
 			virtualHosts = {
 				"code.nuttyver.se" = {
@@ -67,6 +82,14 @@
 			gitea-database-password = {
 				file = ../secrets/gitea-database-password.age;
 				path = "/run/secrets/gitea-database-password";
+				owner = "gitea";
+				group = "gitea";
+				mode = "600";
+			};
+
+			gitea-actions-runner-token = {
+				file = ../secrets/gitea-actions-runner-token.age;
+				path = "/run/secrets/gitea-actions-runner-token";
 				owner = "gitea";
 				group = "gitea";
 				mode = "600";

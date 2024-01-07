@@ -5,4 +5,8 @@ in {
 	"gitea-database-password.age" = {
 		publicKeys = [ versal cloud ];
 	};
+
+	"gitea-actions-runner-token.age" = {
+		publicKeys = [ versal cloud ];
+	};
 }
