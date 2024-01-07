@@ -26,6 +26,12 @@
 			};
 
 			settings = {
+				actions = {
+					# This can be removed after Gitea is upgraded to version
+					# 1.21, which automatically sets this to true.
+					ENABLED = true;
+				};
+
 				log = {
 					LEVEL = "Error";
 				};
