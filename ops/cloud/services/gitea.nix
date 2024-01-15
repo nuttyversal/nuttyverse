@@ -66,6 +66,12 @@
 					url = "https://code.nuttyver.se";
 					tokenFile = "/run/secrets/gitea-actions-runner-token";
 
+					settings = {
+						container = {
+							network = "host";
+						};
+					};
+
 					labels = [
 						"nix:docker://gitea-runner-nix"
 					];
