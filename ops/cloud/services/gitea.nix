@@ -73,7 +73,8 @@
 					};
 
 					labels = [
-						"nix:docker://gitea-runner-nix"
+						"self-hosted"
+						"nix:docker://nixpkgs/nix"
 					];
 				};
 			};
