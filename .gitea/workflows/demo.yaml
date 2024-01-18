@@ -16,7 +16,7 @@ jobs:
       - name: Install Node.js
         run: |
           apt update
-          apt install --yes nodejs
+          apt install --yes git nodejs
       - name: Check out repository code
         uses: actions/checkout@v3
       - run: echo "💡 The ${{ gitea.repository }} repository has been cloned to the runner."
