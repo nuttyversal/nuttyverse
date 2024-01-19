@@ -28,3 +28,24 @@ jobs:
           cd blocks
           nix-shell --run "pnpm install"
           nix-shell --run "pnpm run build-storybook"
+  publish:
+    runs-on: [self-hosted, nix]
+    container:
+      image: ubuntu:noble
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Clone the Nuttyverse
+        uses: actions/checkout@v4
+      - name: Setup Docker
+        uses: docker/setup-buildx-action@v3
+        with:
+          config-inline: |
+            [registry."https://code.nuttyver.se/"]
+              username = "nuttyversal"
+              password = "${{ secrets.DOCKER_PASSWORD }}"
+      - name: Build and publish the design system
+        uses: docker/build-push-action@v5
+        with:
+          context: blocks
+          push: true
+          tags: code.nuttyver.se/observable/blocks:latest
