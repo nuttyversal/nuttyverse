@@ -26,4 +26,5 @@ jobs:
       - name: Build the design system
         run: |
           cd blocks
+          nix-shell --run "pnpm install"
           nix-shell --run "pnpm run build-storybook"
