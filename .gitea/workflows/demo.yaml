@@ -28,7 +28,12 @@ jobs:
           cd blocks
           nix-shell --run "pnpm install"
           nix-shell --run "pnpm run build-storybook"
-  publish:
+      - name: Build font server
+        run: |
+          cd fonts
+          nix-shell --run "cargo test"
+          nix-shell --run "cargo build"
+  deploy:
     if: github.ref == 'refs/heads/main'
     runs-on: [self-hosted, nix]
     container:
@@ -61,9 +66,15 @@ jobs:
           registry: code.nuttyver.se
           username: nuttyversal
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Publish design system
+      - name: Deploy design system
         uses: docker/build-push-action@v5
         with:
           context: blocks
           push: true
           tags: code.nuttyver.se/observable/blocks:latest
+      - name: Deploy font server
+        uses: docker/build-push-action@v5
+        with:
+          context: fonts
+          push: true
+          tags: code.nuttyver.se/observable/font-force-field:latest
