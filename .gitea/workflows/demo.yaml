@@ -44,7 +44,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
         with:
           config-inline: |
-            [registry."https://code.nuttyver.se/"]
+            [registry."code.nuttyver.se"]
               username = "nuttyversal"
               password = "${{ secrets.DOCKER_PASSWORD }}"
       - name: Build and publish the design system
