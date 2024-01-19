@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: [self-hosted, nix]
     container:
-      image: ubuntu:noble
+      image: ubuntu:mantic
     steps:
       - name: Install dependencies
         run: |
@@ -31,7 +31,7 @@ jobs:
   publish:
     runs-on: [self-hosted, nix]
     container:
-      image: ubuntu:noble
+      image: ubuntu:mantic
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Install dependencies
