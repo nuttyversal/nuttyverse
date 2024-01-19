@@ -33,8 +33,18 @@ jobs:
           cd fonts
           nix-shell --run "cargo test"
           nix-shell --run "cargo build"
+      - name: Build Neocities website
+        run: |
+          cd city
+          nix-shell --run "pnpm install"
+          nix-shell --run "pnpm build"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: neocities
+          path: dist
   deploy:
     if: github.ref == 'refs/heads/main'
+    needs: build
     runs-on: [self-hosted, nix]
     container:
       image: ubuntu:mantic
@@ -78,3 +88,8 @@ jobs:
           context: fonts
           push: true
           tags: code.nuttyver.se/observable/font-force-field:latest
+      - uses: actions/download-artifact@v4
+        with:
+          name: neocities
+      - name: Validate Neocities website
+        run: ls -R neocities
