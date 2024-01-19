@@ -5,7 +5,7 @@ on:
     branches:
       - main
 jobs:
-  explore-gitea-actions:
+  build:
     runs-on: [self-hosted, nix]
     container:
       image: ubuntu:noble
@@ -23,5 +23,7 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: Clone the Nuttyverse
         uses: actions/checkout@v4
-      - name: Validate Nix installation
-        run: nix --version
+      - name: Build the design system
+        run: |
+          cd blocks
+          nix-shell --run "pnpm run build-storybook"
