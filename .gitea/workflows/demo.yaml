@@ -34,6 +34,10 @@ jobs:
       image: ubuntu:noble
     if: github.ref == 'refs/heads/main'
     steps:
+      - name: Install dependencies
+        run: |
+          apt update
+          apt install --yes git nodejs
       - name: Clone the Nuttyverse
         uses: actions/checkout@v4
       - name: Setup Docker
