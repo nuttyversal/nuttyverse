@@ -11,7 +11,7 @@ jobs:
       image: ubuntu:mantic
     steps:
       - name: Prepare environment
-        uses: ./.gitea/workflows/prepare
+        uses: ./.gitea/actions/prepare
         with:
           docker_password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Test and build
@@ -32,7 +32,7 @@ jobs:
       image: ubuntu:mantic
     steps:
       - name: Prepare environment
-        uses: ./.gitea/workflows/prepare
+        uses: ./.gitea/actions/prepare
         with:
           docker_password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Test and build
@@ -53,7 +53,7 @@ jobs:
       image: ubuntu:mantic
     steps:
       - name: Prepare environment
-        uses: ./.gitea/workflows/prepare
+        uses: ./.gitea/actions/prepare
         with:
           docker_password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Test and build

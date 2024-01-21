@@ -5,11 +5,9 @@ inputs:
     required: true
 runs:
   using: composite
-  runs-on: [self-hosted, nix]
-  container:
-    image: ubuntu:mantic
   steps:
     - name: Install dependencies
+      shell: /bin/bash
       run: |
         apt update
         # ✦ cachix/install-nix-action
