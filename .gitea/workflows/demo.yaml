@@ -5,91 +5,63 @@ on:
     branches:
       - main
 jobs:
-  build:
+  blocks-µ-service:
     runs-on: [self-hosted, nix]
     container:
       image: ubuntu:mantic
     steps:
-      - name: Install dependencies
-        run: |
-          apt update
-          # ✦ cachix/install-nix-action
-          apt install --yes curl sudo xz-utils
-          # ✦ actions/checkout
-          apt install --yes git nodejs
-      - name: Install Nix
-        uses: cachix/install-nix-action@v25
+      - name: Prepare environment
+        uses: ./.gitea/workflows/prepare
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
-      - name: Clone Nuttyverse
-        uses: actions/checkout@v4
-      - name: Build design system
+          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Test and build
         run: |
           cd blocks
-          nix-shell --run "pnpm install"
-          nix-shell --run "pnpm run build-storybook"
-      - name: Build font server
-        run: |
-          cd fonts
-          nix-shell --run "cargo test"
-          nix-shell --run "cargo build"
-      - name: Build Neocities website
-        run: |
-          cd city
-          nix-shell --run "pnpm install"
-          nix-shell --run "pnpm build"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: neocities
-          path: dist
-  deploy:
-    if: github.ref == 'refs/heads/main'
-    needs: build
-    runs-on: [self-hosted, nix]
-    container:
-      image: ubuntu:mantic
-    steps:
-      - name: Install dependencies
-        run: |
-          apt update
-          # ✦ actions/checkout
-          apt install --yes git nodejs
-          # ✦ docker/setup-buildx-action
-          # ✦ docker/build-push-action
-          apt-get install --yes ca-certificates curl gnupg
-          install -m 0755 -d /etc/apt/keyrings
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-          chmod a+r /etc/apt/keyrings/docker.gpg
-          echo \
-            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-            $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-            tee /etc/apt/sources.list.d/docker.list > /dev/null
-          apt-get update
-          apt-get install --yes docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-      - name: Clone Nuttyverse
-        uses: actions/checkout@v4
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Login to registry
-        uses: docker/login-action@v3
-        with:
-          registry: code.nuttyver.se
-          username: nuttyversal
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Deploy design system
+          nix-shell --run "just install"
+          nix-shell --run "just build"
+      - name: Deploy
+        if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
           context: blocks
           push: true
           tags: code.nuttyver.se/observable/blocks:latest
-      - name: Deploy font server
+  fonts-µ-service:
+    runs-on: [self-hosted, nix]
+    container:
+      image: ubuntu:mantic
+    steps:
+      - name: Prepare environment
+        uses: ./.gitea/workflows/prepare
+        with:
+          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Test and build
+        run: |
+          cd fonts
+          nix-shell --run "just test"
+          nix-shell --run "just build"
+      - name: Deploy
+        if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
           context: fonts
           push: true
           tags: code.nuttyver.se/observable/font-force-field:latest
-      - uses: actions/download-artifact@v4
+  city-µ-service:
+    runs-on: [self-hosted, nix]
+    container:
+      image: ubuntu:mantic
+    steps:
+      - name: Prepare environment
+        uses: ./.gitea/workflows/prepare
         with:
-          name: neocities
-      - name: Validate Neocities website
-        run: ls -R neocities
+          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Test and build
+        run: |
+          cd city
+          nix-shell --run "just install"
+          nix-shell --run "just build"
+      - name: Validate build
+        run: |
+          cd city
+          ls -R dist
