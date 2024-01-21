@@ -11,7 +11,7 @@ jobs:
       image: ubuntu:mantic
     steps:
       - name: Install dependencies
-        run: apt install --yes git nodejs
+        run: apt update && apt install --yes git nodejs
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Prepare environment
@@ -36,7 +36,7 @@ jobs:
       image: ubuntu:mantic
     steps:
       - name: Install dependencies
-        run: apt install --yes git nodejs
+        run: apt update && apt install --yes git nodejs
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Prepare environment
@@ -61,7 +61,7 @@ jobs:
       image: ubuntu:mantic
     steps:
       - name: Install dependencies
-        run: apt install --yes git nodejs
+        run: apt update && apt install --yes git nodejs
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Prepare environment
