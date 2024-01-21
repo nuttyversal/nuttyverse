@@ -1,0 +1,7 @@
+#!/usr/bin/env -S just --justfile
+
+install:
+	pnpm install	
+	
+build:
+	pnpm build

@@ -3,6 +3,7 @@ in nixpkgs.stdenv.mkDerivation {
 	name = "neocities-cli";
 
 	buildInputs = with nixpkgs; [
+		just
 		nodePackages.pnpm
 		ruby
 	];

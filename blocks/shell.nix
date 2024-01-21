@@ -3,6 +3,7 @@ in nixpkgs.stdenv.mkDerivation {
 	name = "nuttyverse-blocks";
 
 	buildInputs = with nixpkgs; [
+		just
 		nodePackages.pnpm
 		nodejs
 	];

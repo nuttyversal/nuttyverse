@@ -1,0 +1,7 @@
+#!/usr/bin/env -S just --justfile
+
+test:
+	cargo test
+
+build:
+	cargo build

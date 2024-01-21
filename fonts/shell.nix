@@ -3,6 +3,9 @@ in nixpkgs.stdenv.mkDerivation {
 	name = "font-force-field";
 
 	buildInputs = with nixpkgs; [
+		# Used for development
+		just
+
 		# Used for server dependencies
 		libiconv
 		rustup
