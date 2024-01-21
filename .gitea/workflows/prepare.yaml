@@ -1,10 +1,10 @@
 name: Prepare CI environment
 inputs:
   docker_password:
-    description: "Docker registry password"
+    description: Docker registry password
     required: true
 runs:
-  using: "composite"
+  using: composite
   runs-on: [self-hosted, nix]
   container:
     image: ubuntu:mantic
