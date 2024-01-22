@@ -1,4 +1,5 @@
 name: Prepare CI environment
+description: Prepare CI environment
 inputs:
   docker_password:
     description: Docker registry password
@@ -9,6 +10,7 @@ runs:
     - name: Install dependencies
       shell: /bin/bash
       run: |
+        echo "Hello from composite action!"
         apt update
         # ✦ cachix/install-nix-action
         apt install --yes curl sudo xz-utils
