@@ -23,6 +23,8 @@ jobs:
           cd blocks
           nix-shell --run "just install"
           nix-shell --run "just build"
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Deploy
         if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
