@@ -1,4 +1,4 @@
-FROM node:alpine3.18 AS build
+FROM node:bookworm AS build
 WORKDIR /src
 COPY . .
 RUN npm install --global pnpm && \
