@@ -2,7 +2,6 @@ FROM node:bookworm AS build
 WORKDIR /src
 COPY . .
 RUN npm install --global pnpm && \
-	rm -rf node_modules && \
 	pnpm --force install && \
 	pnpm run build-storybook
 
