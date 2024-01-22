@@ -17,7 +17,7 @@ jobs:
       - name: Prepare environment
         uses: ./.gitea/actions/prepare
         with:
-          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+          docker-password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Test and build
         run: |
           cd blocks
@@ -42,7 +42,7 @@ jobs:
       - name: Prepare environment
         uses: ./.gitea/actions/prepare
         with:
-          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+          docker-password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Test and build
         run: |
           cd fonts
@@ -67,7 +67,7 @@ jobs:
       - name: Prepare environment
         uses: ./.gitea/actions/prepare
         with:
-          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+          docker-password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Test and build
         run: |
           cd city

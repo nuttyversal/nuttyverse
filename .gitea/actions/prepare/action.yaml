@@ -1,7 +1,7 @@
 name: Prepare CI environment
 description: Prepare CI environment
 inputs:
-  docker_password:
+  docker-password:
     description: Docker registry password
     required: true
 runs:
@@ -41,4 +41,4 @@ runs:
     #   with:
     #     registry: code.nuttyver.se
     #     username: nuttyversal
-    #     password: ${{ inputs.docker_password }}
+    #     password: ${{ inputs.docker-password }}
