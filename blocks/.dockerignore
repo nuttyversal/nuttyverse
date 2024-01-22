@@ -1,0 +1,2 @@
+# exclude from build context
+node_modules/
