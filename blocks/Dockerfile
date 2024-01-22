@@ -1,8 +1,8 @@
 FROM node:alpine3.18 AS build
+RUN npm install --global pnpm
 WORKDIR /src
 COPY . .
-RUN npm install --global pnpm && \
-	pnpm --force install && \
+RUN pnpm install && \
 	pnpm run build-storybook
 
 FROM nginx:alpine3.18
