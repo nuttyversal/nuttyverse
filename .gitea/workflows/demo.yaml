@@ -77,5 +77,5 @@ jobs:
         uses: bcomnes/deploy-to-neocities@v1
         with:
           api_token: ${{ secrets.NEOCITIES_TOKEN }}
-          dist_dir: dist
+          dist_dir: city/dist
           cleanup: false
