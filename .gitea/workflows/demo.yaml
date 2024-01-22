@@ -18,7 +18,7 @@ jobs:
         uses: ./.gitea/actions/prepare
         with:
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Test and build
+      - name: Build
         run: |
           cd blocks
           nix-shell --run "just install"
@@ -68,12 +68,14 @@ jobs:
         uses: ./.gitea/actions/prepare
         with:
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Test and build
+      - name: Build
         run: |
           cd city
           nix-shell --run "just install"
           nix-shell --run "just build"
-      - name: Validate build
-        run: |
-          cd city
-          ls -R dist
+      - name: Deploy
+        uses: bcomnes/deploy-to-neocities@v1
+        with:
+          api_token: ${{ secrets.NEOCITIES_TOKEN }}
+          dist_dir: public
+          cleanup: false
