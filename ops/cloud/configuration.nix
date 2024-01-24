@@ -14,6 +14,7 @@ with lib;
 		./services/caddy.nix
 		./services/gitea.nix
 		./services/postgresql.nix
+		./services/redis.nix
 
 		# Container Configuration
 		./containers/blocks.nix
