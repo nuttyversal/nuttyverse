@@ -8,7 +8,24 @@
 					enable = true;
 					port = 6379;
 					bind = null;
+
+					# Prefer connecting to Redis over the Tailscale network if
+					# connecting from an external IP address (non-loopback).
+					openFirewall = false;
+					requirePassFile = "/run/secrets/redis-password";
 				};
+			};
+		};
+	};
+
+	age = {
+		secrets = {
+			redis-password = {
+				file = ../secrets/redis-password.age;
+				path = "/run/secrets/redis-password";
+				owner = "redis";
+				group = "redis";
+				mode = "600";
 			};
 		};
 	};

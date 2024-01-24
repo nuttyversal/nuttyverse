@@ -13,4 +13,8 @@ in {
 	"nutty-bot-environment.age" = {
 		publicKeys = [ versal cloud ];
 	};
+
+	"redis-password.age" = {
+		publicKeys = [ versal cloud ];
+	};
 }
