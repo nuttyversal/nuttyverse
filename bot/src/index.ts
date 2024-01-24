@@ -113,3 +113,8 @@ function setupWebServer() {
 dotenv.config();
 setupDiscordClient();
 setupWebServer();
+
+process.on('SIGTERM', () => {
+	console.log('Committing sudoku... 🗡️');
+	process.exit(0);
+});
