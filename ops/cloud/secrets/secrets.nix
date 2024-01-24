@@ -9,4 +9,8 @@ in {
 	"gitea-actions-runner-token.age" = {
 		publicKeys = [ versal cloud ];
 	};
+
+	"nutty-bot-environment.age" = {
+		publicKeys = [ versal cloud ];
+	};
 }
