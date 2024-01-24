@@ -125,3 +125,8 @@ process.on('SIGTERM', () => {
 	console.log('Committing sudoku... 🗡️');
 	process.exit(0);
 });
+
+process.on('SIGINT', () => {
+	console.log('Committing sudoku... 🗡️');
+	process.exit(0);
+});
