@@ -90,16 +90,22 @@ function setupWebServer() {
 			url: string;
 		};
 
-		const commits = req.body.commits.map((commit: Commit) => ({
-			commitUrl: commit.url,
-			message: commit.message,
-			shortHash: commit.id.slice(0, 7),
-		}));
+		const commits = req.body.commits.map((commit: Commit) => {
+			const [messageHead, ...messageTail] = commit.message.split('\n\n');
+			const description = messageTail.join('\n\n').trim();
+			const shortHash = commit.id.slice(0, 7);
+
+			return {
+				commitUrl: commit.url,
+				message: messageHead,
+				description,
+				shortHash,
+			};
+		});
 
 		for (const commit of commits) {
-			const compactCommit = `${commit.shortHash} ${commit.message} (${commit.commitUrl})`;
-			cachedCommits.push(compactCommit);
-			console.log(compactCommit);
+			console.log(`${commit.shortHash} ${commit.message} (${commit.commitUrl})`);
+			cachedCommits.push(commit);
 		}
 
 		res.send('Hello from Nutty Bot!');
