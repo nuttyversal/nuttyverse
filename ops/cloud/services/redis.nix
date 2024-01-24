@@ -7,6 +7,7 @@
 				nuttyverse = {
 					enable = true;
 					port = 6379;
+					bind = null;
 				};
 			};
 		};
