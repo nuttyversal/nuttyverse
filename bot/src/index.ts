@@ -92,12 +92,13 @@ function setupWebServer() {
 
 		const commits = req.body.commits.map((commit: Commit) => {
 			const [messageHead, ...messageTail] = commit.message.split('\n\n');
+			const message = messageHead.trim();
 			const description = messageTail.join('\n\n').trim();
 			const shortHash = commit.id.slice(0, 7);
 
 			return {
 				commitUrl: commit.url,
-				message: messageHead,
+				message,
 				description,
 				shortHash,
 			};
