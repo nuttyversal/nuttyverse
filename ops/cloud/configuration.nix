@@ -15,6 +15,7 @@ with lib;
 		./services/gitea.nix
 		./services/postgresql.nix
 		./services/redis.nix
+		./services/tailscale.nix
 
 		# Container Configuration
 		./containers/blocks.nix

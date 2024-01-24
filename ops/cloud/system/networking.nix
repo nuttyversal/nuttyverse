@@ -53,6 +53,16 @@
 						Name = "vrack";
 					};
 				};
+
+				"30-tailscale" = {
+					matchConfig = {
+						Name = "tailscale0";
+					};
+
+					linkConfig = {
+						Name = "tailscale0";
+					};
+				};
 			};
 	
 			networks = {
@@ -90,6 +100,16 @@
 	
 						[Network]
 						LinkLocalAddressing = no
+					'';
+				};
+
+				tailscale0 = {
+					extraConfig = ''
+						[Match]
+						Name = tailscale0
+
+						[Link]
+						RequiredForOnline = no
 					'';
 				};
 			};
