@@ -23,8 +23,8 @@
 			redis-password = {
 				file = ../secrets/redis-password.age;
 				path = "/run/secrets/redis-password";
-				owner = "redis";
-				group = "redis";
+				owner = "root";
+				group = "root";
 				mode = "600";
 			};
 		};
