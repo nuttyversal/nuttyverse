@@ -1,8 +1,9 @@
 import { Client, Events, GatewayIntentBits, TextChannel } from 'discord.js';
 import dotenv from 'dotenv';
-import { channelIdByName, userIdByName } from './constants.js';
+import express from 'express';
+import { HTTP_PORT, channelIdByName, userIdByName } from './constants.js';
 
-async function start() {
+async function setupDiscordClient() {
 	const client = new Client({
 		intents: [
 			GatewayIntentBits.Guilds,
@@ -12,7 +13,7 @@ async function start() {
 	});
 
 	client.once(Events.ClientReady, (client) => {
-		console.log(`Ready! Logged in as ${client.user.tag}.`);
+		console.log(`Nutty Bot is logged in as ${client.user.tag}...`);
 	});
 
 	client.on(Events.MessageCreate, (message) => {
@@ -51,5 +52,18 @@ async function start() {
 	channel?.send('I am alive!');
 }
 
+function setupWebServer() {
+	const app = express();
+
+	app.get('/', (_, res) => {
+		res.send('Hello from Nutty Bot!');
+	});
+
+	app.listen(HTTP_PORT, () => {
+		console.log(`Nutty Bot is listening on port ${HTTP_PORT}...`);
+	});
+}
+
 dotenv.config();
-start();
+setupDiscordClient();
+setupWebServer();
