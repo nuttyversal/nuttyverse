@@ -117,6 +117,7 @@ function setupWebServer() {
 }
 
 dotenv.config();
+
 setupDiscordClient();
 setupWebServer();
 
