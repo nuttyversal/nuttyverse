@@ -64,17 +64,44 @@ function setupWebServer() {
 	// [DEBUG] Cache the most recent webhook call, and return it from
 	// the debug endpoint to enable inspection of the JSON body.
 	let cachedResponse: object | undefined = undefined;
+	const cachedCommits: string[] = [];
 
 	app.get('/webhooks/gitea/debug', (_, res) => {
 		if (cachedResponse) {
-			res.json({ response: cachedResponse });
+			res.json({
+				cachedResponse,
+				cachedCommits,
+			});
 		} else {
-			res.json({ response: {} })
+			res.json({
+				cachedResponse: null,
+				cachedCommits,
+			});
 		}
 	});
 
 	app.post('/webhooks/gitea', (req, res) => {
+		// Cache response for debugging purposes.
 		cachedResponse = req.body;
+
+		type Commit = {
+			id: string;
+			message: string;
+			url: string;
+		};
+
+		const commits = req.body.commits.map((commit: Commit) => ({
+			commitUrl: commit.url,
+			message: commit.message,
+			shortHash: commit.id.slice(0, 7),
+		}));
+
+		for (const commit of commits) {
+			const compactCommit = `${commit.shortHash} ${commit.message} (${commit.commitUrl})`;
+			cachedCommits.push(compactCommit);
+			console.log(compactCommit);
+		}
+
 		res.send('Hello from Nutty Bot!');
 	});
 
