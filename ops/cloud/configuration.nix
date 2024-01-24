@@ -17,6 +17,7 @@ with lib;
 
 		# Container Configuration
 		./containers/blocks.nix
+		./containers/bot.nix
 		./containers/font-force-field.nix
 	];
 
