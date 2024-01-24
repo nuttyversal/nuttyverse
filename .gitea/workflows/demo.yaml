@@ -30,6 +30,26 @@ jobs:
           context: blocks
           push: true
           tags: code.nuttyver.se/observable/blocks:latest
+  bot-µ-service:
+    runs-on: [self-hosted, nix]
+    container:
+      image: ubuntu:mantic
+    steps:
+      - name: Install dependencies
+        run: apt update && apt install --yes git nodejs
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Prepare environment
+        uses: ./.gitea/actions/prepare
+        with:
+          docker-password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Deploy
+        if: github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v5
+        with:
+          context: bot
+          push: true
+          tags: code.nuttyver.se/observable/bot:latest
   fonts-µ-service:
     runs-on: [self-hosted, nix]
     container:
