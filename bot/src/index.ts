@@ -55,7 +55,26 @@ async function setupDiscordClient() {
 function setupWebServer() {
 	const app = express();
 
+	app.use(express.json());
+
 	app.get('/', (_, res) => {
+		res.send('Hello from Nutty Bot!');
+	});
+
+	// [DEBUG] Cache the most recent webhook call, and return it from
+	// the debug endpoint to enable inspection of the JSON body.
+	let cachedResponse: object | undefined = undefined;
+
+	app.get('/webhooks/gitea/debug', (_, res) => {
+		if (cachedResponse) {
+			res.json({ response: cachedResponse });
+		} else {
+			res.json({ response: {} })
+		}
+	});
+
+	app.post('/webhooks/gitea', (req, res) => {
+		cachedResponse = req.body;
 		res.send('Hello from Nutty Bot!');
 	});
 
