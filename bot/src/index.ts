@@ -1,4 +1,4 @@
-import { Client, Events, GatewayIntentBits, TextChannel } from 'discord.js';
+import { Client, Events, GatewayIntentBits, TextChannel, bold, codeBlock, hideLinkEmbed, hyperlink } from 'discord.js';
 import dotenv from 'dotenv';
 import express from 'express';
 import { HTTP_PORT, channelIdByName, userIdByName } from './constants.js';
@@ -50,6 +50,14 @@ async function setupDiscordClient() {
 	// Send a message to #bot-testing to confirm that the bot is running.
 	const channel = await client.channels.fetch(channelIdByName.botTesting) as TextChannel;
 	channel?.send('I am alive!');
+
+	// Preview test formatting.
+	const message = bold('Push test commit');
+	const description = codeBlock('A test description.\n\nfoo. bar. baz.');
+	const maskedLink = hideLinkEmbed('https://code.nuttyver.se/observable/nuttyverse/commit/9bf645541e8af6f1120a130f44c7c4e8a16cdf81');
+	const commitLink = hyperlink('9bf6455', maskedLink);
+	const formattedMessage = `✦ ${commitLink} · ${message}\n${description}`;
+	channel?.send(formattedMessage);
 }
 
 function setupWebServer() {
