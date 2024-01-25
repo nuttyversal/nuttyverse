@@ -1,7 +1,26 @@
 import { Client, Events, GatewayIntentBits, TextChannel, bold, codeBlock, hideLinkEmbed, hyperlink } from 'discord.js';
 import dotenv from 'dotenv';
 import express from 'express';
-import { HTTP_PORT, channelIdByName, userIdByName } from './constants.js';
+import redis from 'redis';
+import { HTTP_PORT, PUBSUB_CHANNELS, channelIdByName, userIdByName } from './constants.js';
+
+async function setupRedisClient() {
+	const client = redis.createClient({
+		socket: {
+			host: process.env.REDIS_HOST,
+			port: Number(process.env.REDIS_PORT),
+		},
+	});
+
+	client.on('error', (err) => {
+		console.error(err);
+	});
+
+	await client.connect();
+	await client.auth({ password: process.env.REDIS_PASSWORD ?? '' });
+
+	return client;
+}
 
 async function setupDiscordClient() {
 	const client = new Client({
@@ -60,7 +79,7 @@ async function setupDiscordClient() {
 	channel?.send(formattedMessage);
 }
 
-function setupWebServer() {
+function setupWebServer(redisClient: Awaited<ReturnType<typeof setupRedisClient>>) {
 	const app = express();
 
 	app.use(express.json());
@@ -127,8 +146,11 @@ function setupWebServer() {
 
 dotenv.config();
 
-setupDiscordClient();
-setupWebServer();
+(async () => {
+	const redisClient = await setupRedisClient();
+	await setupDiscordClient();
+	setupWebServer(redisClient);
+})();
 
 process.on('SIGTERM', () => {
 	console.log('Committing sudoku... 🗡️');
