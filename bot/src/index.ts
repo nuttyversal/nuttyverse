@@ -133,6 +133,7 @@ function setupWebServer(redisClient: Awaited<ReturnType<typeof setupRedisClient>
 
 		for (const commit of commits) {
 			console.log(`${commit.shortHash} ${commit.message} (${commit.commitUrl})`);
+			redisClient.publish(PUBSUB_CHANNELS.GIT_COMMIT, JSON.stringify(commit));
 			cachedCommits.push(commit);
 		}
 
