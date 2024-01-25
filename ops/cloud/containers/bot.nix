@@ -8,6 +8,7 @@
 					image = "code.nuttyver.se/observable/bot:latest";
 					ports = [ "6268:3000" ];
 					environmentFiles = [ "/run/secrets/nutty-bot-environment" ];
+					extraOptions = [ "--network=host" ];
 				};
 			};
 		};
