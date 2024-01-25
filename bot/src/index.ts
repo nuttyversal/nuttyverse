@@ -8,7 +8,7 @@ async function setupRedisClient() {
 	const client = redis.createClient({
 		socket: {
 			host: process.env.REDIS_HOST,
-			port: Number(process.env.REDIS_PORT),
+			port: Number(process.env.REDIS_PORT) || 6379,
 		},
 	});
 
