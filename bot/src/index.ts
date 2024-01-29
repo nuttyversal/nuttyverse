@@ -77,7 +77,12 @@ async function setupDiscordClient(redisClient: Awaited<ReturnType<typeof setupRe
 		const description = codeBlock(commit.description);
 		const maskedLink = hideLinkEmbed(commit.commitUrl);
 		const commitLink = hyperlink(commit.shortHash, maskedLink);
-		const formattedMessage = `✦ ${commitLink} · ${title}\n${description}`;
+
+		const formattedMessage = [
+			`✦ ${commitLink} • ${title}`,
+			commit.description ? description : null,
+		].filter(part => part !== null).join('\n');
+
 		channel?.send(formattedMessage);
 	});
 }
