@@ -1,87 +1,87 @@
-import { globalFontFace, globalStyle, style } from '@vanilla-extract/css';
-import { RecipeVariants, recipe } from '@vanilla-extract/recipes';
-import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles'
+import { globalFontFace, globalStyle, style } from "@vanilla-extract/css";
+import { RecipeVariants, recipe } from "@vanilla-extract/recipes";
+import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
 
-globalFontFace('Nure', {
+globalFontFace("Nure", {
 	src: [
 		'url("https://fonts.nuttyver.se/nure-foo.woff2") format("woff2")',
-	].join(', '),
+	].join(", "),
 });
 
-globalFontFace('PragmataPro Liga', {
+globalFontFace("PragmataPro Liga", {
 	fontWeight: "normal",
 	fontStyle: "normal",
 	src: [
 		'url("https://fonts.nuttyver.se/pragmatapro-liga-regular-foo.woff2") format("woff2")',
-	].join(', '),
+	].join(", "),
 });
 
-globalFontFace('PragmataPro Liga', {
+globalFontFace("PragmataPro Liga", {
 	fontWeight: "bold",
 	fontStyle: "normal",
 	src: [
 		'url("https://fonts.nuttyver.se/pragmatapro-liga-bold-foo.woff2") format("woff2")',
-	].join(', '),
+	].join(", "),
 });
 
-globalFontFace('PragmataPro Liga', {
+globalFontFace("PragmataPro Liga", {
 	fontWeight: "normal",
 	fontStyle: "italic",
 	src: [
 		'url("https://fonts.nuttyver.se/pragmatapro-liga-italic-foo.woff2") format("woff2")',
-	].join(', '),
+	].join(", "),
 });
 
-globalFontFace('PragmataPro Liga', {
+globalFontFace("PragmataPro Liga", {
 	fontWeight: "bold",
 	fontStyle: "italic",
 	src: [
 		'url("https://fonts.nuttyver.se/pragmatapro-liga-bold-italic-foo.woff2") format("woff2")',
-	].join(', '),
+	].join(", "),
 });
 
-globalFontFace('PragmataPro Fraktur', {
+globalFontFace("PragmataPro Fraktur", {
 	fontWeight: "normal",
 	src: [
 		'url("https://fonts.nuttyver.se/pragmatapro-fraktur-regular-foo.woff2") format("woff2")',
-	].join(', '),
+	].join(", "),
 });
 
-globalFontFace('PragmataPro Fraktur', {
+globalFontFace("PragmataPro Fraktur", {
 	fontWeight: "bold",
 	src: [
 		'url("https://fonts.nuttyver.se/pragmatapro-fraktur-bold-foo.woff2") format("woff2")',
-	].join(', '),
+	].join(", "),
 });
 
-globalFontFace('FSD Emoji', {
+globalFontFace("FSD Emoji", {
 	src: [
 		'url("https://fonts.nuttyver.se/fsd-emoji-foo.woff2") format("woff2")',
-	].join(', '),
+	].join(", "),
 });
 
-globalStyle('*', {
-	fontFamily: 'Nure',
+globalStyle("*", {
+	fontFamily: "Nure",
 	fontVariationSettings: `"opsz" 18, "wdth" 85`,
 	lineHeight: 1.5,
 });
 
 export const withDropCap = style({
 	selectors: {
-		'&::first-letter': {
-			float: 'left',
-			fontFamily: 'PragmataPro Fraktur',
-			fontVariantLigatures: 'none',
-			fontSize: '3em',
-			fontWeight: 'bold',
-			lineHeight: '1em',
+		"&::first-letter": {
+			float: "left",
+			fontFamily: "PragmataPro Fraktur",
+			fontVariantLigatures: "none",
+			fontSize: "3em",
+			fontWeight: "bold",
+			lineHeight: "1em",
 			marginRight: 4,
 			marginTop: -1,
-			color: 'transparent',
-			background: 'linear-gradient(180deg, #000 0%, #760063 100%)',
-			backgroundClip: 'text',
-			WebkitBackgroundClip: 'text',
-			WebkitTextFillColor: 'transparent',
+			color: "transparent",
+			background: "linear-gradient(180deg, #000 0%, #760063 100%)",
+			backgroundClip: "text",
+			WebkitBackgroundClip: "text",
+			WebkitTextFillColor: "transparent",
 		},
 	},
 });
@@ -98,8 +98,8 @@ const typographicProperties = defineProperties({
 			h3: 33.1776,
 			h2: 39.81312,
 			h1: 47.775744,
-		}
-	}
+		},
+	},
 });
 
 export const sprinkles = createSprinkles(typographicProperties);
@@ -107,18 +107,18 @@ export const sprinkles = createSprinkles(typographicProperties);
 export const text = recipe({
 	variants: {
 		size: {
-			smol: sprinkles({ fontSize: 'smol' }),
-			body: sprinkles({ fontSize: 'body' }),
-			h6: sprinkles({ fontSize: 'h6' }),
-			h5: sprinkles({ fontSize: 'h5' }),
-			h4: sprinkles({ fontSize: 'h4' }),
-			h3: sprinkles({ fontSize: 'h3' }),
-			h2: sprinkles({ fontSize: 'h2' }),
-			h1: sprinkles({ fontSize: 'h1' }),
+			smol: sprinkles({ fontSize: "smol" }),
+			body: sprinkles({ fontSize: "body" }),
+			h6: sprinkles({ fontSize: "h6" }),
+			h5: sprinkles({ fontSize: "h5" }),
+			h4: sprinkles({ fontSize: "h4" }),
+			h3: sprinkles({ fontSize: "h3" }),
+			h2: sprinkles({ fontSize: "h2" }),
+			h1: sprinkles({ fontSize: "h1" }),
 		},
 	},
 	defaultVariants: {
-		size: 'body',
+		size: "body",
 	},
 });
 

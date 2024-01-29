@@ -1,29 +1,40 @@
-import { Client, Events, GatewayIntentBits, TextChannel, bold, codeBlock, hideLinkEmbed, hyperlink } from 'discord.js';
-import dotenv from 'dotenv';
-import express from 'express';
-import redis from 'redis';
-import { HTTP_PORT, PUBSUB_CHANNELS, channelIdByName, userIdByName } from './constants.js';
-import { GiteaWebhookCommit, RedisGitCommit } from './models.js';
+import {
+	Client,
+	Events,
+	GatewayIntentBits,
+	TextChannel,
+	bold,
+	codeBlock,
+	hideLinkEmbed,
+	hyperlink,
+} from "discord.js";
+import dotenv from "dotenv";
+import express from "express";
+import redis from "redis";
+import { PUBSUB_CHANNELS, channelIdByName, userIdByName } from "./constants.js";
+import { GiteaWebhookCommit, RedisGitCommit } from "./models.js";
 
 async function setupRedisClient() {
 	const client = redis.createClient({
 		socket: {
-			host: process.env.REDIS_HOST ?? 'localhost',
+			host: process.env.REDIS_HOST ?? "localhost",
 			port: Number(process.env.REDIS_PORT) || 6379,
 		},
 	});
 
-	client.on('error', (err) => {
+	client.on("error", (err) => {
 		console.error(err);
 	});
 
 	await client.connect();
-	await client.auth({ password: process.env.REDIS_PASSWORD ?? '' });
+	await client.auth({ password: process.env.REDIS_PASSWORD ?? "" });
 
 	return client;
 }
 
-async function setupDiscordClient(redisClient: Awaited<ReturnType<typeof setupRedisClient>>) {
+async function setupDiscordClient(
+	redisClient: Awaited<ReturnType<typeof setupRedisClient>>,
+) {
 	const client = new Client({
 		intents: [
 			GatewayIntentBits.Guilds,
@@ -56,11 +67,11 @@ async function setupDiscordClient(redisClient: Awaited<ReturnType<typeof setupRe
 
 		if (message.mentions.has(userIdByName.nuttybot)) {
 			if (message.author.id === userIdByName.nuttyversal) {
-				message.channel.send('Hello! ٩(◕‿◕｡)۶');
+				message.channel.send("Hello! ٩(◕‿◕｡)۶");
 			} else if (message.author.id === userIdByName.PrinceWalnut) {
 				message.channel.send('Fuck you! (¬_¬")');
 			} else {
-				message.channel.send('Hiya! (⸝⸝ᵕᴗᵕ⸝⸝)');
+				message.channel.send("Hiya! (⸝⸝ᵕᴗᵕ⸝⸝)");
 			}
 		}
 	});
@@ -68,8 +79,11 @@ async function setupDiscordClient(redisClient: Awaited<ReturnType<typeof setupRe
 	await client.login(process.env.DISCORD_BOT_TOKEN);
 
 	// Send a message to #bot-testing to confirm that the bot is running.
-	const channel = await client.channels.fetch(channelIdByName.botTesting) as TextChannel | null;
-	channel?.send('I am alive!');
+	const channel = (await client.channels.fetch(
+		channelIdByName.botTesting,
+	)) as TextChannel | null;
+
+	channel?.send("I am alive!");
 
 	redisClient.subscribe(PUBSUB_CHANNELS.GIT_COMMIT, async (message) => {
 		const commit = JSON.parse(message) as RedisGitCommit;
@@ -81,20 +95,27 @@ async function setupDiscordClient(redisClient: Awaited<ReturnType<typeof setupRe
 		const formattedMessage = [
 			`✦ ${commitLink} • ${title}`,
 			commit.description ? description : null,
-		].filter(part => part !== null).join('\n');
+		]
+			.filter((part) => part !== null)
+			.join("\n");
 
-		const devlogChannel = await client.channels.fetch(channelIdByName.devlog) as TextChannel | null;
+		const devlogChannel = (await client.channels.fetch(
+			channelIdByName.devlog,
+		)) as TextChannel | null;
+
 		devlogChannel?.send(formattedMessage);
 	});
 }
 
-function setupWebServer(redisClient: Awaited<ReturnType<typeof setupRedisClient>>) {
+function setupWebServer(
+	redisClient: Awaited<ReturnType<typeof setupRedisClient>>,
+) {
 	const httpPort = Number(process.env.PORT) || 3000;
 	const app = express();
 	app.use(express.json());
 
-	app.get('/', (_, res) => {
-		res.send('Hello from Nutty Bot!');
+	app.get("/", (_, res) => {
+		res.send("Hello from Nutty Bot!");
 	});
 
 	// [DEBUG] Cache the most recent webhook call, and return it from
@@ -102,7 +123,7 @@ function setupWebServer(redisClient: Awaited<ReturnType<typeof setupRedisClient>
 	let cachedWebhookRequest: object | undefined = undefined;
 	const cachedRedisMessages: RedisGitCommit[] = [];
 
-	app.get('/webhooks/gitea/debug', (_, res) => {
+	app.get("/webhooks/gitea/debug", (_, res) => {
 		if (cachedWebhookRequest) {
 			res.json({
 				cachedWebhookRequest,
@@ -116,29 +137,34 @@ function setupWebServer(redisClient: Awaited<ReturnType<typeof setupRedisClient>
 		}
 	});
 
-	app.post('/webhooks/gitea', (req, res) => {
+	app.post("/webhooks/gitea", (req, res) => {
 		// Cache webhook request payload for debugging purposes.
 		cachedWebhookRequest = req.body;
 
 		// Parse the commits from the webhook payload.
 		const commits: GiteaWebhookCommit[] = req.body.commits;
-		const parsedCommits: RedisGitCommit[] = commits.map((commit: GiteaWebhookCommit) => {
-			const [messageHead, ...messageTail] = commit.message.split('\n\n');
-			return {
-				commitUrl: commit.url,
-				message: messageHead.trim(),
-				description: messageTail.join('\n\n').trim(),
-				shortHash: commit.id.slice(0, 7),
-			};
-		});
+		const parsedCommits: RedisGitCommit[] = commits.map(
+			(commit: GiteaWebhookCommit) => {
+				const [messageHead, ...messageTail] = commit.message.split("\n\n");
+				return {
+					commitUrl: commit.url,
+					message: messageHead.trim(),
+					description: messageTail.join("\n\n").trim(),
+					shortHash: commit.id.slice(0, 7),
+				};
+			},
+		);
 
 		// Publish messages to the Redis pub/sub channel.
 		for (const commit of parsedCommits) {
-			redisClient.publish(PUBSUB_CHANNELS.GIT_COMMIT, JSON.stringify(commit));
+			redisClient.publish(
+				PUBSUB_CHANNELS.GIT_COMMIT,
+				JSON.stringify(commit),
+			);
 			cachedRedisMessages.push(commit);
 		}
 
-		res.send('Hello from Nutty Bot!');
+		res.send("Hello from Nutty Bot!");
 	});
 
 	app.listen(httpPort, () => {
@@ -155,12 +181,12 @@ dotenv.config();
 	setupWebServer(redisPublisherClient);
 })();
 
-process.on('SIGTERM', () => {
-	console.log('Committing sudoku... 🗡️');
+process.on("SIGTERM", () => {
+	console.log("Committing sudoku... 🗡️");
 	process.exit(0);
 });
 
-process.on('SIGINT', () => {
-	console.log('Committing sudoku... 🗡️');
+process.on("SIGINT", () => {
+	console.log("Committing sudoku... 🗡️");
 	process.exit(0);
 });

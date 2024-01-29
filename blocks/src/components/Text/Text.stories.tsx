@@ -1,26 +1,26 @@
-import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import React from "react";
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { Text } from './Text';
-import { text } from './Text.css';
+import { Text } from "./Text";
+import { text } from "./Text.css";
 
 const meta: Meta<typeof Text> = {
 	component: Text,
 	argTypes: {
 		children: {
 			control: {
-				type: 'text',
+				type: "text",
 			},
 		},
 		size: {
 			control: {
-				type: 'select',
+				type: "select",
 			},
 			options: Object.keys(text.classNames.variants.size),
 		},
 		opsz: {
 			control: {
-				type: 'range',
+				type: "range",
 				min: 12,
 				max: 72,
 				step: 1,
@@ -28,7 +28,7 @@ const meta: Meta<typeof Text> = {
 		},
 		wdth: {
 			control: {
-				type: 'range',
+				type: "range",
 				min: 75,
 				max: 125,
 				step: 1,
@@ -36,7 +36,7 @@ const meta: Meta<typeof Text> = {
 		},
 		weight: {
 			control: {
-				type: 'range',
+				type: "range",
 				min: 100,
 				max: 900,
 				step: 1,
@@ -51,8 +51,8 @@ type Story = StoryObj<typeof Text>;
 
 export const Component: Story = {
 	args: {
-		children: 'Hello, world!',
-		size: 'body',
+		children: "Hello, world!",
+		size: "body",
 		opsz: 18,
 		wdth: 85,
 		weight: 400,
@@ -72,24 +72,27 @@ export const PolymorphicExample: Story = {
 
 			<Text as="p" {...args}>
 				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-				euismod, nisl eget ultricies aliquam, neque diam aliquet nisi,
-				nec tincidunt elit urna nec quam. Aliquam erat volutpat. Nulla
-				facilisi. Nulla facilisi. Donec quis ligula sit amet nibh
-				aliquet ultricies. Nulla facilisi. Sed non magna id magna ornare
-				aliquet. Sed sit amet ipsum mauris. (p)
+				euismod, nisl eget ultricies aliquam, neque diam aliquet nisi, nec
+				tincidunt elit urna nec quam. Aliquam erat volutpat. Nulla facilisi.
+				Nulla facilisi. Donec quis ligula sit amet nibh aliquet ultricies.
+				Nulla facilisi. Sed non magna id magna ornare aliquet. Sed sit amet
+				ipsum mauris. (p)
 			</Text>
 
 			<Text as="p" {...args}>
-				Aliquam erat volutpat. Nulla facilisi. Nulla facilisi. Donec
-				quis ligula sit amet nibh aliquet ultricies. Nulla facilisi.
-				Sed non magna id magna ornare aliquet. Sed sit amet ipsum
-				mauris. Nullam euismod, nisl eget ultricies aliquam, neque diam
-				aliquet nisi, nec tincidunt elit urna nec quam. (p)
+				Aliquam erat volutpat. Nulla facilisi. Nulla facilisi. Donec quis
+				ligula sit amet nibh aliquet ultricies. Nulla facilisi. Sed non
+				magna id magna ornare aliquet. Sed sit amet ipsum mauris. Nullam
+				euismod, nisl eget ultricies aliquam, neque diam aliquet nisi, nec
+				tincidunt elit urna nec quam. (p)
 			</Text>
 
 			<Text as="p" {...args}>
-				This is a <Text as="a" href="https://nuttyver.se">link
-					(a)</Text> inside of a paragraph. (p)
+				This is a{" "}
+				<Text as="a" href="https://nuttyver.se">
+					link (a)
+				</Text>{" "}
+				inside of a paragraph. (p)
 			</Text>
 
 			<Text as="span" {...args}>
