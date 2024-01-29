@@ -11,8 +11,8 @@
 		"test-format": "prettier --check \"**/*.{js,jsx,ts,tsx}\""
 	},
 	"dependencies": {
-		"astro": "^2.8.0",
-		"@nuttyverse/blocks": "workspace:*"
+		"@nuttyverse/blocks": "workspace:*",
+		"astro": "^4.2.6"
 	},
 	"devDependencies": {
 		"prettier": "^3.2.4"
