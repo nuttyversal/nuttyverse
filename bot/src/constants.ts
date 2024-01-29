@@ -5,6 +5,7 @@ export const PUBSUB_CHANNELS = {
 };
 
 export const channelIdByName = {
+	devlog: '1188603230800838786',
 	linkshell: '1186832865661550665',
 	botTesting: '1198853726153232409',
 };

@@ -68,10 +68,10 @@ async function setupDiscordClient(redisClient: Awaited<ReturnType<typeof setupRe
 	await client.login(process.env.DISCORD_BOT_TOKEN);
 
 	// Send a message to #bot-testing to confirm that the bot is running.
-	const channel = await client.channels.fetch(channelIdByName.botTesting) as TextChannel;
+	const channel = await client.channels.fetch(channelIdByName.botTesting) as TextChannel | null;
 	channel?.send('I am alive!');
 
-	redisClient.subscribe(PUBSUB_CHANNELS.GIT_COMMIT, (message) => {
+	redisClient.subscribe(PUBSUB_CHANNELS.GIT_COMMIT, async (message) => {
 		const commit = JSON.parse(message) as RedisGitCommit;
 		const title = bold(commit.message);
 		const description = codeBlock(commit.description);
@@ -83,7 +83,8 @@ async function setupDiscordClient(redisClient: Awaited<ReturnType<typeof setupRe
 			commit.description ? description : null,
 		].filter(part => part !== null).join('\n');
 
-		channel?.send(formattedMessage);
+		const devlogChannel = await client.channels.fetch(channelIdByName.devlog) as TextChannel | null;
+		devlogChannel?.send(formattedMessage);
 	});
 }
 
