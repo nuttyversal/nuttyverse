@@ -89,8 +89,8 @@ async function setupDiscordClient(redisClient: Awaited<ReturnType<typeof setupRe
 }
 
 function setupWebServer(redisClient: Awaited<ReturnType<typeof setupRedisClient>>) {
+	const httpPort = Number(process.env.PORT) || 3000;
 	const app = express();
-
 	app.use(express.json());
 
 	app.get('/', (_, res) => {
@@ -141,8 +141,8 @@ function setupWebServer(redisClient: Awaited<ReturnType<typeof setupRedisClient>
 		res.send('Hello from Nutty Bot!');
 	});
 
-	app.listen(HTTP_PORT, () => {
-		console.log(`Nutty Bot is listening on port ${HTTP_PORT}...`);
+	app.listen(httpPort, () => {
+		console.log(`Nutty Bot is listening on port ${httpPort}...`);
 	});
 }
 

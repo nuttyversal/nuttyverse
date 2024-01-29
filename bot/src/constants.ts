@@ -1,5 +1,3 @@
-export const HTTP_PORT = 3000;
-
 export const PUBSUB_CHANNELS = {
 	GIT_COMMIT: 'git-commits',
 };
