@@ -7,7 +7,7 @@ import { HTTP_PORT, PUBSUB_CHANNELS, channelIdByName, userIdByName } from './con
 async function setupRedisClient() {
 	const client = redis.createClient({
 		socket: {
-			host: process.env.REDIS_HOST,
+			host: process.env.REDIS_HOST ?? 'localhost',
 			port: Number(process.env.REDIS_PORT) || 6379,
 		},
 	});
