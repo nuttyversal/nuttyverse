@@ -23,7 +23,7 @@ async function setupRedisClient() {
 	return client;
 }
 
-async function setupDiscordClient() {
+async function setupDiscordClient(redisClient: Awaited<ReturnType<typeof setupRedisClient>>) {
 	const client = new Client({
 		intents: [
 			GatewayIntentBits.Guilds,
@@ -71,13 +71,15 @@ async function setupDiscordClient() {
 	const channel = await client.channels.fetch(channelIdByName.botTesting) as TextChannel;
 	channel?.send('I am alive!');
 
-	// Preview test formatting.
-	const message = bold('Push test commit');
-	const description = codeBlock('A test description.\n\nfoo. bar. baz.');
-	const maskedLink = hideLinkEmbed('https://code.nuttyver.se/observable/nuttyverse/commit/9bf645541e8af6f1120a130f44c7c4e8a16cdf81');
-	const commitLink = hyperlink('9bf6455', maskedLink);
-	const formattedMessage = `✦ ${commitLink} · ${message}\n${description}`;
-	channel?.send(formattedMessage);
+	redisClient.subscribe(PUBSUB_CHANNELS.GIT_COMMIT, (message) => {
+		const commit = JSON.parse(message) as RedisGitCommit;
+		const title = bold(commit.message);
+		const description = codeBlock(commit.description);
+		const maskedLink = hideLinkEmbed(commit.commitUrl);
+		const commitLink = hyperlink(commit.shortHash, maskedLink);
+		const formattedMessage = `✦ ${commitLink} · ${title}\n${description}`;
+		channel?.send(formattedMessage);
+	});
 }
 
 function setupWebServer(redisClient: Awaited<ReturnType<typeof setupRedisClient>>) {
@@ -142,7 +144,7 @@ dotenv.config();
 
 (async () => {
 	const redisClient = await setupRedisClient();
-	await setupDiscordClient();
+	await setupDiscordClient(redisClient);
 	setupWebServer(redisClient);
 })();
 
