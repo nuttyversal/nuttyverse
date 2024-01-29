@@ -143,9 +143,10 @@ function setupWebServer(redisClient: Awaited<ReturnType<typeof setupRedisClient>
 dotenv.config();
 
 (async () => {
-	const redisClient = await setupRedisClient();
-	await setupDiscordClient(redisClient);
-	setupWebServer(redisClient);
+	const redisSubscriberClient = await setupRedisClient();
+	const redisPublisherClient = await setupRedisClient();
+	await setupDiscordClient(redisSubscriberClient);
+	setupWebServer(redisPublisherClient);
 })();
 
 process.on('SIGTERM', () => {
