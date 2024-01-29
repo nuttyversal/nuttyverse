@@ -30,6 +30,7 @@ jobs:
         run: |
           cd blocks
           nix-shell --run "just install"
+          nix-shell --run "just test"
           nix-shell --run "just build"
       - name: Deploy
         if: steps.path-filter.outputs.src == 'true' && github.ref == 'refs/heads/main'
@@ -59,6 +60,12 @@ jobs:
         uses: ./.gitea/actions/prepare
         with:
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Test
+        if: steps.path-filter.outputs.src == 'true'
+        run: |
+          cd bot
+          nix-shell --run "just install"
+          nix-shell --run "just test"
       - name: Deploy
         if: steps.path-filter.outputs.src == 'true' && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
@@ -126,6 +133,7 @@ jobs:
         run: |
           cd city
           nix-shell --run "just install"
+          nix-shell --run "just test"
           nix-shell --run "just build"
       - name: Deploy
         if: steps.path-filter.outputs.src == 'true'

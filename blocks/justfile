@@ -3,5 +3,8 @@
 install:
 	pnpm install	
 	
+test:
+	pnpm run test-format
+
 build:
 	pnpm run build-storybook

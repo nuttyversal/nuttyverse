@@ -4,7 +4,8 @@
 	"main": "src/index.ts",
 	"scripts": {
 		"storybook": "storybook dev -p 6006",
-		"build-storybook": "storybook build"
+		"build-storybook": "storybook build",
+		"test-format": "prettier --check \"**/*.{js,jsx,ts,tsx}\""
 	},
 	"dependencies": {
 		"@vanilla-extract/css": "^1.14.0",

@@ -5,7 +5,7 @@
 	"main": "dist/index.js",
 	"scripts": {
 		"start": "tsc && node dist/index.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test-format": "prettier --check \"**/*.{js,jsx,ts,tsx}\""
 	},
 	"dependencies": {
 		"discord.js": "^14.14.1",
