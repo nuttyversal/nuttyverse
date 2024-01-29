@@ -6,6 +6,7 @@ export type GiteaWebhookCommit = {
 	id: string;
 	message: string;
 	url: string;
+	timestamp: string;
 };
 
 /**

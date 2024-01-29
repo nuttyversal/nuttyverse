@@ -138,11 +138,19 @@ function setupWebServer(
 	});
 
 	app.post("/webhooks/gitea", (req, res) => {
+		const commits: GiteaWebhookCommit[] = req.body.commits;
+
 		// Cache webhook request payload for debugging purposes.
 		cachedWebhookRequest = req.body;
 
+		// Sort the commits by timestamp in chronological order.
+		commits.sort((a, b) => {
+			const at = new Date(a.timestamp);
+			const bt = new Date(b.timestamp);
+			return at.getTime() - bt.getTime();
+		});
+
 		// Parse the commits from the webhook payload.
-		const commits: GiteaWebhookCommit[] = req.body.commits;
 		const parsedCommits: RedisGitCommit[] = commits.map(
 			(commit: GiteaWebhookCommit) => {
 				const [messageHead, ...messageTail] = commit.message.split("\n\n");
