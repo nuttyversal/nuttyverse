@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import redis from 'redis';
 import { HTTP_PORT, PUBSUB_CHANNELS, channelIdByName, userIdByName } from './constants.js';
+import { GiteaWebhookCommit, RedisGitCommit } from './models.js';
 
 async function setupRedisClient() {
 	const client = redis.createClient({
@@ -90,51 +91,43 @@ function setupWebServer(redisClient: Awaited<ReturnType<typeof setupRedisClient>
 
 	// [DEBUG] Cache the most recent webhook call, and return it from
 	// the debug endpoint to enable inspection of the JSON body.
-	let cachedResponse: object | undefined = undefined;
-	const cachedCommits: string[] = [];
+	let cachedWebhookRequest: object | undefined = undefined;
+	const cachedRedisMessages: RedisGitCommit[] = [];
 
 	app.get('/webhooks/gitea/debug', (_, res) => {
-		if (cachedResponse) {
+		if (cachedWebhookRequest) {
 			res.json({
-				cachedResponse,
-				cachedCommits,
+				cachedWebhookRequest,
+				cachedRedisMessages,
 			});
 		} else {
 			res.json({
 				cachedResponse: null,
-				cachedCommits,
+				cachedRedisMessages,
 			});
 		}
 	});
 
 	app.post('/webhooks/gitea', (req, res) => {
-		// Cache response for debugging purposes.
-		cachedResponse = req.body;
+		// Cache webhook request payload for debugging purposes.
+		cachedWebhookRequest = req.body;
 
-		type Commit = {
-			id: string;
-			message: string;
-			url: string;
-		};
-
-		const commits = req.body.commits.map((commit: Commit) => {
+		// Parse the commits from the webhook payload.
+		const commits: GiteaWebhookCommit[] = req.body.commits;
+		const parsedCommits: RedisGitCommit[] = commits.map((commit: GiteaWebhookCommit) => {
 			const [messageHead, ...messageTail] = commit.message.split('\n\n');
-			const message = messageHead.trim();
-			const description = messageTail.join('\n\n').trim();
-			const shortHash = commit.id.slice(0, 7);
-
 			return {
 				commitUrl: commit.url,
-				message,
-				description,
-				shortHash,
+				message: messageHead.trim(),
+				description: messageTail.join('\n\n').trim(),
+				shortHash: commit.id.slice(0, 7),
 			};
 		});
 
-		for (const commit of commits) {
-			console.log(`${commit.shortHash} ${commit.message} (${commit.commitUrl})`);
+		// Publish messages to the Redis pub/sub channel.
+		for (const commit of parsedCommits) {
 			redisClient.publish(PUBSUB_CHANNELS.GIT_COMMIT, JSON.stringify(commit));
-			cachedCommits.push(commit);
+			cachedRedisMessages.push(commit);
 		}
 
 		res.send('Hello from Nutty Bot!');
