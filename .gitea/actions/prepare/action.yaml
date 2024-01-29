@@ -10,7 +10,6 @@ runs:
     - name: Install dependencies
       shell: bash
       run: |
-        echo "Hello from composite action!"
         apt update
         # ✦ cachix/install-nix-action
         apt install --yes curl sudo xz-utils
