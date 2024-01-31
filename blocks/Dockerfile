@@ -3,11 +3,10 @@ COPY . .
 WORKDIR /src
 
 # [NOTE] The Font Awesome NPM token is required to install the Font Awesome NPM
-# package. You will need to specify the token as a secret when building the
-# Docker image (--mount=type=secret,id=npm_token).
-RUN --mount=type=secret,id=npm_token,required \
+# package. You'll need to specify the token as a secret when building the image.
+RUN --mount=type=secret,id=FONT_AWESOME_NPM_TOKEN,required \
   echo "@fortawesome:registry=https://npm.fontawesome.com/" > ~/.npmrc && \
-  echo "//npm.fontawesome.com/:_authToken=$(cat /run/secrets/npm_token)" >> ~/.npmrc
+  echo "//npm.fontawesome.com/:_authToken=$(cat /run/secrets/FONT_AWESOME_NPM_TOKEN)" >> ~/.npmrc
 
 # Install dependencies.
 RUN npm install -g pnpm

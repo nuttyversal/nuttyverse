@@ -42,7 +42,7 @@ jobs:
           push: true
           tags: code.nuttyver.se/observable/blocks:latest
         secrets: |
-          npm_token=${{ secrets.FONT_AWESOME_NPM_TOKEN }}
+          "FONT_AWESOME_NPM_TOKEN=${{ secrets.FONT_AWESOME_NPM_TOKEN }}"
   bot-µ-service:
     runs-on: [self-hosted, nix]
     container:
