@@ -5,13 +5,16 @@ FROM node:alpine3.18 AS build
 # building the Docker image (--build-arg FONT_AWESOME_NPM_TOKEN=<...>).
 ARG FONT_AWESOME_NPM_TOKEN
 
-# Build Storybook static files.
+# Install dependencies.
 WORKDIR /src
 COPY . .
-RUN npm install && \
-	npm run build-storybook
+RUN npm install -g pnpm
+RUN pnpm install
 
-# Serve static files with NGINX.
+# Build Storybook.
+RUN pnpm build-storybook
+
+# Serve Storybook.
 FROM nginx:alpine3.18
 COPY --from=build /src/storybook-static /usr/share/nginx/html
 EXPOSE 80
