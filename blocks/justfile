@@ -8,3 +8,6 @@ test:
 
 build:
 	pnpm run build-storybook
+
+start:
+	pnpm storybook
