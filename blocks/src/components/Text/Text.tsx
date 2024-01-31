@@ -1,4 +1,3 @@
-import React from "react";
 import { TextVariants, text, withDropCap } from "./Text.css";
 
 const DEFAULT_OPSZ = 18;
