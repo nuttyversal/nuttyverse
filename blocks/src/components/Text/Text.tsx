@@ -3,7 +3,7 @@ import { TextVariants, text, withDropCap } from "./Text.css";
 
 const DEFAULT_OPSZ = 18;
 const DEFAULT_WDTH = 85;
-const DEFAULT_WEIGHT = 300;
+const DEFAULT_WEIGHT = 400;
 const DEFAULT_SIZE = "body";
 const DEFAULT_COMPONENT = "p";
 
