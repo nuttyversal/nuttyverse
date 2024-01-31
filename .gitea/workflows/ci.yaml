@@ -122,6 +122,7 @@ jobs:
         with:
           filters: |
             src:
+              - 'blocks/**'
               - 'city/**'
       - name: Prepare environment
         if: steps.path-filter.outputs.src == 'true'
