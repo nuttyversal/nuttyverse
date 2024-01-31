@@ -23,12 +23,12 @@ jobs:
             src:
               - 'blocks/**'
       - name: Prepare environment
-        if: steps.path-filter.outputs.src == 'true'
+        if: steps.path-filter.outputs.src == 'true' || gitea.run_attempt > 1
         uses: ./.gitea/actions/prepare
         with:
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build
-        if: steps.path-filter.outputs.src == 'true'
+        if: steps.path-filter.outputs.src == 'true' || gitea.run_attempt > 1
         run: |
           cd blocks
           nix-shell --run "just install"
@@ -60,18 +60,18 @@ jobs:
             src:
               - 'bot/**'
       - name: Prepare environment
-        if: steps.path-filter.outputs.src == 'true'
+        if: steps.path-filter.outputs.src == 'true' || gitea.run_attempt > 1
         uses: ./.gitea/actions/prepare
         with:
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Test
-        if: steps.path-filter.outputs.src == 'true'
+        if: steps.path-filter.outputs.src == 'true' || gitea.run_attempt > 1
         run: |
           cd bot
           nix-shell --run "just install"
           nix-shell --run "just test"
       - name: Deploy
-        if: steps.path-filter.outputs.src == 'true' && github.ref == 'refs/heads/main'
+        if: (steps.path-filter.outputs.src == 'true' || gitea.run_attempt > 1) && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
           context: bot
@@ -94,18 +94,18 @@ jobs:
             src:
               - 'fonts/**'
       - name: Prepare environment
-        if: steps.path-filter.outputs.src == 'true'
+        if: steps.path-filter.outputs.src == 'true' || gitea.run_attempt > 1
         uses: ./.gitea/actions/prepare
         with:
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Test and build
-        if: steps.path-filter.outputs.src == 'true'
+        if: steps.path-filter.outputs.src == 'true' || gitea.run_attempt > 1
         run: |
           cd fonts
           nix-shell --run "just test"
           nix-shell --run "just build"
       - name: Deploy
-        if: steps.path-filter.outputs.src == 'true' && github.ref == 'refs/heads/main'
+        if: (steps.path-filter.outputs.src == 'true' || gitea.run_attempt > 1) && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
           context: fonts
@@ -129,19 +129,19 @@ jobs:
               - 'blocks/**'
               - 'city/**'
       - name: Prepare environment
-        if: steps.path-filter.outputs.src == 'true'
+        if: steps.path-filter.outputs.src == 'true' || gitea.run_attempt > 1
         uses: ./.gitea/actions/prepare
         with:
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build
-        if: steps.path-filter.outputs.src == 'true'
+        if: steps.path-filter.outputs.src == 'true' || gitea.run_attempt > 1
         run: |
           cd city
           nix-shell --run "just install"
           nix-shell --run "just test"
           nix-shell --run "just build"
       - name: Deploy
-        if: steps.path-filter.outputs.src == 'true'
+        if: steps.path-filter.outputs.src == 'true' || gitea.run_attempt > 1
         uses: bcomnes/deploy-to-neocities@v1
         with:
           api_token: ${{ secrets.NEOCITIES_TOKEN }}
