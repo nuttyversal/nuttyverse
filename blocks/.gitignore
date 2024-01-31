@@ -4,6 +4,9 @@ node_modules/
 # build output
 storybook-static/
 
+# environment
+.env
+
 # logs
 npm-debug.log*
 yarn-debug.log*

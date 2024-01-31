@@ -32,6 +32,8 @@ jobs:
           nix-shell --run "just install"
           nix-shell --run "just test"
           nix-shell --run "just build"
+        environment:
+          FONT_AWESOME_NPM_TOKEN: ${{ secrets.FONT_AWESOME_NPM_TOKEN }}
       - name: Deploy
         if: steps.path-filter.outputs.src == 'true' && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
@@ -39,6 +41,8 @@ jobs:
           context: blocks
           push: true
           tags: code.nuttyver.se/observable/blocks:latest
+        build-args: |
+          FONT_AWESOME_NPM_TOKEN=${{ secrets.FONT_AWESOME_NPM_TOKEN }}
   bot-µ-service:
     runs-on: [self-hosted, nix]
     container:
