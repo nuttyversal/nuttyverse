@@ -47,6 +47,9 @@ export const Text = <Component extends React.ElementType>(
 		}
 	}
 
+	// Consistent rem-based margin.
+	const margin = "1.2rem 0";
+
 	const fontOpsz = opsz ?? DEFAULT_OPSZ;
 	const fontWdth = wdth ?? DEFAULT_WDTH;
 	const fontVariationSettings = `"opsz" ${fontOpsz}, "wdth" ${fontWdth}`;
@@ -69,6 +72,7 @@ export const Text = <Component extends React.ElementType>(
 		<Component
 			{...polymorphicProps}
 			style={{
+				margin,
 				fontVariationSettings,
 				fontWeight,
 				transition,
