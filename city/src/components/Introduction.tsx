@@ -1,14 +1,20 @@
 import { Text } from "@nuttyverse/blocks";
 
 export const Introduction = () => {
+	const ahoy = (
+		<Text as="span" opsz={8} wdth={120} weight={600}>
+			Ahoy there, fellow navigator!
+		</Text>
+	);
+
 	const physical = (
-		<Text as="span" wdth={115} weight={350} style={{ color: "#3E8857" }}>
+		<Text as="span" wdth={120} weight={500} style={{ color: "#3E8857" }}>
 			physical
 		</Text>
 	);
 
 	const digital = (
-		<Text as="span" wdth={115} weight={350} style={{ color: "#7F7CED" }}>
+		<Text as="span" wdth={120} weight={500} style={{ color: "#7F7CED" }}>
 			digital
 		</Text>
 	);
@@ -16,9 +22,9 @@ export const Introduction = () => {
 	return (
 		<section style={{ marginBottom: "1.5em" }}>
 			<Text dropCap>
-				Ahoy there, fellow navigator! Welcome to my internet expanse. You
-				might notice a seeming emptiness, but do not fret. You've simply
-				arrived early enough to witness the expansion of this universe.
+				{ahoy} Welcome to my internet expanse. You might notice a seeming
+				emptiness, but do not fret. You've simply arrived early enough to
+				witness the expansion of this universe.
 			</Text>
 
 			<Text>
