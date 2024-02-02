@@ -1,3 +1,4 @@
+import { Button } from "./Button/Button";
 import { Text } from "./Text/Text";
 
 export const Test = () => {
@@ -26,6 +27,10 @@ export const Test = () => {
 				website will similarly unfold from this point. Emerging from this
 				singularity will bloom a new {digital} universe.
 			</Text>
+
+			<Button onClick={() => alert("Hello, world!")} sparkle>
+				Explore my inner world
+			</Button>
 		</section>
 	);
 };
