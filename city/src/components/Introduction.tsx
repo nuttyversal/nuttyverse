@@ -14,7 +14,7 @@ export const Introduction = () => {
 	);
 
 	return (
-		<section style={{ width: "425px" }}>
+		<section style={{ marginBottom: "1.5em" }}>
 			<Text dropCap>
 				Ahoy there, fellow navigator! Welcome to my internet expanse. You
 				might notice a seeming emptiness, but do not fret. You've simply

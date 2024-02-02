@@ -1,21 +1,22 @@
 ---
 import { Introduction } from "../components/Introduction.tsx";
+import { Button, Text } from "@nuttyverse/blocks";
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="stylesheet" href="./styles.css" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Nuttyverse</title>
-	</head>
-	<body>
-		<main>
-			<h1>Nuttyverse</h1>
-			<Introduction />
-			<div>~ nuttyversal ~</div>
-		</main>
-	</body>
+   <head>
+      <meta charset="utf-8" />
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      <link rel="stylesheet" href="./styles.css" />
+      <meta name="viewport" content="width=device-width" />
+      <meta name="generator" content={Astro.generator} />
+      <title>Nuttyverse</title>
+   </head>
+   <body>
+      <main>
+         <Text as="h1" weight={700}>Nuttyverse</Text>
+         <Introduction />
+         <Button disabled sparkle>Explore my inner world</Button>
+      </main>
+   </body>
 </html>
