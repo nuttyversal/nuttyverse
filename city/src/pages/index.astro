@@ -1,6 +1,7 @@
 ---
+import { ExploreInnerWorld } from "../components/ExploreBanner.tsx";
 import { Introduction } from "../components/Introduction.tsx";
-import { Button, Text } from "@nuttyverse/blocks";
+import { Text } from "@nuttyverse/blocks";
 ---
 
 <html lang="en">
@@ -16,7 +17,7 @@ import { Button, Text } from "@nuttyverse/blocks";
       <main>
          <Text as="h1" weight={700}>Nuttyverse</Text>
          <Introduction />
-         <Button disabled sparkle>Explore my inner world</Button>
+         <ExploreInnerWorld client:load />
       </main>
    </body>
 </html>
