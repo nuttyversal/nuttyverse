@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { base } from "./Button.css";
+import { banner, base, container } from "./Button.css";
 
 type ButtonProps = {
 	children: React.ReactNode;
-	sparkle?: boolean;
+	banner?: ButtonBannerProps;
+	sparkle?: boolean | any;
 } & React.ComponentPropsWithoutRef<"button">;
 
 export const Button = (props: ButtonProps) => {
@@ -13,15 +14,42 @@ export const Button = (props: ButtonProps) => {
 	const classNames = [base].join(" ");
 
 	return (
-		<button
-			onMouseEnter={() => setIsHovered(true)}
-			onMouseLeave={() => setIsHovered(false)}
-			className={classNames}
-			{...buttonProps}
-		>
-			{isHovered ? "✧ " : "✦ "}
-			{children}
-			{isHovered ? " ✧" : " ✦"}
-		</button>
+		<div className={container}>
+			<button
+				onMouseEnter={() => setIsHovered(true)}
+				onMouseLeave={() => setIsHovered(false)}
+				className={classNames}
+				{...buttonProps}
+			>
+				{isHovered ? "✧ " : "✦ "}
+				{children}
+				{isHovered ? " ✧" : " ✦"}
+			</button>
+
+			{props.banner && (
+				<ButtonBanner {...props.banner} isHovered={isHovered} />
+			)}
+		</div>
 	);
+};
+
+type ButtonBannerProps = {
+	children: React.ReactNode;
+	background?: string;
+};
+
+type ButtonBannerInternalProps = {
+	isHovered: boolean;
+};
+
+export const ButtonBanner = (
+	props: ButtonBannerProps & ButtonBannerInternalProps,
+) => {
+	const bannerState = props.isHovered
+		? ("hovered" as const)
+		: ("notHovered" as const);
+
+	const className = banner({ state: bannerState });
+
+	return <div className={className}>{props.children}</div>;
 };

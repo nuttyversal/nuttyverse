@@ -27,5 +27,8 @@ type Story = StoryObj<typeof Button>;
 export const Component: Story = {
 	args: {
 		children: "Hello, world!",
+		banner: {
+			children: "Goodbye, world!",
+		},
 	},
 };
