@@ -2,7 +2,7 @@ import { Text } from "@nuttyverse/blocks";
 
 export const Introduction = () => {
 	const ahoy = (
-		<Text as="span" opsz={8} wdth={120} weight={600}>
+		<Text as="span" opsz={8} wdth={120} weight={500}>
 			Ahoy there, fellow navigator!
 		</Text>
 	);
