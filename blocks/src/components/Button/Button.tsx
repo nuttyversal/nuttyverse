@@ -12,20 +12,6 @@ export const Button = (props: ButtonProps) => {
 	const { children, ...buttonProps } = props;
 	const classNames = [base].join(" ");
 
-	if (props.sparkle) {
-		const star = isHovered ? "✧" : "✦";
-		return (
-			<button
-				onMouseEnter={() => setIsHovered(true)}
-				onMouseLeave={() => setIsHovered(false)}
-				className={classNames}
-				{...buttonProps}
-			>
-				{star} {children} {star}
-			</button>
-		);
-	}
-
 	return (
 		<button
 			onMouseEnter={() => setIsHovered(true)}
@@ -33,7 +19,9 @@ export const Button = (props: ButtonProps) => {
 			className={classNames}
 			{...buttonProps}
 		>
+			{isHovered ? "✧ " : "✦ "}
 			{children}
+			{isHovered ? " ✧" : " ✦"}
 		</button>
 	);
 };
