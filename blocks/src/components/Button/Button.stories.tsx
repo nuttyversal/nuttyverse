@@ -28,7 +28,11 @@ export const Component: Story = {
 	args: {
 		children: "Hello, world!",
 		banner: {
-			children: "Goodbye, world!",
+			children: (
+				<div style={{ padding: "0 1em" }}>
+					Woah! Look, it's a button banner!
+				</div>
+			),
 		},
 	},
 };
