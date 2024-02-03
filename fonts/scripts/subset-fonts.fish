@@ -7,6 +7,7 @@ set fsd_emoji_dir_path "../unobservable/fonts/FSD Emoji1.0W"
 
 set basic_latin "U+0020-007E"
 set emoticons "U+1F600-1F64F"
+set warning_sign "U+26A0"
 
 if not test -d horcruxes
 	mkdir horcruxes
@@ -28,7 +29,7 @@ pyftsubset \
 	--flavor=woff2 \
 	--with-zopfli \
 	--layout-features="calt" \
-	--unicodes="$basic_latin"
+	--unicodes="$basic_latin, $warning_sign"
 
 echo "Creating metasyntactical horcrux: pragmatapro-liga-bold-foo.woff2"
 pyftsubset \
