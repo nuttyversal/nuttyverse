@@ -18,7 +18,7 @@ pyftsubset \
 	--output-file=horcruxes/nure-foo.woff2 \
 	--flavor=woff2 \
 	--with-zopfli \
-	--layout-features="" \
+	--layout-features="calt,kern" \
 	--unicodes="$basic_latin"
 
 echo "Creating metasyntactical horcrux: pragmatapro-foo.woff2"
@@ -27,7 +27,7 @@ pyftsubset \
 	--output-file=horcruxes/pragmatapro-liga-regular-foo.woff2 \
 	--flavor=woff2 \
 	--with-zopfli \
-	--layout-features="" \
+	--layout-features="calt" \
 	--unicodes="$basic_latin"
 
 echo "Creating metasyntactical horcrux: pragmatapro-liga-bold-foo.woff2"
@@ -36,7 +36,7 @@ pyftsubset \
 	--output-file=horcruxes/pragmatapro-liga-bold-foo.woff2 \
 	--flavor=woff2 \
 	--with-zopfli \
-	--layout-features="" \
+	--layout-features="calt" \
 	--unicodes="$basic_latin"
 
 echo "Creating metasyntactical horcrux: pragmatapro-liga-italic-foo.woff2"
@@ -45,7 +45,7 @@ pyftsubset \
 	--output-file=horcruxes/pragmatapro-liga-italic-foo.woff2 \
 	--flavor=woff2 \
 	--with-zopfli \
-	--layout-features="" \
+	--layout-features="calt" \
 	--unicodes="$basic_latin"
 
 echo "Creating metasyntactical horcrux: pragmatapro-liga-bold-italic-foo.woff2"
@@ -54,7 +54,7 @@ pyftsubset \
 	--output-file=horcruxes/pragmatapro-liga-bold-italic-foo.woff2 \
 	--flavor=woff2 \
 	--with-zopfli \
-	--layout-features="" \
+	--layout-features="calt" \
 	--unicodes="$basic_latin"
 
 echo "Creating metasyntactical horcrux: pragmatapro-regular-foo.woff2"
