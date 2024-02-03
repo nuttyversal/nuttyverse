@@ -6,6 +6,7 @@ set pragmata_fraktur_dir_path "../unobservable/fonts/PragmataProFraktur1.2W"
 set fsd_emoji_dir_path "../unobservable/fonts/FSD Emoji1.0W"
 
 set basic_latin "U+0020-007E"
+set emoticons "U+1F600-1F64F"
 
 if not test -d horcruxes
 	mkdir horcruxes
@@ -81,4 +82,4 @@ pyftsubset \
 	--flavor=woff2 \
 	--with-zopfli \
 	--layout-features="" \
-	--unicodes=""
+	--unicodes="$emoticons"
