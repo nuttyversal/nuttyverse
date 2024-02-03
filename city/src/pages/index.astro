@@ -1,7 +1,7 @@
 ---
-import { ExploreInnerWorld } from "../components/ExploreBanner.tsx";
+import { ExploreInnerWorld } from "../components/ExploreInnerWorld.tsx";
+import { Header } from "../components/Header.tsx";
 import { Introduction } from "../components/Introduction.tsx";
-import { Text } from "@nuttyverse/blocks";
 ---
 
 <html lang="en">
@@ -15,7 +15,7 @@ import { Text } from "@nuttyverse/blocks";
    </head>
    <body>
       <main>
-         <Text as="h1" wdth={100} weight={300}>Nuttyverse ✦</Text>
+         <Header />
          <Introduction />
          <ExploreInnerWorld client:load />
       </main>
