@@ -26,7 +26,7 @@ type Story = StoryObj<typeof Button>;
 
 export const Component: Story = {
 	args: {
-		children: "This button triggered a CI/CD pipeline! 🚀",
+		children: "This button triggered a Gitea job! 🚀",
 		banner: {
 			children: (
 				<div style={{ padding: "0 1em" }}>
