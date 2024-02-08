@@ -38,7 +38,7 @@ jobs:
         if: steps.path-filter.outputs.src == 'true' && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
-          context: blocks
+          dockerfile: blocks/Dockerfile
           push: true
           tags: code.nuttyver.se/observable/blocks:latest
           secrets: |
