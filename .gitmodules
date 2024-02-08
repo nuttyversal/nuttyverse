@@ -1,0 +1,3 @@
+[submodule "unobservable"]
+	path = unobservable
+	url = https://code.nuttyver.se/unobservable/nuttyverse.git
