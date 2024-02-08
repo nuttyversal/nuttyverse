@@ -10,7 +10,22 @@ export const Header = () => {
 					alignItems: "end",
 				}}
 			>
-				<Text as="h1" style={{ margin: 0 }} wdth={90} weight={700}>
+				<Text
+					as="h1"
+					style={{
+						margin: 0,
+						textTransform: "lowercase",
+						letterSpacing: "0.1em",
+						lineHeight: "1.2em",
+						color: "transparent",
+						background: "linear-gradient(180deg, #000 0%, #760063 100%)",
+						backgroundClip: "text",
+						WebkitBackgroundClip: "text",
+						WebkitTextFillColor: "transparent",
+					}}
+					wdth={50}
+					weight={700}
+				>
 					Nuttyverse
 				</Text>
 
