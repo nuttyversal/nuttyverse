@@ -16,6 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          ssh-key: ${{ secrets.UNOBSERVABLE_DEPLOY_KEY }}
           submodules: recursive
       - name: Setup path filter
         id: path-filter
@@ -40,6 +41,8 @@ jobs:
         if: steps.path-filter.outputs.src == 'true' && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
+          ssh:
+            - ${{ secrets.UNOBSERVABLE_DEPLOY_KEY }}
           dockerfile: blocks/Dockerfile
           push: true
           tags: code.nuttyver.se/observable/blocks:latest
