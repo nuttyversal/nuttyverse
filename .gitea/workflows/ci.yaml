@@ -13,6 +13,12 @@ jobs:
     steps:
       - name: Install dependencies
         run: apt update && apt install --yes git nodejs
+      - name: Setup SSH
+        run: |
+          # Disable strict host key checking so that we can clone the
+          # Unobservable Nuttyverse repository as a git submodule.
+          mkdir -p ~/.ssh
+          echo "code.nuttyver.se $(ssh-keyscan -t ed25519 code.nuttyver.se)" >> ~/.ssh/known_hosts
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
