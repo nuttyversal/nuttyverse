@@ -42,7 +42,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           ssh:
-            - ${{ secrets.UNOBSERVABLE_DEPLOY_KEY }}
+            - |
+              ${{ secrets.UNOBSERVABLE_DEPLOY_KEY }}
           dockerfile: blocks/Dockerfile
           push: true
           tags: code.nuttyver.se/observable/blocks:latest
