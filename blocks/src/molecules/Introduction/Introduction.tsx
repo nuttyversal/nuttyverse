@@ -2,19 +2,19 @@ import { Text } from "../../atoms/Text/Text";
 
 export const Introduction = () => {
 	const ahoy = (
-		<Text as="span" wdth={120} weight={500}>
+		<Text as="span" wdth={120} weight={600}>
 			Ahoy there, fellow navigator!
 		</Text>
 	);
 
 	const physical = (
-		<Text as="span" wdth={120} weight={500} style={{ color: "#3E8857" }}>
+		<Text as="span" wdth={120} weight={600} style={{ color: "#3E8857" }}>
 			physical
 		</Text>
 	);
 
 	const digital = (
-		<Text as="span" wdth={120} weight={500} style={{ color: "#7F7CED" }}>
+		<Text as="span" wdth={120} weight={600} style={{ color: "#7F7CED" }}>
 			digital
 		</Text>
 	);
