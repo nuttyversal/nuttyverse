@@ -1,4 +1,4 @@
-import { style } from "@vanilla-extract/css";
+import { keyframes, style } from "@vanilla-extract/css";
 
 export const container = style({
 	display: "flex",
@@ -6,8 +6,36 @@ export const container = style({
 	alignItems: "end",
 });
 
+export const floatKeyFrames = keyframes({
+	"0%": {
+		transform: "translateY(0px)",
+	},
+	"30%": {
+		opacity: 0.8,
+	},
+	"50%": {
+		transform: "translateY(-4px)",
+		opacity: 1,
+	},
+	"70%": {
+		opacity: 0.8,
+	},
+	"100%": {
+		transform: "translateY(0px)",
+	},
+});
+
+export const float = style({
+	animationName: floatKeyFrames,
+	animationDuration: "3s",
+	animationTimingFunction: "ease-in-out",
+	animationIterationCount: "infinite",
+});
+
 export const header = style({
+	display: "inline-block",
 	margin: "0 !important",
+	marginBottom: "8px !important",
 	textTransform: "lowercase",
 	letterSpacing: "0.1em",
 	lineHeight: "1.2em",
