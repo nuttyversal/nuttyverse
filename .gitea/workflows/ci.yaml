@@ -46,8 +46,10 @@ jobs:
         if: steps.path-filter.outputs.src == 'true' && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
+          # Pass the SSH agent socket through to the build command.
+          # SSH_AUTH_SOCK is exported by webfactory/ssh-agent.
           ssh: |
-            ${{ secrets.UNOBSERVABLE_DEPLOY_KEY }}
+            default=${{ env.SSH_AUTH_SOCK }}
           dockerfile: blocks/Dockerfile
           push: true
           tags: code.nuttyver.se/observable/blocks:latest
