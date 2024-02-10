@@ -35,7 +35,7 @@ export const float = style({
 export const header = style({
 	display: "inline-block",
 	margin: "0 !important",
-	marginBottom: "8px !important",
+	marginBottom: "4px !important",
 	textTransform: "lowercase",
 	letterSpacing: "0.1em",
 	lineHeight: "1.2em",
