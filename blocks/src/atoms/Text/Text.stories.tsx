@@ -4,6 +4,7 @@ import { Text } from "./Text";
 import { text } from "./Text.css";
 
 const meta: Meta<typeof Text> = {
+	title: "atoms/Text",
 	component: Text,
 	argTypes: {
 		children: {

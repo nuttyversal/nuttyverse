@@ -1,5 +1,5 @@
-import { Button } from "./Button/Button";
-import { Text } from "./Text/Text";
+import { Button } from "../atoms/Button/Button";
+import { Text } from "../atoms/Text/Text";
 
 export const Test = () => {
 	const physical = (
