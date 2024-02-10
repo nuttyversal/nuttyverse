@@ -8,6 +8,6 @@ const meta: Meta<typeof Introduction> = {
 
 export default meta;
 
-type Story = StoryObj<typeof Text>;
+type Story = StoryObj<typeof Introduction>;
 
 export const Component: Story = {};
