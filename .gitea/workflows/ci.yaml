@@ -19,6 +19,9 @@ jobs:
           ssh-private-key: ${{ secrets.UNOBSERVABLE_DEPLOY_KEY }}
       - name: Checkout observable repository
         uses: actions/checkout@v4
+        with:
+          ssh-known-hosts: |
+            code.nuttyver.se ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIERj1usJbWGs4w5mB3xetwWRiagZjYPc71PSg8gfjg7i
       - name: Checkout unobservable submodule
         run: git submodule update --init --recursive
       - name: Setup path filter
