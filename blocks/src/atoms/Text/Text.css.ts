@@ -64,6 +64,9 @@ globalStyle("*", {
 	fontFamily: "Nure",
 	fontVariationSettings: `"opsz" 18, "wdth" 85`,
 	lineHeight: 1.5,
+	textRendering: "optimizeLegibility",
+	fontFeatureSettings: `'kern' 1`,
+	hyphens: "auto",
 });
 
 export const withDropCap = style({
