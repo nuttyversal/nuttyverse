@@ -1,4 +1,5 @@
 type Props = {
+	className?: string;
 	style?: React.CSSProperties;
 };
 
@@ -8,6 +9,7 @@ export const Chibi = (props: Props) => {
 			xmlns="http://www.w3.org/2000/svg"
 			version="1.1"
 			viewBox="0 0 1024 958"
+			className={props.className}
 			style={{
 				shapeRendering: "geometricPrecision",
 				textRendering: "geometricPrecision",
