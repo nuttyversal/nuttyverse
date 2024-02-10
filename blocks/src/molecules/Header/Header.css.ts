@@ -53,9 +53,8 @@ export const chibi = style({
 });
 
 export const divider = style({
-	height: "3px",
+	height: "2px",
 	width: "calc(100% + 32px)",
 	marginLeft: "-16px",
 	background: "black",
-	marginBottom: "1.5em",
 });

@@ -1,3 +1,4 @@
+import { Marquee } from "../../atoms/Marquee/Marquee";
 import { Chibi } from "../../atoms/Chibi/Chibi";
 import { Text } from "../../atoms/Text/Text";
 import { text } from "../../atoms/Text/Text.css";
@@ -16,6 +17,20 @@ export const Header = () => {
 		</Text>
 	));
 
+	const messageOfTheDay = (
+		<Marquee>
+			<Text
+				style={{
+					lineHeight: "0",
+					margin: "1em",
+					fontFamily: "PragmataPro Fraktur",
+				}}
+			>
+				Happy Lunar New Year (2024)! 🏮
+			</Text>
+		</Marquee>
+	);
+
 	return (
 		<div>
 			<div className={container}>
@@ -23,6 +38,8 @@ export const Header = () => {
 				<Chibi className={chibi} />
 			</div>
 
+			<div className={divider} />
+			{messageOfTheDay}
 			<div className={divider} />
 		</div>
 	);
