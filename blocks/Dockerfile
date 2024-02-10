@@ -12,7 +12,6 @@ RUN --mount=type=secret,id=FONT_AWESOME_NPM_TOKEN,required \
   echo "//npm.fontawesome.com/:_authToken=$(cat /run/secrets/FONT_AWESOME_NPM_TOKEN)" >> .npmrc
 
 # Install dependencies.
-RUN ls -la
 RUN npm install
 
 # Build Storybook.
