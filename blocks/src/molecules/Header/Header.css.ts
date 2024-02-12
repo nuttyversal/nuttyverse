@@ -47,7 +47,7 @@ export const header = style({
 });
 
 export const chibi = style({
-	width: "140px",
+	width: "125px",
 	marginBottom: "-1px",
 	zIndex: -1,
 });
