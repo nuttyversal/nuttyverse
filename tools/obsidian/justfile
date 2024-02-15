@@ -1,0 +1,10 @@
+#!/usr/bin/env -S just --justfile
+
+install:
+	ln -s `pwd` ../../unobservable/book/.obsidian/themes/Nutty
+
+build:
+	pnpm build
+
+watch:
+	pnpm watch
