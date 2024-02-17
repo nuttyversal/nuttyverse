@@ -10,4 +10,5 @@ RUN ./scripts/subset-fonts.fish
 FROM alpine:3.18
 COPY --from=build /src/fonts/target/release/font-force-field /usr/local/bin/
 COPY --from=build /src/fonts/horcruxes /usr/local/share/fonts/
+ENV FONT_DIRECTORY /usr/local/share/fonts
 CMD ["font-force-field"]
