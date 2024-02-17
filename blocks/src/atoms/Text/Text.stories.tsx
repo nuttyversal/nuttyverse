@@ -51,7 +51,7 @@ type Story = StoryObj<typeof Text>;
 
 export const Component: Story = {
 	args: {
-		children: "Hello, world!",
+		children: "Hello, world! 😀",
 		size: "body",
 		opsz: 18,
 		wdth: 85,

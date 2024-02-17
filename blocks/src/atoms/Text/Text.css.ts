@@ -61,7 +61,7 @@ globalFontFace("FSD Emoji", {
 });
 
 globalStyle("*", {
-	fontFamily: "Nure",
+	fontFamily: "FSD Emoji, Nure",
 	fontVariationSettings: `"opsz" 18, "wdth" 85`,
 	lineHeight: 1.5,
 	textRendering: "optimizeLegibility",
