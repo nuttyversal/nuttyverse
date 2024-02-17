@@ -6,6 +6,17 @@ ul {
 	padding-top: var(--list-spacing);
 }
 
+:is(.cm-formatting-list-ul, ul > li) > .list-bullet {
+	align-items: flex-start;
+}
+
+:is(.cm-formatting-list-ul, ul > li) > .list-bullet::after {
+	--list-bullet-size: 1.5em;
+	--list-bullet-border: none;
+	content: "✦";
+	background-color: transparent;
+}
+
 ol {
 	list-style: none;
 	counter-reset: ordered-list;
