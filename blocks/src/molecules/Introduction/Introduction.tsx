@@ -30,7 +30,7 @@ export const Introduction = () => {
 			<Text>
 				Just as the {physical} universe materialized from the Big Bang, this
 				website will similarly unfold from this point. Emerging from this
-				singularity will bloom a new {digital} universe.
+				singularity will bloom a new {digital} universe! 😀
 			</Text>
 		</section>
 	);
