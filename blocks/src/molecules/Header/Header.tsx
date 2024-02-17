@@ -26,7 +26,7 @@ export const Header = () => {
 					fontFamily: "PragmataPro Fraktur",
 				}}
 			>
-				Happy Lunar New Year (2024)! 🏮
+				Hello there, welcome to the Nuttyverse!
 			</Text>
 		</Marquee>
 	);
