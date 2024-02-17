@@ -4,7 +4,7 @@ test:
 	cargo test
 
 build:
-	cargo build
+	cargo build --release
 
 subset:
 	./scripts/subset-fonts.fish

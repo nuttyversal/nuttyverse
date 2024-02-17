@@ -93,8 +93,16 @@ jobs:
     steps:
       - name: Install dependencies
         run: apt update && apt install --yes git nodejs
-      - name: Checkout repository
+      - name: Setup SSH private key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.UNOBSERVABLE_DEPLOY_KEY }}
+      - name: Setup SSH known hosts
+        run: ssh-keyscan -t ed25519 code.nuttyver.se >> ~/.ssh/known_hosts
+      - name: Checkout observable repository
         uses: actions/checkout@v4
+      - name: Checkout unobservable submodule
+        run: git submodule update --init --recursive
       - name: Setup path filter
         id: path-filter
         uses: dorny/paths-filter@v3
@@ -117,7 +125,8 @@ jobs:
         if: steps.path-filter.outputs.src == 'true' && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
-          context: fonts
+          context: .
+          file: fonts/Dockerfile
           push: true
           tags: code.nuttyver.se/observable/font-force-field:latest
   city-µ-service:

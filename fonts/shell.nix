@@ -4,6 +4,7 @@ in nixpkgs.stdenv.mkDerivation {
 
 	buildInputs = with nixpkgs; [
 		# Used for development
+		fish
 		just
 
 		# Used for server dependencies

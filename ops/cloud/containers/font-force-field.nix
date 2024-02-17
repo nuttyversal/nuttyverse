@@ -14,10 +14,6 @@
 					volumes = [
 						"/data/fonts:/fonts"
 					];
-
-					environment = {
-						FONT_DIRECTORY = "/fonts";
-					};
 				};
 			};
 		};
