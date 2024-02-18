@@ -4,6 +4,7 @@ import { Singularity } from "./Singularity";
 const meta: Meta<typeof Singularity> = {
 	title: "organisms/Singularity",
 	component: Singularity,
+	tags: ["autodocs"],
 };
 
 export default meta;
