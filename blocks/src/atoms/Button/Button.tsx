@@ -21,9 +21,9 @@ export const Button = (props: ButtonProps) => {
 				className={classNames}
 				{...buttonProps}
 			>
-				{isHovered ? "✧ " : "✦ "}
+				{props.sparkle && (isHovered ? "✧ " : "✦ ")}
 				{children}
-				{isHovered ? " ✧" : " ✦"}
+				{props.sparkle && (isHovered ? " ✧" : " ✦")}
 			</button>
 
 			{props.banner && (
