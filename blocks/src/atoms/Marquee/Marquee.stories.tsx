@@ -5,6 +5,7 @@ import { Marquee } from "./Marquee";
 const meta: Meta<typeof Marquee> = {
 	title: "atoms/Marquee",
 	component: Marquee,
+	tags: ["autodocs"],
 	args: {
 		children: (
 			<Text
@@ -12,7 +13,7 @@ const meta: Meta<typeof Marquee> = {
 					fontFamily: "PragmataPro Fraktur",
 				}}
 			>
-				🐉 Happy Lunar New Year! 🐉
+				Welcome to the Nuttyverse!
 			</Text>
 		),
 	},
