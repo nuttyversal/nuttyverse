@@ -6,6 +6,7 @@ import { text } from "./Text.css";
 const meta: Meta<typeof Text> = {
 	title: "atoms/Text",
 	component: Text,
+	tags: ["autodocs"],
 	argTypes: {
 		children: {
 			control: {
@@ -49,55 +50,68 @@ export default meta;
 
 type Story = StoryObj<typeof Text>;
 
-export const Component: Story = {
+export const WithDropCap: Story = {
 	args: {
-		children: "Hello, world! 😀",
-		size: "body",
-		opsz: 18,
-		wdth: 85,
-		weight: 400,
+		children:
+			"Welcome to my internet expanse. You might notice a seeming " +
+			"emptiness, but do not fret. You've simply arrived early enough to " +
+			"witness the expansion of this universe.",
+		dropCap: true,
 	},
 };
 
-export const PolymorphicExample: Story = {
-	render: (args) => (
-		<section>
-			<Text as="h1" {...args}>
-				Text as a polymorphic component (h1)
-			</Text>
+export const HeadingOne: Story = {
+	args: {
+		children: "Hello, world! 😀",
+		as: "h1",
+	},
+};
 
-			<Text as="h2" {...args}>
-				This is a subheading (h2)
-			</Text>
+export const HeadingTwo: Story = {
+	args: {
+		children: "Hello, world! 😀",
+		as: "h2",
+	},
+};
 
-			<Text as="p" {...args}>
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-				euismod, nisl eget ultricies aliquam, neque diam aliquet nisi, nec
-				tincidunt elit urna nec quam. Aliquam erat volutpat. Nulla facilisi.
-				Nulla facilisi. Donec quis ligula sit amet nibh aliquet ultricies.
-				Nulla facilisi. Sed non magna id magna ornare aliquet. Sed sit amet
-				ipsum mauris. (p)
-			</Text>
+export const HeadingThree: Story = {
+	args: {
+		children: "Hello, world! 😀",
+		as: "h3",
+	},
+};
 
-			<Text as="p" {...args}>
-				Aliquam erat volutpat. Nulla facilisi. Nulla facilisi. Donec quis
-				ligula sit amet nibh aliquet ultricies. Nulla facilisi. Sed non
-				magna id magna ornare aliquet. Sed sit amet ipsum mauris. Nullam
-				euismod, nisl eget ultricies aliquam, neque diam aliquet nisi, nec
-				tincidunt elit urna nec quam. (p)
-			</Text>
+export const HeadingFour: Story = {
+	args: {
+		children: "Hello, world! 😀",
+		as: "h4",
+	},
+};
 
-			<Text as="p" {...args}>
-				This is a{" "}
-				<Text as="a" href="https://nuttyver.se">
-					link (a)
-				</Text>{" "}
-				inside of a paragraph. (p)
-			</Text>
+export const HeadingFive: Story = {
+	args: {
+		children: "Hello, world! 😀",
+		as: "h5",
+	},
+};
 
-			<Text as="span" {...args}>
-				— Nuttyverse Blocks (span)
-			</Text>
-		</section>
-	),
+export const HeadingSix: Story = {
+	args: {
+		children: "Hello, world! 😀",
+		as: "h6",
+	},
+};
+
+export const Body: Story = {
+	args: {
+		children: "Hello, world! 😀",
+		size: "body",
+	},
+};
+
+export const Smol: Story = {
+	args: {
+		children: "Hello, world! 😀",
+		size: "smol",
+	},
 };
