@@ -4,6 +4,7 @@ import { Chibi } from "./Chibi";
 const meta: Meta<typeof Chibi> = {
 	title: "atoms/Chibi",
 	component: Chibi,
+	tags: ["autodocs"],
 };
 
 export default meta;
