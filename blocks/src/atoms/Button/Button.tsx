@@ -10,7 +10,7 @@ type ButtonProps = {
 export const Button = (props: ButtonProps) => {
 	const [isHovered, setIsHovered] = useState(false);
 
-	const { children, ...buttonProps } = props;
+	const { children, sparkle, ...buttonProps } = props;
 	const classNames = [base].join(" ");
 
 	return (
@@ -21,9 +21,9 @@ export const Button = (props: ButtonProps) => {
 				className={classNames}
 				{...buttonProps}
 			>
-				{props.sparkle && (isHovered ? "✧ " : "✦ ")}
+				{sparkle && (isHovered ? "✧ " : "✦ ")}
 				{children}
-				{props.sparkle && (isHovered ? " ✧" : " ✦")}
+				{sparkle && (isHovered ? " ✧" : " ✦")}
 			</button>
 
 			{props.banner && (
