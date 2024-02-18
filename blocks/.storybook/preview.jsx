@@ -9,6 +9,21 @@ const preview = {
 			},
 		},
 	},
+	decorators: [
+		(Story) => (
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "center",
+					width: "100%",
+				}}
+			>
+				<div style={{ width: "30em" }}>
+					<Story />
+				</div>
+			</div>
+		),
+	],
 };
 
 export default preview;
