@@ -79,7 +79,7 @@ export const withDropCap = style({
 			fontWeight: "bold",
 			lineHeight: "1em",
 			marginRight: 4,
-			marginTop: -1,
+			marginTop: 0,
 			color: "transparent",
 			background: "linear-gradient(180deg, #000 0%, #760063 100%)",
 			backgroundClip: "text",
