@@ -40,7 +40,7 @@ export const Introduction = () => {
 				<ListItem>
 					Follow me on{" "}
 					<Link href="https://neocities.org/site/nuttyverse" newTab>
-						Neocities{" "}
+						Neocities
 					</Link>{" "}
 					for updates!
 				</ListItem>
