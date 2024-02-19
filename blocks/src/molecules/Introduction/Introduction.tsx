@@ -1,3 +1,6 @@
+import { UnorderedList } from "../../atoms/List/UnorderedList";
+import { ListItem } from "../../atoms/List/ListItem";
+import { Link } from "../../atoms/Link/Link";
 import { Text } from "../../atoms/Text/Text";
 
 export const Introduction = () => {
@@ -32,6 +35,23 @@ export const Introduction = () => {
 				website will similarly unfold from this point. Emerging from this
 				singularity will bloom a new {digital} universe! 😀
 			</Text>
+
+			<UnorderedList>
+				<ListItem>
+					Follow me on{" "}
+					<Link href="https://neocities.org/site/nuttyverse" newTab>
+						Neocities{" "}
+					</Link>{" "}
+					for updates!
+				</ListItem>
+				<ListItem>
+					Feel free to take a 👀 at the{" "}
+					<Link href="https://github.com/nuttyversal/nuttyverse" newTab>
+						source code
+					</Link>
+					.
+				</ListItem>
+			</UnorderedList>
 		</section>
 	);
 };
