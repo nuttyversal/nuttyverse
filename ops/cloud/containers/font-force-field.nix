@@ -10,10 +10,6 @@
 					ports = [
 						"3668:3030"
 					];
-
-					volumes = [
-						"/data/fonts:/fonts"
-					];
 				};
 			};
 		};
