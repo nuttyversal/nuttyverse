@@ -13,7 +13,7 @@ body {
 	 * Font Force Field has a CORS policy that prevents access. */
 	font-family: 'Nure-foo', 'Nure', sans-serif;
 	font-variation-settings: 'opsz' 18, 'wdth' 85 !important;
-	font-weight: 300;
+	font-weight: 400;
 
 	text-rendering: optimizeLegibility;
 	font-feature-settings: 'kern' 1;
