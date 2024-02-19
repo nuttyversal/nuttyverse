@@ -19,7 +19,7 @@ pyftsubset \
 	--output-file=horcruxes/nure-foo.woff2 \
 	--flavor=woff2 \
 	--with-zopfli \
-	--layout-features="calt,kern,smcp" \
+	--layout-features="calt,kern,smcp,c2sc" \
 	--unicodes="$basic_latin"
 
 echo "Creating metasyntactical horcrux: pragmatapro-foo.woff2"
