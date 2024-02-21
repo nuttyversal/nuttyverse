@@ -1,25 +1,8 @@
-@font-face {
-	font-family: 'Nure-foo';
-	src: url('https://fonts.nuttyver.se/nure-foo.woff2') format('woff2');
-}
-
 * {
 	padding: 0;
 }
 
 body {
-	/* Reconstruct font faces from the set of metasyntactical horcruxes.
-	 * Fallback to the system font stack for local development since the
-	 * Font Force Field has a CORS policy that prevents access. */
-	font-family: 'Nure-foo', 'Nure', sans-serif;
-	font-variation-settings: 'opsz' 18, 'wdth' 85 !important;
-	font-weight: 400;
-
-	text-rendering: optimizeLegibility;
-	font-feature-settings: 'kern' 1;
-	hyphens: auto;
-	color: #333;
-
 	display: flex;
 	align-items: center;
 	line-height: 1.5em;
@@ -29,13 +12,13 @@ body {
 
 main {
 	margin: auto;
-	width: 30em;
+	width: 500px;
 	padding: 1em 2em;
 }
 
-h1 {
-	text-transform: lowercase;
-	letter-spacing: 0.1em;
-	font-weight: 400;
-	line-height: 1.2em;
+@media (max-width: 600px) {
+	main {
+		width: calc(100% - 2em);
+		padding: 0.5em 1em;
+	}
 }
