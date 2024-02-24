@@ -48,7 +48,6 @@ export const WithBanner: Story = {
 				<Text
 					size="smol"
 					style={{
-						color: "white",
 						padding: "0 1em",
 						fontFamily: "PragmataPro Liga, monospace",
 						margin: "0.3em",

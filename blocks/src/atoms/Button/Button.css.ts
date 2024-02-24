@@ -1,5 +1,20 @@
-import { style } from "@vanilla-extract/css";
+import { createTheme, createThemeContract, style } from "@vanilla-extract/css";
 import { RecipeVariants, recipe } from "@vanilla-extract/recipes";
+
+const vars = createThemeContract({
+	backgroundColor: null,
+	foregroundColor: null,
+});
+
+export const lightMode = createTheme(vars, {
+	backgroundColor: "black",
+	foregroundColor: "white",
+});
+
+export const darkMode = createTheme(vars, {
+	backgroundColor: "white",
+	foregroundColor: "black",
+});
 
 export const container = style({
 	display: "flex",
@@ -10,39 +25,41 @@ export const container = style({
 });
 
 export const base = style({
+	background: vars.backgroundColor,
+	color: vars.foregroundColor,
 	fontSize: "1rem",
 	fontWeight: "normal",
 	fontStyle: "normal",
 	textTransform: "lowercase",
 	letterSpacing: "2px",
-	border: "2px solid black",
+	borderColor: vars.backgroundColor,
+	borderWidth: "2px",
+	borderStyle: "solid",
 	borderRadius: "4px",
 	padding: "0.5rem 2rem",
 	cursor: "not-allowed",
 	transition: "all 0.2s ease-out",
-	color: "white",
-	background: "black",
 	width: "100%",
+	zIndex: 1,
 
 	":hover": {
-		color: "black",
-		background: "white",
+		color: vars.backgroundColor,
+		background: vars.foregroundColor,
 		letterSpacing: "2.4px",
 		fontVariationSettings: `"opsz" 18, "wdth" 95`,
 	},
 });
 
-export const banner = recipe({
+export const bannerVariants = recipe({
 	base: {
+		background: vars.backgroundColor,
+		color: vars.foregroundColor,
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
-		background: "black",
-		color: "white",
 		borderBottomLeftRadius: "16px",
 		borderBottomRightRadius: "16px",
 		transition: "all 0.2s ease-out",
-		zIndex: -1,
 	},
 	variants: {
 		state: {
@@ -58,4 +75,4 @@ export const banner = recipe({
 	},
 });
 
-export type BannerVariants = RecipeVariants<typeof banner>;
+export type BannerVariants = RecipeVariants<typeof bannerVariants>;
