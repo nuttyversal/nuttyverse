@@ -1,6 +1,7 @@
 import { globalFontFace, globalStyle, style } from "@vanilla-extract/css";
 import { RecipeVariants, recipe } from "@vanilla-extract/recipes";
 import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
+import { fontSize } from "../../styles/themes/constants";
 
 globalFontFace("Nure", {
 	src: [
@@ -91,17 +92,7 @@ export const withDropCap = style({
 
 const typographicProperties = defineProperties({
 	properties: {
-		// Minor third (6:5)
-		fontSize: {
-			smol: 13.33,
-			body: 16,
-			h6: 19.2,
-			h5: 23.04,
-			h4: 27.648,
-			h3: 33.1776,
-			h2: 39.81312,
-			h1: 47.775744,
-		},
+		fontSize,
 	},
 });
 
