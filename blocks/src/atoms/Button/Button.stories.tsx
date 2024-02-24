@@ -51,6 +51,7 @@ export const WithBanner: Story = {
 						padding: "0 1em",
 						fontFamily: "PragmataPro Liga, monospace",
 						margin: "0.3em",
+						color: "inherit",
 					}}
 				>
 					Still under construction!
