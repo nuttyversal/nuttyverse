@@ -11,10 +11,17 @@ ul {
 }
 
 :is(.cm-formatting-list-ul, ul > li) > .list-bullet::after {
-	--list-bullet-size: 1.5em;
+	--list-bullet-size: 1em;
 	--list-bullet-border: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	content: "✦";
 	background-color: transparent;
+	margin-left: -0.1em;
+
+	margin-top: 0.15em;
+	padding-top: 0.1em;
 }
 
 ol {
