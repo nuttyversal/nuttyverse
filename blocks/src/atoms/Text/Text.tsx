@@ -36,7 +36,16 @@ export const Text = <Component extends React.ElementType>(
 
 	if (!props.size && typeof Component === "string") {
 		if (["h1", "h2", "h3", "h4", "h5", "h6"].includes(Component)) {
-			inferredFontSize = Component as FontSize;
+			inferredFontSize = (
+				{
+					h1: "6xl",
+					h2: "5xl",
+					h3: "4xl",
+					h4: "3xl",
+					h5: "2xl",
+					h6: "xl",
+				} as const
+			)[Component as string];
 		} else {
 			inferredFontSize = DEFAULT_SIZE;
 		}
