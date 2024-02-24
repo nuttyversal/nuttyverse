@@ -1,10 +1,10 @@
 import { keyframes, style } from "@vanilla-extract/css";
-import { typeScale } from "../../styles/themes/constants";
 
 export const container = style({
 	display: "flex",
 	justifyContent: "space-between",
 	alignItems: "end",
+	zIndex: -1,
 });
 
 export const floatKeyFrames = keyframes({
@@ -49,7 +49,6 @@ export const header = style({
 
 export const chibi = style({
 	marginBottom: "-1px",
-	zIndex: -1,
 	transition: "all 0.2s ease-out",
 
 	"@media": {
