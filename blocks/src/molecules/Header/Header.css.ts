@@ -1,4 +1,5 @@
 import { keyframes, style } from "@vanilla-extract/css";
+import { fontSize } from "../../styles/themes/constants";
 
 export const container = style({
 	display: "flex",
@@ -44,12 +45,32 @@ export const header = style({
 	backgroundClip: "text",
 	WebkitBackgroundClip: "text",
 	WebkitTextFillColor: "transparent",
+
+	"@media": {
+		all: {
+			fontSize: fontSize.h2,
+		},
+		"screen and (min-width: 400px)": {
+			fontSize: fontSize.h1,
+		},
+	},
 });
 
 export const chibi = style({
-	width: "125px",
 	marginBottom: "-1px",
 	zIndex: -1,
+	transition: "all 0.2s ease-out",
+
+	"@media": {
+		all: {
+			opacity: 0,
+			width: "0px",
+		},
+		"screen and (min-width: 500px)": {
+			opacity: 1,
+			width: "125px",
+		},
+	},
 });
 
 export const divider = style({
