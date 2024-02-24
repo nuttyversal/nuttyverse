@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
 import { Text } from "./Text";
-import { text } from "./Text.css";
+import { typeScale } from "../../styles/themes/constants";
 
 const meta: Meta<typeof Text> = {
 	title: "atoms/Text",
@@ -17,7 +17,7 @@ const meta: Meta<typeof Text> = {
 			control: {
 				type: "select",
 			},
-			options: Object.keys(text.classNames.variants.size),
+			options: Object.keys(typeScale),
 		},
 		opsz: {
 			control: {
@@ -105,7 +105,7 @@ export const HeadingSix: Story = {
 export const Body: Story = {
 	args: {
 		children: "Hello, world! 😀",
-		size: "body",
+		size: "base",
 	},
 };
 
@@ -113,5 +113,12 @@ export const Smol: Story = {
 	args: {
 		children: "Hello, world! 😀",
 		size: "smol",
+	},
+};
+
+export const Teeny: Story = {
+	args: {
+		children: "Hello, world! 😀",
+		size: "teeny",
 	},
 };
