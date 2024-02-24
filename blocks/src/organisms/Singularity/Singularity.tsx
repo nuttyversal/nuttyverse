@@ -21,6 +21,7 @@ export const UnderConstruction = () => {
 				padding: "0 1em",
 				fontFamily: "PragmataPro Liga, monospace",
 				margin: "0.3em",
+				color: "inherit",
 			}}
 		>
 			[ERROR] Still under construction! ⚠️
@@ -31,7 +32,7 @@ export const UnderConstruction = () => {
 export const ExploreInnerWorld = () => {
 	return (
 		<Button sparkle banner={{ children: <UnderConstruction /> }}>
-			<Text as="span">Explore my inner world</Text>
+			Explore my inner world
 		</Button>
 	);
 };

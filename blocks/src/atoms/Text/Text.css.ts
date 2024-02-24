@@ -1,4 +1,5 @@
 import {
+	createTheme,
 	createThemeContract,
 	globalFontFace,
 	globalStyle,
@@ -78,7 +79,22 @@ globalStyle("*", {
 });
 
 export const vars = createThemeContract({
-	fontSize: null,
+	color: null,
+	gradient: null,
+});
+
+export const lightMode = createTheme(vars, {
+	color: "black",
+	gradient: "linear-gradient(180deg, #000 0%, #760063 100%)",
+});
+
+export const darkMode = createTheme(vars, {
+	color: "white",
+	gradient: "linear-gradient(180deg, #fff 0%, #fde7ff 100%)",
+});
+
+export const base = style({
+	color: vars.color,
 });
 
 export const responsiveFontSize = Object.keys(typeScale).reduce(
@@ -113,7 +129,7 @@ export const withDropCap = style({
 			marginRight: 4,
 			marginTop: 0,
 			color: "transparent",
-			background: "linear-gradient(180deg, #000 0%, #760063 100%)",
+			background: vars.gradient,
 			backgroundClip: "text",
 			WebkitBackgroundClip: "text",
 			WebkitTextFillColor: "transparent",

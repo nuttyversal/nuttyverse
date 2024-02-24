@@ -1,5 +1,13 @@
+import { useContext } from "react";
+import {
+	withDropCap,
+	responsiveFontSize,
+	lightMode,
+	darkMode,
+	base,
+} from "./Text.css";
+import { NuttyverseContext } from "../../styles/themes/Context";
 import { FontSize } from "../../styles/themes/constants";
-import { withDropCap, responsiveFontSize } from "./Text.css";
 
 const DEFAULT_OPSZ = 18;
 const DEFAULT_WDTH = 85;
@@ -20,6 +28,9 @@ type TextProps<Component extends React.ElementType> = {
 export const Text = <Component extends React.ElementType>(
 	props: TextProps<Component>,
 ) => {
+	const theme = useContext(NuttyverseContext);
+	const themeClass = theme === "light" ? lightMode : darkMode;
+
 	const {
 		as,
 		size,
@@ -65,6 +76,8 @@ export const Text = <Component extends React.ElementType>(
 	const transition = "all 0.2s ease-out";
 
 	const classNames = [
+		base,
+		themeClass,
 		dropCap ? withDropCap : null,
 		responsiveFontSize[fontSize],
 		polymorphicProps.className,
