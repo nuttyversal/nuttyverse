@@ -1,4 +1,28 @@
-import { keyframes, style } from "@vanilla-extract/css";
+import {
+	createTheme,
+	createThemeContract,
+	keyframes,
+	style,
+} from "@vanilla-extract/css";
+
+const vars = createThemeContract({
+	backgroundBefore: null,
+	backgroundAfter: null,
+});
+
+export const lightMode = createTheme(vars, {
+	backgroundBefore:
+		"linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
+	backgroundAfter:
+		"linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
+});
+
+export const darkMode = createTheme(vars, {
+	backgroundBefore:
+		"linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))",
+	backgroundAfter:
+		"linear-gradient(to left, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))",
+});
 
 export const container = style({
 	position: "relative",
@@ -20,8 +44,7 @@ export const overlay = style({
 		position: "absolute",
 		height: "100%",
 		width: "100px",
-		background:
-			"linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
+		background: vars.backgroundBefore,
 	},
 	":after": {
 		right: 0,
@@ -31,8 +54,7 @@ export const overlay = style({
 		position: "absolute",
 		height: "100%",
 		width: "100px",
-		background:
-			"linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
+		background: vars.backgroundAfter,
 	},
 });
 
