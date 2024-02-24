@@ -1,9 +1,13 @@
+import { useContext } from "react";
 import { UnorderedList } from "../../atoms/List/UnorderedList";
 import { ListItem } from "../../atoms/List/ListItem";
 import { Link } from "../../atoms/Link/Link";
 import { Text } from "../../atoms/Text/Text";
+import { NuttyverseContext } from "../../styles/themes/Context";
 
 export const Introduction = () => {
+	const theme = useContext(NuttyverseContext);
+
 	const ahoy = (
 		<Text as="span" wdth={120} weight={600}>
 			Ahoy there, fellow navigator!
@@ -11,13 +15,23 @@ export const Introduction = () => {
 	);
 
 	const physical = (
-		<Text as="span" wdth={120} weight={600} style={{ color: "#3E8857" }}>
+		<Text
+			as="span"
+			wdth={120}
+			weight={600}
+			style={{ color: theme === "light" ? "#3e8857" : "lime" }}
+		>
 			physical
 		</Text>
 	);
 
 	const digital = (
-		<Text as="span" wdth={120} weight={600} style={{ color: "#7F7CED" }}>
+		<Text
+			as="span"
+			wdth={120}
+			weight={600}
+			style={{ color: theme === "light" ? "#7f7ced" : "yellow" }}
+		>
 			digital
 		</Text>
 	);

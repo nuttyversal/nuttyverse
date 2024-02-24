@@ -1,4 +1,24 @@
-import { keyframes, style } from "@vanilla-extract/css";
+import {
+	createTheme,
+	createThemeContract,
+	keyframes,
+	style,
+} from "@vanilla-extract/css";
+
+export const vars = createThemeContract({
+	gradient: null,
+	dividerColor: null,
+});
+
+export const lightMode = createTheme(vars, {
+	gradient: "linear-gradient(180deg, #000 0%, #760063 100%)",
+	dividerColor: "black",
+});
+
+export const darkMode = createTheme(vars, {
+	gradient: "linear-gradient(180deg, #fff 0%, #fde7ff 100%)",
+	dividerColor: "white",
+});
 
 export const container = style({
 	display: "flex",
@@ -41,7 +61,7 @@ export const header = style({
 	letterSpacing: "0.1em",
 	lineHeight: "1.2em",
 	color: "transparent",
-	background: "linear-gradient(180deg, #000 0%, #760063 100%)",
+	background: vars.gradient,
 	backgroundClip: "text",
 	WebkitBackgroundClip: "text",
 	WebkitTextFillColor: "transparent",
@@ -67,5 +87,6 @@ export const divider = style({
 	height: "2px",
 	width: "calc(100% + 32px)",
 	marginLeft: "-16px",
-	background: "black",
+	background: vars.dividerColor,
+	transition: "all 0.2s ease-out",
 });

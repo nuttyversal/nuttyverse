@@ -1,14 +1,27 @@
+import { useContext } from "react";
 import { Marquee } from "../../atoms/Marquee/Marquee";
 import { Chibi } from "../../atoms/Chibi/Chibi";
 import { Text } from "../../atoms/Text/Text";
-import { chibi, container, divider, float, header } from "./Header.css";
+import {
+	chibi,
+	container,
+	darkMode,
+	divider,
+	float,
+	header,
+	lightMode,
+} from "./Header.css";
+import { NuttyverseContext } from "../../styles/themes/Context";
 
 export const Header = () => {
+	const theme = useContext(NuttyverseContext);
+	const themeClass = theme === "light" ? lightMode : darkMode;
+
 	const nuttyverse = "Nuttyverse".split("").map((letter, index) => (
 		<Text
 			as="span"
 			size="6xl"
-			className={[header, float].join(" ")}
+			className={[themeClass, header, float].join(" ")}
 			style={{ animationDelay: `${index * 0.3}s` }}
 			wdth={50}
 			weight={700}
@@ -38,9 +51,9 @@ export const Header = () => {
 				<Chibi className={chibi} />
 			</div>
 
-			<div className={divider} />
+			<div className={[themeClass, divider].join(" ")} />
 			{messageOfTheDay}
-			<div className={divider} />
+			<div className={[themeClass, divider].join(" ")} />
 		</div>
 	);
 };
