@@ -1,7 +1,7 @@
 import { globalFontFace, globalStyle, style } from "@vanilla-extract/css";
 import { RecipeVariants, recipe } from "@vanilla-extract/recipes";
 import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
-import { fontSize } from "../../styles/themes/constants";
+import { typeScale } from "../../styles/themes/constants";
 
 globalFontFace("Nure", {
 	src: [
@@ -92,7 +92,7 @@ export const withDropCap = style({
 
 const typographicProperties = defineProperties({
 	properties: {
-		fontSize,
+		fontSize: typeScale,
 	},
 });
 
@@ -102,13 +102,13 @@ export const text = recipe({
 	variants: {
 		size: {
 			smol: sprinkles({ fontSize: "smol" }),
-			body: sprinkles({ fontSize: "body" }),
-			h6: sprinkles({ fontSize: "h6" }),
-			h5: sprinkles({ fontSize: "h5" }),
-			h4: sprinkles({ fontSize: "h4" }),
-			h3: sprinkles({ fontSize: "h3" }),
-			h2: sprinkles({ fontSize: "h2" }),
-			h1: sprinkles({ fontSize: "h1" }),
+			body: sprinkles({ fontSize: "base" }),
+			h6: sprinkles({ fontSize: "xl" }),
+			h5: sprinkles({ fontSize: "2xl" }),
+			h4: sprinkles({ fontSize: "3xl" }),
+			h3: sprinkles({ fontSize: "4xl" }),
+			h2: sprinkles({ fontSize: "5xl" }),
+			h1: sprinkles({ fontSize: "6xl" }),
 		},
 	},
 	defaultVariants: {

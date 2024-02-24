@@ -1,5 +1,5 @@
 import { keyframes, style } from "@vanilla-extract/css";
-import { fontSize } from "../../styles/themes/constants";
+import { typeScale } from "../../styles/themes/constants";
 
 export const container = style({
 	display: "flex",
@@ -48,10 +48,10 @@ export const header = style({
 
 	"@media": {
 		all: {
-			fontSize: fontSize.h2,
+			fontSize: typeScale["5xl"],
 		},
 		"screen and (min-width: 400px)": {
-			fontSize: fontSize.h1,
+			fontSize: typeScale["6xl"],
 		},
 	},
 });
