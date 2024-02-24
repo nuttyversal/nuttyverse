@@ -36,7 +36,7 @@ export const base = style({
 	borderWidth: "2px",
 	borderStyle: "solid",
 	borderRadius: "4px",
-	padding: "0.5rem 2rem",
+	padding: "0.5rem 1rem",
 	cursor: "not-allowed",
 	transition: "all 0.2s ease-out",
 	width: "100%",
