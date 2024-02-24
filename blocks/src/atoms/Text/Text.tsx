@@ -1,15 +1,16 @@
-import { TextVariants, text, withDropCap } from "./Text.css";
+import { FontSize } from "../../styles/themes/constants";
+import { withDropCap, responsiveFontSize } from "./Text.css";
 
 const DEFAULT_OPSZ = 18;
 const DEFAULT_WDTH = 85;
 const DEFAULT_WEIGHT = 400;
-const DEFAULT_SIZE = "body";
+const DEFAULT_SIZE = "base";
 const DEFAULT_COMPONENT = "p";
 
 type TextProps<Component extends React.ElementType> = {
 	children: React.ReactNode;
 	as?: Component;
-	size?: NonNullable<TextVariants>["size"];
+	size?: FontSize;
 	opsz?: number;
 	wdth?: number;
 	weight?: number;
@@ -31,19 +32,13 @@ export const Text = <Component extends React.ElementType>(
 	} = props;
 
 	const Component = as ?? DEFAULT_COMPONENT;
-	let inferredFontSize: NonNullable<TextVariants>["size"];
+	let inferredFontSize: FontSize | undefined;
 
-	if (!props.size) {
-		if (typeof Component === "string") {
-			inferredFontSize = {
-				h1: "h1",
-				h2: "h2",
-				h3: "h3",
-				h4: "h4",
-				h5: "h5",
-				h6: "h6",
-				p: "body",
-			}[Component as keyof typeof inferredFontSize];
+	if (!props.size && typeof Component === "string") {
+		if (["h1", "h2", "h3", "h4", "h5", "h6"].includes(Component)) {
+			inferredFontSize = Component as FontSize;
+		} else {
+			inferredFontSize = DEFAULT_SIZE;
 		}
 	}
 
@@ -61,8 +56,8 @@ export const Text = <Component extends React.ElementType>(
 	const transition = "all 0.2s ease-out";
 
 	const classNames = [
-		text({ size: fontSize }),
 		dropCap ? withDropCap : null,
+		responsiveFontSize[fontSize],
 		polymorphicProps.className,
 	]
 		.filter((x) => x !== null)

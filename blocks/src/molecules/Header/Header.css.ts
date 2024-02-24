@@ -45,15 +45,6 @@ export const header = style({
 	backgroundClip: "text",
 	WebkitBackgroundClip: "text",
 	WebkitTextFillColor: "transparent",
-
-	"@media": {
-		all: {
-			fontSize: typeScale["5xl"],
-		},
-		"screen and (min-width: 400px)": {
-			fontSize: typeScale["6xl"],
-		},
-	},
 });
 
 export const chibi = style({

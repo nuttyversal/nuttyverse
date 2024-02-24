@@ -36,22 +36,24 @@ export const Introduction = () => {
 				singularity will bloom a new {digital} universe! 😀
 			</Text>
 
-			<UnorderedList>
-				<ListItem>
-					Follow me on{" "}
-					<Link href="https://neocities.org/site/nuttyverse" newTab>
-						Neocities
-					</Link>{" "}
-					for updates!
-				</ListItem>
-				<ListItem>
-					Feel free to take a 👀 at the{" "}
-					<Link href="https://github.com/nuttyversal/nuttyverse" newTab>
-						source code
-					</Link>
-					.
-				</ListItem>
-			</UnorderedList>
+			<Text as="div">
+				<UnorderedList>
+					<ListItem>
+						Follow me on{" "}
+						<Link href="https://neocities.org/site/nuttyverse" newTab>
+							Neocities
+						</Link>{" "}
+						for updates!
+					</ListItem>
+					<ListItem>
+						Feel free to take a 👀 at the{" "}
+						<Link href="https://github.com/nuttyversal/nuttyverse" newTab>
+							source code
+						</Link>
+						.
+					</ListItem>
+				</UnorderedList>
+			</Text>
 		</section>
 	);
 };

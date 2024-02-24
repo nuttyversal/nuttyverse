@@ -1,7 +1,14 @@
-import { globalFontFace, globalStyle, style } from "@vanilla-extract/css";
-import { RecipeVariants, recipe } from "@vanilla-extract/recipes";
-import { createSprinkles, defineProperties } from "@vanilla-extract/sprinkles";
-import { typeScale } from "../../styles/themes/constants";
+import {
+	createThemeContract,
+	globalFontFace,
+	globalStyle,
+	style,
+} from "@vanilla-extract/css";
+import {
+	FontSize,
+	narrowTypeScale,
+	typeScale,
+} from "../../styles/themes/constants";
 
 globalFontFace("Nure", {
 	src: [
@@ -70,6 +77,30 @@ globalStyle("*", {
 	hyphens: "auto",
 });
 
+export const vars = createThemeContract({
+	fontSize: null,
+});
+
+export const responsiveFontSize = Object.keys(typeScale).reduce(
+	(accumulator, fontSize) => ({
+		...accumulator,
+		[fontSize]: style({
+			vars: {
+				fontSize: typeScale[fontSize as keyof typeof typeScale],
+			},
+			"@media": {
+				"screen and (max-width: 600px)": {
+					vars: {
+						fontSize:
+							narrowTypeScale[fontSize as keyof typeof narrowTypeScale],
+					},
+				},
+			},
+		}),
+	}),
+	{} as Record<FontSize, string>,
+);
+
 export const withDropCap = style({
 	selectors: {
 		"&::first-letter": {
@@ -89,31 +120,3 @@ export const withDropCap = style({
 		},
 	},
 });
-
-const typographicProperties = defineProperties({
-	properties: {
-		fontSize: typeScale,
-	},
-});
-
-export const sprinkles = createSprinkles(typographicProperties);
-
-export const text = recipe({
-	variants: {
-		size: {
-			smol: sprinkles({ fontSize: "smol" }),
-			body: sprinkles({ fontSize: "base" }),
-			h6: sprinkles({ fontSize: "xl" }),
-			h5: sprinkles({ fontSize: "2xl" }),
-			h4: sprinkles({ fontSize: "3xl" }),
-			h3: sprinkles({ fontSize: "4xl" }),
-			h2: sprinkles({ fontSize: "5xl" }),
-			h1: sprinkles({ fontSize: "6xl" }),
-		},
-	},
-	defaultVariants: {
-		size: "body",
-	},
-});
-
-export type TextVariants = RecipeVariants<typeof text>;

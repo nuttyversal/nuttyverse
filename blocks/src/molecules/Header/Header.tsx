@@ -7,6 +7,7 @@ export const Header = () => {
 	const nuttyverse = "Nuttyverse".split("").map((letter, index) => (
 		<Text
 			as="span"
+			size="6xl"
 			className={[header, float].join(" ")}
 			style={{ animationDelay: `${index * 0.3}s` }}
 			wdth={50}

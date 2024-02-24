@@ -5,15 +5,15 @@ const minorThird = 1.2;
 
 const deriveTypeScale = (base: number) => {
 	return {
-		teeny: base / minorThird ** 2,
-		smol: base / minorThird,
-		base,
-		xl: base * minorThird,
-		"2xl": base * minorThird ** 2,
-		"3xl": base * minorThird ** 3,
-		"4xl": base * minorThird ** 4,
-		"5xl": base * minorThird ** 5,
-		"6xl": base * minorThird ** 6,
+		teeny: base / minorThird ** 2 + "px",
+		smol: base / minorThird + "px",
+		base: base + "px",
+		xl: base * minorThird + "px",
+		"2xl": base * minorThird ** 2 + "px",
+		"3xl": base * minorThird ** 3 + "px",
+		"4xl": base * minorThird ** 4 + "px",
+		"5xl": base * minorThird ** 5 + "px",
+		"6xl": base * minorThird ** 6 + "px",
 	} as const;
 };
 
@@ -28,3 +28,8 @@ export const typeScale = deriveTypeScale(16);
  * of 14px. This is used when rendering text in narrower viewports.
  */
 export const narrowTypeScale = deriveTypeScale(14);
+
+/**
+ * The names of the available font sizes in the design system.
+ */
+export type FontSize = keyof typeof typeScale;

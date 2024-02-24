@@ -32,7 +32,7 @@ export const UnderConstruction = () => {
 export const ExploreInnerWorld = () => {
 	return (
 		<Button sparkle banner={{ children: <UnderConstruction /> }}>
-			Explore my inner world
+			<Text as="span">Explore my inner world</Text>
 		</Button>
 	);
 };
