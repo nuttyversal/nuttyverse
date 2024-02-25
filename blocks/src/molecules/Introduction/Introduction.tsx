@@ -40,7 +40,7 @@ export const Introduction = () => {
 
 	return (
 		<section style={{ marginTop: "1.5em", marginBottom: "1.5em" }}>
-			<Text dropCap>
+			<Text dropCap glow>
 				{ahoy} Welcome to my internet expanse. You might notice a seeming
 				emptiness, but do not fret. You've simply arrived early enough to
 				witness the expansion of this universe.

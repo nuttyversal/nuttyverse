@@ -142,7 +142,6 @@ export const withDropCap = style({
 			backgroundClip: "text",
 			WebkitBackgroundClip: "text",
 			WebkitTextFillColor: "transparent",
-			textShadow: vars.glow.textShadow,
 		},
 	},
 });
