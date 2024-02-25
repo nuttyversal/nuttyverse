@@ -9,7 +9,7 @@ export const Introduction = () => {
 	const theme = useContext(NuttyverseContext);
 
 	const ahoy = (
-		<Text as="span" wdth={120} weight={600}>
+		<Text as="span" wdth={120} weight={600} glow>
 			Ahoy there, fellow navigator!
 		</Text>
 	);
@@ -20,6 +20,7 @@ export const Introduction = () => {
 			wdth={120}
 			weight={600}
 			style={{ color: theme === "light" ? "#3e8857" : "lime" }}
+			glow
 		>
 			physical
 		</Text>
@@ -31,6 +32,7 @@ export const Introduction = () => {
 			wdth={120}
 			weight={600}
 			style={{ color: theme === "light" ? "#7f7ced" : "yellow" }}
+			glow
 		>
 			digital
 		</Text>

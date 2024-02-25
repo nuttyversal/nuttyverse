@@ -25,6 +25,7 @@ export const Header = () => {
 			style={{ animationDelay: `${index * 0.3}s` }}
 			wdth={50}
 			weight={700}
+			glow
 		>
 			{letter}
 		</Text>

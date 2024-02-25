@@ -5,6 +5,7 @@ import {
 	lightMode,
 	darkMode,
 	base,
+	withGlow,
 } from "./Text.css";
 import { NuttyverseContext } from "../../styles/themes/Context";
 import { FontSize } from "../../styles/themes/constants";
@@ -18,11 +19,13 @@ const DEFAULT_COMPONENT = "p";
 type TextProps<Component extends React.ElementType> = {
 	children: React.ReactNode;
 	as?: Component;
+	color?: string;
 	size?: FontSize;
 	opsz?: number;
 	wdth?: number;
 	weight?: number;
 	dropCap?: boolean;
+	glow?: boolean;
 } & React.ComponentPropsWithoutRef<Component>;
 
 export const Text = <Component extends React.ElementType>(
@@ -33,11 +36,13 @@ export const Text = <Component extends React.ElementType>(
 
 	const {
 		as,
+		color,
 		size,
 		opsz,
 		wdth,
 		weight,
 		dropCap,
+		glow,
 		children,
 		...polymorphicProps
 	} = props;
@@ -78,6 +83,7 @@ export const Text = <Component extends React.ElementType>(
 	const classNames = [
 		base,
 		themeClass,
+		glow ? withGlow : null,
 		dropCap ? withDropCap : null,
 		responsiveFontSize[fontSize],
 		polymorphicProps.className,
