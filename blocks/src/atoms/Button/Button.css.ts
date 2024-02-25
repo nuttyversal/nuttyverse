@@ -27,7 +27,7 @@ export const container = style({
 export const base = style({
 	background: vars.backgroundColor,
 	color: vars.foregroundColor,
-	fontSize: "1rem",
+	fontSize: "1em",
 	fontWeight: "normal",
 	fontStyle: "normal",
 	textTransform: "lowercase",
@@ -35,8 +35,8 @@ export const base = style({
 	borderColor: vars.backgroundColor,
 	borderWidth: "2px",
 	borderStyle: "solid",
-	borderRadius: "4px",
-	padding: "0.5rem 1rem",
+	borderRadius: "3px",
+	padding: "4px 0",
 	cursor: "not-allowed",
 	transition: "all 0.2s ease-out",
 	width: "100%",
@@ -47,6 +47,12 @@ export const base = style({
 		background: vars.foregroundColor,
 		letterSpacing: "2.4px",
 		fontVariationSettings: `"opsz" 18, "wdth" 95`,
+	},
+
+	"@media": {
+		"screen and (min-width: 500px)": {
+			padding: "8px 0",
+		},
 	},
 });
 
