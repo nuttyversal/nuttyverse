@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import { Link } from "./Link";
+import { Text } from "../Text/Text";
 
 const meta: Meta<typeof Link> = {
 	title: "atoms/Link",
@@ -21,9 +22,9 @@ type Story = StoryObj<typeof Link>;
 export const Component: Story = {
 	render: (args) => {
 		return (
-			<div>
+			<Text>
 				Into the <Link {...args} />!
-			</div>
+			</Text>
 		);
 	},
 	args: {
