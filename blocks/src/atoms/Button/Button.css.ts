@@ -21,7 +21,7 @@ export const darkMode = createTheme(vars, {
 	backgroundColor: "white",
 	foregroundColor: "black",
 	glow: {
-		boxShadow: "0 0 10px 5px rgba(255, 255, 255, 0.5)",
+		boxShadow: "0 0 8px 4px rgba(255, 255, 255, 0.5)",
 	},
 });
 

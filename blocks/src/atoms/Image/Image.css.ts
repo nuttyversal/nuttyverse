@@ -17,7 +17,7 @@ export const lightMode = createTheme(vars, {
 export const darkMode = createTheme(vars, {
 	borderColor: "white",
 	glow: {
-		boxShadow: "0 0 10px 5px rgba(255, 255, 255, 0.5)",
+		boxShadow: "0 0 8px 4px rgba(255, 255, 255, 0.5)",
 	},
 });
 

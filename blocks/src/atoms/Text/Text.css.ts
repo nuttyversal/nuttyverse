@@ -98,7 +98,7 @@ export const darkMode = createTheme(vars, {
 	color: "white",
 	gradient: "linear-gradient(180deg, #fff 0%, #fff 100%)",
 	glow: {
-		textShadow: "0 0 12px rgba(255, 255, 255, 0.5)",
+		textShadow: "0 0 0.5em rgba(255, 255, 255, 0.5)",
 	},
 });
 
