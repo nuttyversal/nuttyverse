@@ -4,16 +4,25 @@ import { RecipeVariants, recipe } from "@vanilla-extract/recipes";
 const vars = createThemeContract({
 	backgroundColor: null,
 	foregroundColor: null,
+	glow: {
+		boxShadow: null,
+	},
 });
 
 export const lightMode = createTheme(vars, {
 	backgroundColor: "black",
 	foregroundColor: "white",
+	glow: {
+		boxShadow: "none",
+	},
 });
 
 export const darkMode = createTheme(vars, {
 	backgroundColor: "white",
 	foregroundColor: "black",
+	glow: {
+		boxShadow: "0 0 10px 5px rgba(255, 255, 255, 0.5)",
+	},
 });
 
 export const container = style({
@@ -82,3 +91,7 @@ export const bannerVariants = recipe({
 });
 
 export type BannerVariants = RecipeVariants<typeof bannerVariants>;
+
+export const withGlow = style({
+	boxShadow: vars.glow.boxShadow,
+});

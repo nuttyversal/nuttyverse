@@ -5,6 +5,7 @@ import {
 	container,
 	darkMode,
 	lightMode,
+	withGlow,
 } from "./Button.css";
 import { NuttyverseContext } from "../../styles/themes/Context";
 
@@ -12,16 +13,18 @@ type ButtonProps = {
 	children: React.ReactNode;
 	banner?: ButtonBannerProps;
 	sparkle?: boolean | any;
+	glow?: boolean | any;
 } & React.ComponentPropsWithoutRef<"button">;
 
 export const Button = (props: ButtonProps) => {
 	const theme = useContext(NuttyverseContext);
 	const [isHovered, setIsHovered] = useState(false);
 
+	const { children, sparkle, glow, ...buttonProps } = props;
 	const themeClass = theme === "light" ? lightMode : darkMode;
-	const classNames = [base, themeClass].join(" ");
-
-	const { children, sparkle, ...buttonProps } = props;
+	const classNames = [base, themeClass, glow ? withGlow : undefined]
+		.filter((x) => x !== undefined)
+		.join(" ");
 
 	return (
 		<div className={container}>
