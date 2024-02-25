@@ -90,7 +90,7 @@ export const lightMode = createTheme(vars, {
 
 export const darkMode = createTheme(vars, {
 	color: "white",
-	gradient: "linear-gradient(180deg, #fff 0%, #fde7ff 100%)",
+	gradient: "linear-gradient(180deg, #fff 0%, #fff 100%)",
 });
 
 export const base = style({

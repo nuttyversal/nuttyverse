@@ -8,16 +8,46 @@ import {
 export const vars = createThemeContract({
 	gradient: null,
 	dividerColor: null,
+	floatKeyFrames: null,
 });
 
 export const lightMode = createTheme(vars, {
 	gradient: "linear-gradient(180deg, #000 0%, #760063 100%)",
 	dividerColor: "black",
+	floatKeyFrames: keyframes({
+		"0%": {
+			transform: "translateY(0px)",
+		},
+		"30%": {
+			opacity: 0.8,
+		},
+		"50%": {
+			transform: "translateY(-4px)",
+			opacity: 1,
+		},
+		"70%": {
+			opacity: 0.8,
+		},
+		"100%": {
+			transform: "translateY(0px)",
+		},
+	}),
 });
 
 export const darkMode = createTheme(vars, {
-	gradient: "linear-gradient(180deg, #fff 0%, #fde7ff 100%)",
+	gradient: "linear-gradient(180deg, #fff 0%, #fff 100%)",
 	dividerColor: "white",
+	floatKeyFrames: keyframes({
+		"0%": {
+			transform: "translateY(0px)",
+		},
+		"50%": {
+			transform: "translateY(-4px)",
+		},
+		"100%": {
+			transform: "translateY(0px)",
+		},
+	}),
 });
 
 export const container = style({
@@ -27,27 +57,8 @@ export const container = style({
 	zIndex: -1,
 });
 
-export const floatKeyFrames = keyframes({
-	"0%": {
-		transform: "translateY(0px)",
-	},
-	"30%": {
-		opacity: 0.8,
-	},
-	"50%": {
-		transform: "translateY(-4px)",
-		opacity: 1,
-	},
-	"70%": {
-		opacity: 0.8,
-	},
-	"100%": {
-		transform: "translateY(0px)",
-	},
-});
-
 export const float = style({
-	animationName: floatKeyFrames,
+	animationName: vars.floatKeyFrames,
 	animationDuration: "3s",
 	animationTimingFunction: "ease-in-out",
 	animationIterationCount: "infinite",
