@@ -22,6 +22,7 @@ export const Chibi = (props: Props) => {
 				textRendering: "geometricPrecision",
 				fillRule: "evenodd",
 				clipRule: "evenodd",
+				filter: "drop-shadow(0 0 10px rgb(255 255 255 / 0.5))",
 				...props.style,
 			}}
 			xmlnsXlink="http://www.w3.org/1999/xlink"
