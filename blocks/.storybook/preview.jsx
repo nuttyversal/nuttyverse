@@ -1,3 +1,6 @@
+// Import CSS reset as a side effect.
+import "../src/styles/reset.css";
+
 import { useState } from "react";
 import { NuttyverseContext } from "../src/styles/themes/Context";
 
