@@ -14,8 +14,8 @@ import {
 import { NuttyverseContext } from "../../styles/themes/Context";
 
 export const Header = () => {
-	const theme = useContext(NuttyverseContext);
-	const themeClass = theme === "light" ? lightMode : darkMode;
+	const context = useContext(NuttyverseContext);
+	const themeClass = context.theme === "light" ? lightMode : darkMode;
 
 	const nuttyverse = "Nuttyverse".split("").map((letter, index) => (
 		<Text

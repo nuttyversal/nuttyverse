@@ -24,6 +24,12 @@ const preview = {
 				});
 			};
 
+			const initialContextValue = {
+				theme,
+				setTheme,
+				toggleTheme,
+			};
+
 			return (
 				<>
 					<div
@@ -44,7 +50,7 @@ const preview = {
 						}}
 					>
 						<div style={{ width: "30em", padding: "1em" }}>
-							<NuttyverseContext.Provider value={theme}>
+							<NuttyverseContext.Provider value={initialContextValue}>
 								<Story />
 							</NuttyverseContext.Provider>
 						</div>

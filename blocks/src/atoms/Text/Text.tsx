@@ -31,8 +31,8 @@ type TextProps<Component extends React.ElementType> = {
 export const Text = <Component extends React.ElementType>(
 	props: TextProps<Component>,
 ) => {
-	const theme = useContext(NuttyverseContext);
-	const themeClass = theme === "light" ? lightMode : darkMode;
+	const context = useContext(NuttyverseContext);
+	const themeClass = context.theme === "light" ? lightMode : darkMode;
 
 	const {
 		as,

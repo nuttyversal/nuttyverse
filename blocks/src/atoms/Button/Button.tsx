@@ -17,11 +17,11 @@ type ButtonProps = {
 } & React.ComponentPropsWithoutRef<"button">;
 
 export const Button = (props: ButtonProps) => {
-	const theme = useContext(NuttyverseContext);
+	const context = useContext(NuttyverseContext);
 	const [isHovered, setIsHovered] = useState(false);
 
 	const { children, sparkle, glow, ...buttonProps } = props;
-	const themeClass = theme === "light" ? lightMode : darkMode;
+	const themeClass = context.theme === "light" ? lightMode : darkMode;
 	const classNames = [base, themeClass, glow ? withGlow : undefined]
 		.filter((x) => x !== undefined)
 		.join(" ");

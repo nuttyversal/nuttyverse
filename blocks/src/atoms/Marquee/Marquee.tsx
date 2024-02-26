@@ -14,8 +14,8 @@ type Props = {
 };
 
 export const Marquee = (props: Props) => {
-	const theme = useContext(NuttyverseContext);
-	const themeClass = theme === "light" ? lightMode : darkMode;
+	const context = useContext(NuttyverseContext);
+	const themeClass = context.theme === "light" ? lightMode : darkMode;
 
 	return (
 		<div className={container}>

@@ -4,9 +4,10 @@ import { ListItem } from "../../atoms/List/ListItem";
 import { Link } from "../../atoms/Link/Link";
 import { Text } from "../../atoms/Text/Text";
 import { NuttyverseContext } from "../../styles/themes/Context";
+import { Image } from "../../atoms/Image/Image";
 
 export const Introduction = () => {
-	const theme = useContext(NuttyverseContext);
+	const context = useContext(NuttyverseContext);
 
 	const ahoy = (
 		<Text as="span" wdth={120} weight={600} glow>
@@ -19,7 +20,7 @@ export const Introduction = () => {
 			as="span"
 			wdth={120}
 			weight={600}
-			style={{ color: theme === "light" ? "#3e8857" : "lime" }}
+			style={{ color: context.theme === "light" ? "#3e8857" : "lime" }}
 			glow
 		>
 			physical
@@ -31,7 +32,7 @@ export const Introduction = () => {
 			as="span"
 			wdth={120}
 			weight={600}
-			style={{ color: theme === "light" ? "#7f7ced" : "yellow" }}
+			style={{ color: context.theme === "light" ? "#7f7ced" : "yellow" }}
 			glow
 		>
 			digital

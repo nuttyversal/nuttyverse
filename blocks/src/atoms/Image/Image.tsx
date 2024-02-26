@@ -8,8 +8,8 @@ type ImageProps = {
 
 export const Image = (props: ImageProps) => {
 	const { glow, ...imgProps } = props;
-	const theme = useContext(NuttyverseContext);
-	const themeClass = theme === "light" ? lightMode : darkMode;
+	const context = useContext(NuttyverseContext);
+	const themeClass = context.theme === "light" ? lightMode : darkMode;
 	const classNames = [base, themeClass, glow ? withGlow : undefined];
 
 	return <img className={classNames.join(" ")} {...imgProps} />;

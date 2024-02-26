@@ -10,8 +10,18 @@ export const Landing = () => {
 		setTheme(event.matches ? "dark" : "light");
 	});
 
+	const toggleTheme = () => {
+		setTheme(theme === "light" ? "dark" : "light");
+	};
+
+	const initialContext = {
+		theme,
+		setTheme,
+		toggleTheme,
+	} as const;
+
 	return (
-		<NuttyverseContext.Provider value={theme}>
+		<NuttyverseContext.Provider value={initialContext}>
 			<Singularity />
 		</NuttyverseContext.Provider>
 	);

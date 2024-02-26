@@ -7,9 +7,9 @@ type Props = {
 };
 
 export const Chibi = (props: Props) => {
-	const theme = useContext(NuttyverseContext);
-	const backgroundColor = theme === "light" ? "white" : "black";
-	const foregroundColor = theme === "light" ? "black" : "white";
+	const context = useContext(NuttyverseContext);
+	const backgroundColor = context.theme === "light" ? "white" : "black";
+	const foregroundColor = context.theme === "light" ? "black" : "white";
 
 	return (
 		<svg
