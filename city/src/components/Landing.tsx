@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { NuttyverseContext, Singularity } from "@nuttyverse/blocks";
+import { body, darkMode, lightMode, main } from "./Landing.css.ts";
 
 export const Landing = () => {
 	const colorSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
@@ -20,25 +21,12 @@ export const Landing = () => {
 		toggleTheme,
 	} as const;
 
+	const themeClass = theme === "light" ? lightMode : darkMode;
+
 	return (
 		<NuttyverseContext.Provider value={initialContext}>
-			<div
-				style={{
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-					backgroundColor: theme === "light" ? "white" : "black",
-					width: "100%",
-					minHeight: "100vh",
-				}}
-			>
-				<main
-					style={{
-						margin: "auto",
-						width: "500px",
-						padding: "1em 2em",
-					}}
-				>
+			<div className={[body, themeClass].join(" ")}>
+				<main className={main}>
 					<Singularity />
 				</main>
 			</div>
