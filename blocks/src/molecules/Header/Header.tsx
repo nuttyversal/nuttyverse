@@ -12,6 +12,7 @@ import {
 	lightMode,
 } from "./Header.css";
 import { NuttyverseContext } from "../../styles/themes/Context";
+import { ChibiButton } from "../ChibiButton/ChibiButton";
 
 export const Header = () => {
 	const context = useContext(NuttyverseContext);
@@ -49,7 +50,7 @@ export const Header = () => {
 		<div>
 			<div className={container}>
 				<div>{nuttyverse}</div>
-				<Chibi className={chibi} />
+				<ChibiButton className={chibi} onClick={context.toggleTheme} />
 			</div>
 
 			<div className={[themeClass, divider].join(" ")} />

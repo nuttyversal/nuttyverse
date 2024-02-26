@@ -6,11 +6,13 @@ import {
 } from "@vanilla-extract/css";
 
 const vars = createThemeContract({
+	background: null,
 	backgroundBefore: null,
 	backgroundAfter: null,
 });
 
 export const lightMode = createTheme(vars, {
+	background: "white",
 	backgroundBefore:
 		"linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
 	backgroundAfter:
@@ -18,6 +20,7 @@ export const lightMode = createTheme(vars, {
 });
 
 export const darkMode = createTheme(vars, {
+	background: "black",
 	backgroundBefore:
 		"linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))",
 	backgroundAfter:
@@ -25,10 +28,12 @@ export const darkMode = createTheme(vars, {
 });
 
 export const container = style({
+	background: vars.background,
 	position: "relative",
 	display: "flex",
 	flexDirection: "row",
 	overflow: "hidden",
+	zIndex: 10,
 });
 
 export const overlay = style({

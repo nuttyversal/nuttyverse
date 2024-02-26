@@ -18,7 +18,7 @@ export const Marquee = (props: Props) => {
 	const themeClass = context.theme === "light" ? lightMode : darkMode;
 
 	return (
-		<div className={container}>
+		<div className={[themeClass, container].join(" ")}>
 			{/* Kage Bunshin no Jutsu */}
 			<div className={marquee}>{props.children}</div>
 			<div className={marqueeShadowClone}>{props.children}</div>
