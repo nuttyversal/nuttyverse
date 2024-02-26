@@ -22,7 +22,26 @@ export const Landing = () => {
 
 	return (
 		<NuttyverseContext.Provider value={initialContext}>
-			<Singularity />
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "center",
+					alignItems: "center",
+					backgroundColor: theme === "light" ? "white" : "black",
+					width: "100%",
+					minHeight: "100vh",
+				}}
+			>
+				<main
+					style={{
+						margin: "auto",
+						width: "500px",
+						padding: "1em 2em",
+					}}
+				>
+					<Singularity />
+				</main>
+			</div>
 		</NuttyverseContext.Provider>
 	);
 };

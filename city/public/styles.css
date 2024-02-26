@@ -2,25 +2,6 @@
 	padding: 0;
 }
 
-body {
-	background: white;
-	display: flex;
-	align-items: center;
-	line-height: 1.5em;
-	height: 100vh;
-	margin: 0;
-
-	@media screen and (prefers-color-scheme: dark) {
-		background: black;
-	}
-}
-
-main {
-	margin: auto;
-	width: 500px;
-	padding: 1em 2em;
-}
-
 @media (max-width: 500px) {
 	main {
 		width: calc(100% - 2em);
