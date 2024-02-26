@@ -57,14 +57,22 @@ export const Introduction = () => {
 				<UnorderedList>
 					<ListItem>
 						Follow me on{" "}
-						<Link href="https://neocities.org/site/nuttyverse" newTab>
+						<Link
+							href="https://neocities.org/site/nuttyverse"
+							newTab
+							glow
+						>
 							Neocities
 						</Link>{" "}
 						for updates!
 					</ListItem>
 					<ListItem>
 						Feel free to take a 👀 at the{" "}
-						<Link href="https://github.com/nuttyversal/nuttyverse" newTab>
+						<Link
+							href="https://github.com/nuttyversal/nuttyverse"
+							newTab
+							glow
+						>
 							source code
 						</Link>
 						.
