@@ -44,6 +44,7 @@ export const Button = (props: ButtonProps) => {
 					{...props.banner}
 					themeClass={themeClass}
 					isHovered={isHovered}
+					glow={glow}
 				/>
 			)}
 		</div>
@@ -58,6 +59,7 @@ type ButtonBannerProps = {
 type ButtonBannerInternalProps = {
 	themeClass: string;
 	isHovered: boolean;
+	glow: boolean;
 };
 
 export const ButtonBanner = (
@@ -68,7 +70,14 @@ export const ButtonBanner = (
 		: ("notHovered" as const);
 
 	const bannerVariant = bannerVariants({ state: bannerState });
-	const classNames = [props.themeClass, bannerVariant].join(" ");
+
+	const classNames = [
+		props.themeClass,
+		props.glow ? withGlow : null,
+		bannerVariant,
+	]
+		.filter((x) => x !== null)
+		.join(" ");
 
 	return <div className={classNames}>{props.children}</div>;
 };
