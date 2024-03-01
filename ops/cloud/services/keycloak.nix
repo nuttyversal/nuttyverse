@@ -8,6 +8,7 @@
 			settings = {
 				hostname = "keycloak.nuttyver.se";
 				http-port = 25625;
+				proxy = "edge";
 			};
 
 			database = {
