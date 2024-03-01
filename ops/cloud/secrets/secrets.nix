@@ -10,6 +10,10 @@ in {
 		publicKeys = [ versal cloud ];
 	};
 
+	"keycloak-database-password.age" = {
+		publicKeys = [ versal cloud ];
+	};
+
 	"nutty-bot-environment.age" = {
 		publicKeys = [ versal cloud ];
 	};

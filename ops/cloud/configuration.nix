@@ -13,6 +13,7 @@ with lib;
 		# Service Configuration
 		./services/caddy.nix
 		./services/gitea.nix
+		./services/keycloak.nix
 		./services/postgresql.nix
 		./services/redis.nix
 		./services/tailscale.nix
