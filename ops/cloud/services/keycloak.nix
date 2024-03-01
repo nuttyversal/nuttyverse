@@ -34,8 +34,8 @@
 			keycloak-database-password = {
 				file = ../secrets/keycloak-database-password.age;
 				path = "/run/secrets/keycloak-database-password";
-				owner = "keycloak";
-				group = "keycloak";
+				owner = "root";
+				group = "root";
 				mode = "600";
 			};
 		};
