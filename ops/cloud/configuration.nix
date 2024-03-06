@@ -17,6 +17,7 @@ with lib;
 		./services/postgresql.nix
 		./services/redis.nix
 		./services/tailscale.nix
+		./services/vaultwarden.nix
 
 		# Container Configuration
 		./containers/blocks.nix
