@@ -21,7 +21,6 @@
 				ROCKET_PORT = 9273;
 				ROCKET_LOG = "critical";
 				SIGNUPS_ALLOWED = true;
-				LOG_LEVEL = "debug";
 			};
 		};
 
