@@ -5,10 +5,11 @@
 		vaultwarden = {
 			enable = true;
 
-			# CREATE DATABASE vaultwarden;
-			# CREATE USER vaultwarden WITH ENCRYPTED PASSWORD '<database-password>';
-			# GRANT ALL ON DATABASE vaultwarden TO vaultwarden;
-			# GRANT ALL PRIVILEGES ON DATABASE vaultwarden TO vaultwarden;
+			# =# CREATE DATABASE vaultwarden;
+			# =# CREATE USER vaultwarden WITH ENCRYPTED PASSWORD '<database-password>';
+			# =# GRANT ALL ON DATABASE vaultwarden TO vaultwarden;
+			# =# GRANT ALL PRIVILEGES ON DATABASE vaultwarden TO vaultwarden;
+			# =# GRANT ALL ON SCHEMA public TO vaultwarden;
 			dbBackend = "postgresql";
 
 			# The database connection URL is stored in:
