@@ -19,8 +19,9 @@
 				DOMAIN = "https://vault.nuttyver.se";
 				ROCKET_ADDRESS = "127.0.0.1";
 				ROCKET_PORT = 9273;
-				ROCKET_LOG = "debug";
+				ROCKET_LOG = "critical";
 				SIGNUPS_ALLOWED = true;
+				LOG_LEVEL = "debug";
 			};
 		};
 
