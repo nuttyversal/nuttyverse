@@ -4,7 +4,6 @@
 	services = {
 		vaultwarden = {
 			enable = true;
-			backupDir = "/data/vaultwarden/backups";
 
 			# CREATE DATABASE vaultwarden;
 			# CREATE USER vaultwarden WITH ENCRYPTED PASSWORD '<database-password>';
