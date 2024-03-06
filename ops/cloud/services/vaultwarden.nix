@@ -40,8 +40,8 @@
 			vaultwarden-environment = {
 				file = ../secrets/vaultwarden-environment.age;
 				path = "/run/secrets/vaultwarden-environment";
-				owner = "root";
-				group = "root";
+				owner = "vaultwarden";
+				group = "vaultwarden";
 				mode = "600";
 			};
 		};
