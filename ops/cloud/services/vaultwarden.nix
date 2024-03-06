@@ -16,7 +16,7 @@
 
 			config = {
 				DATA_FOLDER = "/data/vaultwarden";
-				DOMAIN = "vault.nuttyver.se";
+				DOMAIN = "https://vault.nuttyver.se";
 				ROCKET_ADDRESS = "127.0.0.1";
 				ROCKET_PORT = 9273;
 				ROCKET_LOG = "critical";
