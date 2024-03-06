@@ -4,8 +4,16 @@
 	services = {
 		vaultwarden = {
 			enable = true;
-			dbBackend = "postgresql";
 			backupDir = "/data/vaultwarden/backups";
+
+			# CREATE DATABASE vaultwarden;
+			# CREATE USER vaultwarden WITH ENCRYPTED PASSWORD '<database-password>';
+			# GRANT ALL ON DATABASE vaultwarden TO vaultwarden;
+			# GRANT ALL PRIVILEGES ON DATABASE vaultwarden TO vaultwarden;
+			dbBackend = "postgresql";
+
+			# The database connection URL is stored in:
+			environmentFile = "/run/secrets/vaultwarden-environment";
 
 			config = {
 				DATA_FOLDER = "/data/vaultwarden";

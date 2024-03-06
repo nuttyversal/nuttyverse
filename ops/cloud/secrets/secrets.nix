@@ -21,4 +21,8 @@ in {
 	"redis-password.age" = {
 		publicKeys = [ versal cloud ];
 	};
+
+	"vaultwarden-environment.age" = {
+		publicKeys = [ versal cloud ];
+	};
 }
