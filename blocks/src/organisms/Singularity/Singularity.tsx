@@ -31,10 +31,10 @@ export const UnderConstruction = () => {
 
 export const ExploreInnerWorld = () => {
 	return (
-		<Button glow sparkle banner={{ children: <UnderConstruction /> }}>
-			<Text as="span" style={{ color: "inherit" }}>
+		<Text as="span" style={{ color: "inherit" }}>
+			<Button glow sparkle banner={{ children: <UnderConstruction /> }}>
 				Explore my inner world
-			</Text>
-		</Button>
+			</Button>
+		</Text>
 	);
 };
