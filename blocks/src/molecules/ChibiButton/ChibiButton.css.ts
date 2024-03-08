@@ -1,7 +1,8 @@
 import { style } from "@vanilla-extract/css";
 
 export const base = style({
-	transition: "all 0.1s ease-in-out",
+	width: "125px",
+	transition: "all 0.2s ease-out",
 	cursor: "pointer",
 	background: "none",
 	border: "none",

@@ -17,4 +17,10 @@ export default meta;
 
 type Story = StoryObj<typeof ChibiButton>;
 
-export const Component: Story = {};
+export const Component: Story = {
+	render: (args) => (
+		<div style={{ display: "flex", justifyContent: "center" }}>
+			<ChibiButton {...args} />
+		</div>
+	),
+};
