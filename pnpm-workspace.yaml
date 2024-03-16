@@ -1,3 +1,4 @@
 packages:
   - blocks
   - city
+  - tools/obsidian
