@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import classNames from "classnames";
 import {
 	bannerVariants,
 	base,
@@ -37,16 +38,14 @@ export const Button = (props: ButtonProps) => {
 
 	const { children, sparkle, glow, banner, ...htmlButtonProps } = props;
 	const themeClass = context.theme === "light" ? lightMode : darkMode;
-	const classNames = [base, themeClass, glow ? withGlow : undefined]
-		.filter((x) => x !== undefined)
-		.join(" ");
+	const buttonClassNames = classNames(base, themeClass, { [withGlow]: glow });
 
 	return (
 		<div className={container}>
 			<button
 				onMouseEnter={() => setIsHovered(true)}
 				onMouseLeave={() => setIsHovered(false)}
-				className={classNames}
+				className={buttonClassNames}
 				{...htmlButtonProps}
 			>
 				{sparkle && (isHovered ? "✧ " : "✦ ")}
@@ -86,19 +85,13 @@ type ButtonBannerInternalProps = {
 export const ButtonBanner = (
 	props: ButtonBannerProps & ButtonBannerInternalProps,
 ) => {
-	const bannerState = props.isHovered
-		? ("hovered" as const)
-		: ("notHovered" as const);
+	const bannerVariant = bannerVariants({
+		state: props.isHovered ? "hovered" : "notHovered",
+	});
 
-	const bannerVariant = bannerVariants({ state: bannerState });
+	const bannerClassNames = classNames(props.themeClass, bannerVariant, {
+		[withGlow]: props.glow,
+	});
 
-	const classNames = [
-		props.themeClass,
-		props.glow ? withGlow : null,
-		bannerVariant,
-	]
-		.filter((x) => x !== null)
-		.join(" ");
-
-	return <div className={classNames}>{props.children}</div>;
+	return <div className={bannerClassNames}>{props.children}</div>;
 };
