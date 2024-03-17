@@ -12,4 +12,15 @@ export const base = style({
 	":active": {
 		transform: "translateY(0.5em)",
 	},
+
+	"@media": {
+		all: {
+			opacity: 0,
+			width: "0px",
+		},
+		"screen and (min-width: 500px)": {
+			opacity: 1,
+			width: "125px",
+		},
+	},
 });
