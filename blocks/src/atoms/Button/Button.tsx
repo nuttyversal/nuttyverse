@@ -34,7 +34,7 @@ type ButtonProps = {
 
 export const Button = (props: ButtonProps) => {
 	const context = useContext(NuttyverseContext);
-	const [isHovered, setIsHovered] = useState(false);
+	const { isHovered, handleMouseEnter, handleMouseLeave } = useHover();
 
 	const { children, sparkle, glow, banner, ...htmlButtonProps } = props;
 	const themeClass = context.theme === "light" ? lightMode : darkMode;
@@ -43,8 +43,8 @@ export const Button = (props: ButtonProps) => {
 	return (
 		<div className={container}>
 			<button
-				onMouseEnter={() => setIsHovered(true)}
-				onMouseLeave={() => setIsHovered(false)}
+				onMouseEnter={handleMouseEnter}
+				onMouseLeave={handleMouseLeave}
 				className={buttonClassNames}
 				{...htmlButtonProps}
 			>
@@ -95,3 +95,16 @@ export const ButtonBanner = (
 
 	return <div className={bannerClassNames}>{props.children}</div>;
 };
+
+/**
+ * A custom hook that returns the hover state and event handlers.
+ *
+ * @returns An object containing the hover state and event handlers.
+ */
+function useHover() {
+	const [isHovered, setIsHovered] = useState(false);
+	const handleMouseEnter = () => setIsHovered(true);
+	const handleMouseLeave = () => setIsHovered(false);
+
+	return { isHovered, handleMouseEnter, handleMouseLeave };
+}
