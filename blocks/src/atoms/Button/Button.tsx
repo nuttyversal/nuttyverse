@@ -1,4 +1,5 @@
 import { useContext, useState } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import classNames from "classnames";
 import {
 	bannerVariants,
@@ -14,7 +15,7 @@ type ButtonProps = {
 	/**
 	 * Specifies the button's content.
 	 */
-	children: React.ReactNode;
+	children: ReactNode;
 
 	/**
 	 * If enabled (`true`), wraps the `children` with ✦ sparkles ✦.
@@ -30,7 +31,7 @@ type ButtonProps = {
 	 * Defines the settings for a banner displayed behind the button when hovered.
 	 */
 	banner?: ButtonBannerProps;
-} & React.ComponentPropsWithoutRef<"button">;
+} & ComponentPropsWithoutRef<"button">;
 
 export const Button = (props: ButtonProps) => {
 	const context = useContext(NuttyverseContext);
@@ -66,9 +67,6 @@ export const Button = (props: ButtonProps) => {
 };
 
 type ButtonBannerProps = {
-	/**
-	 * Specifies the button banner's content.
-	 */
 	children: React.ReactNode;
 };
 
