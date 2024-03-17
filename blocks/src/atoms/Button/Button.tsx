@@ -10,17 +10,32 @@ import {
 import { NuttyverseContext } from "../../styles/themes/Context";
 
 type ButtonProps = {
+	/**
+	 * Specifies the button's content.
+	 */
 	children: React.ReactNode;
+
+	/**
+	 * If enabled (`true`), wraps the `children` with ✦ sparkles ✦.
+	 */
+	sparkle?: boolean;
+
+	/**
+	 * If enabled (`true`), applies a glow effect to the button in dark mode.
+	 */
+	glow?: boolean;
+
+	/**
+	 * Defines the settings for a banner displayed behind the button when hovered.
+	 */
 	banner?: ButtonBannerProps;
-	sparkle?: boolean | any;
-	glow?: boolean | any;
 } & React.ComponentPropsWithoutRef<"button">;
 
 export const Button = (props: ButtonProps) => {
 	const context = useContext(NuttyverseContext);
 	const [isHovered, setIsHovered] = useState(false);
 
-	const { children, sparkle, glow, ...buttonProps } = props;
+	const { children, sparkle, glow, banner, ...htmlButtonProps } = props;
 	const themeClass = context.theme === "light" ? lightMode : darkMode;
 	const classNames = [base, themeClass, glow ? withGlow : undefined]
 		.filter((x) => x !== undefined)
@@ -32,19 +47,19 @@ export const Button = (props: ButtonProps) => {
 				onMouseEnter={() => setIsHovered(true)}
 				onMouseLeave={() => setIsHovered(false)}
 				className={classNames}
-				{...buttonProps}
+				{...htmlButtonProps}
 			>
 				{sparkle && (isHovered ? "✧ " : "✦ ")}
 				{children}
 				{sparkle && (isHovered ? " ✧" : " ✦")}
 			</button>
 
-			{props.banner && (
+			{banner && (
 				<ButtonBanner
-					{...props.banner}
+					{...banner}
 					themeClass={themeClass}
 					isHovered={isHovered}
-					glow={glow}
+					glow={glow ?? false}
 				/>
 			)}
 		</div>
@@ -52,10 +67,16 @@ export const Button = (props: ButtonProps) => {
 };
 
 type ButtonBannerProps = {
+	/**
+	 * Specifies the button banner's content.
+	 */
 	children: React.ReactNode;
-	background?: string;
 };
 
+/**
+ * These props are not part of the public API. They are implicitly passed
+ * through from `Button` to `ButtonBanner`.
+ */
 type ButtonBannerInternalProps = {
 	themeClass: string;
 	isHovered: boolean;
