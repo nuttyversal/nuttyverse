@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
+import { Text } from "~/atoms/Text/Text";
 import { OrderedList } from "./OrderedList";
 import { ListItem } from "./ListItem";
-import { Text } from "../Text/Text";
 
 const meta: Meta<typeof OrderedList> = {
 	title: "atoms/List/Ordered",

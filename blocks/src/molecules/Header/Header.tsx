@@ -1,7 +1,8 @@
 import { useContext } from "react";
-import { Marquee } from "../../atoms/Marquee/Marquee";
-import { Chibi } from "../../atoms/Chibi/Chibi";
-import { Text } from "../../atoms/Text/Text";
+import { Marquee } from "~/atoms/Marquee/Marquee";
+import { Text } from "~/atoms/Text/Text";
+import { ChibiButton } from "~/molecules/ChibiButton/ChibiButton";
+import { NuttyverseContext } from "~/styles/themes/context";
 import {
 	chibi,
 	container,
@@ -11,8 +12,6 @@ import {
 	header,
 	lightMode,
 } from "./Header.css";
-import { NuttyverseContext } from "../../styles/themes/Context";
-import { ChibiButton } from "../ChibiButton/ChibiButton";
 
 export const Header = () => {
 	const context = useContext(NuttyverseContext);

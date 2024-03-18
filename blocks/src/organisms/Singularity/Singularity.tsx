@@ -1,7 +1,7 @@
-import { Button } from "../../atoms/Button/Button";
-import { Text } from "../../atoms/Text/Text";
-import { Introduction } from "../../molecules/Introduction/Introduction";
-import { Header } from "../../molecules/Header/Header";
+import { Button } from "~/atoms/Button/Button";
+import { Text } from "~/atoms/Text/Text";
+import { Introduction } from "~/molecules/Introduction/Introduction";
+import { Header } from "~/molecules/Header/Header";
 
 export const Singularity = () => {
 	return (

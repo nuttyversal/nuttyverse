@@ -1,6 +1,6 @@
 import { useContext } from "react";
+import { NuttyverseContext } from "~/styles/themes/context";
 import { base, darkMode, lightMode, withGlow } from "./Image.css";
-import { NuttyverseContext } from "../../styles/themes/context";
 
 type ImageProps = {
 	glow?: boolean | any;

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
-import { Text } from "../Text/Text";
+import { Text } from "~/atoms/Text/Text";
+import { NuttyverseContext } from "~/styles/themes/context";
 import { darkMode, lightMode, link, withGlow } from "./Link.css";
-import { NuttyverseContext } from "../../styles/themes/Context";
 
 type Props = {
 	children: React.ReactNode;

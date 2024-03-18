@@ -1,4 +1,6 @@
 import { useContext } from "react";
+import { NuttyverseContext } from "~/styles/themes/context";
+import { FontSize } from "~/styles/themes/constants";
 import {
 	withDropCap,
 	responsiveFontSize,
@@ -7,8 +9,6 @@ import {
 	base,
 	withGlow,
 } from "./Text.css";
-import { NuttyverseContext } from "../../styles/themes/Context";
-import { FontSize } from "../../styles/themes/constants";
 
 const DEFAULT_OPSZ = 18;
 const DEFAULT_WDTH = 85;

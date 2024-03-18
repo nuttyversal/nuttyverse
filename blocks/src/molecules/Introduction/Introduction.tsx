@@ -1,10 +1,9 @@
 import { useContext } from "react";
-import { UnorderedList } from "../../atoms/List/UnorderedList";
-import { ListItem } from "../../atoms/List/ListItem";
-import { Link } from "../../atoms/Link/Link";
-import { Text } from "../../atoms/Text/Text";
-import { NuttyverseContext } from "../../styles/themes/Context";
-import { Image } from "../../atoms/Image/Image";
+import { UnorderedList } from "~/atoms/List/UnorderedList";
+import { ListItem } from "~/atoms/List/ListItem";
+import { Link } from "~/atoms/Link/Link";
+import { Text } from "~/atoms/Text/Text";
+import { NuttyverseContext } from "~/styles/themes/context";
 
 export const Introduction = () => {
 	const context = useContext(NuttyverseContext);

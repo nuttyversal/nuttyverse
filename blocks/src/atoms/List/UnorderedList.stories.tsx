@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/react";
+import { Text } from "~/atoms/Text/Text";
 import { UnorderedList } from "./UnorderedList";
 import { ListItem } from "./ListItem";
-import { Text } from "../Text/Text";
 
 const meta: Meta<typeof UnorderedList> = {
 	title: "atoms/List/Unordered",

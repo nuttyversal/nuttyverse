@@ -9,7 +9,7 @@ import {
 	lightMode,
 	withGlow,
 } from "./Button.css";
-import { NuttyverseContext } from "../../styles/themes/context";
+import { NuttyverseContext } from "~/styles/themes/context";
 
 type ButtonProps = {
 	/**

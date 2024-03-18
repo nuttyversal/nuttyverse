@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
-
+import { typeScale } from "~/styles/themes/constants";
 import { Text } from "./Text";
-import { typeScale } from "../../styles/themes/constants";
 
 const meta: Meta<typeof Text> = {
 	title: "atoms/Text",

@@ -1,4 +1,4 @@
-import { Chibi } from "../../atoms/Chibi/Chibi";
+import { Chibi } from "~/atoms/Chibi/Chibi";
 import { base } from "./ChibiButton.css";
 
 type ChibiButtonProps = {

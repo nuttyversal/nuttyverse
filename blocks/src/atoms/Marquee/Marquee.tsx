@@ -7,7 +7,7 @@ import {
 	marqueeShadowClone,
 	overlay,
 } from "./Marquee.css";
-import { NuttyverseContext } from "../../styles/themes/Context";
+import { NuttyverseContext } from "~/styles/themes/context";
 
 type Props = {
 	children: React.ReactNode;

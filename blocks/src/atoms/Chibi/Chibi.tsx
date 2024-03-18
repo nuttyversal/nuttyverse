@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { NuttyverseContext } from "../../styles/themes/Context";
+import { NuttyverseContext } from "~/styles/themes/context";
 
 type Props = {
 	className?: string;
