@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import classNames from "classnames";
 import { NuttyverseContext } from "~/styles/themes/context";
 import { FontSize } from "~/styles/themes/constants";
 import {
@@ -73,35 +74,34 @@ export const Text = <Component extends React.ElementType>(
 	const fontOpsz = opsz ?? DEFAULT_OPSZ;
 	const fontWdth = wdth ?? DEFAULT_WDTH;
 	const fontVariationSettings = `"opsz" ${fontOpsz}, "wdth" ${fontWdth}`;
-
 	const fontWeight = weight ?? DEFAULT_WEIGHT;
 	const fontSize = size ?? inferredFontSize ?? DEFAULT_SIZE;
-
-	// [TODO] Should the transition be applied to all CSS properties?
 	const transition = "all 0.2s ease-out";
 
-	const classNames = [
+	const textStyles = {
+		margin,
+		fontVariationSettings,
+		fontWeight,
+		transition,
+		...polymorphicProps.style,
+	};
+
+	const textClassNames = classNames(
 		base,
 		themeClass,
-		glow ? withGlow : null,
-		dropCap ? withDropCap : null,
 		responsiveFontSize[fontSize],
 		polymorphicProps.className,
-	]
-		.filter((x) => x !== null)
-		.join(" ");
+		{
+			[withGlow]: glow,
+			[withDropCap]: dropCap,
+		},
+	);
 
 	return (
 		<Component
 			{...polymorphicProps}
-			style={{
-				margin,
-				fontVariationSettings,
-				fontWeight,
-				transition,
-				...polymorphicProps.style,
-			}}
-			className={classNames}
+			style={textStyles}
+			className={textClassNames}
 		>
 			{children}
 		</Component>

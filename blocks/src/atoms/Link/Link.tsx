@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import classNames from "classnames";
 import { Text } from "~/atoms/Text/Text";
 import { NuttyverseContext } from "~/styles/themes/context";
 import { darkMode, lightMode, link, withGlow } from "./Link.css";
@@ -13,15 +14,14 @@ type Props = {
 export const Link: React.FC<Props> = (props) => {
 	const context = useContext(NuttyverseContext);
 	const themeClass = context.theme === "light" ? lightMode : darkMode;
-
-	const classNames = [link, themeClass, props.glow ? withGlow : undefined]
-		.filter((x) => x !== undefined)
-		.join(" ");
+	const linkClassNames = classNames(link, themeClass, {
+		[withGlow]: props.glow,
+	});
 
 	return (
 		<Text
 			as="a"
-			className={classNames}
+			className={linkClassNames}
 			href={props.href}
 			target={props.newTab ? "_blank" : ""}
 		>

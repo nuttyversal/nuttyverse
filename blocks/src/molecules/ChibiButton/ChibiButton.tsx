@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { Chibi } from "~/atoms/Chibi/Chibi";
 import { base } from "./ChibiButton.css";
 
@@ -10,7 +11,7 @@ export const ChibiButton: React.FC<ChibiButtonProps> = (props) => {
 	return (
 		<button
 			onClick={props.onClick}
-			className={[props.className, base].join(" ")}
+			className={classNames(props.className, base)}
 		>
 			<Chibi className={props.className} />
 		</button>

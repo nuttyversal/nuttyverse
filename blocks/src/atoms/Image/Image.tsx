@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import classNames from "classnames";
 import { NuttyverseContext } from "~/styles/themes/context";
 import { base, darkMode, lightMode, withGlow } from "./Image.css";
 
@@ -7,10 +8,11 @@ type ImageProps = {
 } & React.ComponentPropsWithoutRef<"img">;
 
 export const Image = (props: ImageProps) => {
-	const { glow, ...imgProps } = props;
 	const context = useContext(NuttyverseContext);
 	const themeClass = context.theme === "light" ? lightMode : darkMode;
-	const classNames = [base, themeClass, glow ? withGlow : undefined];
 
-	return <img className={classNames.join(" ")} {...imgProps} />;
+	const { glow, ...htmlImgProps } = props;
+	const imageClassNames = classNames(base, themeClass, { [withGlow]: glow });
+
+	return <img className={imageClassNames} {...htmlImgProps} />;
 };
