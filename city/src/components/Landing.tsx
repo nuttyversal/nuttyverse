@@ -1,18 +1,26 @@
 import { useState } from "react";
-import { NuttyverseContext, Singularity } from "@nuttyverse/blocks";
+import {
+	NuttyverseContext,
+	Singularity,
+	setDocumentRootBackground,
+} from "@nuttyverse/blocks";
 import { body, darkMode, lightMode, main } from "./Landing.css.ts";
 
 export const Landing = () => {
 	const colorSchemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
 	const defaultTheme = colorSchemeQuery.matches ? "dark" : "light";
+
 	const [theme, setTheme] = useState<"light" | "dark">(defaultTheme);
+	setDocumentRootBackground(defaultTheme);
 
 	colorSchemeQuery.addEventListener("change", (event) => {
 		setTheme(event.matches ? "dark" : "light");
+		setDocumentRootBackground(event.matches ? "dark" : "light");
 	});
 
 	const toggleTheme = () => {
 		setTheme(theme === "light" ? "dark" : "light");
+		setDocumentRootBackground(theme === "light" ? "dark" : "light");
 	};
 
 	const initialContext = {
