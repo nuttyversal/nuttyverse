@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import classNames from "classnames";
+import { NuttyverseContext } from "~/styles/themes/context";
 import {
 	bannerVariants,
 	base,
@@ -8,8 +9,8 @@ import {
 	darkMode,
 	lightMode,
 	withGlow,
+	withNotAllowedCursor,
 } from "./Button.css";
-import { NuttyverseContext } from "~/styles/themes/context";
 
 type ButtonProps = {
 	/**
@@ -39,7 +40,11 @@ export const Button = (props: ButtonProps) => {
 
 	const { children, sparkle, glow, banner, ...htmlButtonProps } = props;
 	const themeClass = context.theme === "light" ? lightMode : darkMode;
-	const buttonClassNames = classNames(base, themeClass, { [withGlow]: glow });
+
+	const buttonClassNames = classNames(base, themeClass, {
+		[withGlow]: glow,
+		[withNotAllowedCursor]: htmlButtonProps.disabled,
+	});
 
 	return (
 		<div className={container}>

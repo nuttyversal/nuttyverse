@@ -37,6 +37,7 @@ export const base = style({
 	background: vars.backgroundColor,
 	color: vars.foregroundColor,
 	fontSize: "1em",
+	cursor: "pointer",
 	fontWeight: "normal",
 	fontStyle: "normal",
 	textTransform: "lowercase",
@@ -46,7 +47,6 @@ export const base = style({
 	borderStyle: "solid",
 	borderRadius: "3px",
 	padding: "4px 0",
-	cursor: "not-allowed",
 	transition: "all 0.2s ease-out",
 	width: "100%",
 	zIndex: 1,
@@ -94,4 +94,8 @@ export type BannerVariants = RecipeVariants<typeof bannerVariants>;
 
 export const withGlow = style({
 	boxShadow: vars.glow.boxShadow,
+});
+
+export const withNotAllowedCursor = style({
+	cursor: "not-allowed",
 });
