@@ -10,8 +10,16 @@ import {
 } from "./Image.css";
 
 type ImageProps = {
-	glow?: boolean | any;
-	pixelated?: boolean | any;
+	/**
+	 * If enabled (`true`), applies a glow effect to the image in dark mode.
+	 */
+	glow?: boolean;
+
+	/**
+	 * If enabled (`true`), applies pixelated image rendering. This is useful
+	 * for rendering pixel art at increased sizes without blurring.
+	 */
+	pixelated?: boolean;
 } & React.ComponentPropsWithoutRef<"img">;
 
 export const Image = (props: ImageProps) => {

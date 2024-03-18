@@ -1,9 +1,16 @@
-import { useContext } from "react";
+import { CSSProperties, useContext } from "react";
 import { NuttyverseContext } from "~/styles/themes/context";
 
 type Props = {
+	/**
+	 * Additional class names to apply to the SVG element.
+	 */
 	className?: string;
-	style?: React.CSSProperties;
+
+	/**
+	 * Additional styles to apply to the SVG element.
+	 */
+	style?: CSSProperties;
 };
 
 export const Chibi = (props: Props) => {

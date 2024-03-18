@@ -1,7 +1,11 @@
+import { ReactNode } from "react";
 import { listItem } from "./ListItem.css";
 
 type Props = {
-	children: React.ReactNode;
+	/**
+	 * Specifies the list item's content.
+	 */
+	children: ReactNode;
 };
 
 export const ListItem: React.FC<Props> = (props) => {

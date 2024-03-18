@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { ReactNode, useContext } from "react";
 import {
 	container,
 	darkMode,
@@ -10,7 +10,10 @@ import {
 import { NuttyverseContext } from "~/styles/themes/context";
 
 type Props = {
-	children: React.ReactNode;
+	/**
+	 * Specifies the marquee's content.
+	 */
+	children: ReactNode;
 };
 
 export const Marquee = (props: Props) => {

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { ReactNode, useContext } from "react";
 import classNames from "classnames";
 import { NuttyverseContext } from "~/styles/themes/context";
 import { FontSize } from "~/styles/themes/constants";
@@ -18,14 +18,44 @@ const DEFAULT_SIZE = "base";
 const DEFAULT_COMPONENT = "p";
 
 type TextProps<Component extends React.ElementType> = {
-	children: React.ReactNode;
+	/**
+	 * Specifies the text's content.
+	 */
+	children: ReactNode;
+
+	/**
+	 * Specifies the HTML element to render.
+	 */
 	as?: Component;
-	color?: string;
+
+	/**
+	 * Specifies the text's font size.
+	 */
 	size?: FontSize;
+
+	/**
+	 * Specifies the text's font optical size (only for variable fonts).
+	 */
 	opsz?: number;
+
+	/**
+	 * Specifies the text's font width (only for variable fonts).
+	 */
 	wdth?: number;
+
+	/**
+	 * Specifies the text's font weight.
+	 */
 	weight?: number;
+
+	/**
+	 * If enabled (`true`), applies a drop cap effect to the text.
+	 */
 	dropCap?: boolean;
+
+	/**
+	 * If enabled (`true`), applies a glow effect to the text in dark mode.
+	 */
 	glow?: boolean;
 } & React.ComponentPropsWithoutRef<Component>;
 
@@ -37,7 +67,6 @@ export const Text = <Component extends React.ElementType>(
 
 	const {
 		as,
-		color,
 		size,
 		opsz,
 		wdth,

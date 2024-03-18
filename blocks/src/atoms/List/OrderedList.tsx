@@ -1,8 +1,11 @@
-import React from "react";
+import { ReactNode } from "react";
 import { orderedList } from "./OrderedList.css";
 
 type Props = {
-	children: React.ReactNode;
+	/**
+	 * Specifies the ordered list's content.
+	 */
+	children: ReactNode;
 };
 
 export const OrderedList: React.FC<Props> = (props) => {
