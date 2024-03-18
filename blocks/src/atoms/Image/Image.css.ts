@@ -26,9 +26,12 @@ export const base = style({
 	borderWidth: "3px",
 	borderRadius: "3px",
 	borderStyle: "solid",
-	imageRendering: "pixelated",
 });
 
 export const withGlow = style({
 	boxShadow: vars.glow.boxShadow,
+});
+
+export const withPixelatedRendering = style({
+	imageRendering: "pixelated",
 });
