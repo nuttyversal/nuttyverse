@@ -1,8 +1,8 @@
+import { useState } from "react";
+import { NuttyverseContext } from "../src/styles/themes/context";
+
 // Import CSS reset as a side effect.
 import "../src/styles/reset.css";
-
-import { useState } from "react";
-import { NuttyverseContext } from "../src/styles/themes/Context";
 
 /** @type { import('@storybook/react').Preview } */
 const preview = {
