@@ -4,6 +4,6 @@ import "./styles/reset.css";
 import { Button } from "./atoms/Button/Button";
 import { Text } from "./atoms/Text/Text";
 import { Singularity } from "./organisms/Singularity/Singularity";
-import { NuttyverseContext } from "./styles/themes/Context";
+import { NuttyverseContext } from "./styles/themes/context";
 
 export { Button, Text, Singularity, NuttyverseContext };
