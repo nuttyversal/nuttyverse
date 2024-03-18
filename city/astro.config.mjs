@@ -1,4 +1,5 @@
 import { defineConfig } from "astro/config";
+import tsconfigPaths from "vite-tsconfig-paths";
 import react from "@astrojs/react";
 import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
 
@@ -6,6 +7,6 @@ import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
 export default defineConfig({
 	integrations: [react()],
 	vite: {
-		plugins: [vanillaExtractPlugin()],
+		plugins: [vanillaExtractPlugin(), tsconfigPaths()],
 	},
 });

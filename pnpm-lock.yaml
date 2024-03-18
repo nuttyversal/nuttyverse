@@ -127,6 +127,9 @@ importers:
       typescript:
         specifier: ^5.3.3
         version: 5.3.3
+      vite-tsconfig-paths:
+        specifier: ^4.3.2
+        version: 4.3.2(typescript@5.3.3)(vite@4.5.1)
 
   tools/obsidian:
     devDependencies:
