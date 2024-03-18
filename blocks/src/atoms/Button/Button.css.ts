@@ -1,5 +1,6 @@
 import { createTheme, createThemeContract, style } from "@vanilla-extract/css";
 import { RecipeVariants, recipe } from "@vanilla-extract/recipes";
+import { typeScale } from "~/styles/themes/constants";
 
 const vars = createThemeContract({
 	backgroundColor: null,
@@ -36,8 +37,8 @@ export const container = style({
 export const base = style({
 	background: vars.backgroundColor,
 	color: vars.foregroundColor,
-	fontSize: "1em",
 	cursor: "pointer",
+	fontSize: typeScale.base,
 	fontWeight: "normal",
 	fontStyle: "normal",
 	textTransform: "lowercase",
