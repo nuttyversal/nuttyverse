@@ -4,6 +4,10 @@ install:
 	pnpm install
 
 test:
+	# [HACK] Use `npm install` instead of `pnpm install` to install prettier.
+	# We need to ensure that node_modules exists in this directory so that we
+	# don't run into any path issues when running `pnpm run test-format`.
+	npm install
 	pnpm run test-format
 
 start:
