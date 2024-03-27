@@ -77,8 +77,8 @@ jobs:
         if: steps.path-filter.outputs.src == 'true'
         run: |
           cd bot
-          nix-shell --run "just install"
-          nix-shell --run "just test"
+          nix develop -c bash -c "just install"
+          nix develop -c bash -c "just test"
       - name: Deploy
         if: steps.path-filter.outputs.src == 'true' && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
