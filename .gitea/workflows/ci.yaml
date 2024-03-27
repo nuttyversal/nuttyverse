@@ -83,9 +83,12 @@ jobs:
         if: steps.path-filter.outputs.src == 'true' && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
-          context: bot
+          context: .
+          file: bot/Dockerfile
           push: true
           tags: code.nuttyver.se/observable/bot:latest
+          secrets: |
+            "FONT_AWESOME_NPM_TOKEN=${{ secrets.FONT_AWESOME_NPM_TOKEN }}"
   fonts-µ-service:
     runs-on: [self-hosted, nix]
     container:
