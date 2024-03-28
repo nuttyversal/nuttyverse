@@ -6,7 +6,19 @@ in {
 		publicKeys = [ versal cloud ];
 	};
 
-	"gitea-actions-runner-token.age" = {
+	"gitea-actions-runner-0-token.age" = {
+		publicKeys = [ versal cloud ];
+	};
+
+	"gitea-actions-runner-1-token.age" = {
+		publicKeys = [ versal cloud ];
+	};
+
+	"gitea-actions-runner-2-token.age" = {
+		publicKeys = [ versal cloud ];
+	};
+
+	"gitea-actions-runner-3-token.age" = {
 		publicKeys = [ versal cloud ];
 	};
 

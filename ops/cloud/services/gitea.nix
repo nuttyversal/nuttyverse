@@ -1,6 +1,9 @@
-{ ... }:
+{ lib, ... }:
 
-{
+let
+	# Number of Gitea Action runners.
+	runnerCount = 4;
+in {
 	services = {
 		gitea = {
 			enable = true;
@@ -59,25 +62,26 @@
 		};
 
 		gitea-actions-runner = {
-			instances = {
-				runner = {
-					enable = true;
-					name = "runner";
-					url = "https://code.nuttyver.se";
-					tokenFile = "/run/secrets/gitea-actions-runner-token";
+			instances = 
+				lib.genAttrs
+					(builtins.genList builtins.toString runnerCount)
+					(index: {
+						enable = true;
+						name = "runner-${index}";
+						url = "https://code.nuttyver.se";
+						tokenFile = "/run/secrets/gitea-actions-runner-${index}-token";
 
-					settings = {
-						container = {
-							network = "host";
+						settings = {
+							container = {
+								network = "host";
+							};
 						};
-					};
 
-					labels = [
-						"self-hosted"
-						"nix:docker://nixpkgs/nix"
-					];
-				};
-			};
+						labels = [
+							"self-hosted"
+							"nix:docker://nixpkgs/nix"
+						];
+					});
 		};
 
 		caddy = {
@@ -101,9 +105,33 @@
 				mode = "600";
 			};
 
-			gitea-actions-runner-token = {
-				file = ../secrets/gitea-actions-runner-token.age;
-				path = "/run/secrets/gitea-actions-runner-token";
+			gitea-actions-runner-0-token = {
+				file = ../secrets/gitea-actions-runner-0-token.age;
+				path = "/run/secrets/gitea-actions-runner-0-token";
+				owner = "gitea";
+				group = "gitea";
+				mode = "600";
+			};
+
+			gitea-actions-runner-1-token = {
+				file = ../secrets/gitea-actions-runner-1-token.age;
+				path = "/run/secrets/gitea-actions-runner-1-token";
+				owner = "gitea";
+				group = "gitea";
+				mode = "600";
+			};
+
+			gitea-actions-runner-2-token = {
+				file = ../secrets/gitea-actions-runner-2-token.age;
+				path = "/run/secrets/gitea-actions-runner-2-token";
+				owner = "gitea";
+				group = "gitea";
+				mode = "600";
+			};
+
+			gitea-actions-runner-3-token = {
+				file = ../secrets/gitea-actions-runner-3-token.age;
+				path = "/run/secrets/gitea-actions-runner-3-token";
 				owner = "gitea";
 				group = "gitea";
 				mode = "600";
