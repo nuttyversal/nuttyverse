@@ -23,27 +23,18 @@ jobs:
         uses: actions/checkout@v4
       - name: Checkout unobservable submodule
         run: git submodule update --init --recursive
-      - name: Setup path filter
-        id: path-filter
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            src:
-              - 'blocks/**'
       - name: Prepare environment
-        if: steps.path-filter.outputs.src == 'true'
         uses: ./.gitea/actions/prepare
         with:
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build
-        if: steps.path-filter.outputs.src == 'true'
         run: |
           cd blocks
           nix develop -c bash -c "just install"
           nix develop -c bash -c "just test"
           nix develop -c bash -c "just build"
       - name: Deploy
-        if: steps.path-filter.outputs.src == 'true' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -61,26 +52,17 @@ jobs:
         run: apt update && apt install --yes git nodejs
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Setup path filter
-        id: path-filter
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            src:
-              - 'bot/**'
       - name: Prepare environment
-        if: steps.path-filter.outputs.src == 'true'
         uses: ./.gitea/actions/prepare
         with:
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Test
-        if: steps.path-filter.outputs.src == 'true'
         run: |
           cd bot
           nix develop -c bash -c "just install"
           nix develop -c bash -c "just test"
       - name: Deploy
-        if: steps.path-filter.outputs.src == 'true' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -106,26 +88,17 @@ jobs:
         uses: actions/checkout@v4
       - name: Checkout unobservable submodule
         run: git submodule update --init --recursive
-      - name: Setup path filter
-        id: path-filter
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            src:
-              - 'fonts/**'
       - name: Prepare environment
-        if: steps.path-filter.outputs.src == 'true'
         uses: ./.gitea/actions/prepare
         with:
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Test and build
-        if: steps.path-filter.outputs.src == 'true'
         run: |
           cd fonts
           nix develop -c bash -c "just test"
           nix develop -c bash -c "just build"
       - name: Deploy
-        if: steps.path-filter.outputs.src == 'true' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -141,28 +114,17 @@ jobs:
         run: apt update && apt install --yes git nodejs
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Setup path filter
-        id: path-filter
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            src:
-              - 'blocks/**'
-              - 'city/**'
       - name: Prepare environment
-        if: steps.path-filter.outputs.src == 'true'
         uses: ./.gitea/actions/prepare
         with:
           docker-password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build
-        if: steps.path-filter.outputs.src == 'true'
         run: |
           cd city
           nix-shell --run "just install"
           nix-shell --run "just test"
           nix-shell --run "just build"
       - name: Deploy
-        if: steps.path-filter.outputs.src == 'true'
         uses: bcomnes/deploy-to-neocities@v1
         with:
           api_token: ${{ secrets.NEOCITIES_TOKEN }}
