@@ -2,7 +2,7 @@
 
 let
 	# Number of Gitea Action runners.
-	runnerCount = 4;
+	runnerCount = 8;
 in {
 	services = {
 		gitea = {
