@@ -10,6 +10,8 @@ jobs:
     runs-on: [self-hosted, nix]
     container:
       image: ubuntu:mantic
+    env:
+      RUNNER_TOOL_CACHE: /toolcache
     steps:
       - name: Install dependencies
         run: apt update && apt install --yes git nodejs
@@ -47,6 +49,8 @@ jobs:
     runs-on: [self-hosted, nix]
     container:
       image: ubuntu:mantic
+    env:
+      RUNNER_TOOL_CACHE: /toolcache
     steps:
       - name: Install dependencies
         run: apt update && apt install --yes git nodejs
@@ -75,6 +79,8 @@ jobs:
     runs-on: [self-hosted, nix]
     container:
       image: ubuntu:mantic
+    env:
+      RUNNER_TOOL_CACHE: /toolcache
     steps:
       - name: Install dependencies
         run: apt update && apt install --yes git nodejs
@@ -109,6 +115,8 @@ jobs:
     runs-on: [self-hosted, nix]
     container:
       image: ubuntu:mantic
+    env:
+      RUNNER_TOOL_CACHE: /toolcache
     steps:
       - name: Install dependencies
         run: apt update && apt install --yes git nodejs
