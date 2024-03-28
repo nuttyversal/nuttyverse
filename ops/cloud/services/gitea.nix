@@ -69,7 +69,7 @@ in {
 						enable = true;
 						name = "runner-${index}";
 						url = "https://code.nuttyver.se";
-						tokenFile = "/run/secrets/gitea-actions-runner-${index}-token";
+						tokenFile = "/run/secrets/gitea-actions-runner-token";
 
 						settings = {
 							container = {
@@ -105,33 +105,9 @@ in {
 				mode = "600";
 			};
 
-			gitea-actions-runner-0-token = {
-				file = ../secrets/gitea-actions-runner-0-token.age;
-				path = "/run/secrets/gitea-actions-runner-0-token";
-				owner = "gitea";
-				group = "gitea";
-				mode = "600";
-			};
-
-			gitea-actions-runner-1-token = {
-				file = ../secrets/gitea-actions-runner-1-token.age;
-				path = "/run/secrets/gitea-actions-runner-1-token";
-				owner = "gitea";
-				group = "gitea";
-				mode = "600";
-			};
-
-			gitea-actions-runner-2-token = {
-				file = ../secrets/gitea-actions-runner-2-token.age;
-				path = "/run/secrets/gitea-actions-runner-2-token";
-				owner = "gitea";
-				group = "gitea";
-				mode = "600";
-			};
-
-			gitea-actions-runner-3-token = {
-				file = ../secrets/gitea-actions-runner-3-token.age;
-				path = "/run/secrets/gitea-actions-runner-3-token";
+			gitea-actions-runner-token = {
+				file = ../secrets/gitea-actions-runner-token.age;
+				path = "/run/secrets/gitea-actions-runner-token";
 				owner = "gitea";
 				group = "gitea";
 				mode = "600";
