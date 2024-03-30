@@ -48,9 +48,11 @@
 			};
 		};	
 
-		devShell = {
-			aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.mkShell {
-				buildInputs = [ agenix.packages.aarch64-darwin.default ];
+		devShells = {
+			aarch64-darwin = {
+				default = nixpkgs.legacyPackages.aarch64-darwin.mkShell {
+					buildInputs = [ agenix.packages.aarch64-darwin.default ];
+				};
 			};
 		};
 	};

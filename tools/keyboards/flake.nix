@@ -20,9 +20,11 @@
 			};
 		};
 
-		devShell = {
-			aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.mkShell {
-				buildInputs = [ kmonadPackage ];
+		devShells = {
+			aarch64-darwin = {
+				default = nixpkgs.legacyPackages.aarch64-darwin.mkShell {
+					buildInputs = [ kmonadPackage ];
+				};
 			};
 		};
 	};
