@@ -54,6 +54,11 @@
 			url = "./tools/keyboards";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
+
+		utils = {
+			url = "./tools/utils";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
    };
 
    outputs = { self, flake-utils, nixpkgs, ... } @ inputs: {
@@ -68,6 +73,7 @@
 					inputs.git.devShells.aarch64-darwin.default
 					inputs.gpg.devShells.aarch64-darwin.default
 					inputs.keyboards.devShells.aarch64-darwin.default
+					inputs.utils.devShells.aarch64-darwin.default
 				];
 			};
 		};
