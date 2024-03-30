@@ -1,0 +1,8 @@
+abbr g "git"
+abbr ga "git add"
+abbr gc "git commit --verbose"
+abbr gc! "git commit --verbose --amend"
+abbr gp "git push"
+abbr gco "git checkout"
+abbr gst "git status"
+abbr glog "git log --graph --pretty='%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"

@@ -35,6 +35,11 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
+		fish = {
+			url = "./tools/fish";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
+
 		git = {
 			url = "./tools/git";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -59,6 +64,7 @@
 					inputs.city.devShells.aarch64-darwin.default
 					inputs.fonts.devShells.aarch64-darwin.default
 					inputs.ops.devShells.aarch64-darwin.default
+					inputs.fish.devShells.aarch64-darwin.default
 					inputs.git.devShells.aarch64-darwin.default
 					inputs.gpg.devShells.aarch64-darwin.default
 					inputs.keyboards.devShells.aarch64-darwin.default
