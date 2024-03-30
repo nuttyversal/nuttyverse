@@ -48,8 +48,8 @@
 					inputs.blocks.devShells.aarch64-darwin.default
 					inputs.city.devShells.aarch64-darwin.default
 					inputs.fonts.devShells.aarch64-darwin.default
-					inputs.ops.devShell.aarch64-darwin
-					inputs.keyboards.devShell.aarch64-darwin
+					inputs.ops.devShells.aarch64-darwin.default
+					inputs.keyboards.devShells.aarch64-darwin.default
 				];
 			};
 		};
