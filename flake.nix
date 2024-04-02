@@ -60,6 +60,11 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
+		tmux = {
+			url = "./tools/tmux";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
+
 		utils = {
 			url = "./tools/utils";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -79,6 +84,7 @@
 					inputs.gpg.devShells.aarch64-darwin.default
 					inputs.keyboards.devShells.aarch64-darwin.default
 					inputs.nvim.devShells.aarch64-darwin.default
+					inputs.tmux.devShells.aarch64-darwin.default
 					inputs.utils.devShells.aarch64-darwin.default
 				];
 			};
