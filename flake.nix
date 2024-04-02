@@ -1,8 +1,8 @@
 {
-   description = "Nuttyverse";
+	description = "Nuttyverse";
 
-   inputs = {
-      nixpkgs = {
+	inputs = {
+		nixpkgs = {
 			url = "github:NixOS/nixpkgs/nixos-unstable";
 		};
 
@@ -59,9 +59,9 @@
 			url = "./tools/utils";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
-   };
+	};
 
-   outputs = { self, flake-utils, nixpkgs, ... } @ inputs: {
+	outputs = { self, flake-utils, nixpkgs, ... } @ inputs: {
 		devShell = {
 			aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.mkShell {
 				inputsFrom = [
