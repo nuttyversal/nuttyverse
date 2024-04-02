@@ -55,6 +55,11 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
+		nvim = {
+			url = "./tools/nvim";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
+
 		utils = {
 			url = "./tools/utils";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -73,6 +78,7 @@
 					inputs.git.devShells.aarch64-darwin.default
 					inputs.gpg.devShells.aarch64-darwin.default
 					inputs.keyboards.devShells.aarch64-darwin.default
+					inputs.nvim.devShells.aarch64-darwin.default
 					inputs.utils.devShells.aarch64-darwin.default
 				];
 			};
