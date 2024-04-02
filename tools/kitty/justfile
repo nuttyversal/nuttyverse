@@ -1,0 +1,4 @@
+#!/usr/bin/env -S just --justfile
+
+install:
+	ln -s `pwd` ~/.config
