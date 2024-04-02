@@ -1,5 +1,3 @@
-echo "Is this getting sourced?"
-
 function fish_prompt
 	echo
 
