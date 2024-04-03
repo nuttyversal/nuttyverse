@@ -135,6 +135,7 @@ require("lazy").setup("plugins")
 --
 
 require('config.lspconfig')
+require('config.lualine')
 require('config.telescope')
 require('config.toggleterm')
 require('config.treesitter')
