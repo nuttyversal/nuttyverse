@@ -9,7 +9,6 @@ return {
 			topdelete = { text = '' },
 			changedelete = { text = '' }
 		},
-		numhl = true,
-		linehl = true
+		numhl = true
 	}
 }
