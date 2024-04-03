@@ -38,7 +38,7 @@ function nix_shell_prompt
 	set_color normal
 
 	set_color blue
-	printf ' → '
+	printf ' -> '
 	set_color normal
 end
 
