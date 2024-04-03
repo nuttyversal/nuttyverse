@@ -134,3 +134,4 @@ require("lazy").setup("plugins")
 --
 
 require('config.telescope')
+require('config.toggleterm')
