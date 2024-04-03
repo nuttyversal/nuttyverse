@@ -75,6 +75,7 @@ vim.o.mouse = 'a'
 -- Appearance
 --
 
+vim.cmd("colorscheme lunaperche")
 vim.wo.cursorline = true
 vim.wo.number = true
 vim.wo.foldcolumn = "1"
