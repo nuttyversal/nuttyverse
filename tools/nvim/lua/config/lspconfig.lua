@@ -32,6 +32,22 @@ local on_attach = function(client, bufnr)
 	vim.keymap.set('n', '<space>ff', function() vim.lsp.buf.format { async = true } end, bufopts)
 end
 
+local border = {
+	{ "╭", "FloatBorder" },
+	{ "─", "FloatBorder" },
+	{ "╮", "FloatBorder" },
+	{ "│", "FloatBorder" },
+	{ "╯", "FloatBorder" },
+	{ "─", "FloatBorder" },
+	{ "╰", "FloatBorder" },
+	{ "│", "FloatBorder" },
+}
+
+local handlers =  {
+	["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = border }),
+	["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = border }),
+}
+
 -- LSP servers and clients are able to communicate to each other what features they support.
 --  By default, Neovim doesn't support everything that is in the LSP specification.
 --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
@@ -43,14 +59,17 @@ local servers = {
 	lua_ls = {
 		on_attach = on_attach,
 		capabilities = cmp_capabilities,
+		handlers = handlers
 	},
 	rust_analyzer = {
 		on_attach = on_attach,
 		capabilities = cmp_capabilities,
+		handlers = handlers
 	},
 	tsserver = {
 		on_attach = on_attach,
 		capabilities = cmp_capabilities,
+		handlers = handlers
 	}
 }
 
