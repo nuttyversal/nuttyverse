@@ -81,6 +81,16 @@ vim.wo.number = true
 vim.wo.foldcolumn = "1"
 vim.o.termguicolors = true
 
+if vim.g.neovide then
+   vim.g.neovide_cursor_antialiasing = true
+   vim.g.neovide_cursor_vfx_mode = "pixiedust"
+	vim.g.neovide_refresh_rate = 144
+	vim.g.neovide_scale_factor = 1
+
+	vim.o.guifont = "PragmataPro Liga:h18"
+	vim.o.linespace = 0
+end
+
 --
 -- Mappings
 --
