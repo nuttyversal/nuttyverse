@@ -37,16 +37,20 @@ end
 --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
 --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
 local capabilities = vim.lsp.protocol.make_client_capabilities()
+local cmp_capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 local servers = {
 	lua_ls = {
 		on_attach = on_attach,
+		capabilities = cmp_capabilities,
 	},
 	rust_analyzer = {
 		on_attach = on_attach,
+		capabilities = cmp_capabilities,
 	},
 	tsserver = {
 		on_attach = on_attach,
+		capabilities = cmp_capabilities,
 	}
 }
 
