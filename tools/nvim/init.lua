@@ -76,7 +76,6 @@ vim.opt.whichwrap:append "<>[]hl"
 -- Appearance
 --
 
-vim.cmd("colorscheme torte")
 vim.wo.cursorline = true
 vim.wo.number = true
 vim.wo.foldcolumn = "1"
@@ -154,6 +153,7 @@ require("lazy").setup("plugins")
 --
 
 require('config.autocomplete')
+require('config.catppuccin')
 require('config.lspconfig')
 require('config.lualine')
 require('config.telescope')
