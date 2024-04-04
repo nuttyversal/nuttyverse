@@ -153,6 +153,7 @@ require("lazy").setup("plugins")
 -- Configuration modules
 --
 
+require('config.autocomplete')
 require('config.lspconfig')
 require('config.lualine')
 require('config.telescope')
