@@ -70,6 +70,7 @@ vim.o.scrolloff = 5
 vim.o.sidescroll = 1
 vim.o.backspace = 'indent,eol,start'
 vim.o.mouse = 'a'
+vim.opt.whichwrap:append "<>[]hl"
 
 --
 -- Appearance
