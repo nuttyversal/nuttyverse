@@ -87,7 +87,7 @@ if vim.g.neovide then
 	vim.g.neovide_refresh_rate = 144
 	vim.g.neovide_scale_factor = 1
 
-	vim.o.guifont = "PragmataPro Liga:h18"
+	vim.o.guifont = "PragmataPro Mono Liga:h18"
 	vim.o.linespace = 2
 end
 
@@ -148,4 +148,5 @@ require('config.lspconfig')
 require('config.lualine')
 require('config.telescope')
 require('config.toggleterm')
+require('config.tree')
 require('config.treesitter')
