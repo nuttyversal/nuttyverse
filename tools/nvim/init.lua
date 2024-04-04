@@ -88,7 +88,7 @@ if vim.g.neovide then
 	vim.g.neovide_scale_factor = 1
 
 	vim.o.guifont = "PragmataPro Liga:h18"
-	vim.o.linespace = 0
+	vim.o.linespace = 2
 end
 
 --
