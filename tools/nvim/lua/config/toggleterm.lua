@@ -6,13 +6,11 @@ toggleterm.setup {
 	shade_terminals = true,
 	start_in_insert = true,
 	persist_size = true,
-	direction = 'float',
+	direction = 'horizontal',
 	close_on_exit = true,
-	float_opts = {
-		border = 'single',
-		width = math.floor(vim.o.columns * 0.9),
-		height = math.floor(vim.o.lines * 0.9),
-	},
+	size = function()
+		return vim.o.columns
+	end,
 }
 
 local function toggle(i)
