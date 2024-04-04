@@ -8,7 +8,9 @@ toggleterm.setup {
 	persist_size = true,
 	direction = 'float',
 	close_on_exit = true,
+
 	float_opts = {
+		border = 'curved',
 		width = function()
 			return math.floor(vim.o.columns * 0.9)
 		end,
