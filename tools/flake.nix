@@ -6,6 +6,10 @@
 			url = "github:NixOS/nixpkgs/nixos-unstable";
 		};
 
+		flake-utils = {
+			url = "github:numtide/flake-utils";
+		};
+
 		fish = {
 			url = "./fish";
 			inputs.nixpkgs.follows = "nixpkgs";
@@ -42,19 +46,24 @@
 		};
 	};
 
-	outputs = { self, nixpkgs, ... } @ inputs: {
-		devShell = {
-			aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.mkShell {
-				inputsFrom = [
-					inputs.fish.devShells.aarch64-darwin.default
-					inputs.git.devShells.aarch64-darwin.default
-					inputs.gpg.devShells.aarch64-darwin.default
-					inputs.keyboards.devShells.aarch64-darwin.default
-					inputs.nvim.devShells.aarch64-darwin.default
-					inputs.tmux.devShells.aarch64-darwin.default
-					inputs.utils.devShells.aarch64-darwin.default
-				];
-			};
-		};
-	};
+	outputs = inputs @ { self, flake-utils, nixpkgs, ... }:
+		flake-utils.lib.eachDefaultSystem (system:
+			let
+				pkgs = import nixpkgs {
+					inherit system;
+				};
+			in {
+				devShells.default = pkgs.mkShell {
+					inputsFrom = [
+						inputs.fish.devShells.${system}.default
+						inputs.git.devShells.${system}.default
+						inputs.gpg.devShells.${system}.default
+						inputs.keyboards.devShells.${system}.default
+						inputs.nvim.devShells.${system}.default
+						inputs.tmux.devShells.${system}.default
+						inputs.utils.devShells.${system}.default
+					];
+				};
+			}
+		);
 }
