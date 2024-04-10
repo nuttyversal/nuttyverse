@@ -6,6 +6,11 @@
 			url = "github:NixOS/nixpkgs/nixos-unstable";
 		};
 
+		nix-darwin = {
+			url = "github:LnL7/nix-darwin";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
+
 		nixos-generators = {
 			# Pinning to revision because kexec is broken in the latest HEAD.
 			# See https://github.com/nix-community/nixos-generators/issues/259.
@@ -19,7 +24,13 @@
 		};
 	};
 
-	outputs = inputs @ { nixpkgs, nixos-generators, agenix, ... }: {
+	outputs = inputs @ { nixpkgs, nix-darwin, nixos-generators, agenix, ... }: {
+		darwinConfigurations.nuttybook = nix-darwin.lib.darwinSystem {
+			modules = [
+				./book/configuration.nix
+			];
+		};
+
 		nixosConfigurations.nuttycloud = nixpkgs.lib.nixosSystem {
 			system = "x86_64-linux";
 
