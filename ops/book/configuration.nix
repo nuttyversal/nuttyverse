@@ -9,6 +9,10 @@
 		systemPackages = [ ];
 	};
 
+	nixpkgs = {
+		hostPlatform = "aarch64-darwin";
+	};
+
 	services = {
 		nix-daemon = {
 			enable = true;
