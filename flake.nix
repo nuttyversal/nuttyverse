@@ -35,38 +35,8 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
-		fish = {
-			url = "./tools/fish";
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
-
-		git = {
-			url = "./tools/git";
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
-
-		gpg = {
-			url = "./tools/gpg";
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
-
-		keyboards = {
-			url = "./tools/keyboards";
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
-
-		nvim = {
-			url = "./tools/nvim";
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
-
-		tmux = {
-			url = "./tools/tmux";
-			inputs.nixpkgs.follows = "nixpkgs";
-		};
-
-		utils = {
-			url = "./tools/utils";
+		tools = {
+			url = "./tools";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 	};
@@ -79,13 +49,7 @@
 					inputs.city.devShells.aarch64-darwin.default
 					inputs.fonts.devShells.aarch64-darwin.default
 					inputs.ops.devShells.aarch64-darwin.default
-					inputs.fish.devShells.aarch64-darwin.default
-					inputs.git.devShells.aarch64-darwin.default
-					inputs.gpg.devShells.aarch64-darwin.default
-					inputs.keyboards.devShells.aarch64-darwin.default
-					inputs.nvim.devShells.aarch64-darwin.default
-					inputs.tmux.devShells.aarch64-darwin.default
-					inputs.utils.devShells.aarch64-darwin.default
+					inputs.tools.devShells.aarch64-darwin.default
 				];
 			};
 		};
