@@ -1,16 +1,22 @@
-{ config, pkgs, ... }:
+{ inputs, pkgs, ... }:
 
 {
 	environment = {
 		darwinConfig = "$HOME/Code/nuttyverse/ops/book/configuration.nix";
-
-		# List packages installed in system profile. To search by name, run:
-		# $ nix-env -qaP | grep wget
-		systemPackages = [ ];
+		systemPackages = pkgs.lib.attrsets.attrValues inputs.tools.packages.aarch64-darwin;
 	};
 
 	nixpkgs = {
 		hostPlatform = "aarch64-darwin";
+	};
+
+	programs = {
+		fish = {
+			# Enabling fish via Nix instead of Homebrew will initialize the Nix
+			# configuration environment, which will include the packages in the
+			# system profile.
+			enable = true;
+		};
 	};
 
 	services = {
