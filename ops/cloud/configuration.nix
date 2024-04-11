@@ -25,6 +25,10 @@ with lib;
 		./containers/font-force-field.nix
 	];
 
+	environment = {
+		systemPackages = pkgs.lib.attrsets.attrValues inputs.tools.packages.x86_64-linux;
+	};
+
 	time = {
 		timeZone = "America/Phoenix";
 	};
