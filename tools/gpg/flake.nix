@@ -17,11 +17,13 @@
 				pkgs = import nixpkgs {
 					inherit system;
 				};
-			in {
+			in rec {
+				packages = {
+					gnupg = pkgs.gnupg;
+				};
+
 				devShells.default = pkgs.mkShell {
-					buildInputs = with pkgs; [
-						gnupg
-					];
+					buildInputs = pkgs.lib.attrsets.attrValues packages;
 				};
 			}
 		);

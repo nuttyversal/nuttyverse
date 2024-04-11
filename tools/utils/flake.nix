@@ -17,24 +17,26 @@
 				pkgs = import nixpkgs {
 					inherit system;
 				};
-			in {
+			in rec {
+				packages = {
+					bat = pkgs.bat;
+					difftastic = pkgs.difftastic;
+					duf = pkgs.duf;
+					dust = pkgs.dust;
+					entr = pkgs.entr;
+					eza = pkgs.eza;
+					fd = pkgs.fd;
+					fzf = pkgs.fzf;
+					glances = pkgs.glances;
+					jq = pkgs.jq;
+					just = pkgs.just;
+					ripgrep = pkgs.ripgrep;
+					sd = pkgs.sd;
+					tldr = pkgs.tldr;
+				};
+
 				devShells.default = pkgs.mkShell {
-					buildInputs = with pkgs; [
-						bat
-						difftastic
-						duf
-						dust
-						entr
-						eza
-						fd
-						fzf
-						glances
-						jq
-						just
-						ripgrep
-						sd
-						tldr
-					];
+					buildInputs = pkgs.lib.attrsets.attrValues packages;
 				};
 			}
 		);

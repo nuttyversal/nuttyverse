@@ -17,12 +17,14 @@
 				pkgs = import nixpkgs {
 					inherit system;
 				};
-			in {
+			in rec {
+				packages = {
+					git = pkgs.gitAndTools.gitFull;
+					lazygit = pkgs.lazygit;
+				};
+
 				devShells.default = pkgs.mkShell {
-					buildInputs = with pkgs; [
-						gitAndTools.gitFull
-						lazygit
-					];
+					buildInputs = pkgs.lib.attrsets.attrValues packages;
 				};
 			}
 		);

@@ -17,12 +17,14 @@
 				pkgs = import nixpkgs {
 					inherit system;
 				};
-			in {
+			in rec {
+				packages = {
+					neovide = pkgs.neovide;
+					neovim = pkgs.neovim;
+				};
+
 				devShells.default = pkgs.mkShell {
-					buildInputs = with pkgs; [
-						neovide
-						neovim
-					];
+					buildInputs = pkgs.lib.attrsets.attrValues packages;
 				};
 			}
 		);

@@ -53,6 +53,16 @@
 					inherit system;
 				};
 			in {
+				packages = pkgs.lib.attrsets.mergeAttrsList [
+					inputs.fish.packages.${system}
+					inputs.git.packages.${system}
+					inputs.gpg.packages.${system}
+					inputs.keyboards.packages.${system}
+					inputs.nvim.packages.${system}
+					inputs.tmux.packages.${system}
+					inputs.utils.packages.${system}
+				];
+
 				devShells.default = pkgs.mkShell {
 					inputsFrom = [
 						inputs.fish.devShells.${system}.default

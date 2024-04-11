@@ -17,11 +17,13 @@
 				pkgs = import nixpkgs {
 					inherit system;
 				};
-			in {
+			in rec {
+				packages = {
+					tmux = pkgs.tmux;
+				};
+
 				devShells.default = pkgs.mkShell {
-					buildInputs = with pkgs; [
-						tmux
-					];
+					buildInputs = pkgs.lib.attrsets.attrValues packages;
 				};
 			}
 		);

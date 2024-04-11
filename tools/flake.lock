@@ -9,12 +9,12 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-DNfI+IBw54E8CL+PL+C7k1zf7O49tkY8THK+0JRPSeM=",
-        "path": "/nix/store/i157cgvv1gjg8qw0b0j35qyvdic5jvm4-source/tools/fish",
+        "narHash": "sha256-JEeyVoT0QS2ngY+IM7BUC47L4DDRABYgnqHe3aU2giY=",
+        "path": "/nix/store/fxyl3ylziqwhzs48hwm7n3dgd4arm08m-source/tools/fish",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/i157cgvv1gjg8qw0b0j35qyvdic5jvm4-source/tools/fish",
+        "path": "/nix/store/fxyl3ylziqwhzs48hwm7n3dgd4arm08m-source/tools/fish",
         "type": "path"
       }
     },
@@ -126,25 +126,25 @@
         "type": "github"
       }
     },
-    "git": {
+    "flake-utils_7": {
       "inputs": {
-        "flake-utils": "flake-utils_2",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
+        "systems": "systems_7"
       },
       "locked": {
-        "lastModified": 1,
-        "narHash": "sha256-2TZBqz/zlHISLaO02R8gh425Skhmy9DsIRnKG+qYB6Q=",
-        "path": "/nix/store/i157cgvv1gjg8qw0b0j35qyvdic5jvm4-source/tools/git",
-        "type": "path"
+        "lastModified": 1710146030,
+        "narHash": "sha256-SZ5L6eA7HJ/nmkzGG7/ISclqe6oZdOZTNoesiInkXPQ=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "b1d9ab70662946ef0850d488da1c9019f3a9752a",
+        "type": "github"
       },
       "original": {
-        "path": "/nix/store/i157cgvv1gjg8qw0b0j35qyvdic5jvm4-source/tools/git",
-        "type": "path"
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
       }
     },
-    "gpg": {
+    "git": {
       "inputs": {
         "flake-utils": "flake-utils_3",
         "nixpkgs": [
@@ -153,12 +153,30 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-u0GFOTXx0XjFtJDXuLOJkByrfauJ6K1gn//CLQbz5ps=",
-        "path": "/nix/store/i157cgvv1gjg8qw0b0j35qyvdic5jvm4-source/tools/gpg",
+        "narHash": "sha256-S6tUPxTVtugl2OSnpjHkOgIX8a+5vHf4YTNrNmfwrs8=",
+        "path": "/nix/store/fxyl3ylziqwhzs48hwm7n3dgd4arm08m-source/tools/git",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/i157cgvv1gjg8qw0b0j35qyvdic5jvm4-source/tools/gpg",
+        "path": "/nix/store/fxyl3ylziqwhzs48hwm7n3dgd4arm08m-source/tools/git",
+        "type": "path"
+      }
+    },
+    "gpg": {
+      "inputs": {
+        "flake-utils": "flake-utils_4",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1,
+        "narHash": "sha256-HEnaAytGrGWaqp6ESaIkchktkDOYC32bFSr7AjSTak8=",
+        "path": "/nix/store/fxyl3ylziqwhzs48hwm7n3dgd4arm08m-source/tools/gpg",
+        "type": "path"
+      },
+      "original": {
+        "path": "/nix/store/fxyl3ylziqwhzs48hwm7n3dgd4arm08m-source/tools/gpg",
         "type": "path"
       }
     },
@@ -171,12 +189,12 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-FG/heSGnCJQqkrGvbjm/wCvc/stH7QpeE4ZHx5fhX0s=",
-        "path": "/nix/store/i157cgvv1gjg8qw0b0j35qyvdic5jvm4-source/tools/keyboards",
+        "narHash": "sha256-mDjYQTpSSg2qspWVjQPNcqefNi5LwUtdEZtEtMtI8y0=",
+        "path": "/nix/store/fxyl3ylziqwhzs48hwm7n3dgd4arm08m-source/tools/keyboards",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/i157cgvv1gjg8qw0b0j35qyvdic5jvm4-source/tools/keyboards",
+        "path": "/nix/store/fxyl3ylziqwhzs48hwm7n3dgd4arm08m-source/tools/keyboards",
         "type": "path"
       }
     },
@@ -236,25 +254,26 @@
     },
     "nvim": {
       "inputs": {
-        "flake-utils": "flake-utils_4",
+        "flake-utils": "flake-utils_5",
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-cyTm+jYK/yJF7YMSsZWpTVcNNW7rQyFb3U8ErQB+7co=",
-        "path": "/nix/store/i157cgvv1gjg8qw0b0j35qyvdic5jvm4-source/tools/nvim",
+        "narHash": "sha256-Zh8vY6di1FVXEcWq3kEN1cMJRlsG8SvuPNqCOfGx7z0=",
+        "path": "/nix/store/fxyl3ylziqwhzs48hwm7n3dgd4arm08m-source/tools/nvim",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/i157cgvv1gjg8qw0b0j35qyvdic5jvm4-source/tools/nvim",
+        "path": "/nix/store/fxyl3ylziqwhzs48hwm7n3dgd4arm08m-source/tools/nvim",
         "type": "path"
       }
     },
     "root": {
       "inputs": {
         "fish": "fish",
+        "flake-utils": "flake-utils_2",
         "git": "git",
         "gpg": "gpg",
         "keyboards": "keyboards",
@@ -354,25 +373,22 @@
         "type": "github"
       }
     },
-    "tmux": {
-      "inputs": {
-        "flake-utils": "flake-utils_5",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
+    "systems_7": {
       "locked": {
-        "lastModified": 1,
-        "narHash": "sha256-9kcR9pEEc2L0I3xvG/SDpStQHfwBRbk9tqGmrECekE0=",
-        "path": "/nix/store/i157cgvv1gjg8qw0b0j35qyvdic5jvm4-source/tools/tmux",
-        "type": "path"
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
       },
       "original": {
-        "path": "/nix/store/i157cgvv1gjg8qw0b0j35qyvdic5jvm4-source/tools/tmux",
-        "type": "path"
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
       }
     },
-    "utils": {
+    "tmux": {
       "inputs": {
         "flake-utils": "flake-utils_6",
         "nixpkgs": [
@@ -381,12 +397,30 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-abk+VrUdAX3d3xLp873oJZliHRmBtTtO4+m8smpNRmk=",
-        "path": "/nix/store/i157cgvv1gjg8qw0b0j35qyvdic5jvm4-source/tools/utils",
+        "narHash": "sha256-1Na01ixY946yOQiJQ4l0q+vqlDlJuai0p0eHGtqRBj0=",
+        "path": "/nix/store/fxyl3ylziqwhzs48hwm7n3dgd4arm08m-source/tools/tmux",
         "type": "path"
       },
       "original": {
-        "path": "/nix/store/i157cgvv1gjg8qw0b0j35qyvdic5jvm4-source/tools/utils",
+        "path": "/nix/store/fxyl3ylziqwhzs48hwm7n3dgd4arm08m-source/tools/tmux",
+        "type": "path"
+      }
+    },
+    "utils": {
+      "inputs": {
+        "flake-utils": "flake-utils_7",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1,
+        "narHash": "sha256-jqdH46ZJFVAvkhivQK7drBw4uoR+JNM7Q76EP+bTnfw=",
+        "path": "/nix/store/fxyl3ylziqwhzs48hwm7n3dgd4arm08m-source/tools/utils",
+        "type": "path"
+      },
+      "original": {
+        "path": "/nix/store/fxyl3ylziqwhzs48hwm7n3dgd4arm08m-source/tools/utils",
         "type": "path"
       }
     }

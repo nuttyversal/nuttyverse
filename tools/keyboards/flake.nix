@@ -10,7 +10,7 @@
 	outputs = { self, nixpkgs, kmonad }: let
 		kmonadPackage = kmonad.packages.aarch64-darwin.kmonad;
 		config = nixpkgs.legacyPackages.x86_64-linux.writeText (builtins.readFile ./macos.kbd);
-	in {
+	in rec {
 		apps = {
 			aarch64-darwin = {
 				default = {
@@ -20,10 +20,16 @@
 			};
 		};
 
+		packages = {
+			aarch64-darwin = {
+				kmonad = kmonadPackage;
+			};
+		};
+
 		devShells = {
 			aarch64-darwin = {
 				default = nixpkgs.legacyPackages.aarch64-darwin.mkShell {
-					buildInputs = [ kmonadPackage ];
+					buildInputs = nixpkgs.lib.attrsets.attrValues packages.aarch64-darwin;
 				};
 			};
 		};
