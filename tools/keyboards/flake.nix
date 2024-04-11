@@ -21,6 +21,9 @@
 		};
 
 		packages = {
+			# [HACK] For evaluating on nuttycloud.
+			x86_64-linux = { };
+
 			aarch64-darwin = {
 				kmonad = kmonadPackage;
 			};
