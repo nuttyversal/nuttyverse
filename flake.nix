@@ -57,7 +57,7 @@
 	outputs = inputs @ { self, nix-darwin, nixos-generators, nixpkgs, agenix, ... }: {
 		darwinConfigurations.nuttybook = nix-darwin.lib.darwinSystem {
 			modules = [
-				./book/configuration.nix
+				./ops/book/configuration.nix
 			];
 
 			specialArgs = {
@@ -69,8 +69,8 @@
 			system = "x86_64-linux";
 
 			modules = [
-				./cloud/configuration.nix
-				./cloud/configuration.hardware.nix
+				./ops/cloud/configuration.nix
+				./ops/cloud/configuration.hardware.nix
 				agenix.nixosModules.default
 			];
 
@@ -84,8 +84,8 @@
 			pkgs = nixpkgs.legacyPackages.x86_64-linux;
 
 			modules = [
-				./cloud/configuration.nix
-				./cloud/configuration.kexec.nix
+				./ops/cloud/configuration.nix
+				./ops/cloud/configuration.kexec.nix
 			];
 
 			specialArgs = {
