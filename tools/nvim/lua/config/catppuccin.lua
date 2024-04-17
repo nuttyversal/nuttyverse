@@ -36,9 +36,10 @@ require("catppuccin").setup({
 	},
 
 	integrations = {
-		telescope = {
-			enabled = true,
-		}
+		gitsigns = true,
+		nvimtree = true,
+		telescope = true,
+		mason = true,
 	},
 })
 
