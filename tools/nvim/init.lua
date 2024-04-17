@@ -80,7 +80,10 @@ vim.wo.cursorline = true
 vim.wo.number = true
 vim.wo.foldcolumn = "1"
 vim.o.termguicolors = true
-vim.opt.fillchars = { eob = " " }
+vim.opt.fillchars = {
+   eob = " ",
+   diff = " ",
+}
 
 if vim.g.neovide then
    vim.g.neovide_cursor_antialiasing = true
