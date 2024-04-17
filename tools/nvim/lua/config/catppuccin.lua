@@ -1,4 +1,9 @@
 require("catppuccin").setup({
+	background = {
+		light = "latte",
+		dark = "mocha",
+	},
+
 	term_colors = true,
 	transparent_background = false,
 
@@ -17,6 +22,12 @@ require("catppuccin").setup({
 	},
 
 	color_overrides = {
+		latte = {
+			base = "#ffffff",
+			mantle = "#ffffff",
+			crust = "#ffffff",
+		},
+
 		mocha = {
 			base = "#000000",
 			mantle = "#000000",
