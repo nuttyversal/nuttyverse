@@ -86,14 +86,14 @@ if vim.g.neovide then
    vim.g.neovide_cursor_antialiasing = true
    vim.g.neovide_cursor_vfx_mode = "pixiedust"
 	vim.g.neovide_refresh_rate = 144
-	vim.g.neovide_scale_factor = 1
+	vim.g.neovide_scale_factor = 1.15
 
 	vim.g.neovide_padding_top = 16
 	vim.g.neovide_padding_bottom = 0
 	vim.g.neovide_padding_right = 16
 	vim.g.neovide_padding_left = 16
 
-	vim.o.guifont = "PragmataPro Liga:h18"
+	vim.o.guifont = "PragmataPro Liga:h16"
 	vim.o.linespace = 2
 
    -- Allow clipboard copy-pasta.
