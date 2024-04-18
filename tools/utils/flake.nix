@@ -33,6 +33,14 @@
 					ripgrep = pkgs.ripgrep;
 					sd = pkgs.sd;
 					tldr = pkgs.tldr;
+
+					# Node.js
+					eslint = pkgs.nodePackages.eslint;
+					nodejs = pkgs.nodejs;
+					pnpm = pkgs.nodePackages.pnpm;
+					prettier = pkgs.nodePackages.prettier;
+					ts-node = pkgs.nodePackages.ts-node;
+					typescript = pkgs.nodePackages.typescript;
 				};
 
 				devShells.default = pkgs.mkShell {
