@@ -1,5 +1,6 @@
 import { CSSProperties, useContext } from "react";
 import { NuttyverseContext } from "~/styles/themes/context";
+import { colors } from "~/styles/themes/constants";
 
 type Props = {
 	/**
@@ -15,8 +16,10 @@ type Props = {
 
 export const Chibi = (props: Props) => {
 	const context = useContext(NuttyverseContext);
-	const backgroundColor = context.theme === "light" ? "white" : "black";
-	const foregroundColor = context.theme === "light" ? "black" : "white";
+	const backgroundColor =
+		context.theme === "light" ? colors.white : colors.black;
+	const foregroundColor =
+		context.theme === "light" ? colors.black : colors.white;
 
 	return (
 		<svg

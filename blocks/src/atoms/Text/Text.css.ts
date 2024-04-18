@@ -7,6 +7,7 @@ import {
 } from "@vanilla-extract/css";
 import {
 	FontSize,
+	colors,
 	narrowTypeScale,
 	typeScale,
 } from "~/styles/themes/constants";
@@ -87,7 +88,7 @@ export const vars = createThemeContract({
 });
 
 export const lightMode = createTheme(vars, {
-	color: "black",
+	color: colors.black,
 	gradient: "linear-gradient(180deg, #000 0%, #760063 100%)",
 	glow: {
 		textShadow: "none",
@@ -95,7 +96,7 @@ export const lightMode = createTheme(vars, {
 });
 
 export const darkMode = createTheme(vars, {
-	color: "white",
+	color: colors.white,
 	gradient: "linear-gradient(180deg, #fff 0%, #fff 100%)",
 	glow: {
 		textShadow: "0 0 0.5em rgba(255, 255, 255, 0.5)",

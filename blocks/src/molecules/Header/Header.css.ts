@@ -4,6 +4,7 @@ import {
 	keyframes,
 	style,
 } from "@vanilla-extract/css";
+import { colors } from "~/styles/themes/constants";
 
 export const vars = createThemeContract({
 	gradient: null,
@@ -13,7 +14,7 @@ export const vars = createThemeContract({
 
 export const lightMode = createTheme(vars, {
 	gradient: "linear-gradient(180deg, #000 0%, #760063 100%)",
-	dividerColor: "black",
+	dividerColor: colors.black,
 	floatKeyFrames: keyframes({
 		"0%": {
 			transform: "translateY(0px)",
@@ -36,7 +37,7 @@ export const lightMode = createTheme(vars, {
 
 export const darkMode = createTheme(vars, {
 	gradient: "linear-gradient(180deg, #fff 0%, #fff 100%)",
-	dividerColor: "white",
+	dividerColor: colors.white,
 	floatKeyFrames: keyframes({
 		"0%": {
 			transform: "translateY(0px)",

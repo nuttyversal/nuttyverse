@@ -1,4 +1,5 @@
 import { createTheme, createThemeContract, style } from "@vanilla-extract/css";
+import { colors } from "~/index";
 
 export const vars = createThemeContract({
 	borderColor: null,
@@ -8,14 +9,14 @@ export const vars = createThemeContract({
 });
 
 export const lightMode = createTheme(vars, {
-	borderColor: "black",
+	borderColor: colors.black,
 	glow: {
 		boxShadow: "none",
 	},
 });
 
 export const darkMode = createTheme(vars, {
-	borderColor: "white",
+	borderColor: colors.white,
 	glow: {
 		boxShadow: "0 0 8px 4px rgba(255, 255, 255, 0.5)",
 	},

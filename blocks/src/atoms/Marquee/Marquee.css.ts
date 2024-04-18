@@ -4,6 +4,7 @@ import {
 	keyframes,
 	style,
 } from "@vanilla-extract/css";
+import { colors } from "~/index";
 
 const vars = createThemeContract({
 	background: null,
@@ -12,19 +13,15 @@ const vars = createThemeContract({
 });
 
 export const lightMode = createTheme(vars, {
-	background: "white",
-	backgroundBefore:
-		"linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
-	backgroundAfter:
-		"linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
+	background: colors.white,
+	backgroundBefore: `linear-gradient(to right, ${colors.white}, rgba(255, 255, 255, 0))`,
+	backgroundAfter: `linear-gradient(to left, ${colors.white}, rgba(255, 255, 255, 0))`,
 });
 
 export const darkMode = createTheme(vars, {
-	background: "black",
-	backgroundBefore:
-		"linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))",
-	backgroundAfter:
-		"linear-gradient(to left, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))",
+	background: colors.black,
+	backgroundBefore: `linear-gradient(to right, ${colors.black}, rgba(0, 0, 0, 0))`,
+	backgroundAfter: `linear-gradient(to left, ${colors.black}, rgba(0, 0, 0, 0))`,
 });
 
 export const container = style({

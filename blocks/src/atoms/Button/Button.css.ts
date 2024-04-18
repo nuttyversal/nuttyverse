@@ -1,6 +1,6 @@
 import { createTheme, createThemeContract, style } from "@vanilla-extract/css";
 import { RecipeVariants, recipe } from "@vanilla-extract/recipes";
-import { typeScale } from "~/styles/themes/constants";
+import { colors, typeScale } from "~/styles/themes/constants";
 
 const vars = createThemeContract({
 	backgroundColor: null,
@@ -11,16 +11,16 @@ const vars = createThemeContract({
 });
 
 export const lightMode = createTheme(vars, {
-	backgroundColor: "black",
-	foregroundColor: "white",
+	backgroundColor: colors.black,
+	foregroundColor: colors.white,
 	glow: {
 		boxShadow: "none",
 	},
 });
 
 export const darkMode = createTheme(vars, {
-	backgroundColor: "white",
-	foregroundColor: "black",
+	backgroundColor: colors.white,
+	foregroundColor: colors.black,
 	glow: {
 		boxShadow: "0 0 8px 4px rgba(255, 255, 255, 0.5)",
 	},
