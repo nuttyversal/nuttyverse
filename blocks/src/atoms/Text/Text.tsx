@@ -8,7 +8,6 @@ import {
 	lightMode,
 	darkMode,
 	base,
-	withGlow,
 } from "./Text.css";
 
 const DEFAULT_OPSZ = 18;
@@ -52,11 +51,6 @@ type TextProps<Component extends React.ElementType> = {
 	 * If enabled (`true`), applies a drop cap effect to the text.
 	 */
 	dropCap?: boolean;
-
-	/**
-	 * If enabled (`true`), applies a glow effect to the text in dark mode.
-	 */
-	glow?: boolean;
 } & React.ComponentPropsWithoutRef<Component>;
 
 export const Text = <Component extends React.ElementType>(
@@ -72,7 +66,6 @@ export const Text = <Component extends React.ElementType>(
 		wdth,
 		weight,
 		dropCap,
-		glow,
 		children,
 		...polymorphicProps
 	} = props;
@@ -120,10 +113,7 @@ export const Text = <Component extends React.ElementType>(
 		themeClass,
 		responsiveFontSize[fontSize],
 		polymorphicProps.className,
-		{
-			[withGlow]: glow,
-			[withDropCap]: dropCap,
-		},
+		{ [withDropCap]: dropCap },
 	);
 
 	return (

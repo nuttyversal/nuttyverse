@@ -8,7 +8,6 @@ import {
 	container,
 	darkMode,
 	lightMode,
-	withGlow,
 	withNotAllowedCursor,
 } from "./Button.css";
 
@@ -24,11 +23,6 @@ type ButtonProps = {
 	sparkle?: boolean;
 
 	/**
-	 * If enabled (`true`), applies a glow effect to the button in dark mode.
-	 */
-	glow?: boolean;
-
-	/**
 	 * Defines the settings for a banner displayed behind the button when hovered.
 	 */
 	banner?: ButtonBannerProps;
@@ -38,11 +32,10 @@ export const Button = (props: ButtonProps) => {
 	const context = useContext(NuttyverseContext);
 	const { isHovered, handleMouseEnter, handleMouseLeave } = useHover();
 
-	const { children, sparkle, glow, banner, ...htmlButtonProps } = props;
+	const { children, sparkle, banner, ...htmlButtonProps } = props;
 	const themeClass = context.theme === "light" ? lightMode : darkMode;
 
 	const buttonClassNames = classNames(base, themeClass, {
-		[withGlow]: glow,
 		[withNotAllowedCursor]: htmlButtonProps.disabled,
 	});
 
@@ -64,7 +57,6 @@ export const Button = (props: ButtonProps) => {
 					{...banner}
 					themeClass={themeClass}
 					isHovered={isHovered}
-					glow={glow ?? false}
 				/>
 			)}
 		</div>
@@ -82,7 +74,6 @@ type ButtonBannerProps = {
 type ButtonBannerInternalProps = {
 	themeClass: string;
 	isHovered: boolean;
-	glow: boolean;
 };
 
 export const ButtonBanner = (
@@ -92,9 +83,7 @@ export const ButtonBanner = (
 		state: props.isHovered ? "hovered" : "notHovered",
 	});
 
-	const bannerClassNames = classNames(props.themeClass, bannerVariant, {
-		[withGlow]: props.glow,
-	});
+	const bannerClassNames = classNames(props.themeClass, bannerVariant);
 
 	return <div className={bannerClassNames}>{props.children}</div>;
 };

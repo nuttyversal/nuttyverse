@@ -5,25 +5,16 @@ import { colors, typeScale } from "~/styles/themes/constants";
 const vars = createThemeContract({
 	backgroundColor: null,
 	foregroundColor: null,
-	glow: {
-		boxShadow: null,
-	},
 });
 
 export const lightMode = createTheme(vars, {
 	backgroundColor: colors.black,
 	foregroundColor: colors.white,
-	glow: {
-		boxShadow: "none",
-	},
 });
 
 export const darkMode = createTheme(vars, {
 	backgroundColor: colors.white,
 	foregroundColor: colors.black,
-	glow: {
-		boxShadow: "0 0 8px 4px rgba(255, 255, 255, 0.5)",
-	},
 });
 
 export const container = style({
@@ -92,10 +83,6 @@ export const bannerVariants = recipe({
 });
 
 export type BannerVariants = RecipeVariants<typeof bannerVariants>;
-
-export const withGlow = style({
-	boxShadow: vars.glow.boxShadow,
-});
 
 export const withNotAllowedCursor = style({
 	cursor: "not-allowed",

@@ -9,7 +9,7 @@ export const Introduction = () => {
 	const context = useContext(NuttyverseContext);
 
 	const ahoy = (
-		<Text as="span" wdth={120} weight={600} glow>
+		<Text as="span" wdth={120} weight={600}>
 			Ahoy there, fellow navigator!
 		</Text>
 	);
@@ -20,7 +20,6 @@ export const Introduction = () => {
 			wdth={120}
 			weight={600}
 			style={{ color: context.theme === "light" ? "#3e8857" : "lime" }}
-			glow
 		>
 			physical
 		</Text>
@@ -32,7 +31,6 @@ export const Introduction = () => {
 			wdth={120}
 			weight={600}
 			style={{ color: context.theme === "light" ? "#7f7ced" : "yellow" }}
-			glow
 		>
 			digital
 		</Text>
@@ -40,7 +38,7 @@ export const Introduction = () => {
 
 	return (
 		<section style={{ marginTop: "1.5em", marginBottom: "1.5em" }}>
-			<Text dropCap glow>
+			<Text dropCap>
 				{ahoy} Welcome to my internet expanse. You might notice a seeming
 				emptiness, but do not fret. You've simply arrived early enough to
 				witness the expansion of this universe.
@@ -56,22 +54,14 @@ export const Introduction = () => {
 				<UnorderedList>
 					<ListItem>
 						Follow me on{" "}
-						<Link
-							href="https://neocities.org/site/nuttyverse"
-							newTab
-							glow
-						>
+						<Link href="https://neocities.org/site/nuttyverse" newTab>
 							Neocities
 						</Link>{" "}
 						for updates!
 					</ListItem>
 					<ListItem>
 						Feel free to take a 👀 at the{" "}
-						<Link
-							href="https://github.com/nuttyversal/nuttyverse"
-							newTab
-							glow
-						>
+						<Link href="https://github.com/nuttyversal/nuttyverse" newTab>
 							source code
 						</Link>
 						.

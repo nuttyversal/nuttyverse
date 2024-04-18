@@ -4,7 +4,7 @@ import {
 	keyframes,
 	style,
 } from "@vanilla-extract/css";
-import { colors } from "~/index";
+import { colors } from "~/styles/themes/constants";
 
 const vars = createThemeContract({
 	background: null,

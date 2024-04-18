@@ -32,7 +32,7 @@ export const UnderConstruction = () => {
 export const ExploreInnerWorld = () => {
 	return (
 		<Text as="span" style={{ color: "inherit" }}>
-			<Button glow sparkle banner={{ children: <UnderConstruction /> }}>
+			<Button sparkle banner={{ children: <UnderConstruction /> }}>
 				Explore my inner world
 			</Button>
 		</Text>

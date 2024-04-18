@@ -82,25 +82,16 @@ globalStyle("*", {
 export const vars = createThemeContract({
 	color: null,
 	gradient: null,
-	glow: {
-		textShadow: null,
-	},
 });
 
 export const lightMode = createTheme(vars, {
 	color: colors.black,
 	gradient: "linear-gradient(180deg, #000 0%, #760063 100%)",
-	glow: {
-		textShadow: "none",
-	},
 });
 
 export const darkMode = createTheme(vars, {
 	color: colors.white,
 	gradient: "linear-gradient(180deg, #fff 0%, #fff 100%)",
-	glow: {
-		textShadow: "0 0 0.5em rgba(255, 255, 255, 0.5)",
-	},
 });
 
 export const base = style({
@@ -145,8 +136,4 @@ export const withDropCap = style({
 			WebkitTextFillColor: "transparent",
 		},
 	},
-});
-
-export const withGlow = style({
-	textShadow: vars.glow.textShadow,
 });
