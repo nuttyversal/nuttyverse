@@ -42,115 +42,115 @@ const white = "#fcfcfc";
 /**
  * Background color for dark mode.
  */
-const black = "#111111";
+const black = "#070707";
 
 /**
  * Generated as a custom palette with the following parameters:
  *
- * ✦ Accent:     #111111
- * ✦ Gray:       #111111
+ * ✦ Accent:     #070707
+ * ✦ Gray:       #070707
  * ✦ Background: #fcfcfc
  */
 const gray = {
-	gray1: "#fcfcfc",
-	gray2: "#f9f9f9",
-	gray3: "#f0f0f0",
-	gray4: "#e8e8e8",
-	gray5: "#e1e1e1",
-	gray6: "#d9d9d9",
-	gray7: "#cecece",
-	gray8: "#bbbbbb",
-	gray9: "#8c8c8c",
-	gray10: "#828282",
-	gray11: "#636363",
+	gray1: "#f9f9f9",
+	gray2: "#f5f5f5",
+	gray3: "#ececec",
+	gray4: "#e4e4e4",
+	gray5: "#dddddd",
+	gray6: "#d5d5d5",
+	gray7: "#c9c9c9",
+	gray8: "#b7b7b7",
+	gray9: "#878787",
+	gray10: "#7d7d7d",
+	gray11: "#5f5f5f",
 	gray12: "#1f1f1f",
 };
 
 /**
  * Generated as a custom palette with the following parameters:
  *
- * ✦ Accent:     #111111
- * ✦ Gray:       #111111
+ * ✦ Accent:     #070707
+ * ✦ Gray:       #070707
  * ✦ Background: #fcfcfc
  */
 const grayA = {
 	grayA1: "#00000003",
-	grayA2: "#00000006",
-	grayA3: "#0000000f",
-	grayA4: "#00000017",
-	grayA5: "#0000001e",
-	grayA6: "#00000026",
-	grayA7: "#00000031",
-	grayA8: "#00000044",
-	grayA9: "#00000073",
-	grayA10: "#0000007d",
-	grayA11: "#0000009c",
+	grayA2: "#00000007",
+	grayA3: "#00000010",
+	grayA4: "#00000018",
+	grayA5: "#0000001f",
+	grayA6: "#00000027",
+	grayA7: "#00000034",
+	grayA8: "#00000046",
+	grayA9: "#00000076",
+	grayA10: "#00000081",
+	grayA11: "#0000009f",
 	grayA12: "#000000e0",
 };
 
 /**
  * Generated as a custom palette with the following parameters:
  *
- * ✦ Accent:     #111111
- * ✦ Gray:       #111111
+ * ✦ Accent:     #070707
+ * ✦ Gray:       #070707
  * ✦ Background: #fcfcfc
  */
 const grayP3 = {
-	gray1: "oklch(99.2% 0 0)",
-	gray2: "oklch(98.1% 0 0)",
-	gray3: "oklch(95.5% 0 0)",
-	gray4: "oklch(93.1% 0 0)",
-	gray5: "oklch(90.9% 0 0)",
-	gray6: "oklch(88.5% 0 0)",
-	gray7: "oklch(85.1% 0 0)",
-	gray8: "oklch(79.3% 0 0)",
-	gray9: "oklch(64% 0 0)",
-	gray10: "oklch(60.5% 0 0)",
-	gray11: "oklch(50.1% 0 0)",
+	gray1: "oklch(98.3% 0 0)",
+	gray2: "oklch(97% 0 0)",
+	gray3: "oklch(94.4% 0 0)",
+	gray4: "oklch(91.9% 0 0)",
+	gray5: "oklch(89.7% 0 0)",
+	gray6: "oklch(87.2% 0 0)",
+	gray7: "oklch(83.7% 0 0)",
+	gray8: "oklch(77.8% 0 0)",
+	gray9: "oklch(62.5% 0 0)",
+	gray10: "oklch(59% 0 0)",
+	gray11: "oklch(48.7% 0 0)",
 	gray12: "oklch(24% 0 0)",
 };
 
 /**
  * Generated as a custom palette with the following parameters:
  *
- * ✦ Accent:     #111111
- * ✦ Gray:       #111111
+ * ✦ Accent:     #070707
+ * ✦ Gray:       #070707
  * ✦ Background: #fcfcfc
  */
 const grayP3A = {
 	grayA1: "color(display-p3 0 0 0 / 0.012)",
-	grayA2: "color(display-p3 0 0 0 / 0.024)",
-	grayA3: "color(display-p3 0 0 0 / 0.059)",
-	grayA4: "color(display-p3 0 0 0 / 0.09)",
-	grayA5: "color(display-p3 0 0 0 / 0.118)",
-	grayA6: "color(display-p3 0 0 0 / 0.149)",
-	grayA7: "color(display-p3 0 0 0 / 0.192)",
-	grayA8: "color(display-p3 0 0 0 / 0.267)",
-	grayA9: "color(display-p3 0 0 0 / 0.451)",
-	grayA10: "color(display-p3 0 0 0 / 0.49)",
-	grayA11: "color(display-p3 0 0 0 / 0.612)",
-	grayA12: "color(display-p3 0 0 0 / 0.878)",
+	grayA2: "color(display-p3 0 0 0 / 0.028)",
+	grayA3: "color(display-p3 0 0 0 / 0.063)",
+	grayA4: "color(display-p3 0 0 0 / 0.095)",
+	grayA5: "color(display-p3 0 0 0 / 0.123)",
+	grayA6: "color(display-p3 0 0 0 / 0.155)",
+	grayA7: "color(display-p3 0 0 0 / 0.202)",
+	grayA8: "color(display-p3 0 0 0 / 0.274)",
+	grayA9: "color(display-p3 0 0 0 / 0.464)",
+	grayA10: "color(display-p3 0 0 0 / 0.504)",
+	grayA11: "color(display-p3 0 0 0 / 0.623)",
+	grayA12: "color(display-p3 0 0 0 / 0.877)",
 };
 
 /**
  * Generated as a custom palette with the following parameters:
  *
  * ✦ Accent:     #fcfcfc
- * ✦ Gray:       #111111
- * ✦ Background: #111111
+ * ✦ Gray:       #070707
+ * ✦ Background: #070707
  */
 const grayDark = {
-	gray1: "#111111",
-	gray2: "#191919",
-	gray3: "#222222",
-	gray4: "#2a2a2a",
+	gray1: "#070707",
+	gray2: "#171717",
+	gray3: "#212121",
+	gray4: "#292929",
 	gray5: "#313131",
 	gray6: "#3a3a3a",
 	gray7: "#484848",
 	gray8: "#606060",
-	gray9: "#6e6e6e",
-	gray10: "#7b7b7b",
-	gray11: "#b4b4b4",
+	gray9: "#6d6d6d",
+	gray10: "#7a7a7a",
+	gray11: "#b3b3b3",
 	gray12: "#eeeeee",
 };
 
@@ -158,66 +158,66 @@ const grayDark = {
  * Generated as a custom palette with the following parameters:
  *
  * ✦ Accent:     #fcfcfc
- * ✦ Gray:       #111111
- * ✦ Background: #111111
+ * ✦ Gray:       #070707
+ * ✦ Background: #070707
  */
 const grayDarkA = {
 	grayA1: "#00000000",
-	grayA2: "#ffffff09",
-	grayA3: "#ffffff12",
-	grayA4: "#ffffff1b",
-	grayA5: "#ffffff22",
-	grayA6: "#ffffff2c",
-	grayA7: "#ffffff3b",
-	grayA8: "#ffffff55",
-	grayA9: "#ffffff64",
-	grayA10: "#ffffff72",
-	grayA11: "#ffffffaf",
-	grayA12: "#ffffffed",
+	grayA2: "#ffffff10",
+	grayA3: "#ffffff1b",
+	grayA4: "#ffffff23",
+	grayA5: "#ffffff2b",
+	grayA6: "#ffffff34",
+	grayA7: "#ffffff43",
+	grayA8: "#ffffff5c",
+	grayA9: "#ffffff69",
+	grayA10: "#ffffff76",
+	grayA11: "#ffffffb1",
+	grayA12: "#ffffffee",
 };
 
 /**
  * Generated as a custom palette with the following parameters:
  *
  * ✦ Accent:     #fcfcfc
- * ✦ Gray:       #111111
- * ✦ Background: #111111
+ * ✦ Gray:       #070707
+ * ✦ Background: #070707
  */
 const grayDarkP3 = {
-	gray1: "oklch(17.8% 0 0)",
-	gray2: "oklch(21.3% 0 0)",
-	gray3: "oklch(25.4% 0 0)",
-	gray4: "oklch(28.3% 0 0)",
-	gray5: "oklch(31.3% 0 0)",
-	gray6: "oklch(34.9% 0 0)",
-	gray7: "oklch(40.2% 0 0)",
-	gray8: "oklch(48.8% 0 0)",
-	gray9: "oklch(53.8% 0 0)",
-	gray10: "oklch(58.4% 0 0)",
-	gray11: "oklch(77% 0 0)",
-	gray12: "oklch(94.9% 0 0)",
+	gray1: "oklch(12.9% 0 0)",
+	gray2: "oklch(20.5% 0 0)",
+	gray3: "oklch(24.9% 0 0)",
+	gray4: "oklch(28.1% 0 0)",
+	gray5: "oklch(31.1% 0 0)",
+	gray6: "oklch(34.8% 0 0)",
+	gray7: "oklch(40% 0 0)",
+	gray8: "oklch(49% 0 0)",
+	gray9: "oklch(53.5% 0 0)",
+	gray10: "oklch(58.1% 0 0)",
+	gray11: "oklch(76.7% 0 0)",
+	gray12: "oklch(94.8% 0 0)",
 };
 
 /**
  * Generated as a custom palette with the following parameters:
  *
  * ✦ Accent:     #fcfcfc
- * ✦ Gray:       #111111
- * ✦ Background: #111111
+ * ✦ Gray:       #070707
+ * ✦ Background: #070707
  */
 const grayDarkP3A = {
 	grayA1: "color(display-p3 0 0 0 / 0)",
-	grayA2: "color(display-p3 1 1 1 / 0.034)",
-	grayA3: "color(display-p3 1 1 1 / 0.071)",
-	grayA4: "color(display-p3 1 1 1 / 0.105)",
-	grayA5: "color(display-p3 1 1 1 / 0.134)",
-	grayA6: "color(display-p3 1 1 1 / 0.172)",
-	grayA7: "color(display-p3 1 1 1 / 0.231)",
-	grayA8: "color(display-p3 1 1 1 / 0.332)",
-	grayA9: "color(display-p3 1 1 1 / 0.391)",
-	grayA10: "color(display-p3 1 1 1 / 0.445)",
-	grayA11: "color(display-p3 1 1 1 / 0.685)",
-	grayA12: "color(display-p3 1 1 1 / 0.929)",
+	grayA2: "color(display-p3 1 1 1 / 0.065)",
+	grayA3: "color(display-p3 1 1 1 / 0.105)",
+	grayA4: "color(display-p3 1 1 1 / 0.137)",
+	grayA5: "color(display-p3 1 1 1 / 0.169)",
+	grayA6: "color(display-p3 1 1 1 / 0.206)",
+	grayA7: "color(display-p3 1 1 1 / 0.262)",
+	grayA8: "color(display-p3 1 1 1 / 0.359)",
+	grayA9: "color(display-p3 1 1 1 / 0.411)",
+	grayA10: "color(display-p3 1 1 1 / 0.464)",
+	grayA11: "color(display-p3 1 1 1 / 0.694)",
+	grayA12: "color(display-p3 1 1 1 / 0.931)",
 };
 
 export const colors = {
