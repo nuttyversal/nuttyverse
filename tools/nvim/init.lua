@@ -162,6 +162,7 @@ require("lazy").setup("plugins")
 
 require('config.autocomplete')
 require('config.catppuccin')
+require('config.conform')
 require('config.lspconfig')
 require('config.lualine')
 require('config.neogit')
