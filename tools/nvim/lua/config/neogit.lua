@@ -1,6 +1,6 @@
-vim.api.nvim_set_keymap('n', '<LEADER>gg', ':Neogit<CR>', { noremap = true })
+vim.api.nvim_set_keymap("n", "<LEADER>gg", ":Neogit<CR>", { noremap = true })
 
-require("neogit").setup {
+require("neogit").setup({
 	graph_style = "unicode",
 
 	signs = {
@@ -14,4 +14,4 @@ require("neogit").setup {
 		telescope = true,
 		diffview = true,
 	},
-}
+})

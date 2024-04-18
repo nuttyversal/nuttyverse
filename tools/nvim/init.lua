@@ -11,15 +11,15 @@ vim.o.autoread = true
 -- TODO Add autocmds for triggering autoread when switching buffers and
 -- focusing windows (https://stackoverflow.com/a/20418591).
 
-if vim.fn.has('persistent_undo') then
-	local cachedir = os.getenv('XDG_CACHE_HOME')
-	if cachedir == nil or cachedir == '' then
-		cachedir = vim.fn.expand('~/.cache')
+if vim.fn.has("persistent_undo") then
+	local cachedir = os.getenv("XDG_CACHE_HOME")
+	if cachedir == nil or cachedir == "" then
+		cachedir = vim.fn.expand("~/.cache")
 	end
 
-	local undodir = cachedir .. '/nvim/undodir'
+	local undodir = cachedir .. "/nvim/undodir"
 	if vim.fn.isdirectory(undodir) == 0 then
-		vim.fn.mkdir(undodir, 'p')
+		vim.fn.mkdir(undodir, "p")
 	end
 
 	vim.o.undodir = undodir
@@ -57,20 +57,20 @@ vim.o.smartcase = true
 -- Usability
 --
 
-vim.o.clipboard = 'unnamedplus'
-vim.o.completeopt = 'menuone,noselect'
+vim.o.clipboard = "unnamedplus"
+vim.o.completeopt = "menuone,noselect"
 vim.o.startofline = false
 vim.o.wrap = false
 vim.o.timeout = false
 vim.o.ttimeout = true
 vim.o.ttimeoutlen = 10
 vim.o.updatetime = 100
-vim.o.inccommand = 'split'
+vim.o.inccommand = "split"
 vim.o.scrolloff = 5
 vim.o.sidescroll = 1
-vim.o.backspace = 'indent,eol,start'
-vim.o.mouse = 'a'
-vim.opt.whichwrap:append "<>[]hl"
+vim.o.backspace = "indent,eol,start"
+vim.o.mouse = "a"
+vim.opt.whichwrap:append("<>[]hl")
 
 --
 -- Appearance
@@ -81,13 +81,13 @@ vim.wo.number = true
 vim.wo.foldcolumn = "1"
 vim.o.termguicolors = true
 vim.opt.fillchars = {
-   eob = " ",
-   diff = " ",
+	eob = " ",
+	diff = " ",
 }
 
 if vim.g.neovide then
-   vim.g.neovide_cursor_antialiasing = true
-   vim.g.neovide_cursor_vfx_mode = "pixiedust"
+	vim.g.neovide_cursor_antialiasing = true
+	vim.g.neovide_cursor_vfx_mode = "pixiedust"
 	vim.g.neovide_refresh_rate = 144
 	vim.g.neovide_scale_factor = 1.15
 
@@ -99,12 +99,12 @@ if vim.g.neovide then
 	vim.o.guifont = "PragmataPro Liga:h16"
 	vim.o.linespace = 2
 
-   -- Allow clipboard copy-pasta.
-   vim.g.neovide_input_use_logo = 1
-   vim.api.nvim_set_keymap('', '<D-v>', '+p<CR>', { noremap = true, silent = true})
-   vim.api.nvim_set_keymap('!', '<D-v>', '<C-R>+', { noremap = true, silent = true})
-   vim.api.nvim_set_keymap('t', '<D-v>', '<C-R>+', { noremap = true, silent = true})
-   vim.api.nvim_set_keymap('v', '<D-v>', '<C-R>+', { noremap = true, silent = true})
+	-- Allow clipboard copy-pasta.
+	vim.g.neovide_input_use_logo = 1
+	vim.api.nvim_set_keymap("", "<D-v>", "+p<CR>", { noremap = true, silent = true })
+	vim.api.nvim_set_keymap("!", "<D-v>", "<C-R>+", { noremap = true, silent = true })
+	vim.api.nvim_set_keymap("t", "<D-v>", "<C-R>+", { noremap = true, silent = true })
+	vim.api.nvim_set_keymap("v", "<D-v>", "<C-R>+", { noremap = true, silent = true })
 end
 
 --
@@ -114,28 +114,28 @@ end
 vim.g.mapleader = " "
 
 -- Did you forget to open the file with `sudo`?
-vim.api.nvim_set_keymap('c', 'w!!', 'w !sudo tee % >/dev/null', { noremap = true })
+vim.api.nvim_set_keymap("c", "w!!", "w !sudo tee % >/dev/null", { noremap = true })
 
 -- Split navigation
-vim.api.nvim_set_keymap('n', '<LEADER>wm', '<C-w><C-h>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<LEADER>wn', '<C-w><C-j>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<LEADER>we', '<C-w><C-k>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<LEADER>wi', '<C-w><C-l>', { noremap = true })
+vim.api.nvim_set_keymap("n", "<LEADER>wm", "<C-w><C-h>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<LEADER>wn", "<C-w><C-j>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<LEADER>we", "<C-w><C-k>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<LEADER>wi", "<C-w><C-l>", { noremap = true })
 
 -- Toggle line wrapping
-vim.api.nvim_set_keymap('n', '<LEADER>tl', ':set wrap!<CR>', { noremap = true })
+vim.api.nvim_set_keymap("n", "<LEADER>tl", ":set wrap!<CR>", { noremap = true })
 
 -- Toggle whitespace visibility
-vim.api.nvim_set_keymap('n', '<LEADER>tw', ':set list!<CR>', { noremap = true })
+vim.api.nvim_set_keymap("n", "<LEADER>tw", ":set list!<CR>", { noremap = true })
 
 -- Toggle paste mode
-vim.api.nvim_set_keymap('n', '<LEADER>tp', ':set paste!<CR>', { noremap = true })
+vim.api.nvim_set_keymap("n", "<LEADER>tp", ":set paste!<CR>", { noremap = true })
 
 -- Clear search highlighting
-vim.api.nvim_set_keymap('n', '//', ':noh<CR>', { noremap = true })
+vim.api.nvim_set_keymap("n", "//", ":noh<CR>", { noremap = true })
 
 -- Save file
-vim.api.nvim_set_keymap('n', '<LEADER>w', ':w<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap("n", "<LEADER>w", ":w<CR>", { noremap = true, silent = true })
 
 --
 -- Plugin manager
@@ -160,13 +160,13 @@ require("lazy").setup("plugins")
 -- Configuration modules
 --
 
-require('config.autocomplete')
-require('config.catppuccin')
-require('config.conform')
-require('config.lspconfig')
-require('config.lualine')
-require('config.neogit')
-require('config.telescope')
-require('config.toggleterm')
-require('config.tree')
-require('config.treesitter')
+require("config.autocomplete")
+require("config.catppuccin")
+require("config.conform")
+require("config.lspconfig")
+require("config.lualine")
+require("config.neogit")
+require("config.telescope")
+require("config.toggleterm")
+require("config.tree")
+require("config.treesitter")

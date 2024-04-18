@@ -1,6 +1,6 @@
-vim.api.nvim_set_keymap('n', '<LEADER>dd', ':DiffviewOpen<CR>', { noremap = true })
+vim.api.nvim_set_keymap("n", "<LEADER>dd", ":DiffviewOpen<CR>", { noremap = true })
 
-require("diffview").setup {
+require("diffview").setup({
 	use_icons = false,
 	enhanced_diff_hl = true,
 
@@ -9,4 +9,4 @@ require("diffview").setup {
 		fold_open = "  ",
 		done = "✓ ",
 	},
-}
+})

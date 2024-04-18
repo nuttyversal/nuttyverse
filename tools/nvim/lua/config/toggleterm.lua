@@ -1,16 +1,16 @@
-local toggleterm = require('toggleterm')
-local terminals = require('toggleterm.terminal')
+local toggleterm = require("toggleterm")
+local terminals = require("toggleterm.terminal")
 
-toggleterm.setup {
+toggleterm.setup({
 	hide_numbers = true,
 	shade_terminals = true,
 	start_in_insert = true,
 	persist_size = true,
-	direction = 'float',
+	direction = "float",
 	close_on_exit = true,
 
 	float_opts = {
-		border = 'curved',
+		border = "curved",
 		width = function()
 			return math.floor(vim.o.columns * 0.9)
 		end,
@@ -18,7 +18,7 @@ toggleterm.setup {
 			return math.floor(vim.o.lines * 0.9)
 		end,
 	},
-}
+})
 
 local function toggle(i)
 	return function()
@@ -40,8 +40,8 @@ local function toggle(i)
 	end
 end
 
-vim.keymap.set({ 'n', 't' }, '<C-t>', toggle(1), {})
+vim.keymap.set({ "n", "t" }, "<C-t>", toggle(1), {})
 
 for i = 1, 10, 1 do
-	vim.keymap.set({ 'n', 't' }, '<C-s>' .. (i % 10), toggle(i), {})
+	vim.keymap.set({ "n", "t" }, "<C-s>" .. (i % 10), toggle(i), {})
 end
