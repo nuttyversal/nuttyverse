@@ -7,10 +7,10 @@ import {
 } from "@vanilla-extract/css";
 import {
 	FontSize,
-	colors,
 	narrowTypeScale,
 	typeScale,
 } from "~/styles/themes/constants";
+import * as colors from "~/styles/tokens/colors";
 
 globalFontFace("Nure", {
 	src: [

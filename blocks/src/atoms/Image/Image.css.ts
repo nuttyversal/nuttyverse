@@ -1,5 +1,5 @@
 import { createTheme, createThemeContract, style } from "@vanilla-extract/css";
-import { colors } from "~/styles/themes/constants";
+import * as colors from "~/styles/tokens/colors";
 
 export const vars = createThemeContract({
 	borderColor: null,

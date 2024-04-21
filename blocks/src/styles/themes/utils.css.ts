@@ -1,5 +1,5 @@
 import { style } from "@vanilla-extract/css";
-import { colors } from "./constants";
+import * as colors from "~/styles/tokens/colors";
 
 export const lightBackground = style({
 	backgroundColor: colors.white,

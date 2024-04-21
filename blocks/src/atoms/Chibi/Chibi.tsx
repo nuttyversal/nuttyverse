@@ -1,6 +1,6 @@
 import { CSSProperties, useContext } from "react";
 import { NuttyverseContext } from "~/styles/themes/context";
-import { colors } from "~/styles/themes/constants";
+import * as colors from "~/styles/tokens/colors";
 
 type Props = {
 	/**

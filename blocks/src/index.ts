@@ -6,7 +6,7 @@ import { Text } from "~/atoms/Text/Text";
 import { Singularity } from "~/organisms/Singularity/Singularity";
 import { NuttyverseContext } from "~/styles/themes/context";
 import { setDocumentRootBackground } from "~/styles/themes/utils";
-import { colors } from "~/styles/themes/constants";
+import * as colors from "~/styles/tokens/colors";
 
 export {
 	Button,
