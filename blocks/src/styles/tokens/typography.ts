@@ -30,6 +30,22 @@ export const typeScale = deriveTypeScale(16);
 export const narrowTypeScale = deriveTypeScale(14);
 
 /**
+ * An experiment with a fluid type scale that uses rem units that automatically
+ * scales with the base font size.
+ */
+export const experimentalTypeScale = {
+	teeny: `calc(1rem / pow(${minorThird}, 2))`,
+	smol: `calc(1rem / pow(${minorThird}, 1))`,
+	base: `calc (1rem * pow(${minorThird}, 0))`,
+	xl: `calc(1rem * pow(${minorThird}, 1))`,
+	"2xl": `calc(1rem * pow(${minorThird}, 1))`,
+	"3xl": `calc(1rem * pow(${minorThird}, 2))`,
+	"4xl": `calc(1rem * pow(${minorThird}, 3))`,
+	"5xl": `calc(1rem * pow(${minorThird}, 4))`,
+	"6xl": `calc(1rem * pow(${minorThird}, 5))`,
+};
+
+/**
  * The names of the available font sizes in the design system.
  */
 export type FontSize = keyof typeof typeScale;

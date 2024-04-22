@@ -98,7 +98,10 @@ export const Text = <Component extends React.ElementType>(
 	const fontVariationSettings = `"opsz" ${fontOpsz}, "wdth" ${fontWdth}`;
 	const fontWeight = weight ?? DEFAULT_WEIGHT;
 	const fontSize = size ?? inferredFontSize ?? DEFAULT_SIZE;
-	const transition = "all 0.2s ease-out";
+
+	// Animate all text properties except font size, which, in my opinion, feels
+	// sluggish when resizing the viewport with fluid typography.
+	const transition = "all 0.2s ease-out; font-size 0";
 
 	const textStyles = {
 		margin,

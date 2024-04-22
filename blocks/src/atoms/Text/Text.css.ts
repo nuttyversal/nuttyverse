@@ -7,6 +7,7 @@ import {
 } from "@vanilla-extract/css";
 import {
 	FontSize,
+	experimentalTypeScale,
 	narrowTypeScale,
 	typeScale,
 } from "~/styles/tokens/typography";
@@ -71,6 +72,14 @@ globalFontFace("FSD Emoji", {
 });
 
 globalStyle("*", {
+	// Apply fluid typography styles to tween the base font size between
+	// 14.4px (0.9rem) and 16px (1rem) when the viewport is in between
+	// 320px (20rem) and 960px (60rem). Used a calculator to figure out
+	// the clamp parameters.
+	//
+	// https://royalfig.github.io/fluid-typography-calculator/
+	fontSize: "clamp(0.9rem, 0.85rem + 0.25vw, 1rem)",
+
 	fontFamily: "FSD Emoji, Nure",
 	fontVariationSettings: `"opsz" 18, "wdth" 85`,
 	lineHeight: 1.5,
@@ -103,13 +112,15 @@ export const responsiveFontSize = Object.keys(typeScale).reduce(
 		...accumulator,
 		[fontSize]: style({
 			vars: {
-				fontSize: typeScale[fontSize as keyof typeof typeScale],
+				fontSize: experimentalTypeScale[fontSize as keyof typeof typeScale],
 			},
 			"@media": {
 				"screen and (max-width: 600px)": {
 					vars: {
 						fontSize:
-							narrowTypeScale[fontSize as keyof typeof narrowTypeScale],
+							experimentalTypeScale[
+								fontSize as keyof typeof narrowTypeScale
+							],
 					},
 				},
 			},
