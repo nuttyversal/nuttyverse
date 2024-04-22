@@ -1,6 +1,6 @@
 import { createTheme, createThemeContract, style } from "@vanilla-extract/css";
 import { RecipeVariants, recipe } from "@vanilla-extract/recipes";
-import { typeScale } from "~/styles/tokens/typography";
+import { experimentalTypeScale } from "~/styles/tokens/typography";
 import * as colors from "~/styles/tokens/colors";
 import { spacing } from "~/styles/tokens/spacing";
 
@@ -31,7 +31,7 @@ export const base = style({
 	background: vars.backgroundColor,
 	color: vars.foregroundColor,
 	cursor: "pointer",
-	fontSize: typeScale.base,
+	fontSize: experimentalTypeScale.base,
 	fontWeight: "normal",
 	fontStyle: "normal",
 	textTransform: "lowercase",
