@@ -5,6 +5,7 @@ import {
 	style,
 } from "@vanilla-extract/css";
 import * as colors from "~/styles/tokens/colors";
+import { spacing } from "~/styles/tokens/spacing";
 
 export const vars = createThemeContract({
 	gradient: null,
@@ -17,20 +18,20 @@ export const lightMode = createTheme(vars, {
 	dividerColor: colors.black,
 	floatKeyFrames: keyframes({
 		"0%": {
-			transform: "translateY(0px)",
+			transform: `translateY(${spacing[0]})`,
 		},
 		"30%": {
 			opacity: 0.8,
 		},
 		"50%": {
-			transform: "translateY(-4px)",
+			transform: `translateY(-${spacing[1]})`,
 			opacity: 1,
 		},
 		"70%": {
 			opacity: 0.8,
 		},
 		"100%": {
-			transform: "translateY(0px)",
+			transform: `translateY(${spacing[0]})`,
 		},
 	}),
 });
@@ -40,13 +41,13 @@ export const darkMode = createTheme(vars, {
 	dividerColor: colors.white,
 	floatKeyFrames: keyframes({
 		"0%": {
-			transform: "translateY(0px)",
+			transform: `translateY(${spacing[0]})`,
 		},
 		"50%": {
-			transform: "translateY(-4px)",
+			transform: `translateY(-${spacing[1]})`,
 		},
 		"100%": {
-			transform: "translateY(0px)",
+			transform: `translateY(${spacing[0]})`,
 		},
 	}),
 });
@@ -90,15 +91,15 @@ export const chibi = style({
 		},
 		"screen and (min-width: 500px)": {
 			opacity: 1,
-			width: "125px",
+			width: spacing[32],
 		},
 	},
 });
 
 export const divider = style({
 	height: "2px",
-	width: "calc(100% + 32px)",
-	marginLeft: "-16px",
+	width: `calc(100% + ${spacing[8]})`,
+	marginLeft: `-${spacing[4]}`,
 	background: vars.dividerColor,
 	transition: "all 0.2s ease-out",
 });

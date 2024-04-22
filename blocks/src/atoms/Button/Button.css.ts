@@ -2,6 +2,7 @@ import { createTheme, createThemeContract, style } from "@vanilla-extract/css";
 import { RecipeVariants, recipe } from "@vanilla-extract/recipes";
 import { typeScale } from "~/styles/tokens/typography";
 import * as colors from "~/styles/tokens/colors";
+import { spacing } from "~/styles/tokens/spacing";
 
 const vars = createThemeContract({
 	backgroundColor: null,
@@ -39,7 +40,7 @@ export const base = style({
 	borderWidth: "2px",
 	borderStyle: "solid",
 	borderRadius: "3px",
-	padding: "4px 0",
+	padding: `${spacing[1]} 0`,
 	transition: "all 0.2s ease-out",
 	width: "100%",
 	zIndex: 1,
@@ -53,7 +54,7 @@ export const base = style({
 
 	"@media": {
 		"screen and (min-width: 500px)": {
-			padding: "8px 0",
+			padding: `${spacing[2]} 0`,
 		},
 	},
 });

@@ -1,5 +1,6 @@
 import { style } from "@vanilla-extract/css";
+import { spacing } from "~/styles/tokens/spacing";
 
 export const listItem = style({
-	margin: "0.5em",
+	margin: spacing[2],
 });

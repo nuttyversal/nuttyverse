@@ -1,8 +1,9 @@
 import { globalStyle, style } from "@vanilla-extract/css";
+import { spacing } from "~/styles/tokens/spacing";
 
 export const orderedList = style({
 	fontFamily: "Nure",
-	paddingLeft: "1em",
+	paddingLeft: spacing[4],
 	listStyleType: "none",
 	counterReset: "ordered-list",
 });
@@ -16,8 +17,8 @@ globalStyle(`${orderedList} li::before`, {
 	display: "flex",
 	justifyContent: "center",
 	alignItems: "center",
-	width: "2em",
+	width: spacing[8],
 
 	float: "left",
-	marginLeft: "-0.5em",
+	marginLeft: -spacing[2],
 });

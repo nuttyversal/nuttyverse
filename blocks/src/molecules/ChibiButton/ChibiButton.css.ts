@@ -1,7 +1,8 @@
 import { style } from "@vanilla-extract/css";
+import { spacing } from "~/styles/tokens/spacing";
 
 export const base = style({
-	width: "125px",
+	width: spacing[32],
 	transition: "all 0.2s ease-out",
 	cursor: "pointer",
 	background: "none",
@@ -10,7 +11,7 @@ export const base = style({
 	padding: 0,
 
 	":active": {
-		transform: "translateY(0.5em)",
+		transform: `translateY(${spacing[2]})`,
 	},
 
 	"@media": {
@@ -20,7 +21,7 @@ export const base = style({
 		},
 		"screen and (min-width: 500px)": {
 			opacity: 1,
-			width: "125px",
+			width: spacing[32],
 		},
 	},
 });

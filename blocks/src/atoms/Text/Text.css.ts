@@ -12,6 +12,7 @@ import {
 	typeScale,
 } from "~/styles/tokens/typography";
 import * as colors from "~/styles/tokens/colors";
+import { spacing } from "~/styles/tokens/spacing";
 
 globalFontFace("Nure", {
 	src: [
@@ -143,7 +144,7 @@ export const withDropCap = style({
 			fontVariantLigatures: "none",
 			fontWeight: "bold",
 			lineHeight: "1em",
-			marginRight: 4,
+			marginRight: spacing[1],
 			marginTop: 0,
 			color: "transparent",
 			background: vars.gradient,
