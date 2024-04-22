@@ -1,7 +1,7 @@
 import { ReactNode, useContext } from "react";
 import classNames from "classnames";
 import { NuttyverseContext } from "~/styles/themes/context";
-import { FontSize } from "~/styles/themes/constants";
+import { FontSize } from "~/styles/tokens/typography";
 import {
 	withDropCap,
 	responsiveFontSize,

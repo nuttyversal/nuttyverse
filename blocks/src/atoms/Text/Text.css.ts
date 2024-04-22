@@ -9,7 +9,7 @@ import {
 	FontSize,
 	narrowTypeScale,
 	typeScale,
-} from "~/styles/themes/constants";
+} from "~/styles/tokens/typography";
 import * as colors from "~/styles/tokens/colors";
 
 globalFontFace("Nure", {

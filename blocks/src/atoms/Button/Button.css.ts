@@ -1,6 +1,6 @@
 import { createTheme, createThemeContract, style } from "@vanilla-extract/css";
 import { RecipeVariants, recipe } from "@vanilla-extract/recipes";
-import { typeScale } from "~/styles/themes/constants";
+import { typeScale } from "~/styles/tokens/typography";
 import * as colors from "~/styles/tokens/colors";
 
 const vars = createThemeContract({
