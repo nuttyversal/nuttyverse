@@ -121,10 +121,15 @@ export const responsiveFontSize = Object.keys(typeScale).reduce(
 export const withDropCap = style({
 	selectors: {
 		"&::first-letter": {
+			// [HACK] 3em is a value that was picked so that the drop cap would
+			// vertically span two lines (1.5em line height * 2), but sometimes,
+			// it would span three lines with in certain viewports. I observed
+			// that subtracting 1px ensures that this doesn't happen.
+			fontSize: "calc(3em - 1px)",
+
 			float: "left",
 			fontFamily: "PragmataPro Fraktur",
 			fontVariantLigatures: "none",
-			fontSize: "3em",
 			fontWeight: "bold",
 			lineHeight: "1em",
 			marginRight: 4,
