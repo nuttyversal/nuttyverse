@@ -15,6 +15,7 @@ import * as colors from "~/styles/tokens/colors";
 import { spacing } from "~/styles/tokens/spacing";
 
 globalFontFace("Nure", {
+	fontDisplay: "swap",
 	src: [
 		'url("https://fonts.nuttyver.se/nure-foo.woff2") format("woff2")',
 	].join(", "),
@@ -23,6 +24,7 @@ globalFontFace("Nure", {
 globalFontFace("PragmataPro Liga", {
 	fontWeight: "normal",
 	fontStyle: "normal",
+	fontDisplay: "swap",
 	src: [
 		'url("https://fonts.nuttyver.se/pragmatapro-liga-regular-foo.woff2") format("woff2")',
 	].join(", "),
@@ -31,6 +33,7 @@ globalFontFace("PragmataPro Liga", {
 globalFontFace("PragmataPro Liga", {
 	fontWeight: "bold",
 	fontStyle: "normal",
+	fontDisplay: "swap",
 	src: [
 		'url("https://fonts.nuttyver.se/pragmatapro-liga-bold-foo.woff2") format("woff2")',
 	].join(", "),
@@ -39,6 +42,7 @@ globalFontFace("PragmataPro Liga", {
 globalFontFace("PragmataPro Liga", {
 	fontWeight: "normal",
 	fontStyle: "italic",
+	fontDisplay: "swap",
 	src: [
 		'url("https://fonts.nuttyver.se/pragmatapro-liga-italic-foo.woff2") format("woff2")',
 	].join(", "),
@@ -47,6 +51,7 @@ globalFontFace("PragmataPro Liga", {
 globalFontFace("PragmataPro Liga", {
 	fontWeight: "bold",
 	fontStyle: "italic",
+	fontDisplay: "swap",
 	src: [
 		'url("https://fonts.nuttyver.se/pragmatapro-liga-bold-italic-foo.woff2") format("woff2")',
 	].join(", "),
@@ -54,6 +59,7 @@ globalFontFace("PragmataPro Liga", {
 
 globalFontFace("PragmataPro Fraktur", {
 	fontWeight: "normal",
+	fontDisplay: "swap",
 	src: [
 		'url("https://fonts.nuttyver.se/pragmatapro-fraktur-regular-foo.woff2") format("woff2")',
 	].join(", "),
@@ -61,12 +67,14 @@ globalFontFace("PragmataPro Fraktur", {
 
 globalFontFace("PragmataPro Fraktur", {
 	fontWeight: "bold",
+	fontDisplay: "swap",
 	src: [
 		'url("https://fonts.nuttyver.se/pragmatapro-fraktur-bold-foo.woff2") format("woff2")',
 	].join(", "),
 });
 
 globalFontFace("FSD Emoji", {
+	fontDisplay: "swap",
 	src: [
 		'url("https://fonts.nuttyver.se/fsd-emoji-foo.woff2") format("woff2")',
 	].join(", "),
