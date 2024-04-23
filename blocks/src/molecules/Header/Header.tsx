@@ -7,8 +7,7 @@ import {
 	chibi,
 	container,
 	darkMode,
-	divider,
-	float,
+	marqueeBox,
 	header,
 	lightMode,
 } from "./Header.css";
@@ -17,31 +16,34 @@ export const Header = () => {
 	const context = useContext(NuttyverseContext);
 	const themeClass = context.theme === "light" ? lightMode : darkMode;
 
-	const nuttyverse = "Nuttyverse".split("").map((letter, index) => (
+	const nuttyverse = (
 		<Text
-			as="span"
+			className={[themeClass, header].join(" ")}
 			size="6xl"
-			className={[themeClass, header, float].join(" ")}
-			style={{ animationDelay: `${index * 0.3}s` }}
-			wdth={50}
-			weight={700}
+			as="span"
+			wdth={125}
+			weight={900}
 		>
-			{letter}
+			Nuttyverse
 		</Text>
-	));
+	);
 
 	const messageOfTheDay = (
-		<Marquee>
-			<Text
-				style={{
-					lineHeight: "0",
-					margin: "1em",
-					fontFamily: "PragmataPro Fraktur",
-				}}
-			>
-				Hello there, welcome to the Nuttyverse!
-			</Text>
-		</Marquee>
+		<div className={[themeClass, marqueeBox].join(" ")}>
+			<Marquee>
+				<Text
+					size="smol"
+					weight={600}
+					style={{
+						lineHeight: "0",
+						margin: "1em",
+						fontFamily: "PragmataPro Liga",
+					}}
+				>
+					Hello there, welcome to the Nuttyverse!
+				</Text>
+			</Marquee>
+		</div>
 	);
 
 	return (
@@ -51,9 +53,7 @@ export const Header = () => {
 				<ChibiButton className={chibi} onClick={context.toggleTheme} />
 			</div>
 
-			<div className={[themeClass, divider].join(" ")} />
 			{messageOfTheDay}
-			<div className={[themeClass, divider].join(" ")} />
 		</div>
 	);
 };

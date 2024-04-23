@@ -116,7 +116,7 @@ export const responsiveFontSize = Object.keys(typeScale).reduce(
 				fontSize: experimentalTypeScale[fontSize as keyof typeof typeScale],
 			},
 			"@media": {
-				"screen and (max-width: 600px)": {
+				[`screen and (max-width: ${spacing[144]})`]: {
 					vars: {
 						fontSize:
 							experimentalTypeScale[

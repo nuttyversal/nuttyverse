@@ -53,6 +53,7 @@ export const darkMode = createTheme(vars, {
 });
 
 export const container = style({
+	padding: `0 ${spacing[4]}`,
 	display: "flex",
 	justifyContent: "space-between",
 	alignItems: "end",
@@ -70,9 +71,9 @@ export const header = style({
 	display: "inline-block",
 	margin: "0 !important",
 	marginBottom: "4px !important",
-	textTransform: "lowercase",
-	letterSpacing: "0.1em",
-	lineHeight: "1.2em",
+	textTransform: "uppercase",
+	letterSpacing: "calc(1em * 0.05)",
+	lineHeight: "1em",
 	color: "transparent",
 	background: vars.gradient,
 	backgroundClip: "text",
@@ -89,9 +90,24 @@ export const chibi = style({
 			opacity: 0,
 			width: "0px",
 		},
-		"screen and (min-width: 500px)": {
+		[`screen and (min-width: ${spacing[144]})`]: {
 			opacity: 1,
 			width: spacing[32],
+		},
+	},
+});
+
+export const marqueeBox = style({
+	borderWidth: `2px 4px`,
+	borderColor: vars.dividerColor,
+	borderStyle: "solid",
+
+	"@media": {
+		all: {
+			borderRadius: "0",
+		},
+		[`screen and (min-width: ${spacing[144]})`]: {
+			borderRadius: "4px",
 		},
 	},
 });

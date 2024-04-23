@@ -2,7 +2,6 @@ import { style } from "@vanilla-extract/css";
 import { spacing } from "~/styles/tokens/spacing";
 
 export const base = style({
-	width: spacing[32],
 	transition: "all 0.2s ease-out",
 	cursor: "pointer",
 	background: "none",
@@ -19,7 +18,7 @@ export const base = style({
 			opacity: 0,
 			width: "0px",
 		},
-		"screen and (min-width: 500px)": {
+		[`screen and (min-width: ${spacing[144]})`]: {
 			opacity: 1,
 			width: spacing[32],
 		},

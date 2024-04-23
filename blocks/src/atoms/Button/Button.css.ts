@@ -53,7 +53,7 @@ export const base = style({
 	},
 
 	"@media": {
-		"screen and (min-width: 500px)": {
+		[`screen and (min-width: ${spacing[144]})`]: {
 			padding: `${spacing[2]} 0`,
 		},
 	},

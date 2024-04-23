@@ -2,13 +2,22 @@ import { Button } from "~/atoms/Button/Button";
 import { Text } from "~/atoms/Text/Text";
 import { Introduction } from "~/molecules/Introduction/Introduction";
 import { Header } from "~/molecules/Header/Header";
+import { spacing } from "~/styles/tokens/spacing";
 
 export const Singularity = () => {
 	return (
 		<div>
 			<Header />
-			<Introduction />
-			<ExploreInnerWorld />
+
+			<div
+				style={{
+					paddingLeft: spacing[4],
+					paddingRight: spacing[4],
+				}}
+			>
+				<Introduction />
+				<ExploreInnerWorld />
+			</div>
 		</div>
 	);
 };

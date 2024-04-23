@@ -24,13 +24,11 @@ export const body = style({
 
 export const main = style({
 	margin: "auto",
-	width: "500px",
-	padding: "1em 2em",
+	width: "36rem",
 
 	"@media": {
-		"screen and (max-width: 500px)": {
-			width: "calc(100% - 2em)",
-			padding: "0.5em 0",
+		"screen and (max-width: 36rem)": {
+			width: "100%",
 		},
 	},
 });
