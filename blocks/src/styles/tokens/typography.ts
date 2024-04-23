@@ -14,6 +14,7 @@ const deriveTypeScale = (base: number) => {
 		"4xl": base * minorThird ** 4 + "px",
 		"5xl": base * minorThird ** 5 + "px",
 		"6xl": base * minorThird ** 6 + "px",
+		"7xl": base * minorThird ** 7 + "px",
 	} as const;
 };
 
@@ -38,11 +39,12 @@ export const experimentalTypeScale = {
 	smol: `calc(1rem / pow(${minorThird}, 1))`,
 	base: `calc (1rem * pow(${minorThird}, 0))`,
 	xl: `calc(1rem * pow(${minorThird}, 1))`,
-	"2xl": `calc(1rem * pow(${minorThird}, 1))`,
-	"3xl": `calc(1rem * pow(${minorThird}, 2))`,
-	"4xl": `calc(1rem * pow(${minorThird}, 3))`,
-	"5xl": `calc(1rem * pow(${minorThird}, 4))`,
-	"6xl": `calc(1rem * pow(${minorThird}, 5))`,
+	"2xl": `calc(1rem * pow(${minorThird}, 2))`,
+	"3xl": `calc(1rem * pow(${minorThird}, 3))`,
+	"4xl": `calc(1rem * pow(${minorThird}, 4))`,
+	"5xl": `calc(1rem * pow(${minorThird}, 5))`,
+	"6xl": `calc(1rem * pow(${minorThird}, 6))`,
+	"7xl": `calc(1rem * pow(${minorThird}, 7))`,
 };
 
 /**
