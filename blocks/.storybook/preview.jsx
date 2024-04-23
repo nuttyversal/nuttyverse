@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { NuttyverseContext } from "../src/styles/themes/context";
+import { spacing } from "../src/styles/tokens/spacing";
 
 // Import CSS reset as a side effect.
 import "../src/styles/reset.css";
@@ -37,8 +38,8 @@ const preview = {
 					<div
 						style={{
 							position: "absolute",
-							top: "1em",
-							right: "1em",
+							top: spacing[4],
+							right: spacing[4],
 						}}
 					>
 						<button onClick={toggleTheme}>{themeButtonText}</button>
@@ -51,7 +52,7 @@ const preview = {
 							backgroundColor,
 						}}
 					>
-						<div style={{ width: "30em", padding: "1em" }}>
+						<div style={{ width: spacing[144], padding: spacing[4] }}>
 							<NuttyverseContext.Provider value={initialContextValue}>
 								<Story />
 							</NuttyverseContext.Provider>
