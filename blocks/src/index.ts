@@ -16,8 +16,9 @@ import { Text } from "~/atoms/Text";
 import { ChibiButton } from "~/molecules/ChibiButton";
 import { Header } from "~/molecules/Header";
 import { Introduction } from "~/molecules/Introduction";
+import { MessageOfTheDay } from "./molecules/MessageOfTheDay";
 
-import { Singularity } from "~/organisms/Singularity/Singularity";
+import { Singularity } from "~/organisms/Singularity";
 
 import { NuttyverseContext } from "~/styles/themes/context";
 import { setDocumentRootBackground } from "~/styles/themes/utils";
@@ -43,6 +44,7 @@ export {
 	ChibiButton,
 	Header,
 	Introduction,
+	MessageOfTheDay,
 
 	// Organisms
 	Singularity,
