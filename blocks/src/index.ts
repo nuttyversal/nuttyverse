@@ -14,10 +14,10 @@ import { Marquee } from "~/atoms/Marquee";
 import { Text } from "~/atoms/Text";
 
 import { ChibiButton } from "~/molecules/ChibiButton";
-import { Header } from "~/molecules/Header";
 import { Introduction } from "~/molecules/Introduction";
 import { MessageOfTheDay } from "./molecules/MessageOfTheDay";
 
+import { Header } from "~/organisms/Header";
 import { Singularity } from "~/organisms/Singularity";
 
 import { NuttyverseContext } from "~/styles/themes/context";
@@ -42,11 +42,11 @@ export {
 
 	// Molecules
 	ChibiButton,
-	Header,
 	Introduction,
 	MessageOfTheDay,
 
 	// Organisms
+	Header,
 	Singularity,
 
 	// Utilities
