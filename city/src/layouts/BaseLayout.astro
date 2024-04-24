@@ -1,0 +1,22 @@
+---
+const { title } = Astro.props.frontmatter || Astro.props;
+---
+
+<html lang="en">
+   <head>
+      <meta charset="utf-8" />
+		<meta name="description" content="Ahoy there, fellow navigator! Welcome to my internet expanse — my comfy corner of the Internet that I enjoy working on from time to time as a form of creative self-expression." />
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="preload" href="https://fonts.nuttyver.se/fsd-emoji-foo.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="https://fonts.nuttyver.se/pragmatapro-liga-regular-foo.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="https://fonts.nuttyver.se/pragmatapro-liga-bold-foo.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="https://fonts.nuttyver.se/pragmatapro-fraktur-bold-foo.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="https://fonts.nuttyver.se/nure-foo.woff2" as="font" type="font/woff2" crossorigin />
+      <meta name="viewport" content="width=device-width" />
+      <meta name="generator" content={Astro.generator} />
+      <title>{title}</title>
+   </head>
+   <body>
+      <slot />
+   </body>
+</html>
