@@ -10,11 +10,13 @@
 	"dependencies": {
 		"@fortawesome/fontawesome-svg-core": "^6.5.1",
 		"@fortawesome/pro-solid-svg-icons": "^6.5.1",
+		"@nanostores/react": "^0.7.2",
 		"@radix-ui/colors": "^3.0.0",
 		"@vanilla-extract/css": "^1.14.0",
 		"@vanilla-extract/recipes": "^0.5.1",
 		"@vanilla-extract/sprinkles": "^1.6.1",
 		"classnames": "^2.5.1",
+		"nanostores": "^0.10.3",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0"
 	},

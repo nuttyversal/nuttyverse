@@ -14,6 +14,9 @@ importers:
       '@fortawesome/pro-solid-svg-icons':
         specifier: ^6.5.1
         version: 6.5.1
+      '@nanostores/react':
+        specifier: ^0.7.2
+        version: 0.7.2(nanostores@0.10.3)(react@18.2.0)
       '@radix-ui/colors':
         specifier: ^3.0.0
         version: 3.0.0
@@ -29,6 +32,9 @@ importers:
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
+      nanostores:
+        specifier: ^0.10.3
+        version: 0.10.3
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -2054,6 +2060,17 @@ packages:
       '@types/react': 18.2.48
       react: 18.2.0
     dev: true
+
+  /@nanostores/react@0.7.2(nanostores@0.10.3)(react@18.2.0):
+    resolution: {integrity: sha512-e3OhHJFv3NMSFYDgREdlAQqkyBTHJM91s31kOZ4OvZwJKdFk5BLk0MLbh51EOGUz9QGX2aCHfy1RvweSi7fgwA==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    peerDependencies:
+      nanostores: ^0.9.0 || ^0.10.0
+      react: '>=18.0.0'
+    dependencies:
+      nanostores: 0.10.3
+      react: 18.2.0
+    dev: false
 
   /@ndelangen/get-tarball@3.0.9:
     resolution: {integrity: sha512-9JKTEik4vq+yGosHYhZ1tiH/3WpUS0Nh0kej4Agndhox8pAdWhEx5knFVRcb/ya9knCRCs1rPxNrSXTDdfVqpA==}
@@ -6743,6 +6760,11 @@ packages:
     resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+
+  /nanostores@0.10.3:
+    resolution: {integrity: sha512-Nii8O1XqmawqSCf9o2aWqVxhKRN01+iue9/VEd1TiJCr9VT5XxgPFbF1Edl1XN6pwJcZRsl8Ki+z01yb/T/C2g==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    dev: false
 
   /napi-build-utils@1.0.2:
     resolution: {integrity: sha512-ONmRUqK7zj7DWX0D9ADe03wbwOBZxNAfF20PlGfCWQcD3+/MakShIHrMqx9YwPTfxDdF1zLeL+RGZiR9kGMLdg==}
