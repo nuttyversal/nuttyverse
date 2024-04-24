@@ -24,7 +24,7 @@ const colorScaleContract = {
  * Theme contract that defines locally scoped variable names that is
  * implemented by each color mode (light and dark).
  */
-const colors = createThemeContract({
+export const colors = createThemeContract({
 	background: null,
 	gray: {
 		solid: colorScaleContract,
