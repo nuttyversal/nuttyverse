@@ -1,5 +1,5 @@
 import { CSSProperties, useContext } from "react";
-import { NuttyverseContext } from "~/index";
+import { NuttyverseContext } from "~/styles/themes/context";
 import * as colors from "~/styles/tokens/colors";
 import { spacing } from "~/styles/tokens/spacing";
 
@@ -15,10 +15,8 @@ type Props = {
 	style?: CSSProperties;
 };
 
-export const Logo = (props: Props) => {
+export const Logo: React.FC<Props> = (props) => {
 	const context = useContext(NuttyverseContext);
-	const backgroundColor =
-		context.theme === "light" ? colors.white : colors.black;
 	const foregroundColor =
 		context.theme === "light" ? colors.black : colors.white;
 
