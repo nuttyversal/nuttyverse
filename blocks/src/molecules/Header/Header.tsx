@@ -8,25 +8,13 @@ import {
 	container,
 	darkMode,
 	marqueeBox,
-	header,
 	lightMode,
 } from "./Header.css";
+import { Logo } from "~/atoms/Logo/Logo";
 
 export const Header = () => {
 	const context = useContext(NuttyverseContext);
 	const themeClass = context.theme === "light" ? lightMode : darkMode;
-
-	const nuttyverse = (
-		<Text
-			className={[themeClass, header].join(" ")}
-			size="6xl"
-			as="span"
-			wdth={125}
-			weight={900}
-		>
-			Nuttyverse
-		</Text>
-	);
 
 	const messageOfTheDay = (
 		<div className={[themeClass, marqueeBox].join(" ")}>
@@ -49,7 +37,7 @@ export const Header = () => {
 	return (
 		<div>
 			<div className={container}>
-				<div>{nuttyverse}</div>
+				<Logo />
 				<ChibiButton className={chibi} onClick={context.toggleTheme} />
 			</div>
 
