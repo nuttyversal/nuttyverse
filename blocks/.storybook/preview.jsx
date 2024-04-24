@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { NuttyverseContext } from "../src/styles/themes/context";
+import * as colors from "../src/styles/tokens/colors";
 import { spacing } from "../src/styles/tokens/spacing";
+import { darkTheme, lightTheme } from "../src/styles/themes/contract.css";
+import { useThemeSwitcher } from "../src/styles/themes/contract";
 
 // Import CSS reset as a side effect.
 import "../src/styles/reset.css";
@@ -17,21 +18,18 @@ const preview = {
 	},
 	decorators: [
 		(Story) => {
-			const [theme, setTheme] = useState("light");
-			const themeButtonText = theme === "light" ? "☀️" : "🌙";
-			const backgroundColor = theme === "light" ? "white" : "black";
+			const { theme, toggleTheme } = useThemeSwitcher();
 
-			const toggleTheme = () => {
-				setTheme((prevTheme) => {
-					return prevTheme === "light" ? "dark" : "light";
-				});
-			};
-
-			const initialContextValue = {
-				theme,
-				setTheme,
-				toggleTheme,
-			};
+			const themeVars =
+				theme === lightTheme
+					? {
+							icon: "☀️",
+							background: colors.white,
+						}
+					: {
+							icon: "🌙",
+							background: colors.black,
+						};
 
 			return (
 				<>
@@ -42,20 +40,18 @@ const preview = {
 							right: spacing[4],
 						}}
 					>
-						<button onClick={toggleTheme}>{themeButtonText}</button>
+						<button onClick={toggleTheme}>{themeVars.icon}</button>
 					</div>
 					<div
 						style={{
 							display: "flex",
 							justifyContent: "center",
 							width: "100%",
-							backgroundColor,
+							backgroundColor: themeVars.background,
 						}}
 					>
 						<div style={{ width: spacing[144], padding: spacing[4] }}>
-							<NuttyverseContext.Provider value={initialContextValue}>
-								<Story />
-							</NuttyverseContext.Provider>
+							<Story />
 						</div>
 					</div>
 				</>
