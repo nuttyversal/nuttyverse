@@ -1,9 +1,21 @@
-import { useContext } from "react";
+import { CSSProperties, useContext } from "react";
 import { NuttyverseContext } from "~/index";
 import * as colors from "~/styles/tokens/colors";
 import { spacing } from "~/styles/tokens/spacing";
 
-export const Logo = () => {
+type Props = {
+	/**
+	 * Additional class names to apply to the SVG element.
+	 */
+	className?: string;
+
+	/**
+	 * Additional styles to apply to the SVG element.
+	 */
+	style?: CSSProperties;
+};
+
+export const Logo = (props: Props) => {
 	const context = useContext(NuttyverseContext);
 	const backgroundColor =
 		context.theme === "light" ? colors.white : colors.black;
@@ -14,15 +26,11 @@ export const Logo = () => {
 		<svg
 			width={spacing[96]}
 			viewBox="0 0 118 24"
-			style={{
-				shapeRendering: "geometricPrecision",
-				textRendering: "geometricPrecision",
-				fillRule: "evenodd",
-				clipRule: "evenodd",
-			}}
+			className={props.className}
+			style={props.style}
 			xmlns="http://www.w3.org/2000/svg"
 		>
-			<rect width="118" height="24" fill={backgroundColor} />
+			<rect width="118" height="24" fill="transparent" />
 			<path
 				d="M2.625 24V8.80469H6.51562L11.4688 15.2969V7H14.8125V20H10.9844L5.96875 13.4219V24H2.625Z"
 				fill={foregroundColor}

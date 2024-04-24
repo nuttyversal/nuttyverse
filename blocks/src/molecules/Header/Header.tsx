@@ -1,8 +1,10 @@
 import { useContext } from "react";
+import { NuttyverseContext } from "~/styles/themes/context";
+import { spacing } from "~/styles/tokens/spacing";
+import { Logo } from "~/atoms/Logo/Logo";
 import { Marquee } from "~/atoms/Marquee/Marquee";
 import { Text } from "~/atoms/Text/Text";
 import { ChibiButton } from "~/molecules/ChibiButton/ChibiButton";
-import { NuttyverseContext } from "~/styles/themes/context";
 import {
 	chibi,
 	container,
@@ -10,7 +12,6 @@ import {
 	marqueeBox,
 	lightMode,
 } from "./Header.css";
-import { Logo } from "~/atoms/Logo/Logo";
 
 export const Header = () => {
 	const context = useContext(NuttyverseContext);
@@ -37,7 +38,7 @@ export const Header = () => {
 	return (
 		<div>
 			<div className={container}>
-				<Logo />
+				<Logo style={{ marginBottom: `-${spacing.px}` }} />
 				<ChibiButton className={chibi} onClick={context.toggleTheme} />
 			</div>
 
