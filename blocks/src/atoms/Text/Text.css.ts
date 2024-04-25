@@ -1,17 +1,11 @@
-import {
-	createTheme,
-	createThemeContract,
-	globalFontFace,
-	globalStyle,
-	style,
-} from "@vanilla-extract/css";
+import { globalFontFace, globalStyle, style } from "@vanilla-extract/css";
 import {
 	FontSize,
 	experimentalTypeScale,
 	narrowTypeScale,
 	typeScale,
 } from "~/styles/tokens/typography";
-import * as colors from "~/styles/tokens/colors";
+import { colors } from "~/styles/themes/contract.css";
 import { spacing } from "~/styles/tokens/spacing";
 
 globalFontFace("Nure", {
@@ -97,23 +91,8 @@ globalStyle("*", {
 	hyphens: "auto",
 });
 
-export const vars = createThemeContract({
-	color: null,
-	gradient: null,
-});
-
-export const lightMode = createTheme(vars, {
-	color: colors.black,
-	gradient: "linear-gradient(180deg, #000 0%, #760063 100%)",
-});
-
-export const darkMode = createTheme(vars, {
-	color: colors.white,
-	gradient: "linear-gradient(180deg, #fff 0%, #fff 100%)",
-});
-
 export const base = style({
-	color: vars.color,
+	color: colors.gray.solid["12"],
 });
 
 export const responsiveFontSize = Object.keys(typeScale).reduce(
@@ -155,7 +134,7 @@ export const withDropCap = style({
 			marginRight: spacing[1],
 			marginTop: 0,
 			color: "transparent",
-			background: vars.gradient,
+			background: colors.gray.solid["12"],
 			backgroundClip: "text",
 			WebkitBackgroundClip: "text",
 			WebkitTextFillColor: "transparent",

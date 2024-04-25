@@ -1,23 +1,8 @@
-import { createTheme, createThemeContract, style } from "@vanilla-extract/css";
+import { style } from "@vanilla-extract/css";
 import { RecipeVariants, recipe } from "@vanilla-extract/recipes";
 import { experimentalTypeScale } from "~/styles/tokens/typography";
-import * as colors from "~/styles/tokens/colors";
 import { spacing } from "~/styles/tokens/spacing";
-
-const vars = createThemeContract({
-	backgroundColor: null,
-	foregroundColor: null,
-});
-
-export const lightMode = createTheme(vars, {
-	backgroundColor: colors.black,
-	foregroundColor: colors.white,
-});
-
-export const darkMode = createTheme(vars, {
-	backgroundColor: colors.white,
-	foregroundColor: colors.black,
-});
+import { colors } from "~/styles/themes/contract.css";
 
 export const container = style({
 	display: "flex",
@@ -28,15 +13,15 @@ export const container = style({
 });
 
 export const base = style({
-	background: vars.backgroundColor,
-	color: vars.foregroundColor,
+	background: colors.gray.solid["12"],
+	color: colors.gray.solid["01"],
 	cursor: "pointer",
 	fontSize: experimentalTypeScale.base,
 	fontWeight: "normal",
 	fontStyle: "normal",
 	textTransform: "lowercase",
 	letterSpacing: "2px",
-	borderColor: vars.backgroundColor,
+	borderColor: colors.gray.solid["12"],
 	borderWidth: "2px",
 	borderStyle: "solid",
 	borderRadius: "3px",
@@ -46,8 +31,8 @@ export const base = style({
 	zIndex: 1,
 
 	":hover": {
-		color: vars.backgroundColor,
-		background: vars.foregroundColor,
+		background: colors.gray.solid["01"],
+		color: colors.gray.solid["12"],
 		letterSpacing: "2.4px",
 		fontVariationSettings: `"opsz" 18, "wdth" 95`,
 	},
@@ -61,8 +46,8 @@ export const base = style({
 
 export const bannerVariants = recipe({
 	base: {
-		background: vars.backgroundColor,
-		color: vars.foregroundColor,
+		background: colors.gray.solid["12"],
+		color: colors.gray.solid["01"],
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",

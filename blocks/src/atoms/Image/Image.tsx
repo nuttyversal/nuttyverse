@@ -1,7 +1,5 @@
-import { useContext } from "react";
 import classNames from "classnames";
-import { NuttyverseContext } from "~/styles/themes/context";
-import { base, darkMode, lightMode, withPixelatedRendering } from "./Image.css";
+import { base, withPixelatedRendering } from "./Image.css";
 
 type ImageProps = {
 	/**
@@ -12,11 +10,8 @@ type ImageProps = {
 } & React.ComponentPropsWithoutRef<"img">;
 
 export const Image = (props: ImageProps) => {
-	const context = useContext(NuttyverseContext);
-	const themeClass = context.theme === "light" ? lightMode : darkMode;
-
 	const { pixelated, ...htmlImgProps } = props;
-	const imageClassNames = classNames(base, themeClass, {
+	const imageClassNames = classNames(base, {
 		[withPixelatedRendering]: pixelated,
 	});
 

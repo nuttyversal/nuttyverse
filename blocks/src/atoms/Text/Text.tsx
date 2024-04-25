@@ -1,6 +1,5 @@
 import { ReactNode, useContext } from "react";
 import classNames from "classnames";
-import { NuttyverseContext } from "~/styles/themes/context";
 import { FontSize } from "~/styles/tokens/typography";
 import {
 	withDropCap,
@@ -56,9 +55,6 @@ type TextProps<Component extends React.ElementType> = {
 export const Text = <Component extends React.ElementType>(
 	props: TextProps<Component>,
 ) => {
-	const context = useContext(NuttyverseContext);
-	const themeClass = context.theme === "light" ? lightMode : darkMode;
-
 	const {
 		as,
 		size,
@@ -113,7 +109,6 @@ export const Text = <Component extends React.ElementType>(
 
 	const textClassNames = classNames(
 		base,
-		themeClass,
 		responsiveFontSize[fontSize],
 		polymorphicProps.className,
 		{ [withDropCap]: dropCap },

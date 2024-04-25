@@ -1,13 +1,10 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import classNames from "classnames";
-import { NuttyverseContext } from "~/styles/themes/context";
 import {
 	bannerVariants,
 	base,
 	container,
-	darkMode,
-	lightMode,
 	withNotAllowedCursor,
 } from "./Button.css";
 
@@ -29,13 +26,10 @@ type ButtonProps = {
 } & ComponentPropsWithoutRef<"button">;
 
 export const Button = (props: ButtonProps) => {
-	const context = useContext(NuttyverseContext);
+	const { children, sparkle, banner, ...htmlButtonProps } = props;
 	const { isHovered, handleMouseEnter, handleMouseLeave } = useHover();
 
-	const { children, sparkle, banner, ...htmlButtonProps } = props;
-	const themeClass = context.theme === "light" ? lightMode : darkMode;
-
-	const buttonClassNames = classNames(base, themeClass, {
+	const buttonClassNames = classNames(base, {
 		[withNotAllowedCursor]: htmlButtonProps.disabled,
 	});
 
@@ -52,13 +46,7 @@ export const Button = (props: ButtonProps) => {
 				{sparkle && (isHovered ? " ✧" : " ✦")}
 			</button>
 
-			{banner && (
-				<ButtonBanner
-					{...banner}
-					themeClass={themeClass}
-					isHovered={isHovered}
-				/>
-			)}
+			{banner && <ButtonBanner {...banner} isHovered={isHovered} />}
 		</div>
 	);
 };
@@ -72,7 +60,6 @@ type ButtonBannerProps = {
  * through from `Button` to `ButtonBanner`.
  */
 type ButtonBannerInternalProps = {
-	themeClass: string;
 	isHovered: boolean;
 };
 
@@ -83,9 +70,7 @@ export const ButtonBanner = (
 		state: props.isHovered ? "hovered" : "notHovered",
 	});
 
-	const bannerClassNames = classNames(props.themeClass, bannerVariant);
-
-	return <div className={bannerClassNames}>{props.children}</div>;
+	return <div className={bannerVariant}>{props.children}</div>;
 };
 
 /**

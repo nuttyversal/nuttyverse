@@ -1,4 +1,5 @@
 import { style } from "@vanilla-extract/css";
+import { colors } from "~/styles/themes/contract.css";
 
 export const link = style({
 	fontFeatureSettings: `"smcp" 1, "c2sc" 1`,
@@ -7,7 +8,7 @@ export const link = style({
 	textUnderlineOffset: "3px",
 	fontFamily: "Nure",
 	textDecoration: "none",
-	color: "inherit",
+	color: colors.gray.solid["12"],
 
 	":hover": {
 		textDecoration: "underline",

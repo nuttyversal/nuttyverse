@@ -1,20 +1,8 @@
-import { createTheme, createThemeContract, style } from "@vanilla-extract/css";
-import * as colors from "~/styles/tokens/colors";
-
-export const vars = createThemeContract({
-	borderColor: null,
-});
-
-export const lightMode = createTheme(vars, {
-	borderColor: colors.black,
-});
-
-export const darkMode = createTheme(vars, {
-	borderColor: colors.white,
-});
+import { style } from "@vanilla-extract/css";
+import { colors } from "~/styles/themes/contract.css";
 
 export const base = style({
-	borderColor: vars.borderColor,
+	borderColor: colors.gray.solid["12"],
 	borderWidth: "3px",
 	borderRadius: "3px",
 	borderStyle: "solid",

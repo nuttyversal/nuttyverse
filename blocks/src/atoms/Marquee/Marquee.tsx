@@ -1,13 +1,5 @@
-import { ReactNode, useContext } from "react";
-import {
-	container,
-	darkMode,
-	lightMode,
-	marquee,
-	marqueeShadowClone,
-	overlay,
-} from "./Marquee.css";
-import { NuttyverseContext } from "~/styles/themes/context";
+import { ReactNode } from "react";
+import { container, marquee, marqueeShadowClone, overlay } from "./Marquee.css";
 
 type Props = {
 	/**
@@ -17,17 +9,14 @@ type Props = {
 };
 
 export const Marquee = (props: Props) => {
-	const context = useContext(NuttyverseContext);
-	const themeClass = context.theme === "light" ? lightMode : darkMode;
-
 	return (
-		<div className={[themeClass, container].join(" ")}>
+		<div className={container}>
 			{/* Kage Bunshin no Jutsu */}
 			<div className={marquee}>{props.children}</div>
 			<div className={marqueeShadowClone}>{props.children}</div>
 
 			{/* Fade content in and out. */}
-			<div className={[themeClass, overlay].join(" ")} />
+			<div className={overlay} />
 		</div>
 	);
 };

@@ -1,31 +1,8 @@
-import {
-	createTheme,
-	createThemeContract,
-	keyframes,
-	style,
-} from "@vanilla-extract/css";
-import * as colors from "~/styles/tokens/colors";
-
-const vars = createThemeContract({
-	background: null,
-	backgroundBefore: null,
-	backgroundAfter: null,
-});
-
-export const lightMode = createTheme(vars, {
-	background: colors.white,
-	backgroundBefore: `linear-gradient(to right, ${colors.white}, rgba(255, 255, 255, 0))`,
-	backgroundAfter: `linear-gradient(to left, ${colors.white}, rgba(255, 255, 255, 0))`,
-});
-
-export const darkMode = createTheme(vars, {
-	background: colors.black,
-	backgroundBefore: `linear-gradient(to right, ${colors.black}, rgba(0, 0, 0, 0))`,
-	backgroundAfter: `linear-gradient(to left, ${colors.black}, rgba(0, 0, 0, 0))`,
-});
+import { keyframes, style } from "@vanilla-extract/css";
+import { colors } from "~/styles/themes/contract.css";
 
 export const container = style({
-	background: vars.background,
+	background: colors.background,
 	position: "relative",
 	display: "flex",
 	flexDirection: "row",
@@ -46,7 +23,7 @@ export const overlay = style({
 		position: "absolute",
 		height: "100%",
 		width: "100px",
-		background: vars.backgroundBefore,
+		background: `linear-gradient(to right, ${colors.background}, ${colors.backgroundInvisible})`,
 	},
 	":after": {
 		right: 0,
@@ -56,7 +33,7 @@ export const overlay = style({
 		position: "absolute",
 		height: "100%",
 		width: "100px",
-		background: vars.backgroundAfter,
+		background: `linear-gradient(to left, ${colors.background}, ${colors.backgroundInvisible})`,
 	},
 });
 
