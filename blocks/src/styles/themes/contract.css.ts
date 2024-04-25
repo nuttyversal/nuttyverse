@@ -26,6 +26,7 @@ const colorScaleContract = {
  */
 export const colors = createThemeContract({
 	background: null,
+	backgroundInvisible: null,
 	gray: {
 		solid: colorScaleContract,
 		alpha: colorScaleContract,
@@ -41,6 +42,7 @@ export const colors = createThemeContract({
  */
 export const lightTheme = createTheme(colors, {
 	background: tokens.white,
+	backgroundInvisible: tokens.whiteInvisible,
 	gray: {
 		solid: tokens.gray.light,
 		alpha: tokens.gray.lightAlpha,
@@ -56,6 +58,7 @@ export const lightTheme = createTheme(colors, {
  */
 export const darkTheme = createTheme(colors, {
 	background: tokens.black,
+	backgroundInvisible: tokens.blackInvisible,
 	gray: {
 		solid: tokens.gray.dark,
 		alpha: tokens.gray.darkAlpha,

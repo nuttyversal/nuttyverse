@@ -4,9 +4,19 @@
 export const black = "#070707" as const;
 
 /**
+ * Not pure black (#000), but still quite dark. Actually, it's invisible.
+ */
+export const blackInvisible = "#07070700" as const;
+
+/**
  * An off-white, but still quite white.
  */
 export const white = "#fcfcfc" as const;
+
+/**
+ * An off-white, but still quite white. Actually, it's invisible.
+ */
+export const whiteInvisible = "#fcfcfc00" as const;
 
 /**
  * Generated as a custom palette with the following parameters:
@@ -131,5 +141,3 @@ export const gray = {
 		},
 	},
 } as const;
-
-console.log(gray);
