@@ -1,4 +1,8 @@
 ---
+type Props = {
+	title: string;
+};
+
 const { title } = Astro.props.frontmatter || Astro.props;
 ---
 
@@ -17,6 +21,6 @@ const { title } = Astro.props.frontmatter || Astro.props;
       <title>{title}</title>
    </head>
    <body>
-      <slot />
+		<slot />
    </body>
 </html>
