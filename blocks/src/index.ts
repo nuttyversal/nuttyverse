@@ -1,7 +1,7 @@
 // Import CSS reset as a side effect.
 import "~/styles/reset.css";
 
-import * as colors from "~/styles/tokens/colors";
+import { colors } from "~/styles/themes/contract.css";
 import { spacing } from "~/styles/tokens/spacing";
 import { experimentalTypeScale } from "~/styles/tokens/typography";
 
@@ -20,8 +20,7 @@ import { MessageOfTheDay } from "./molecules/MessageOfTheDay";
 import { Header } from "~/organisms/Header";
 import { Singularity } from "~/organisms/Singularity";
 
-import { NuttyverseContext } from "~/styles/themes/context";
-import { setDocumentRootBackground } from "~/styles/themes/utils";
+import { useThemeSwitcher } from "~/styles/themes/contract";
 
 export {
 	// Tokens
@@ -50,6 +49,5 @@ export {
 	Singularity,
 
 	// Utilities
-	NuttyverseContext,
-	setDocumentRootBackground,
+	useThemeSwitcher,
 };

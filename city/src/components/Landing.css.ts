@@ -1,20 +1,8 @@
-import { createTheme, createThemeContract, style } from "@vanilla-extract/css";
+import { style } from "@vanilla-extract/css";
 import { colors } from "@nuttyverse/blocks";
 
-export const vars = createThemeContract({
-	background: null,
-});
-
-export const lightMode = createTheme(vars, {
-	background: colors.white,
-});
-
-export const darkMode = createTheme(vars, {
-	background: colors.black,
-});
-
 export const body = style({
-	backgroundColor: vars.background,
+	backgroundColor: colors.background,
 	display: "flex",
 	justifyContent: "center",
 	alignItems: "center",
