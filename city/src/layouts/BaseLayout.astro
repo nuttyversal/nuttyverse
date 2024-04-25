@@ -1,7 +1,7 @@
 ---
 type Props = {
-	title: string;
-	frontmatter: Record<string, any>;
+	title?: string;
+	frontmatter?: Record<string, any>;
 };
 
 const { title } = Astro.props.frontmatter || Astro.props;
