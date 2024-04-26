@@ -9,13 +9,13 @@ export const Header = () => {
 	const { toggleTheme } = useThemeSwitcher();
 
 	return (
-		<div>
+		<header>
 			<div className={container}>
 				<Logo style={{ marginBottom: `-${spacing.px}` }} />
 				<ChibiButton className={chibi} onClick={toggleTheme} />
 			</div>
 
 			<MessageOfTheDay />
-		</div>
+		</header>
 	);
 };
