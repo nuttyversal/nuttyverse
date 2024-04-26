@@ -1,0 +1,9 @@
+---
+import { Introduction, ExploreInnerWorld } from "@nuttyverse/blocks";
+import { singularity } from "./Singularity.css.ts";
+---
+
+<div class={singularity}>
+	<Introduction />
+	<ExploreInnerWorld client:only="react" />
+</div>

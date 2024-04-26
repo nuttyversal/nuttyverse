@@ -19,7 +19,6 @@ import { Introduction } from "~/molecules/Introduction";
 import { MessageOfTheDay } from "./molecules/MessageOfTheDay";
 
 import { Header } from "~/organisms/Header";
-import { Singularity } from "~/organisms/Singularity";
 
 import { useThemeSwitcher } from "~/styles/themes/contract";
 
@@ -48,7 +47,6 @@ export {
 
 	// Organisms
 	Header,
-	Singularity,
 
 	// Utilities
 	useThemeSwitcher,
