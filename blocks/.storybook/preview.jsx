@@ -1,6 +1,5 @@
 import * as colors from "../src/styles/tokens/colors";
 import { spacing } from "../src/styles/tokens/spacing";
-import { darkTheme, lightTheme } from "../src/styles/themes/contract.css";
 import { useThemeSwitcher } from "../src/styles/themes/contract";
 
 // Import CSS reset as a side effect.
@@ -21,7 +20,7 @@ const preview = {
 			const { theme, toggleTheme } = useThemeSwitcher();
 
 			const themeVars =
-				theme === lightTheme
+				theme === "light"
 					? {
 							icon: "☀️",
 							background: colors.white,
