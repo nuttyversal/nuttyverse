@@ -1,5 +1,5 @@
 import { style } from "@vanilla-extract/css";
-import { colors } from "@nuttyverse/blocks";
+import { colors, spacing } from "@nuttyverse/blocks";
 
 export const body = style({
 	backgroundColor: colors.background,
@@ -7,15 +7,14 @@ export const body = style({
 	justifyContent: "center",
 	alignItems: "center",
 	width: "100%",
-	minHeight: "100vh",
 });
 
 export const main = style({
 	margin: "auto",
-	width: "36rem",
+	width: spacing[144],
 
 	"@media": {
-		"screen and (max-width: 36rem)": {
+		[`screen and (max-width: ${spacing[144]})`]: {
 			width: "100%",
 		},
 	},
