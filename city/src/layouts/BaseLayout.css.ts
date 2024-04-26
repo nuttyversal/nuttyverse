@@ -4,12 +4,9 @@ import { colors, spacing } from "@nuttyverse/blocks";
 export const body = style({
 	backgroundColor: colors.background,
 	display: "flex",
+	flexDirection: "column",
 	justifyContent: "center",
 	alignItems: "center",
-	width: "100%",
-});
-
-export const main = style({
 	margin: "auto",
 	width: spacing[144],
 

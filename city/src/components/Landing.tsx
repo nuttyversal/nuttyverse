@@ -1,5 +1,10 @@
-import { Singularity } from "@nuttyverse/blocks";
+import { Introduction, ExploreInnerWorld } from "@nuttyverse/blocks";
 
 export const Landing = () => {
-	return <Singularity />;
+	return (
+		<div>
+			<Introduction />
+			<ExploreInnerWorld />
+		</div>
+	);
 };
