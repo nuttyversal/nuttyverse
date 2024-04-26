@@ -1,4 +1,4 @@
-import { createTheme, createThemeContract } from "@vanilla-extract/css";
+import { createTheme, createThemeContract, style } from "@vanilla-extract/css";
 import * as radix from "@radix-ui/colors";
 import * as tokens from "~/styles/tokens/colors";
 
@@ -155,6 +155,13 @@ export const lightTheme = createTheme(colors, {
 });
 
 /**
+ * A class to be applied to the document element when a theme is applied.
+ */
+export const lightThemeBackground = style({
+	background: tokens.white,
+});
+
+/**
  * Defines colors to render when dark mode is enabled.
  */
 export const darkTheme = createTheme(colors, {
@@ -197,4 +204,11 @@ export const darkTheme = createTheme(colors, {
 	lime: generateColorPalette("lime", "dark"),
 	mint: generateColorPalette("mint", "dark"),
 	sky: generateColorPalette("sky", "dark"),
+});
+
+/**
+ * A class to be applied to the document element when a theme is applied.
+ */
+export const darkThemeBackground = style({
+	background: tokens.black,
 });

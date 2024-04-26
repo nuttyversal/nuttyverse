@@ -1,9 +1,15 @@
 import { atom } from "nanostores";
 import { useStore } from "@nanostores/react";
 import { useEffect } from "react";
-import { darkTheme, lightTheme } from "./contract.css";
+import {
+	darkTheme,
+	darkThemeBackground,
+	lightTheme,
+	lightThemeBackground,
+} from "./contract.css";
+import classNames from "classnames";
 
-type Theme = typeof lightTheme | typeof darkTheme | "unset";
+type Theme = "light" | "dark" | "unset";
 
 export const $theme = atom<Theme>("unset");
 
@@ -17,22 +23,37 @@ export const useThemeSwitcher = () => {
 	const theme = useStore($theme);
 
 	const setTheme = (theme: Theme) => {
+		$theme.set(theme);
+
 		// [NOTE] Assumes that the only class applied to the root element
 		// is the class name that indicates the currently applied theme.
 		// Any other applied classes will get nuked.
-		document.documentElement.className = theme;
-		$theme.set(theme);
+		document.documentElement.className = classNames({
+			[darkTheme]: theme === "dark",
+			[lightTheme]: theme === "light",
+			[darkThemeBackground]: theme === "dark",
+			[lightThemeBackground]: theme === "light",
+		});
 	};
 
 	const toggleTheme = () => {
-		setTheme($theme.get() === lightTheme ? darkTheme : lightTheme);
+		if ($theme.get() === "light") {
+			setTheme("dark");
+		} else {
+			setTheme("light");
+		}
 	};
 
 	useEffect(() => {
 		if ($theme.get() === "unset") {
 			const mediaQuery = "(prefers-color-scheme: dark)";
 			const prefersDarkMode = window.matchMedia(mediaQuery);
-			setTheme(prefersDarkMode.matches ? darkTheme : lightTheme);
+
+			if (prefersDarkMode.matches) {
+				setTheme("dark");
+			} else {
+				setTheme("light");
+			}
 		}
 	}, []);
 
