@@ -14,6 +14,7 @@ import { Marquee } from "~/atoms/Marquee";
 import { Text } from "~/atoms/Text";
 
 import { ChibiButton } from "~/molecules/ChibiButton";
+import { ExploreInnerWorld } from "~/molecules/ExploreInnerWorld";
 import { Introduction } from "~/molecules/Introduction";
 import { MessageOfTheDay } from "./molecules/MessageOfTheDay";
 
@@ -41,6 +42,7 @@ export {
 
 	// Molecules
 	ChibiButton,
+	ExploreInnerWorld,
 	Introduction,
 	MessageOfTheDay,
 
