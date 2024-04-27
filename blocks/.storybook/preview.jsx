@@ -37,6 +37,7 @@ const preview = {
 							position: "absolute",
 							top: spacing[4],
 							right: spacing[4],
+							zIndex: 100,
 						}}
 					>
 						<button onClick={toggleTheme}>{themeVars.icon}</button>
@@ -49,7 +50,13 @@ const preview = {
 							backgroundColor: themeVars.background,
 						}}
 					>
-						<div style={{ width: spacing[144], padding: spacing[4] }}>
+						<div
+							style={{
+								width: "100%",
+								maxWidth: spacing[144],
+								padding: spacing[4],
+							}}
+						>
 							<Story />
 						</div>
 					</div>

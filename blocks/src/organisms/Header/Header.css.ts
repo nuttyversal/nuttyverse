@@ -1,12 +1,20 @@
 import { style } from "@vanilla-extract/css";
 import { spacing } from "~/styles/tokens/spacing";
 
+export const header = style({
+	width: "100%",
+});
+
 export const container = style({
 	padding: `0 ${spacing[4]}`,
 	display: "flex",
 	justifyContent: "space-between",
 	alignItems: "end",
 	zIndex: -1,
+});
+
+export const logo = style({
+	marginBottom: `-${spacing.px}`,
 });
 
 export const chibi = style({

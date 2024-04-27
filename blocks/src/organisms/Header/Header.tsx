@@ -3,15 +3,15 @@ import { useThemeSwitcher } from "~/styles/themes/contract";
 import { Logo } from "~/atoms/Logo";
 import { ChibiButton } from "~/molecules/ChibiButton";
 import { MessageOfTheDay } from "~/molecules/MessageOfTheDay";
-import { chibi, container } from "./Header.css";
+import { chibi, container, header, logo } from "./Header.css";
 
 export const Header = () => {
 	const { toggleTheme } = useThemeSwitcher();
 
 	return (
-		<header>
+		<header className={header}>
 			<div className={container}>
-				<Logo style={{ marginBottom: `-${spacing.px}` }} />
+				<Logo className={logo} />
 				<ChibiButton className={chibi} onClick={toggleTheme} />
 			</div>
 
