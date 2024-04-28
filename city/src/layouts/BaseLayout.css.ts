@@ -16,3 +16,7 @@ export const body = style({
 		},
 	},
 });
+
+export const main = style({
+	width: "100%",
+});

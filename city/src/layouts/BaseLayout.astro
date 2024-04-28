@@ -1,6 +1,6 @@
 ---
 import { Header } from "@nuttyverse/blocks";
-import { body } from "./BaseLayout.css.ts";
+import { body, main } from "./BaseLayout.css.ts";
 
 type Props = {
 	title?: string;
@@ -27,7 +27,7 @@ const { title } = Astro.props.frontmatter || Astro.props;
 
    <body class={body}>
 		<Header client:only="react" />
-		<main>
+		<main class={main}>
 			<slot />
 		</main>
    </body>
