@@ -159,6 +159,8 @@ export const lightTheme = createTheme(colors, {
  */
 export const lightThemeBackground = style({
 	background: tokens.white,
+	color: colors.gray.solid["12"],
+	transition: "color 200ms ease-out",
 });
 
 /**
@@ -211,4 +213,6 @@ export const darkTheme = createTheme(colors, {
  */
 export const darkThemeBackground = style({
 	background: tokens.black,
+	color: colors.gray.solid["12"],
+	transition: "color 200ms ease-out",
 });
