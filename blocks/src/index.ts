@@ -7,6 +7,7 @@ import { experimentalTypeScale } from "~/styles/tokens/typography";
 
 import { Button } from "~/atoms/Button";
 import { Chibi } from "~/atoms/Chibi";
+import { Heading } from "~/atoms/Heading";
 import { Image } from "~/atoms/Image";
 import { ListItem, OrderedList, UnorderedList } from "~/atoms/List";
 import { Logo } from "~/atoms/Logo";
@@ -34,6 +35,7 @@ export {
 	// Atoms
 	Button,
 	Chibi,
+	Heading,
 	Image,
 	ListItem,
 	OrderedList,
