@@ -12,6 +12,7 @@ import { ListItem, OrderedList, UnorderedList } from "~/atoms/List";
 import { Logo } from "~/atoms/Logo";
 import { Marquee } from "~/atoms/Marquee";
 import { Text } from "~/atoms/Text";
+import { Title } from "~/atoms/Title";
 
 import { ChibiButton } from "~/molecules/ChibiButton";
 import { ExploreInnerWorld } from "~/molecules/ExploreInnerWorld";
@@ -38,6 +39,7 @@ export {
 	Logo,
 	Marquee,
 	Text,
+	Title,
 
 	// Molecules
 	ChibiButton,
