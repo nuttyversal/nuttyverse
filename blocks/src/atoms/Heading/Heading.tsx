@@ -32,7 +32,7 @@ export const Heading: React.FC<HeadingProps> = (props) => {
 
 	return (
 		<Text as={props.type} wdth={75} weight={500} className={heading}>
-			<FontAwesomeIcon style={{ fontSize }} icon={faSparkle} />{" "}
+			<FontAwesomeIcon style={{ height: fontSize }} icon={faSparkle} />{" "}
 			{props.children}
 		</Text>
 	);
