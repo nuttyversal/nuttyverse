@@ -1,13 +1,7 @@
-import { ReactNode, useContext } from "react";
+import { ReactNode } from "react";
 import classNames from "classnames";
 import { FontSize } from "~/styles/tokens/typography";
-import {
-	withDropCap,
-	responsiveFontSize,
-	lightMode,
-	darkMode,
-	base,
-} from "./Text.css";
+import { withDropCap, responsiveFontSize, base } from "./Text.css";
 
 const DEFAULT_OPSZ = 18;
 const DEFAULT_WDTH = 85;
