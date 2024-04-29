@@ -13,26 +13,25 @@ export const container = style({
 });
 
 export const base = style({
-	background: colors.gray.solid["12"],
-	color: colors.gray.solid["01"],
+	background: colors.pink.solid["09"],
+	color: "white",
 	cursor: "pointer",
 	fontSize: experimentalTypeScale.base,
 	fontWeight: "normal",
 	fontStyle: "normal",
 	textTransform: "lowercase",
-	letterSpacing: "2px",
-	borderColor: colors.gray.solid["12"],
+	letterSpacing: "1px",
+	borderColor: colors.gray.solid["11"],
 	borderWidth: "2px",
 	borderStyle: "solid",
-	borderRadius: "3px",
+	borderRadius: spacing[1],
 	padding: `${spacing[1]} 0`,
 	transition: "all 0.2s ease-out",
 	width: "100%",
 	zIndex: 1,
 
 	":hover": {
-		background: colors.gray.solid["01"],
-		color: colors.gray.solid["12"],
+		background: colors.pink.solid["10"],
 		letterSpacing: "2.4px",
 		fontVariationSettings: `"opsz" 18, "wdth" 95`,
 	},
@@ -46,13 +45,17 @@ export const base = style({
 
 export const bannerVariants = recipe({
 	base: {
-		background: colors.gray.solid["12"],
-		color: colors.gray.solid["01"],
+		background: colors.mauve.solid["01"],
+		color: colors.mauve.solid["12"],
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
-		borderBottomLeftRadius: "16px",
-		borderBottomRightRadius: "16px",
+		borderColor: colors.mauve.solid["05"],
+		borderWidth: "2px",
+		borderTopWidth: 0,
+		borderStyle: "solid",
+		borderBottomLeftRadius: "8px",
+		borderBottomRightRadius: "8px",
 		transition: "all 0.2s ease-out",
 	},
 	variants: {
@@ -64,6 +67,7 @@ export const bannerVariants = recipe({
 			hovered: {
 				opacity: 1,
 				transform: "translateY(0)",
+				marginBottom: spacing[4],
 			},
 		},
 	},
