@@ -20,6 +20,7 @@ import { Introduction } from "~/molecules/Introduction";
 import { MessageOfTheDay } from "./molecules/MessageOfTheDay";
 
 import { Header } from "~/organisms/Header";
+import { Footer } from "~/organisms/Footer";
 
 import { useThemeSwitcher } from "~/styles/themes/contract";
 
@@ -49,6 +50,7 @@ export {
 
 	// Organisms
 	Header,
+	Footer,
 
 	// Utilities
 	useThemeSwitcher,

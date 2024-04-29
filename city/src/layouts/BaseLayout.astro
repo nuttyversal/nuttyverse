@@ -1,5 +1,5 @@
 ---
-import { Header } from "@nuttyverse/blocks";
+import { Header, Footer } from "@nuttyverse/blocks";
 import { body, main } from "./BaseLayout.css.ts";
 
 type Props = {
@@ -30,5 +30,6 @@ const { title } = Astro.props.frontmatter || Astro.props;
 		<main class={main}>
 			<slot />
 		</main>
+		<Footer />
    </body>
 </html>
