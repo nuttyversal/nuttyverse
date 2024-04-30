@@ -1,5 +1,6 @@
 import highlightjs from "highlight.js/lib/core";
 import bash from "highlight.js/lib/languages/bash";
+import typescript from "highlight.js/lib/languages/typescript";
 import { container } from "./CodeBlock.css";
 
 // Import global styles as side-effect.
@@ -10,6 +11,7 @@ import "./themes/override.css";
 // [NOTE] Hey there! Remember to extend the union type
 // when registering a new programming language.
 highlightjs.registerLanguage("bash", bash);
+highlightjs.registerLanguage("typescript", typescript);
 
 type CodeBlockProps = {
 	/**
@@ -20,7 +22,7 @@ type CodeBlockProps = {
 	/**
 	 * The code snippet language.
 	 */
-	language: "bash";
+	language: "bash" | "typescript";
 };
 
 export const CodeBlock: React.FC<CodeBlockProps> = (props) => {
