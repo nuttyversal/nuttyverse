@@ -12,6 +12,7 @@ import { Image } from "~/atoms/Image";
 import { ListItem, OrderedList, UnorderedList } from "~/atoms/List";
 import { Logo } from "~/atoms/Logo";
 import { Marquee } from "~/atoms/Marquee";
+import { NavigationItem } from "~/atoms/NavigationItem";
 import { ScrollContainer } from "~/atoms/ScrollContainer";
 import { Text } from "~/atoms/Text";
 import { Title } from "~/atoms/Title";
@@ -42,6 +43,7 @@ export {
 	UnorderedList,
 	Logo,
 	Marquee,
+	NavigationItem,
 	ScrollContainer,
 	Text,
 	Title,
