@@ -13,7 +13,7 @@ import {
 	text,
 } from "./NavigationItem.css";
 
-type Props = {
+export type NavigationItemProps = {
 	/**
 	 * Specifies the name of the navigation item.
 	 */
@@ -40,7 +40,7 @@ type Props = {
 	active?: boolean;
 };
 
-export const NavigationItem: React.FC<Props> = (props) => {
+export const NavigationItem: React.FC<NavigationItemProps> = (props) => {
 	return (
 		<li className={container}>
 			<Text

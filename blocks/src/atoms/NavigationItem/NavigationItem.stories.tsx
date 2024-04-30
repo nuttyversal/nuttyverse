@@ -6,13 +6,6 @@ const meta: Meta<typeof NavigationItem> = {
 	title: "atoms/NavigationItem",
 	component: NavigationItem,
 	tags: ["autodocs"],
-	argTypes: {
-		href: {
-			control: {
-				type: "text",
-			},
-		},
-	},
 };
 
 export default meta;

@@ -21,6 +21,7 @@ import { ChibiButton } from "~/molecules/ChibiButton";
 import { ExploreInnerWorld } from "~/molecules/ExploreInnerWorld";
 import { Introduction } from "~/molecules/Introduction";
 import { MessageOfTheDay } from "./molecules/MessageOfTheDay";
+import { NavigationItemList } from "./molecules/NavigationItemList";
 
 import { Header } from "~/organisms/Header";
 import { Footer } from "~/organisms/Footer";
@@ -53,6 +54,7 @@ export {
 	ExploreInnerWorld,
 	Introduction,
 	MessageOfTheDay,
+	NavigationItemList,
 
 	// Organisms
 	Header,
