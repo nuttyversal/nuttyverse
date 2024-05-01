@@ -52,6 +52,7 @@ export const NavigationItem: React.FC<NavigationItemProps> = (props) => {
 					[link]: true,
 					[active]: props.active,
 				})}
+				marginless
 			>
 				<FontAwesomeIcon
 					style={{ height: experimentalTypeScale.base }}

@@ -7,6 +7,8 @@ export const footer = style({
 	justifyContent: "center",
 	width: "100%",
 	background: colors.gray.solid["12"],
+	paddingTop: spacing[1],
+	paddingBottom: spacing[1],
 
 	"@media": {
 		all: {
@@ -20,5 +22,4 @@ export const footer = style({
 
 export const text = style({
 	color: colors.gray.solid["01"],
-	margin: `${spacing[1]} !important`,
 });

@@ -19,6 +19,6 @@ export const container = style({
 
 export const text = style({
 	lineHeight: spacing[0],
-	margin: `${spacing[3.5]} !important`,
+	margin: spacing[4],
 	fontFamily: "PragmataPro Liga",
 });

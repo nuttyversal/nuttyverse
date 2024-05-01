@@ -16,7 +16,7 @@ type TitleProps = {
 
 export const Title: React.FC<TitleProps> = (props) => {
 	return (
-		<Text as="h1" className={title} weight={500} wdth={75}>
+		<Text as="h1" className={title} weight={500} wdth={75} marginless>
 			{props.fleuron && "☙ "}
 			{props.children}
 			{props.fleuron && " ❧"}

@@ -6,7 +6,7 @@ export const MessageOfTheDay: React.FC = () => {
 	return (
 		<div className={container}>
 			<Marquee>
-				<Text size="smol" weight={600} className={text}>
+				<Text size="smol" weight={600} className={text} marginless>
 					Hello there, welcome to the Nuttyverse!
 				</Text>
 			</Marquee>

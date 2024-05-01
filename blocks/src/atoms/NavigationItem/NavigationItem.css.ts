@@ -50,6 +50,5 @@ export const external = style({
 });
 
 export const text = style({
-	margin: `0 !important`,
 	textDecoration: "none",
 });

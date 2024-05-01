@@ -44,6 +44,11 @@ type TextProps<Component extends React.ElementType> = {
 	 * If enabled (`true`), applies a drop cap effect to the text.
 	 */
 	dropCap?: boolean;
+
+	/**
+	 * If enabled (`true`), disables the application of natural margin styles.
+	 */
+	marginless?: boolean;
 } & React.ComponentPropsWithoutRef<Component>;
 
 export const Text = <Component extends React.ElementType>(
@@ -94,7 +99,7 @@ export const Text = <Component extends React.ElementType>(
 	const transition = "all 0.2s ease-out; font-size 0";
 
 	const textStyles = {
-		margin,
+		margin: props.marginless ? undefined : margin,
 		fontVariationSettings,
 		fontWeight,
 		transition,

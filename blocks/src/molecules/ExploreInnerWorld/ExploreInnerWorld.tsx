@@ -4,7 +4,7 @@ import { underConstruction } from "./ExploreInnerWorld.css";
 
 const UnderConstruction: React.FC = () => {
 	return (
-		<Text size="smol" className={underConstruction}>
+		<Text size="smol" className={underConstruction} marginless>
 			[ERROR] Still under construction! ⚠️
 		</Text>
 	);

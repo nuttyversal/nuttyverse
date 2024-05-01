@@ -4,7 +4,9 @@ import { footer, text } from "./Footer.css";
 export const Footer = () => {
 	return (
 		<footer className={footer}>
-			<Text className={text}>Nuttyverse &copy; 2023–2024</Text>
+			<Text className={text} marginless>
+				Nuttyverse &copy; 2023–2024
+			</Text>
 		</footer>
 	);
 };
