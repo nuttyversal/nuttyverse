@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from "astro:transitions";
 import { Header, Footer } from "@nuttyverse/blocks";
 import { body, main } from "./SingularityLayout.css.ts";
 
@@ -26,11 +27,12 @@ const { title } = Astro.props.frontmatter || Astro.props;
       <meta name="viewport" content="width=device-width" />
       <meta name="generator" content={Astro.generator} />
       <title>{title}</title>
+		<ViewTransitions />
    </head>
 
    <body class={body}>
-		<Header client:only="react" />
-		<main class={main}>
+		<Header client:only="react" transition:persist />
+		<main class={main} transition:animate>
 			<slot />
 		</main>
    </body>
