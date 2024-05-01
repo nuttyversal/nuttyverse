@@ -21,3 +21,10 @@ export const body = style({
 export const main = style({
 	width: "100%",
 });
+
+export const container = style({
+	marginTop: "1rem",
+	marginBottom: "1rem",
+	height: "calc(100dvh - 256px)",
+	maxHeight: "calc(100dvh - 256px)",
+});

@@ -1,6 +1,6 @@
 ---
-import { Header, Footer } from "@nuttyverse/blocks";
-import { body, main } from "./BaseLayout.css.ts";
+import { Header, Footer, ScrollContainer } from "@nuttyverse/blocks";
+import { body, main, container } from "./BaseLayout.css.ts";
 
 type Props = {
 	title?: string;
@@ -31,7 +31,9 @@ const { title } = Astro.props.frontmatter || Astro.props;
    <body class={body}>
 		<Header client:only="react" />
 		<main class={main}>
-			<slot />
+			<ScrollContainer className={container} client:only="react">
+				<slot />
+			</ScrollContainer>
 		</main>
 		<Footer />
    </body>

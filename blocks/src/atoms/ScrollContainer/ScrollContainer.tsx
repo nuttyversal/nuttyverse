@@ -20,6 +20,7 @@ type ScrollContainerProps = {
 };
 
 export const ScrollContainer: React.FC<ScrollContainerProps> = (props) => {
+	console.log(props.className);
 	return (
 		<div
 			className={classNames([container, props.className])}
