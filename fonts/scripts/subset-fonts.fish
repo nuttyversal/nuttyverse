@@ -6,8 +6,10 @@ set pragmata_fraktur_dir_path "../unobservable/fonts/PragmataProFraktur1.2W"
 set fsd_emoji_dir_path "../unobservable/fonts/FSD Emoji1.0W"
 
 set basic_latin "U+0020-007E"
+set astrological_signs "U+2648-2653"
 set emoticons "U+1F600-1F64F"
-set warning_sign "U+26A0"
+set warning_symbol "U+26A0"
+set copyright_symbol "U+00A9"
 
 if not test -d horcruxes
 	mkdir horcruxes
@@ -20,7 +22,7 @@ pyftsubset \
 	--flavor=woff2 \
 	--with-zopfli \
 	--layout-features="calt,kern,smcp,c2sc" \
-	--unicodes="$basic_latin"
+	--unicodes="$basic_latin, $copyright_symbol"
 
 echo "Creating horcrux: pragmatapro-liga-regular.woff2"
 pyftsubset \
@@ -29,7 +31,7 @@ pyftsubset \
 	--flavor=woff2 \
 	--with-zopfli \
 	--layout-features="calt" \
-	--unicodes="$basic_latin, $warning_sign"
+	--unicodes="$basic_latin, $warning_symbol"
 
 echo "Creating horcrux: pragmatapro-liga-bold.woff2"
 pyftsubset \
@@ -83,4 +85,4 @@ pyftsubset \
 	--flavor=woff2 \
 	--with-zopfli \
 	--layout-features="" \
-	--unicodes="$emoticons"
+	--unicodes="$emoticons, $astrological_signs"
