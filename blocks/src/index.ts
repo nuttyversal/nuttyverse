@@ -24,6 +24,7 @@ import { Title } from "~/atoms/Title";
 import { ChibiButton } from "~/molecules/ChibiButton";
 import { ExploreInnerWorld } from "~/molecules/ExploreInnerWorld";
 import { Introduction } from "~/molecules/Introduction";
+import { LogoButton } from "~/molecules/LogoButton";
 import { MessageOfTheDay } from "./molecules/MessageOfTheDay";
 import { NavigationItemList } from "./molecules/NavigationItemList";
 
@@ -61,6 +62,7 @@ export {
 	ChibiButton,
 	ExploreInnerWorld,
 	Introduction,
+	LogoButton,
 	MessageOfTheDay,
 	NavigationItemList,
 
