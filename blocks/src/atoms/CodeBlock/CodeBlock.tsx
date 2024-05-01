@@ -1,7 +1,7 @@
 import highlightjs from "highlight.js/lib/core";
 import bash from "highlight.js/lib/languages/bash";
 import typescript from "highlight.js/lib/languages/typescript";
-import { container } from "./CodeBlock.css";
+import { code, container } from "./CodeBlock.css";
 
 // Import global styles as side-effect.
 import "./themes/github-light.css";
@@ -32,7 +32,10 @@ export const CodeBlock: React.FC<CodeBlockProps> = (props) => {
 
 	return (
 		<pre className={container}>
-			<code dangerouslySetInnerHTML={{ __html: highlightedCode }} />
+			<code
+				dangerouslySetInnerHTML={{ __html: highlightedCode }}
+				className={code}
+			/>
 		</pre>
 	);
 };
