@@ -1,0 +1,38 @@
+---
+import { Header, Footer } from "@nuttyverse/blocks";
+import { body, main } from "./SingularityLayout.css.ts";
+
+type Props = {
+	title?: string;
+	frontmatter?: Record<string, any>;
+};
+
+const { title } = Astro.props.frontmatter || Astro.props;
+---
+
+<html lang="en">
+   <head>
+      <meta charset="utf-8" />
+		<meta name="description" content="Ahoy there, fellow navigator! Welcome to my internet expanse — my comfy corner of the Internet that I enjoy working on from time to time as a form of creative self-expression." />
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="preload" href="https://fonts.nuttyver.se/nure.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="https://fonts.nuttyver.se/pragmatapro-liga-regular.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="https://fonts.nuttyver.se/pragmatapro-liga-bold.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="https://fonts.nuttyver.se/pragmatapro-liga-italic.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="https://fonts.nuttyver.se/pragmatapro-liga-bold-italic.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="https://fonts.nuttyver.se/pragmatapro-fraktur-regular.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="https://fonts.nuttyver.se/pragmatapro-fraktur-bold.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="https://fonts.nuttyver.se/fsd-emoji.woff2" as="font" type="font/woff2" crossorigin />
+      <meta name="viewport" content="width=device-width" />
+      <meta name="generator" content={Astro.generator} />
+      <title>{title}</title>
+   </head>
+
+   <body class={body}>
+		<Header client:only="react" />
+		<main class={main}>
+			<slot />
+		</main>
+		<Footer />
+   </body>
+</html>
