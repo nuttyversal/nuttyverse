@@ -1,6 +1,7 @@
+import classNames from "classnames";
 import { ReactNode } from "react";
 import { Text } from "~/atoms/Text";
-import { title } from "./Title.css";
+import { fleuron, mirror, title } from "./Title.css";
 
 type TitleProps = {
 	/**
@@ -17,9 +18,23 @@ type TitleProps = {
 export const Title: React.FC<TitleProps> = (props) => {
 	return (
 		<Text as="h1" className={title} weight={500} wdth={75} marginless>
-			{props.fleuron && "☙ "}
+			{props.fleuron && (
+				<Text size="5xl" className={fleuron} marginless>
+					☙
+				</Text>
+			)}
+
 			{props.children}
-			{props.fleuron && " ❧"}
+
+			{props.fleuron && (
+				<Text
+					size="5xl"
+					className={classNames([fleuron, mirror])}
+					marginless
+				>
+					☙
+				</Text>
+			)}
 		</Text>
 	);
 };
