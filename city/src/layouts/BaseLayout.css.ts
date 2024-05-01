@@ -9,7 +9,8 @@ export const body = style({
 	alignItems: "center",
 	margin: "auto",
 	width: spacing[144],
-	height: "100vh",
+	height: "100dvh",
+	maxHeight: "100dvh",
 
 	"@media": {
 		[`screen and (max-width: ${spacing[144]})`]: {
