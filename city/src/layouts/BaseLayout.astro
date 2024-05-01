@@ -31,7 +31,7 @@ const { title } = Astro.props.frontmatter || Astro.props;
    <body class={body}>
 		<Header client:only="react" />
 		<main class={main}>
-			<ScrollContainer className={container} client:only="react">
+			<ScrollContainer className={container}>
 				<slot />
 			</ScrollContainer>
 		</main>
