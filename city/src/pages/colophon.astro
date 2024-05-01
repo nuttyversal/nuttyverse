@@ -1,0 +1,148 @@
+---
+import {
+	CodeBlock,
+	Heading,
+	ListItem,
+	ScrollContainer,
+	Text,
+	Title,
+	QuoteBlock,
+	UnorderedList,
+	colors,
+	experimentalTypeScale,
+} from "@nuttyverse/blocks";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Nuttyverse">
+	<ScrollContainer
+		style={{
+			marginTop: "0.5rem",
+			marginBottom: "0.5rem",
+			maxHeight: "calc(80vh - 150px)",
+		}}
+	>
+		<Title>☙ Colophon ❧</Title>
+		<div style={{ width: "100%", paddingLeft: "1rem", paddingRight: "1rem" }}>
+			<Text dropCap
+				>The Nuttyverse is a personal publishing platform for my creative
+				and recreational pursuits, imbued with ♌-energy and a pinch of
+				whimsical delusion. It has been slowly expanding since July 2023.</Text
+			>
+		</div>
+		<Heading type="h2">Ethos</Heading>
+		<div style={{ width: "100%", paddingLeft: "1rem", paddingRight: "1rem" }}>
+			<Text
+				>Like many others in the Neocities community, I have become
+				discontent with how corporatized the Internet has become. I yearn
+				for the early days of the web that felt more personal and less
+				commercialized. So this is my contribution to bringing back that
+				lost individual creativity of the web.</Text
+			>
+			<Text
+				>This website will be under construction indefinitely, most
+				definitely. You see, I have perfectionistic tendencies, and so I
+				often find myself absorbed in the small details that don't matter.
+				But please, do not misunderstand: that is exactly the point.</Text
+			>
+			<Text
+				>The minutiae brings me joy, and I am just going to play with it. As
+				the physicist Richard Feynman put it, "There's no importance
+				whatsoever. I'm just doing it for the fun of it." I wish to pursue
+				webmastery with that same kind of autotelic attitude.</Text
+			>
+		</div>
+		<Heading type="h2">Technology</Heading>
+		<div style={{ width: "100%", paddingLeft: "1rem", paddingRight: "1rem" }}>
+			<Text
+				>The Nuttyverse is (over-)engineered as a set of polyglot μ-services
+				running in a swarm of Docker containers deployed on a bare-metal
+				NixOS server -- with the exception of this static website that you
+				are currently navigating, which is deployed on Neocities.</Text
+			>
+			<Text
+				>If you are interested in taking a peek into the internals, the code
+				happens to be open-sourced and published in a git monorepo. But
+				don't let me find you blatantly copying it... or else!
+			</Text>
+		</div>
+		<CodeBlock
+			client:visible="react"
+			language="bash"
+			code={`
+git clone https://code.nuttyver.se/observable/nuttyverse.git
+cd nuttyverse && cat curse.txt
+				`.trim()}
+		/>
+		<div style={{ width: "100%", paddingLeft: "1rem", paddingRight: "1rem" }}>
+			<QuoteBlock
+				citation="https://code.nuttyver.se/observable/nuttyverse/src/branch/main/curse.txt"
+				style={{ marginTop: "1.2rem", marginBottom: "1.2rem" }}
+			>
+				<pre
+					style={{
+						fontFamily: "PragmataPro Fraktur",
+						fontSize: experimentalTypeScale.smol,
+						color: colors.gray.solid["12"],
+					}}>
+"Please peruse & muse upon the code,
+but best not fork it," Nutty implores,
+lest, cursed, it might just explode,
+"For my style is mine & yours is yours."</pre>
+			</QuoteBlock>
+
+			<Text
+				>I read on Wikipedia that colophons would sometimes contain book
+				curses in early printed publications. I found that idea to be quite
+				amusing, so I thought to irreverently place one in mine. Muahahaha,
+				it's such an evil thing to do! It feels delightfully roguish.</Text
+			>
+		</div>
+		<Heading type="h2">Typography</Heading>
+		<div style={{ width: "100%", paddingLeft: "1rem", paddingRight: "1rem" }}>
+			<Text>
+				<UnorderedList>
+					<ListItem
+						>Words are set in <span
+							style={{
+								fontFamily: "Nure",
+								fontWeight: "bold",
+							}}>Nure</span
+						> and <span
+							style={{
+								fontFamily: "PragmataPro Fraktur",
+								fontWeight: "bold",
+							}}>PragmataPro Fraktur</span
+						>.</ListItem
+					>
+					<ListItem
+						>Code is set in <span
+							style={{
+								fontFamily: "PragmataPro Liga",
+								fontWeight: "bold",
+							}}>PragmataPro Liga</span
+						>.</ListItem
+					>
+					<ListItem
+						>Icons are set with
+						<span
+							style={{
+								fontFamily: "'FSD Emoji'",
+								fontWeight: "bold",
+								fontVariantLigatures: "none",
+							}}>FSD Emoji 😀</span
+						> and
+						<span
+							style={{
+								fontFamily: "'Font Awesome 6 Pro'",
+								fontWeight: "bold",
+								fontVariantLigatures: "none",
+							}}>Font Awesome </span
+						>
+						.</ListItem
+					>
+				</UnorderedList>
+			</Text>
+		</div>
+	</ScrollContainer>
+</BaseLayout>
