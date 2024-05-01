@@ -4,17 +4,18 @@ import { base } from "./LogoButton.css";
 
 type LogoButtonProps = {
 	className?: string;
-	onClick: () => void;
+	onClick?: () => void;
 };
 
 export const LogoButton: React.FC<LogoButtonProps> = (props) => {
 	return (
-		<button
+		<a
+			href="/"
 			onClick={props.onClick}
 			aria-label="Navigate to Singularity"
 			className={classNames(props.className, base)}
 		>
 			<Logo className={props.className} />
-		</button>
+		</a>
 	);
 };
