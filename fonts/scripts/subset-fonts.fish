@@ -13,73 +13,73 @@ if not test -d horcruxes
 	mkdir horcruxes
 end
 
-echo "Creating metasyntactical horcrux: nure-foo.woff2"
+echo "Creating horcrux: nure.woff2"
 pyftsubset \
 	$nure_dir_path/Nure12-VF.woff2 \
-	--output-file=horcruxes/nure-foo.woff2 \
+	--output-file=horcruxes/nure.woff2 \
 	--flavor=woff2 \
 	--with-zopfli \
 	--layout-features="calt,kern,smcp,c2sc" \
 	--unicodes="$basic_latin"
 
-echo "Creating metasyntactical horcrux: pragmatapro-foo.woff2"
+echo "Creating horcrux: pragmatapro-liga-regular.woff2"
 pyftsubset \
 	$pragmata_dir_path/PragmataProR_liga_0830.woff2 \
-	--output-file=horcruxes/pragmatapro-liga-regular-foo.woff2 \
+	--output-file=horcruxes/pragmatapro-liga-regular.woff2 \
 	--flavor=woff2 \
 	--with-zopfli \
 	--layout-features="calt" \
 	--unicodes="$basic_latin, $warning_sign"
 
-echo "Creating metasyntactical horcrux: pragmatapro-liga-bold-foo.woff2"
+echo "Creating horcrux: pragmatapro-liga-bold.woff2"
 pyftsubset \
 	$pragmata_dir_path/PragmataProB_liga_0830.woff2 \
-	--output-file=horcruxes/pragmatapro-liga-bold-foo.woff2 \
+	--output-file=horcruxes/pragmatapro-liga-bold.woff2 \
 	--flavor=woff2 \
 	--with-zopfli \
 	--layout-features="calt" \
 	--unicodes="$basic_latin"
 
-echo "Creating metasyntactical horcrux: pragmatapro-liga-italic-foo.woff2"
+echo "Creating horcrux: pragmatapro-liga-italic.woff2"
 pyftsubset \
 	$pragmata_dir_path/PragmataProI_liga_0830.woff2 \
-	--output-file=horcruxes/pragmatapro-liga-italic-foo.woff2 \
+	--output-file=horcruxes/pragmatapro-liga-italic.woff2 \
 	--flavor=woff2 \
 	--with-zopfli \
 	--layout-features="calt" \
 	--unicodes="$basic_latin"
 
-echo "Creating metasyntactical horcrux: pragmatapro-liga-bold-italic-foo.woff2"
+echo "Creating horcrux: pragmatapro-liga-bold-italic.woff2"
 pyftsubset \
 	$pragmata_dir_path/PragmataProZ_liga_0830.woff2 \
-	--output-file=horcruxes/pragmatapro-liga-bold-italic-foo.woff2 \
+	--output-file=horcruxes/pragmatapro-liga-bold-italic.woff2 \
 	--flavor=woff2 \
 	--with-zopfli \
 	--layout-features="calt" \
 	--unicodes="$basic_latin"
 
-echo "Creating metasyntactical horcrux: pragmatapro-regular-foo.woff2"
+echo "Creating horcrux: pragmatapro-fraktur-regular.woff2"
 pyftsubset \
 	$pragmata_fraktur_dir_path/PragmataProFraktur.woff2 \
-	--output-file=horcruxes/pragmatapro-fraktur-regular-foo.woff2 \
+	--output-file=horcruxes/pragmatapro-fraktur-regular.woff2 \
 	--flavor=woff2 \
 	--with-zopfli \
 	--layout-features="" \
 	--unicodes="$basic_latin"
 
-echo "Creating metasyntactical horcrux: pragmatapro-bold-foo.woff2"
+echo "Creating horcrux: pragmatapro-fraktur-bold.woff2"
 pyftsubset \
 	$pragmata_fraktur_dir_path/PragmataProFrakturB.woff2 \
-	--output-file=horcruxes/pragmatapro-fraktur-bold-foo.woff2 \
+	--output-file=horcruxes/pragmatapro-fraktur-bold.woff2 \
 	--flavor=woff2 \
 	--with-zopfli \
 	--layout-features="" \
 	--unicodes="$basic_latin"
 
-echo "Creating metasyntactical horcrux: fsd-emoji-foo.woff2"
+echo "Creating horcrux: fsd-emoji.woff2"
 pyftsubset \
 	$fsd_emoji_dir_path/fsd_emoji_1.0-webfont.woff2 \
-	--output-file=horcruxes/fsd-emoji-foo.woff2 \
+	--output-file=horcruxes/fsd-emoji.woff2 \
 	--flavor=woff2 \
 	--with-zopfli \
 	--layout-features="" \
