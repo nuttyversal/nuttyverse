@@ -1,7 +1,7 @@
 ---
 import { ViewTransitions } from "astro:transitions";
-import { Header, Footer, ScrollContainer } from "@nuttyverse/blocks";
-import { body, main, container } from "./BaseLayout.css.ts";
+import { Header } from "@nuttyverse/blocks";
+import { body } from "./BaseLayout.css.ts";
 
 type Props = {
 	title?: string;
@@ -32,11 +32,6 @@ const { title } = Astro.props.frontmatter || Astro.props;
 
    <body class={body}>
 		<Header client:only="react" transition:persist />
-		<main class={main} transition:animate>
-			<ScrollContainer className={container}>
-				<slot />
-			</ScrollContainer>
-		</main>
-		<Footer />
+		<slot />
    </body>
 </html>

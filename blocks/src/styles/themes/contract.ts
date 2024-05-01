@@ -57,6 +57,25 @@ export const useThemeSwitcher = () => {
 		}
 	}, []);
 
+	const resetTheme = () => {
+		if ($theme.get() !== "unset") {
+			setTheme($theme.get());
+		}
+	};
+
+	useEffect(() => {
+		// When using Astro view transitions, the theme classes applied to the
+		// document element get reset. This side effect re-applies the theme
+		// classes when the header mounts again.
+		document.addEventListener("astro:page-load", resetTheme);
+		document.addEventListener("astro:after-swap", resetTheme);
+
+		return () => {
+			document.removeEventListener("astro:page-load", resetTheme);
+			document.removeEventListener("astro:after-swap", resetTheme);
+		};
+	}, []);
+
 	return {
 		theme,
 		setTheme,
