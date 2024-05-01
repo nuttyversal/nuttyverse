@@ -61,6 +61,7 @@ export const Text = <Component extends React.ElementType>(
 		wdth,
 		weight,
 		dropCap,
+		marginless,
 		children,
 		...polymorphicProps
 	} = props;
@@ -99,7 +100,7 @@ export const Text = <Component extends React.ElementType>(
 	const transition = "all 0.2s ease-out; font-size 0";
 
 	const textStyles = {
-		margin: props.marginless ? undefined : margin,
+		margin: marginless ? undefined : margin,
 		fontVariationSettings,
 		fontWeight,
 		transition,
