@@ -14,6 +14,7 @@ import { ListItem, OrderedList, UnorderedList } from "~/atoms/List";
 import { Logo } from "~/atoms/Logo";
 import { Marquee } from "~/atoms/Marquee";
 import { NavigationItem } from "~/atoms/NavigationItem";
+import { QuoteBlock } from "~/atoms/QuoteBlock";
 import { ScrollContainer } from "~/atoms/ScrollContainer";
 import { Text } from "~/atoms/Text";
 import { Title } from "~/atoms/Title";
@@ -47,6 +48,7 @@ export {
 	Logo,
 	Marquee,
 	NavigationItem,
+	QuoteBlock,
 	ScrollContainer,
 	Text,
 	Title,
