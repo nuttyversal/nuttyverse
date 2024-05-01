@@ -1,5 +1,5 @@
 import { style } from "@vanilla-extract/css";
-import { colors, spacing } from "@nuttyverse/blocks";
+import { colors, layout, spacing } from "@nuttyverse/blocks";
 
 export const body = style({
 	backgroundColor: colors.background,
@@ -26,6 +26,13 @@ export const main = style({
 export const container = style({
 	marginTop: "1rem",
 	marginBottom: "1rem",
-	height: "calc(100dvh - 256px)",
-	maxHeight: "calc(100dvh - 256px)",
+	height: `calc(100dvh - ${layout.headerHeight.wide} - ${layout.footerHeight.wide})`,
+	maxHeight: `calc(100dvh - ${layout.headerHeight.wide} - ${layout.footerHeight.wide})`,
+
+	"@media": {
+		[`screen and (max-width: ${spacing[144]})`]: {
+			height: `calc(100dvh - ${layout.headerHeight.narrow} - ${layout.footerHeight.narrow})`,
+			maxHeight: `calc(100dvh - ${layout.headerHeight.narrow} - ${layout.footerHeight.narrow})`,
+		},
+	},
 });

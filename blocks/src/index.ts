@@ -2,6 +2,7 @@
 import "~/styles/reset.css";
 
 import { colors } from "~/styles/themes/contract.css";
+import * as layout from "~/styles/tokens/layout";
 import { spacing } from "~/styles/tokens/spacing";
 import { experimentalTypeScale } from "~/styles/tokens/typography";
 
@@ -34,6 +35,7 @@ import { useThemeSwitcher } from "~/styles/themes/contract";
 export {
 	// Tokens
 	colors,
+	layout,
 	spacing,
 	experimentalTypeScale,
 
