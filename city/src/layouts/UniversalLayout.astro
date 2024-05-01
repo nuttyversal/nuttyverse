@@ -12,7 +12,7 @@ type Props = {
 const { title } = Astro.props.frontmatter || Astro.props;
 ---
 
-<BaseLayout>
+<BaseLayout title={title}>
 	<main class={main} transition:animate="fade">
 		<ScrollContainer className={container}>
 			<slot />
