@@ -2,6 +2,7 @@
 import {
 	CodeBlock,
 	Heading,
+	Link,
 	ListItem,
 	ScrollContainer,
 	Text,
@@ -33,11 +34,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 		<Heading type="h2">Ethos</Heading>
 		<div style={{ width: "100%", paddingLeft: "1rem", paddingRight: "1rem" }}>
 			<Text
-				>Like many others in the Neocities community, I have become
-				discontent with how corporatized the Internet has become. I yearn
-				for the early days of the web that felt more personal and less
-				commercialized. So this is my contribution to bringing back that
-				lost individual creativity of the web.</Text
+				>Like many others in the <Link href="https://neocities.org/" newTab
+					>Neocities</Link
+				> community, I have become discontent with how corporatized the Internet
+				has become. I yearn for the early days of the web that felt more personal
+				and less commercialized. So this is my contribution to bringing back
+				that lost individual creativity of the web.</Text
 			>
 			<Text
 				>This website will be under construction indefinitely, most
@@ -47,9 +49,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 			>
 			<Text
 				>The minutiae brings me joy, and I am just going to play with it. As
-				the physicist Richard Feynman put it, "There's no importance
-				whatsoever. I'm just doing it for the fun of it." I wish to pursue
-				webmastery with that same kind of autotelic attitude.</Text
+				the physicist Richard Feynman put it, <Link
+					href="https://www.asc.ohio-state.edu/kilcup.1/262/feynman.html"
+					newTab
+					>"There's no importance whatsoever. I'm just doing it for the fun
+					of it."</Link
+				> I wish to pursue webmastery with that same kind of autotelic attitude.</Text
 			>
 		</div>
 		<Heading type="h2">Technology</Heading>
@@ -62,8 +67,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 			>
 			<Text
 				>If you are interested in taking a peek into the internals, the code
-				happens to be open-sourced and published in a git monorepo. But
-				don't let me find you blatantly copying it... or else!
+				happens to be open-sourced and published in a <Link
+					href="https://code.nuttyver.se/observable/nuttyverse"
+					newTab>git monorepo</Link
+				>. But don't let me find you blatantly copying it... or else!
 			</Text>
 		</div>
 		<CodeBlock
@@ -92,10 +99,14 @@ lest, cursed, it might just explode,
 			</QuoteBlock>
 
 			<Text
-				>I read on Wikipedia that colophons would sometimes contain book
-				curses in early printed publications. I found that idea to be quite
-				amusing, so I thought to irreverently place one in mine. Muahahaha,
-				it's such an evil thing to do! It feels delightfully roguish.</Text
+				>I read on Wikipedia that colophons would sometimes contain <Link
+					href="https://en.wikipedia.org/wiki/Book_curse"
+					newTab>book curses</Link
+				> in early printed publications. I found that idea to be quite amusing,
+				so I thought to irreverently place one in mine. <Link
+					href="https://www.youtube.com/watch?v=v4YnyVdMjG4"
+					newTab>Muahahaha</Link
+				>, it's such an evil thing to do! It feels delightfully roguish.</Text
 			>
 		</div>
 		<Heading type="h2">Typography</Heading>

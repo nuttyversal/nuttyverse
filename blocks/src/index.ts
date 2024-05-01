@@ -10,6 +10,7 @@ import { Chibi } from "~/atoms/Chibi";
 import { CodeBlock } from "~/atoms/CodeBlock";
 import { Heading } from "~/atoms/Heading";
 import { Image } from "~/atoms/Image";
+import { Link } from "~/atoms/Link";
 import { ListItem, OrderedList, UnorderedList } from "~/atoms/List";
 import { Logo } from "~/atoms/Logo";
 import { Marquee } from "~/atoms/Marquee";
@@ -42,6 +43,7 @@ export {
 	CodeBlock,
 	Heading,
 	Image,
+	Link,
 	ListItem,
 	OrderedList,
 	UnorderedList,
