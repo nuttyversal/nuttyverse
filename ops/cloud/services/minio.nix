@@ -6,7 +6,7 @@
 			enable = true;
 			listenAddress = ":64646";
 			consoleAddress = ":64647";
-			dataDir = "/data/minio/data";
+			dataDir = [ "/data/minio/data" ];
 			configDir = "/data/minio/config";
 			region = "us-west-1";
 			rootCredentialsFile = "/run/secrets/minio-credentials";

@@ -14,6 +14,7 @@ with lib;
 		./services/caddy.nix
 		./services/gitea.nix
 		./services/keycloak.nix
+		./services/minio.nix
 		./services/postgresql.nix
 		./services/redis.nix
 		./services/tailscale.nix
