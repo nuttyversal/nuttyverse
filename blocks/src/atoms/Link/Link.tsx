@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import classNames from "classnames";
 import { Text } from "~/atoms/Text/Text";
 import { link } from "./Link.css";
 
@@ -21,12 +20,11 @@ type Props = {
 };
 
 export const Link: React.FC<Props> = (props) => {
-	const linkClassNames = classNames(link);
-
 	return (
 		<Text
 			as="a"
-			className={linkClassNames}
+			className={link}
+			weight={500}
 			href={props.href}
 			target={props.newTab ? "_blank" : ""}
 		>
