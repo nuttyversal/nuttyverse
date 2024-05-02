@@ -14,6 +14,10 @@ in {
 		publicKeys = [ versal cloud ];
 	};
 
+	"minio-credentials.age" = {
+		publicKeys = [ versal cloud ];
+	};
+
 	"nutty-bot-environment.age" = {
 		publicKeys = [ versal cloud ];
 	};

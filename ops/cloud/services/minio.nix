@@ -6,10 +6,10 @@
 			enable = true;
 			listenAddress = ":64646";
 			consoleAddress = ":64647";
-			dataDir = "/data/minio";
+			dataDir = "/data/minio/data";
 			configDir = "/data/minio/config";
 			region = "us-west-1";
-			rootCredentialsFile = "[TODO]";
+			rootCredentialsFile = "/run/secrets/minio-credentials";
 		};
 
 		caddy = {
@@ -19,6 +19,18 @@
 						reverse_proxy :64646
 					'';
 				};
+			};
+		};
+	};
+
+	age = {
+		secrets = {
+			minio-credentials = {
+				file = ../secrets/minio-credentials.age;
+				path = "/run/secrets/minio-credentials";
+				owner = "root";
+				group = "root";
+				mode = "600";
 			};
 		};
 	};
