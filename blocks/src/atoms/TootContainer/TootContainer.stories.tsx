@@ -26,7 +26,8 @@ export const Component: Story = {
 	},
 	args: {
 		style: {
-			height: spacing[40],
+			position: "relative",
+			height: spacing[28],
 			width: spacing[48],
 		},
 	},
