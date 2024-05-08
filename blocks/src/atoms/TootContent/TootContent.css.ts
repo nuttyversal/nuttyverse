@@ -5,11 +5,18 @@ import { spacing } from "~/styles/tokens/spacing";
 
 export const container = style({
 	display: "flex",
+	height: "100%",
 	flexDirection: "column",
+	justifyContent: "space-between",
 });
 
 export const content = style({
-	marginBottom: spacing[2],
+	overflowY: "scroll",
+	scrollbarColor: `${colors.gray.solid["01"]} ${colors.gray.solid["12"]}`,
+	scrollbarGutter: "stable",
+	scrollbarWidth: "thin",
+	paddingRight: spacing[1],
+	maxHeight: spacing[16],
 });
 
 globalStyle(`${content} *`, {
