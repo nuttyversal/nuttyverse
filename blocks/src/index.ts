@@ -21,6 +21,7 @@ import { ScrollContainer } from "~/atoms/ScrollContainer";
 import { Text } from "~/atoms/Text";
 import { Title } from "~/atoms/Title";
 import { TootContainer } from "~/atoms/TootContainer";
+import { TootContent } from "~/atoms/TootContent";
 
 import { ChibiButton } from "~/molecules/ChibiButton";
 import { ExploreInnerWorld } from "~/molecules/ExploreInnerWorld";
@@ -59,6 +60,7 @@ export {
 	Text,
 	Title,
 	TootContainer,
+	TootContent,
 
 	// Molecules
 	ChibiButton,
