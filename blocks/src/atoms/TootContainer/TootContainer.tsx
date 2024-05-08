@@ -9,12 +9,12 @@ type TootContainerProps = {
 	children: ReactNode;
 
 	/**
-	 * Additional class names to apply to the scroll container.
+	 * Additional class names to apply to the toot container.
 	 */
 	className?: string;
 
 	/**
-	 * Additional styles to apply to the scroll container.
+	 * Additional styles to apply to the toot container.
 	 */
 	style?: CSSProperties;
 };
