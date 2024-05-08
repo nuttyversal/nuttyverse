@@ -20,6 +20,7 @@ import { QuoteBlock } from "~/atoms/QuoteBlock";
 import { ScrollContainer } from "~/atoms/ScrollContainer";
 import { Text } from "~/atoms/Text";
 import { Title } from "~/atoms/Title";
+import { TootContainer } from "~/atoms/TootContainer";
 
 import { ChibiButton } from "~/molecules/ChibiButton";
 import { ExploreInnerWorld } from "~/molecules/ExploreInnerWorld";
@@ -57,6 +58,7 @@ export {
 	ScrollContainer,
 	Text,
 	Title,
+	TootContainer,
 
 	// Molecules
 	ChibiButton,
