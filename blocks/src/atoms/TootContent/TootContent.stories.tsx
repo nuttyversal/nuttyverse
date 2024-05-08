@@ -15,7 +15,13 @@ type Story = StoryObj<typeof TootContent>;
 export const Component: Story = {
 	render: (args) => {
 		return (
-			<TootContainer style={{ width: spacing[64], height: spacing[28] }}>
+			<TootContainer
+				style={{
+					width: spacing[64],
+					height: spacing[28],
+					position: "relative",
+				}}
+			>
 				<TootContent {...args} />
 			</TootContainer>
 		);
