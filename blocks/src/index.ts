@@ -29,6 +29,7 @@ import { Introduction } from "~/molecules/Introduction";
 import { LogoButton } from "~/molecules/LogoButton";
 import { MessageOfTheDay } from "./molecules/MessageOfTheDay";
 import { NavigationItemList } from "./molecules/NavigationItemList";
+import { TootBubble } from "~/molecules/TootBubble";
 
 import { Header } from "~/organisms/Header";
 import { Footer } from "~/organisms/Footer";
@@ -69,6 +70,7 @@ export {
 	LogoButton,
 	MessageOfTheDay,
 	NavigationItemList,
+	TootBubble,
 
 	// Organisms
 	Header,
