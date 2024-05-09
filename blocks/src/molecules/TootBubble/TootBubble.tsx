@@ -1,32 +1,41 @@
 import { TootContainer } from "~/atoms/TootContainer";
 import { TootContent } from "~/atoms/TootContent";
-import { useLatestToot } from "./TootBubble.api";
+import { Toot, fetchToots } from "./TootBubble.api";
 import { container, link } from "./TootBubble.css";
+import { useEffect, useState } from "react";
 
 export const TootBubble: React.FC = () => {
-	const { query } = useLatestToot();
+	const [latestToot, setLatestToot] = useState<Toot | null>(null);
+	const [hasEncounteredError, setHasEncounteredError] = useState(false);
 
-	const [latestToot] = query.data ?? [];
+	useEffect(() => {
+		(async () => {
+			try {
+				const [latestToot] = await fetchToots();
+				setLatestToot(latestToot);
+			} catch (error) {
+				setHasEncounteredError(true);
+			}
+		})();
+	}, []);
 
-	if (query.isLoading) {
-		return <TootContainer>Loading...</TootContainer>;
-	}
-
-	if (query.isError) {
+	if (hasEncounteredError) {
 		return <TootContainer>Uh oh... something went wrong.</TootContainer>;
 	}
 
-	if (query.data) {
-		const html = latestToot.content;
-		const href = latestToot.url;
-		const createdAt = new Date(latestToot.created_at);
-
-		return (
-			<a className={link} href={href} target="_blank">
-				<TootContainer className={container}>
-					<TootContent html={html} createdAt={createdAt} />
-				</TootContainer>
-			</a>
-		);
+	if (latestToot === null) {
+		return <TootContainer>Loading...</TootContainer>;
 	}
+
+	const html = latestToot.content;
+	const href = latestToot.url;
+	const createdAt = new Date(latestToot.created_at);
+
+	return (
+		<a className={link} href={href} target="_blank">
+			<TootContainer className={container}>
+				<TootContent html={html} createdAt={createdAt} />
+			</TootContainer>
+		</a>
+	);
 };
