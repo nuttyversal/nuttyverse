@@ -1,4 +1,6 @@
+import classNames from "classnames";
 import { formatDistance } from "date-fns";
+import { CSSProperties } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMastodon } from "@fortawesome/free-brands-svg-icons";
 import { experimentalTypeScale } from "~/styles/tokens/typography";
@@ -9,12 +11,22 @@ type TootContentProps = {
 	/**
 	 * Specifies the HTML content to render.
 	 */
-	content: string;
+	html: string;
 
 	/**
 	 * Specifies the creation date of the toot.
 	 */
 	createdAt: Date;
+
+	/**
+	 * Additional class names to apply to the toot container.
+	 */
+	className?: string;
+
+	/**
+	 * Additional styles to apply to the toot container.
+	 */
+	style?: CSSProperties;
 };
 
 export const TootContent: React.FC<TootContentProps> = (props) => {
@@ -23,9 +35,12 @@ export const TootContent: React.FC<TootContentProps> = (props) => {
 	});
 
 	return (
-		<div className={container}>
+		<div
+			className={classNames([container, props.className])}
+			style={props.style}
+		>
 			<div
-				dangerouslySetInnerHTML={{ __html: props.content }}
+				dangerouslySetInnerHTML={{ __html: props.html }}
 				className={content}
 			/>
 

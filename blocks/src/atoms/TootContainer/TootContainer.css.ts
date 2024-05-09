@@ -7,7 +7,7 @@ export const container = style({
 	background: colors.gray.solid["12"],
 	color: colors.gray.solid["01"],
 	borderRadius: spacing[1],
-	padding: `${spacing[4]} ${spacing[4]}`,
+	padding: `${spacing[3]} ${spacing[3]}`,
 });
 
 export const tailContainer = style({

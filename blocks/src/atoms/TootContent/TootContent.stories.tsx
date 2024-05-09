@@ -26,8 +26,7 @@ export const Component: Story = {
 		);
 	},
 	args: {
-		content:
-			"\u003Cp\u003EHello world! Finally got around to setting up a self-hosted Mastodon instance. It&#39;s empty. No one is here. 💤\u003C/p\u003E",
+		html: "\u003Cp\u003EHello world! Finally got around to setting up a self-hosted Mastodon instance. It&#39;s empty. No one is here. 💤\u003C/p\u003E",
 		createdAt: new Date(),
 	},
 };

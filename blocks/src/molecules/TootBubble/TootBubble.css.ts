@@ -3,9 +3,9 @@ import { spacing } from "~/styles/tokens/spacing";
 
 export const container = style({
 	width: spacing[64],
-	height: spacing[36],
+	height: spacing[40],
 });
 
-export const content = style({
-	maxHeight: spacing[20],
+export const link = style({
+	textDecoration: "none",
 });

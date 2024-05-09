@@ -11,11 +11,11 @@ export const container = style({
 });
 
 export const content = style({
-	overflowY: "scroll",
+	overflowY: "auto",
 	scrollbarColor: `${colors.gray.solid["01"]} ${colors.gray.solid["12"]}`,
 	scrollbarGutter: "stable",
 	scrollbarWidth: "thin",
-	paddingRight: spacing[1],
+	marginBottom: spacing[1],
 });
 
 globalStyle(`${content} *`, {
