@@ -19,7 +19,6 @@ export const Component: Story = {
 				style={{
 					width: spacing[64],
 					height: spacing[28],
-					position: "relative",
 				}}
 			>
 				<TootContent {...args} />

@@ -16,7 +16,6 @@ export const content = style({
 	scrollbarGutter: "stable",
 	scrollbarWidth: "thin",
 	paddingRight: spacing[1],
-	maxHeight: spacing[16],
 });
 
 globalStyle(`${content} *`, {
