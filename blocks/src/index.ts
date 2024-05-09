@@ -33,6 +33,7 @@ import { TootBubble } from "~/molecules/TootBubble";
 
 import { Header } from "~/organisms/Header";
 import { Footer } from "~/organisms/Footer";
+import { Sidebar } from "~/organisms/Sidebar";
 
 import { useThemeSwitcher } from "~/styles/themes/contract";
 
@@ -75,6 +76,7 @@ export {
 	// Organisms
 	Header,
 	Footer,
+	Sidebar,
 
 	// Utilities
 	useThemeSwitcher,
