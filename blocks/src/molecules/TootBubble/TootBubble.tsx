@@ -1,10 +1,24 @@
+import { CSSProperties } from "react";
 import { TootContainer } from "~/atoms/TootContainer";
 import { TootContent } from "~/atoms/TootContent";
 import { Toot, fetchToots } from "./TootBubble.api";
 import { container, link } from "./TootBubble.css";
 import { useEffect, useState } from "react";
+import classNames from "classnames";
 
-export const TootBubble: React.FC = () => {
+type TootBubbleProps = {
+	/**
+	 * Additional class names to apply to the toot bubble.
+	 */
+	className?: string;
+
+	/**
+	 * Additional styles to apply to the toot bubble.
+	 */
+	style?: CSSProperties;
+};
+
+export const TootBubble: React.FC<TootBubbleProps> = (props) => {
 	const [latestToot, setLatestToot] = useState<Toot | null>(null);
 	const [hasEncounteredError, setHasEncounteredError] = useState(false);
 
@@ -32,7 +46,12 @@ export const TootBubble: React.FC = () => {
 	const createdAt = new Date(latestToot.created_at);
 
 	return (
-		<a className={link} href={href} target="_blank">
+		<a
+			className={classNames([link, props.className])}
+			style={props.style}
+			href={href}
+			target="_blank"
+		>
 			<TootContainer className={container}>
 				<TootContent html={html} createdAt={createdAt} />
 			</TootContainer>
