@@ -8,7 +8,6 @@ export const body = style({
 	justifyContent: "center",
 	alignItems: "center",
 	margin: "auto",
-	width: spacing[144],
 	height: "100dvh",
 
 	"@media": {

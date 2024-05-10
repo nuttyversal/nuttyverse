@@ -5,9 +5,10 @@ import { colors } from "~/styles/themes/contract.css";
 export const container = style({
 	display: "flex",
 	alignItems: "center",
+	justifyContent: "center",
 	background: colors.background,
 	borderRadius: spacing[1],
-	transition: "all 200ms ease-out",
+	transition: "color 200ms ease-out",
 	cursor: "pointer",
 
 	":hover": {
@@ -16,7 +17,8 @@ export const container = style({
 });
 
 export const link = style({
-	display: "block",
+	display: "flex",
+	alignItems: "center",
 	width: "100%",
 	paddingTop: spacing[2],
 	paddingBottom: spacing[2],
@@ -26,7 +28,8 @@ export const link = style({
 	transition: "all 200ms ease-out",
 
 	":hover": {
-		letterSpacing: "1px",
+		fontVariationSettings: `"opsz" 12, "wdth" 100 !important`,
+		fontWeight: "500 !important",
 	},
 });
 
@@ -41,6 +44,7 @@ export const active = style({
 });
 
 export const icon = style({
+	width: spacing[4],
 	paddingLeft: spacing[2],
 	paddingRight: spacing[2],
 });

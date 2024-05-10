@@ -1,7 +1,7 @@
 ---
 import { ViewTransitions } from "astro:transitions";
-import { Header } from "@nuttyverse/blocks";
-import { body } from "./BaseLayout.css.ts";
+import { Header, Sidebar, TootBubble } from "@nuttyverse/blocks";
+import { body, slot, layout, responsiveBubble, responsiveSidebar } from "./BaseLayout.css.ts";
 
 type Props = {
 	title?: string;
@@ -31,7 +31,22 @@ const { title } = Astro.props.frontmatter || Astro.props;
    </head>
 
    <body class={body}>
-		<Header client:only="react" transition:persist />
-		<slot />
+		<div class={layout}>
+			<div>
+				<Header client:only="react" transition:persist />
+			</div>
+
+			<div class={responsiveBubble}>
+				<TootBubble className={responsiveBubble} client:only="react" transition:persist />
+			</div>
+
+			<div className={slot}>
+				<slot />
+			</div>
+
+			<div class={responsiveSidebar}>
+				<Sidebar className={responsiveSidebar} client:only="react" transition:persist />
+			</div>
+		</div>
    </body>
 </html>

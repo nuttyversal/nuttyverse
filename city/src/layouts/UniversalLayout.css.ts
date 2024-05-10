@@ -6,7 +6,6 @@ export const main = style({
 });
 
 export const container = style({
-	marginTop: "1rem",
 	marginBottom: "1rem",
 	height: `calc(100dvh - ${layout.headerHeight.wide} - ${layout.footerHeight.wide})`,
 	maxHeight: `calc(100dvh - ${layout.headerHeight.wide} - ${layout.footerHeight.wide})`,
