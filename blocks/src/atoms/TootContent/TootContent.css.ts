@@ -22,6 +22,12 @@ globalStyle(`${content} *`, {
 	fontSize: `${experimentalTypeScale.smol} !important`,
 });
 
+export const metadata = style({
+	display: "flex",
+	alignItems: "center",
+	gap: spacing[1],
+});
+
 export const timestamp = style({
 	color: colors.gray.solid["08"],
 });

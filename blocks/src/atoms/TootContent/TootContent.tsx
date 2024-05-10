@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMastodon } from "@fortawesome/free-brands-svg-icons/faMastodon";
 import { experimentalTypeScale } from "~/styles/tokens/typography";
 import { Text } from "~/atoms/Text";
-import { container, content, timestamp } from "./TootContent.css";
+import { container, content, metadata, timestamp } from "./TootContent.css";
 
 type TootContentProps = {
 	/**
@@ -44,13 +44,15 @@ export const TootContent: React.FC<TootContentProps> = (props) => {
 				className={content}
 			/>
 
-			<Text size="smol" className={timestamp} marginless>
-				posted {timeSinceToot} on{" "}
+			<div className={metadata}>
+				<Text className={timestamp} size="smol" marginless>
+					posted {timeSinceToot} on
+				</Text>
 				<FontAwesomeIcon
-					style={{ height: experimentalTypeScale.smol }}
+					style={{ display: "block", height: experimentalTypeScale.smol }}
 					icon={faMastodon}
 				/>
-			</Text>
+			</div>
 		</div>
 	);
 };
