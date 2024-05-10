@@ -26,7 +26,16 @@ export const link = style({
 	borderRadius: spacing[1],
 	letterSpacing: 0,
 	transition: "all 200ms ease-out",
+	textDecoration: "none",
 
+	":hover": {
+		fontVariationSettings: `"opsz" 12, "wdth" 100 !important`,
+		fontWeight: "500 !important",
+	},
+});
+
+export const text = style({
+	transition: "all 200ms ease-out",
 	":hover": {
 		fontVariationSettings: `"opsz" 12, "wdth" 100 !important`,
 		fontWeight: "500 !important",
@@ -44,15 +53,15 @@ export const active = style({
 });
 
 export const icon = style({
-	width: spacing[4],
-	paddingLeft: spacing[2],
-	paddingRight: spacing[2],
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "center",
+	height: spacing[4],
+	width: spacing[10],
 });
 
 export const external = style({
 	color: colors.gray.solid["11"],
-});
-
-export const text = style({
-	textDecoration: "none",
+	height: spacing[3],
+	width: spacing[8],
 });
