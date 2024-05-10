@@ -14,7 +14,7 @@ export const NavigationItemList: React.FC<NavigationItemListProps> = (
 	return (
 		<nav className={navigation}>
 			{props.items.map((item) => (
-				<NavigationItem {...item} />
+				<NavigationItem key={item.name} {...item} />
 			))}
 		</nav>
 	);
