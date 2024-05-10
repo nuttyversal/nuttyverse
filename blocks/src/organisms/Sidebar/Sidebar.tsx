@@ -4,6 +4,7 @@ import { faCode } from "@fortawesome/pro-solid-svg-icons/faCode";
 import { faPenNib } from "@fortawesome/pro-solid-svg-icons/faPenNib";
 import { faTrillium } from "@fortawesome/pro-solid-svg-icons/faTrillium";
 import { faUser } from "@fortawesome/pro-solid-svg-icons/faUser";
+import { NavigationItemProps } from "~/atoms/NavigationItem";
 import { NavigationItemList } from "~/molecules/NavigationItemList";
 import { container } from "./Sidebar.css";
 
@@ -20,11 +21,12 @@ type SidebarProps = {
 };
 
 export const Sidebar: React.FC<SidebarProps> = (props) => {
-	const navigationItems = [
+	const navigationItems: NavigationItemProps[] = [
 		{
 			name: "Colophon",
 			icon: faTrillium,
 			href: "/colophon",
+			active: document.location.pathname === "/colophon",
 		},
 		{
 			name: "Design",
