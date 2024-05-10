@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { formatDistance } from "date-fns";
 import { CSSProperties } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMastodon } from "@fortawesome/free-brands-svg-icons";
+import { faMastodon } from "@fortawesome/free-brands-svg-icons/faMastodon";
 import { experimentalTypeScale } from "~/styles/tokens/typography";
 import { Text } from "~/atoms/Text";
 import { container, content, timestamp } from "./TootContent.css";

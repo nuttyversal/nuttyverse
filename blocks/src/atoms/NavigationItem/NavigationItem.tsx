@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowUpRightFromSquare } from "@fortawesome/pro-solid-svg-icons";
+import { faArrowUpRightFromSquare } from "@fortawesome/pro-solid-svg-icons/faArrowUpRightFromSquare";
 import { experimentalTypeScale } from "~/styles/tokens/typography";
 import { Text } from "~/atoms/Text/Text";
 import {
