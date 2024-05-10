@@ -24,7 +24,7 @@ export const Introduction = () => {
 	);
 
 	return (
-		<section style={{ marginTop: "1.5em", marginBottom: "1.5em" }}>
+		<section>
 			<Text dropCap>
 				{ahoy} Welcome to my internet expanse. You might notice a seeming
 				emptiness, but do not fret. You've simply arrived early enough to
@@ -35,25 +35,6 @@ export const Introduction = () => {
 				Just as the {physical} universe materialized from the Big Bang, this
 				website will similarly unfold from this point. Emerging from this
 				singularity will bloom a new {digital} universe! 😀
-			</Text>
-
-			<Text as="div">
-				<UnorderedList>
-					<ListItem>
-						Follow me on{" "}
-						<Link href="https://neocities.org/site/nuttyverse" newTab>
-							Neocities
-						</Link>{" "}
-						for updates!
-					</ListItem>
-					<ListItem>
-						Feel free to take a 👀 at the{" "}
-						<Link href="https://github.com/nuttyversal/nuttyverse" newTab>
-							source code
-						</Link>
-						.
-					</ListItem>
-				</UnorderedList>
 			</Text>
 		</section>
 	);
