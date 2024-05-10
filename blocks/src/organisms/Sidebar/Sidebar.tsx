@@ -26,7 +26,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
 			name: "Colophon",
 			icon: faTrillium,
 			href: "/colophon",
-			active: document.location.pathname === "/colophon",
+			active: /\/colophon\/?/.test(document.location.pathname),
 		},
 		{
 			name: "Design",
