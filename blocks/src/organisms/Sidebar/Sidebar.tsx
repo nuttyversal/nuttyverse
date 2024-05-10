@@ -1,12 +1,24 @@
+import classNames from "classnames";
+import { CSSProperties } from "react";
 import { faCode } from "@fortawesome/pro-solid-svg-icons/faCode";
-import { faGalaxy } from "@fortawesome/pro-solid-svg-icons/faGalaxy";
 import { faPenNib } from "@fortawesome/pro-solid-svg-icons/faPenNib";
 import { faUser } from "@fortawesome/pro-solid-svg-icons/faUser";
 import { NavigationItemList } from "~/molecules/NavigationItemList";
-import { TootBubble } from "~/molecules/TootBubble";
 import { container } from "./Sidebar.css";
 
-export const Sidebar: React.FC = () => {
+type SidebarProps = {
+	/**
+	 * Additional class names to apply to the sidebar.
+	 */
+	className?: string;
+
+	/**
+	 * Additional styles to apply to the sidebar.
+	 */
+	style?: CSSProperties;
+};
+
+export const Sidebar: React.FC<SidebarProps> = (props) => {
 	const navigationItems = [
 		{
 			name: "Design",
@@ -29,7 +41,10 @@ export const Sidebar: React.FC = () => {
 	];
 
 	return (
-		<div className={container}>
+		<div
+			className={classNames([container, props.className])}
+			style={props.style}
+		>
 			<NavigationItemList items={navigationItems} />
 		</div>
 	);
