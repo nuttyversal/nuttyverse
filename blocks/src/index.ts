@@ -25,6 +25,7 @@ import { TootContent } from "~/atoms/TootContent";
 
 import { ChibiButton } from "~/molecules/ChibiButton";
 import { ExploreInnerWorld } from "~/molecules/ExploreInnerWorld";
+import { ImageGrid } from "~/molecules/ImageGrid";
 import { Introduction } from "~/molecules/Introduction";
 import { LogoButton } from "~/molecules/LogoButton";
 import { MessageOfTheDay } from "./molecules/MessageOfTheDay";
@@ -67,6 +68,7 @@ export {
 	// Molecules
 	ChibiButton,
 	ExploreInnerWorld,
+	ImageGrid,
 	Introduction,
 	LogoButton,
 	MessageOfTheDay,
