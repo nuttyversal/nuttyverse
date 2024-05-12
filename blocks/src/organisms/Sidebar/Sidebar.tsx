@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import { CSSProperties } from "react";
+import { faAperture } from "@fortawesome/pro-solid-svg-icons/faAperture";
 import { faBedFront } from "@fortawesome/pro-solid-svg-icons/faBedFront";
 import { faCode } from "@fortawesome/pro-solid-svg-icons/faCode";
 import { faPenNib } from "@fortawesome/pro-solid-svg-icons/faPenNib";
