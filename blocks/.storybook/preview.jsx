@@ -1,4 +1,3 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import * as colors from "../src/styles/tokens/colors";
 import { spacing } from "../src/styles/tokens/spacing";
 import { useThemeSwitcher } from "../src/styles/themes/contract";
@@ -31,10 +30,8 @@ const preview = {
 							background: colors.black,
 						};
 
-			const queryClient = new QueryClient();
-
 			return (
-				<QueryClientProvider client={queryClient}>
+				<>
 					<div
 						style={{
 							position: "absolute",
@@ -63,7 +60,7 @@ const preview = {
 							<Story />
 						</div>
 					</div>
-				</QueryClientProvider>
+				</>
 			);
 		},
 	],
