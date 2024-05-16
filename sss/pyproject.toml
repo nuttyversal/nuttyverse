@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "sss"
+version = "0.1.0"
+description = "Spaceship Storage"
+authors = ["nuttyversal <mail@nuttyver.se>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
