@@ -1,12 +1,15 @@
-import minio
 import os
 
-from s3.exceptions import MissingVariableException
+from minio import Minio
+from minio.error import S3Error
 
 
-def create_minio_client() -> minio.Minio:
+def create_minio_client() -> Minio:
 	if os.environ.get("MINIO_ENDPOINT", None) is None:
 		raise MissingVariableException("MinIO endpoint not specified.")
+
+	if os.environ.get("MINIO_REGION", None) is None:
+		raise MissingVariableException("MinIO region not specified.")
 
 	if os.environ.get("MINIO_ACCESS_KEY") is None:
 		raise MissingVariableException("MinIO access key not specified.")
@@ -14,10 +17,11 @@ def create_minio_client() -> minio.Minio:
 	if os.environ.get("MINIO_SECRET_KEY") is None:
 		raise MissingVariableException("MinIO secret key not specified.")
 
-	return minio.Minio(
+	return Minio(
 		os.environ["MINIO_ENDPOINT"],
-		os.environ["MINIO_ACCESS_KEY"],
-		os.environ["MINIO_SECRET_KEY"],
+		region=os.environ["MINIO_REGION"],
+		access_key=os.environ["MINIO_ACCESS_KEY"],
+		secret_key=os.environ["MINIO_SECRET_KEY"],
 	)
 
 
