@@ -1,0 +1,10 @@
+#!/usr/bin/env -S just --justfile
+
+develop:
+	nix develop -c fish
+
+shell:
+	poetry shell
+
+start:
+	flask --app sss run
