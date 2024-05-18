@@ -3,6 +3,8 @@ import os
 
 from minio import Minio
 import psycopg2
+import psycopg2.extras
+import uuid_utils
 
 
 class SpaceshipStorage:
@@ -49,11 +51,23 @@ class SpaceshipStorage:
 			port=os.environ["DATABASE_PORT"],
 		)
 
-	def store_object(self, bucket_name: str, object_name: str, data: io.BytesIO):
-		with self.connection.cursor() as cursor:
-			cursor.execute("SELECT version()")
-			single_row = cursor.fetchone()
-			print(f"version: {single_row}")
+	def store_object(self, bucket_name: str, object_name: str, data: io.BytesIO) -> str:
+		object_id = str(uuid_utils.uuid7())
+
+		with self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+			query = """
+				INSERT INTO objects (id, bucket_name, object_name)
+				VALUES (%s, %s, %s)
+				ON CONFLICT (bucket_name, object_name)
+				DO UPDATE SET
+					updated_at = CURRENT_TIMESTAMP
+				RETURNING id, (xmax = 0) AS inserted
+			"""
+
+			values = (object_id, bucket_name, object_name)
+			cursor.execute(query, values)
+			result = cursor.fetchone()
+			self.connection.commit()
 
 		self.client.put_object(
 			bucket_name=bucket_name,
@@ -62,7 +76,12 @@ class SpaceshipStorage:
 			length=data.getbuffer().nbytes,
 		)
 
+		if result["inserted"] is True:
+			return object_id
+		else:
+			return result["id"]
+
 
 def test():
 	client = SpaceshipStorage()
-	client.store_object("looking-glass", "message.txt", io.BytesIO(b"hello"))
+	object_id = client.store_object("looking-glass", "folder3/message.txt", io.BytesIO(b"hello"))
