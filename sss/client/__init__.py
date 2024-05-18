@@ -7,6 +7,7 @@ import psycopg2.extras
 import uuid_utils
 
 import client.errors
+import client.models
 
 
 class SpaceshipStorage:
@@ -53,7 +54,7 @@ class SpaceshipStorage:
 			port=os.environ["DATABASE_PORT"],
 		)
 
-	def store_object(self, bucket_name: str, object_name: str, data: io.BytesIO) -> str:
+	def store_object(self, bucket_name: str, object_name: str, data: io.BytesIO) -> client.models.StoreObjectResult:
 		object_id = str(uuid_utils.uuid7())
 
 		with self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
@@ -78,12 +79,13 @@ class SpaceshipStorage:
 			length=data.getbuffer().nbytes,
 		)
 
-		if result["inserted"] is True:
-			return object_id
-		else:
-			return result["id"]
+		return client.models.StoreObjectResult(
+			object_id=object_id if result["inserted"] else result["id"],
+			inserted=result["inserted"],
+		)
 
 
 def test():
 	client = SpaceshipStorage()
-	object_id = client.store_object("looking-glass", "folder3/message.txt", io.BytesIO(b"hello"))
+	store_result = client.store_object("looking-glass", "folder4/message.txt", io.BytesIO(b"hello"))
+	print(store_result)
