@@ -1,2 +1,2 @@
-class MissingVariableException(Exception):
+class MissingConfigError(Exception):
     pass

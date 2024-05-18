@@ -2,22 +2,21 @@ import io
 import os
 
 from minio import Minio
-from minio.error import S3Error
 
 
 class SpaceshipStorage:
 	def __init__(self):
 		if os.environ.get("MINIO_ENDPOINT", None) is None:
-			raise MissingVariableException("MinIO endpoint not specified.")
+			raise MissingConfigError("MinIO endpoint not specified.")
 
 		if os.environ.get("MINIO_REGION", None) is None:
-			raise MissingVariableException("MinIO region not specified.")
+			raise MissingConfigError("MinIO region not specified.")
 
 		if os.environ.get("MINIO_ACCESS_KEY") is None:
-			raise MissingVariableException("MinIO access key not specified.")
+			raise MissingConfigError("MinIO access key not specified.")
 
 		if os.environ.get("MINIO_SECRET_KEY") is None:
-			raise MissingVariableException("MinIO secret key not specified.")
+			raise MissingConfigError("MinIO secret key not specified.")
 
 		self.client = Minio(
 			os.environ["MINIO_ENDPOINT"],
