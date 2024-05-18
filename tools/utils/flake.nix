@@ -36,6 +36,7 @@
 
 					# Database
 					dbmate = pkgs.dbmate;
+					postgresql = pkgs.postgresql;
 
 					# Node.js
 					eslint = pkgs.nodePackages.eslint;
