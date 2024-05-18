@@ -6,20 +6,22 @@ import psycopg2
 import psycopg2.extras
 import uuid_utils
 
+import client.errors
+
 
 class SpaceshipStorage:
 	def __init__(self):
 		if os.environ.get("MINIO_ENDPOINT", None) is None:
-			raise MissingConfigError("MinIO endpoint not specified.")
+			raise client.errors.MissingConfigError("MinIO endpoint not specified.")
 
 		if os.environ.get("MINIO_REGION", None) is None:
-			raise MissingConfigError("MinIO region not specified.")
+			raise client.errors.MissingConfigError("MinIO region not specified.")
 
 		if os.environ.get("MINIO_ACCESS_KEY") is None:
-			raise MissingConfigError("MinIO access key not specified.")
+			raise client.errors.MissingConfigError("MinIO access key not specified.")
 
 		if os.environ.get("MINIO_SECRET_KEY") is None:
-			raise MissingConfigError("MinIO secret key not specified.")
+			raise client.errors.MissingConfigError("MinIO secret key not specified.")
 
 		self.client = Minio(
 			os.environ["MINIO_ENDPOINT"],
@@ -29,19 +31,19 @@ class SpaceshipStorage:
 		)
 
 		if os.environ.get("DATABASE_NAME", None) is None:
-			raise MissingConfigError("Database name not specified.")
+			raise client.errors.MissingConfigError("Database name not specified.")
 
 		if os.environ.get("DATABASE_USER", None) is None:
-			raise MissingConfigError("Database user not specified.")
+			raise client.errors.MissingConfigError("Database user not specified.")
 
 		if os.environ.get("DATABASE_PASSWORD", None) is None:
-			raise MissingConfigError("Database password not specified.")
+			raise client.errors.MissingConfigError("Database password not specified.")
 
 		if os.environ.get("DATABASE_HOST", None) is None:
-			raise MissingConfigError("Database host not specified.")
+			raise client.errors.MissingConfigError("Database host not specified.")
 
 		if os.environ.get("DATABASE_PORT", None) is None:
-			raise MissingConfigError("Database port not specified.")
+			raise client.errors.MissingConfigError("Database port not specified.")
 
 		self.connection = psycopg2.connect(
 			dbname=os.environ["DATABASE_NAME"],
