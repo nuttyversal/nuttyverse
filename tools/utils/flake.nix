@@ -34,6 +34,9 @@
 					sd = pkgs.sd;
 					tldr = pkgs.tldr;
 
+					# Database
+					dbmate = pkgs.dbmate;
+
 					# Node.js
 					eslint = pkgs.nodePackages.eslint;
 					nodejs = pkgs.nodejs;
