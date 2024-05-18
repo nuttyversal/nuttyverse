@@ -8,9 +8,10 @@
 		dataDir = "/data/postgresql";
 
 		authentication = ''
-			# type database user address      method
-			host   all      all  127.0.0.1/32 scram-sha-256
-			host   all      all  ::1/128      scram-sha-256
+			# type database user address         method
+			host   all      all  100.96.66.22/32 scram-sha-256
+			host   all      all  127.0.0.1/32    scram-sha-256
+			host   all      all  ::1/128         scram-sha-256
 		'';
 	};
 }
