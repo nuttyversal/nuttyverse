@@ -55,7 +55,7 @@ class SpaceshipStorage:
 			port=os.environ["DATABASE_PORT"],
 		)
 
-	def store_object(self, bucket_name: str, object_name: str, data: io.BytesIO) -> client.models.StoreObjectResult:
+	def store_object(self, bucket_name: str, object_name: str, data: io.BytesIO, content_type: str | None) -> client.models.StoreObjectResult:
 		object_id = str(uuid_utils.uuid7())
 
 		with self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
@@ -78,6 +78,7 @@ class SpaceshipStorage:
 			object_name=object_name,
 			data=data,
 			length=data.getbuffer().nbytes,
+			content_type=content_type,
 		)
 
 		return client.models.StoreObjectResult(
