@@ -1,5 +1,6 @@
 import io
 import os
+import typing
 
 from minio import Minio
 import psycopg2
@@ -116,7 +117,20 @@ class SpaceshipStorage:
 				object_name=object_name,
 			)
 
+	def list_objects(self, bucket_name: str) -> typing.List[client.models.SpaceshipObject]:
+		with self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)	as cursor:
+			select_query = """
+				SELECT id, created_at, updated_at, bucket_name, object_name
+				FROM objects
+				WHERE bucket_name = %s
+			"""
+
+			cursor.execute(select_query, (bucket_name,))
+			result = cursor.fetchall()
+
+		return result
+
 
 def test():
 	client = SpaceshipStorage()
-	# store_result = client.store_object("looking-glass", "folder4/message.txt", io.BytesIO(b"hello"))
+	store_result = client.store_object("looking-glass", "folder4/message.txt", io.BytesIO(b"hello"))
