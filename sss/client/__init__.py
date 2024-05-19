@@ -84,8 +84,39 @@ class SpaceshipStorage:
 			inserted=result["inserted"],
 		)
 
+	def delete_object(self, id: str):
+		with self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+			select_query = """
+				SELECT bucket_name, object_name
+				FROM objects
+				WHERE id = %s
+			"""
+
+			cursor.execute(select_query, (id,))
+			result = cursor.fetchone()
+
+			if not result:
+				raise client.errors.ObjectNotFoundError("Object does not exist.")
+
+			bucket_name = result["bucket_name"]
+			object_name = result["object_name"]
+
+		with self.connection:
+			with self.connection.cursor() as cursor:
+				delete_query = """
+					DELETE FROM objects
+					WHERE id = %s
+				"""
+
+				cursor.execute(delete_query, (id,))
+				self.connection.commit()
+
+			self.client.remove_object(
+				bucket_name=bucket_name,
+				object_name=object_name,
+			)
+
 
 def test():
 	client = SpaceshipStorage()
-	store_result = client.store_object("looking-glass", "folder4/message.txt", io.BytesIO(b"hello"))
-	print(store_result)
+	# store_result = client.store_object("looking-glass", "folder4/message.txt", io.BytesIO(b"hello"))
