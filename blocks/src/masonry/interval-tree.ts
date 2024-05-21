@@ -8,6 +8,13 @@ type Interval = {
 
 /**
  * Represents the color of a node in a red-black tree.
+ *
+ * ✦ Every node is either red or black.
+ * ✦ The root is black.
+ * ✦ Every leaf (null) is black.
+ * ✦ If a node is red, then both its children are black.
+ * ✦ For each node, all simple paths from the node to the descendant leaves
+ *   contain the same number of black nodes.
  */
 enum Color {
 	Red = "RED",
