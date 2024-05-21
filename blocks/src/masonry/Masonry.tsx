@@ -61,7 +61,19 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 			}
 		};
 
-		const observer = new ResizeObserver(handleResize);
+		// Debounce the resize callback function to prevent rapid state updates
+		// that could potentially lead to an infinite render loop.
+		const debounce = (func: (...args: any[]) => void, wait: number) => {
+			let timeout: NodeJS.Timeout;
+			return (...args: any[]) => {
+				clearTimeout(timeout);
+				timeout = setTimeout(() => func(...args), wait);
+			};
+		};
+
+		// We still want the resizing experience to feel buttery smooth, so
+		// we'll limit the debounce delay to 8 ms (120 Hz).
+		const observer = new ResizeObserver(debounce(handleResize, 8));
 
 		if (containerRef.current) {
 			observer.observe(containerRef.current);
