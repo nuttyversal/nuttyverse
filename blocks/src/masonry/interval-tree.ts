@@ -62,10 +62,32 @@ export class IntervalTree<T> {
 		// [TODO] Needs to be implemented.
 	}
 
+	/**
+	 *     ┏━┓                    ┏━┓
+	 *  ┌──┃X┃──┐              ┌──┃Y┃──┐
+	 *  │  ┗━┛  │              │  ┗━┛  │
+	 * ┌─┐     ┏━┓            ┏━┓     ┌─┐
+	 * │α│   ┌─┃Y┃─┐ ─────▶ ┌─┃X┃─┐   │ɣ│
+	 * └─┘   │ ┗━┛ │        │ ┗━┛ │   └─┘
+	 *      ┌─┐   ┌─┐      ┌─┐   ┌─┐
+	 *      │β│   │ɣ│      │α│   │β│
+	 *      └─┘   └─┘      └─┘   └─┘
+	 */
 	private rotateLeft(node: IntervalTreeNode<T>) {
 		// [TODO] Needs to be implemented.
 	}
 
+	/**
+	 *        ┏━┓                ┏━┓
+	 *     ┌──┃Y┃──┐          ┌──┃X┃──┐
+	 *     │  ┗━┛  │          │  ┗━┛  │
+	 *    ┏━┓     ┌─┐        ┌─┐     ┏━┓
+	 *  ┌─┃X┃─┐   │ɣ│ ─────▶ │α│   ┌─┃Y┃─┐
+	 *  │ ┗━┛ │   └─┘        └─┘   │ ┗━┛ │
+	 * ┌─┐   ┌─┐                  ┌─┐   ┌─┐
+	 * │α│   │β│                  │β│   │ɣ│
+	 * └─┘   └─┘                  └─┘   └─┘
+	 */
 	private rotateRight(node: IntervalTreeNode<T>) {
 		// [TODO] Needs to be implemented.
 	}
