@@ -7,7 +7,9 @@ import {
 	Position,
 	layoutContentBlocks,
 } from "./layout";
+import { breakpoints } from "./constants";
 import { container, contentBlock } from "./Masonry.css";
+import { parse } from "date-fns";
 
 export type MasonryContentBlock = {
 	/**
@@ -76,11 +78,21 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 	// Whenever the masonry container width changes, re-run the layout
 	// algorithm to reflow the content blocks.
 	useEffect(() => {
+		let columnCount = 0;
+
+		for (const [width, columns] of Object.entries(breakpoints)) {
+			const breakpointWidth = parseInt(width, 10);
+			if (containerWidth < breakpointWidth) {
+				columnCount = columns;
+				break;
+			}
+		}
+
 		const layoutInput: MasonryLayoutInput = {
 			contentBlocks: props.contentBlocks,
 			contentContainerWidth: containerWidth,
-			columnCount: 4,
 			paddingSize: 12,
+			columnCount,
 		};
 
 		const layoutOutput = layoutContentBlocks(layoutInput);
