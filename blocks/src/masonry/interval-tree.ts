@@ -9,7 +9,7 @@ type Interval = {
 /**
  * Represents the color of a node in a red-black tree.
  */
-enum RedBlackTreeNodeColor {
+enum Color {
 	Red = "RED",
 	Black = "BLACK",
 }
@@ -17,12 +17,13 @@ enum RedBlackTreeNodeColor {
 /**
  * Represents a node storing an interval in a red-black tree.
  */
-type IntervalTreeNode = {
+type IntervalTreeNode<T> = {
+	data: T;
 	interval: Interval;
-	left: IntervalTreeNode | null;
-	right: IntervalTreeNode | null;
-	parent: IntervalTreeNode | null;
-	color: RedBlackTreeNodeColor;
+	left: IntervalTreeNode<T> | null;
+	right: IntervalTreeNode<T> | null;
+	parent: IntervalTreeNode<T> | null;
+	color: Color;
 
 	/**
 	 * Keep track of the maximum high value in the subtree rooted at the
@@ -34,10 +35,31 @@ type IntervalTreeNode = {
 /**
  * A red-black interval tree.
  */
-export class IntervalTree {
-	root: IntervalTreeNode | null;
+export class IntervalTree<T> {
+	root: IntervalTreeNode<T> | null;
 
 	constructor() {
 		this.root = null;
+	}
+
+	insert(interval: Interval) {
+		// [TODO] Needs to be implemented.
+	}
+
+	query(interval: Interval): T[] {
+		// [TODO] Needs to be implemented.
+		return [];
+	}
+
+	private rebalance() {
+		// [TODO] Needs to be implemented.
+	}
+
+	private rotateLeft(node: IntervalTreeNode<T>) {
+		// [TODO] Needs to be implemented.
+	}
+
+	private rotateRight(node: IntervalTreeNode<T>) {
+		// [TODO] Needs to be implemented.
 	}
 }
