@@ -9,7 +9,6 @@ import {
 } from "./layout";
 import { breakpoints } from "./constants";
 import { container, contentBlock } from "./Masonry.css";
-import { parse } from "date-fns";
 
 export type MasonryContentBlock = {
 	/**
@@ -70,7 +69,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 
 		return () => {
 			if (containerRef.current) {
-				observer.observe(containerRef.current);
+				observer.unobserve(containerRef.current);
 			}
 		};
 	}, [containerRef.current]);
