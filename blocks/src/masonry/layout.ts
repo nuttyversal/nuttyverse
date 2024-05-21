@@ -1,7 +1,7 @@
 /**
- * Represents an element being rendered in a Masonry layout.
+ * Represents bounding box dimensions.
  */
-export type ContentBlock = {
+export type BoundingBox = {
 	width: number;
 	height: number;
 };
@@ -21,7 +21,7 @@ export type MasonryLayoutInput = {
 	/**
 	 * An ordered list of elements to be rendered.
 	 */
-	contentBlocks: ContentBlock[];
+	contentBlocks: BoundingBox[];
 
 	/**
 	 * The width of the content container.
@@ -47,7 +47,7 @@ export type MasonryLayoutOutput = {
 	 * An ordered list of elements to be rendered annotated with their relative
 	 * positions within the Masonry layout.
 	 */
-	contentBlocks: (ContentBlock & Position)[];
+	contentBlocks: (BoundingBox & Position)[];
 
 	/**
 	 * The width of the content container.
@@ -88,7 +88,7 @@ export function layoutContentBlocks(
 
 	// As the content blocks get laid out, they will have their relative
 	// positions within the Masonry content container annotated.
-	const annotatedContentBlocks: (ContentBlock & Position)[] = [];
+	const annotatedContentBlocks: (BoundingBox & Position)[] = [];
 
 	for (const contentBlock of input.contentBlocks) {
 		// Figure out which column to insert the next content block into.
@@ -103,7 +103,7 @@ export function layoutContentBlocks(
 		}
 
 		// Scale the content block to match the column width.
-		const resizedContentBlock: ContentBlock = {
+		const resizedContentBlock: BoundingBox = {
 			width: singleColumnWidth,
 			height: (singleColumnWidth / contentBlock.width) * contentBlock.height,
 		};
