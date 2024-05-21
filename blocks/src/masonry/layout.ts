@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 /**
  * Represents bounding box dimensions.
  */
@@ -15,13 +17,33 @@ export type Position = {
 };
 
 /**
+ * A utility type that can be intersected with [[MasonryContentBlock]] to
+ * extend its definition to include information about position.
+ */
+export type WithPosition = {
+	position: Position;
+};
+
+export type MasonryContentBlock = {
+	/**
+	 * The element to render as a content block in the masonry.
+	 */
+	content: ReactNode;
+
+	/**
+	 * The (static) dimensions of the content block.
+	 */
+	boundingBox: BoundingBox;
+};
+
+/**
  * The input configuration for the Masonry algorithm.
  */
 export type MasonryLayoutInput = {
 	/**
-	 * An ordered list of elements to be rendered.
+	 * An ordered list of content blocks to be rendered.
 	 */
-	contentBlocks: BoundingBox[];
+	contentBlocks: MasonryContentBlock[];
 
 	/**
 	 * The width of the content container.
@@ -47,7 +69,7 @@ export type MasonryLayoutOutput = {
 	 * An ordered list of elements to be rendered annotated with their relative
 	 * positions within the Masonry layout.
 	 */
-	contentBlocks: (BoundingBox & Position)[];
+	contentBlocks: (MasonryContentBlock & WithPosition)[];
 
 	/**
 	 * The width of the content container.
@@ -88,7 +110,7 @@ export function layoutContentBlocks(
 
 	// As the content blocks get laid out, they will have their relative
 	// positions within the Masonry content container annotated.
-	const annotatedContentBlocks: (BoundingBox & Position)[] = [];
+	const annotatedContentBlocks: (MasonryContentBlock & WithPosition)[] = [];
 
 	for (const contentBlock of input.contentBlocks) {
 		// Figure out which column to insert the next content block into.
@@ -103,21 +125,28 @@ export function layoutContentBlocks(
 		}
 
 		// Scale the content block to match the column width.
-		const resizedContentBlock: BoundingBox = {
+		const resizedBoundingBox: BoundingBox = {
 			width: singleColumnWidth,
-			height: (singleColumnWidth / contentBlock.width) * contentBlock.height,
+			height:
+				(singleColumnWidth / contentBlock.boundingBox.width) *
+				contentBlock.boundingBox.height,
 		};
 
 		// Annotate the position of the next content block.
 		annotatedContentBlocks.push({
-			...contentBlock,
-			x: columnIndex * singleColumnWidth + columnIndex * input.paddingSize,
-			y: lowestCursorPosition,
+			content: contentBlock.content,
+			boundingBox: resizedBoundingBox,
+			position: {
+				x:
+					columnIndex * singleColumnWidth +
+					columnIndex * input.paddingSize,
+				y: lowestCursorPosition,
+			},
 		});
 
 		// Update the column cursor position.
 		columnCursors[columnIndex] +=
-			resizedContentBlock.height + input.paddingSize;
+			resizedBoundingBox.height + input.paddingSize;
 	}
 
 	// Compute the total content container height.

@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { Image } from "~/atoms/Image";
 import { Masonry } from "./Masonry";
+import { BoundingBox, MasonryContentBlock } from "./layout";
 
 const meta: Meta<typeof Masonry> = {
 	title: "experimental/Masonry",
@@ -11,4 +13,30 @@ export default meta;
 
 type Story = StoryObj<typeof Masonry>;
 
-export const Component: Story = {};
+const generateRandomBoundingBox = (): BoundingBox => {
+	return {
+		width: Math.floor(Math.random() * 20) * 100 + 200,
+		height: Math.floor(Math.random() * 20) * 100 + 200,
+	};
+};
+
+const generateMasonryContentBlock = (): MasonryContentBlock => {
+	const boundingBox = generateRandomBoundingBox();
+	const dimensions = `${boundingBox.width}x${boundingBox.height}`;
+	const imageSrc = `https://placehold.co/${dimensions}`;
+
+	return {
+		content: <Image src={imageSrc} />,
+		boundingBox,
+	};
+};
+
+const contentBlocks: MasonryContentBlock[] = Array.from({ length: 100 }).map(
+	() => generateMasonryContentBlock(),
+);
+
+export const Component: Story = {
+	render: () => {
+		return <Masonry contentBlocks={contentBlocks} />;
+	},
+};
