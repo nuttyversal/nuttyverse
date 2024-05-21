@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { CSSProperties, ReactNode, useEffect, useState } from "react";
 import {
 	BoundingBox,
@@ -6,6 +7,7 @@ import {
 	Position,
 	layoutContentBlocks,
 } from "./layout";
+import { container, contentBlock } from "./Masonry.css";
 
 export type MasonryContentBlock = {
 	/**
@@ -37,7 +39,7 @@ type MasonryProps = {
 };
 
 export const Masonry: React.FC<MasonryProps> = (props) => {
-	const [containerWidth, setContainerWidth] = useState(0);
+	const [containerWidth, setContainerWidth] = useState(500);
 
 	const [layoutConfig, setLayoutConfig] = useState<MasonryLayoutOutput>({
 		contentBlocks: [],
@@ -57,13 +59,22 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 
 		const layoutOutput = layoutContentBlocks(layoutInput);
 		setLayoutConfig(layoutOutput);
-	}, []);
+	}, [containerWidth]);
+
+	const containerStyles = {
+		...props.style,
+		height: `${layoutConfig.contentContainerHeight}px`,
+	};
 
 	return (
-		<div className={props.className} style={props.style}>
-			{layoutConfig.contentBlocks.map((block) => {
+		<div
+			className={classNames([container, props.className])}
+			style={containerStyles}
+		>
+			{layoutConfig.contentBlocks.map((block, index) => {
 				return (
 					<MasonryBlock
+						key={index}
 						boundingBox={block.boundingBox}
 						position={block.position}
 					>
@@ -93,5 +104,15 @@ type MasonryBlockProps = {
 };
 
 const MasonryBlock: React.FC<MasonryBlockProps> = (props) => {
-	return <div>{props.children}</div>;
+	const blockStyles: CSSProperties = {
+		width: props.boundingBox.width,
+		height: props.boundingBox.height,
+		transform: `translate(${props.position.x}px, ${props.position.y}px)`,
+	};
+
+	return (
+		<div className={contentBlock} style={blockStyles}>
+			{props.children}
+		</div>
+	);
 };
