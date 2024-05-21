@@ -26,7 +26,14 @@ const generateMasonryContentBlock = (): MasonryContentBlock => {
 	const imageSrc = `https://placehold.co/${dimensions}`;
 
 	return {
-		content: <Image src={imageSrc} />,
+		content: (
+			<Image
+				src={imageSrc}
+				height="100%"
+				width="100%"
+				style={{ objectFit: "cover" }}
+			/>
+		),
 		boundingBox,
 	};
 };
