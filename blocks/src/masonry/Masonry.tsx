@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { CSSProperties, ReactNode, useEffect, useState } from "react";
+import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
 import {
 	BoundingBox,
 	MasonryLayoutInput,
@@ -39,7 +39,8 @@ type MasonryProps = {
 };
 
 export const Masonry: React.FC<MasonryProps> = (props) => {
-	const [containerWidth, setContainerWidth] = useState(500);
+	const containerRef = useRef<HTMLDivElement>(null);
+	const [containerWidth, setContainerWidth] = useState(0);
 
 	const [layoutConfig, setLayoutConfig] = useState<MasonryLayoutOutput>({
 		contentBlocks: [],
@@ -49,6 +50,31 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 		paddingSize: 0,
 	});
 
+	// Observe changes to the width of the masonry container.
+	useEffect(() => {
+		const handleResize = (entries: ResizeObserverEntry[]) => {
+			for (let entry of entries) {
+				if (entry.contentBoxSize) {
+					setContainerWidth(entry.contentRect.width);
+				}
+			}
+		};
+
+		const observer = new ResizeObserver(handleResize);
+
+		if (containerRef.current) {
+			observer.observe(containerRef.current);
+		}
+
+		return () => {
+			if (containerRef.current) {
+				observer.observe(containerRef.current);
+			}
+		};
+	}, [containerRef.current]);
+
+	// Whenever the masonry container width changes, re-run the layout
+	// algorithm to reflow the content blocks.
 	useEffect(() => {
 		const layoutInput: MasonryLayoutInput = {
 			contentBlocks: props.contentBlocks,
@@ -59,7 +85,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 
 		const layoutOutput = layoutContentBlocks(layoutInput);
 		setLayoutConfig(layoutOutput);
-	}, [containerWidth]);
+	}, [containerWidth, props.contentBlocks]);
 
 	const containerStyles = {
 		...props.style,
@@ -68,6 +94,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 
 	return (
 		<div
+			ref={containerRef}
 			className={classNames([container, props.className])}
 			style={containerStyles}
 		>
