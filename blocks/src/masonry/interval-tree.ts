@@ -149,7 +149,7 @@ export class IntervalTree<T> {
 		// these properties.
 		let z = node;
 
-		while (z.parent!.color === Color.Red) {
+		while (z.parent && z.parent.color === Color.Red) {
 			if (z.parent === z.parent!.parent!.left) {
 				const y = z.parent!.parent!.right;
 
