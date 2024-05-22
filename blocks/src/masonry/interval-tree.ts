@@ -144,6 +144,9 @@ export class IntervalTree<T> {
 	 * Rebalances the tree to maintain the red-black properties of the tree.
 	 */
 	private rebalance(node: IntervalTreeNode<T>) {
+		// [NOTE] There are lots of non-null assertions where z's parent or
+		// grandparent might be null, however, the tree structure should maintain
+		// these properties.
 		let z = node;
 
 		while (z.parent!.color === Color.Red) {
