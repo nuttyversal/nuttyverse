@@ -1,7 +1,7 @@
 /**
  * Represents the closed interval: [low, high].
  */
-type Interval = {
+export type Interval = {
 	low: number;
 	high: number;
 };
@@ -16,7 +16,7 @@ type Interval = {
  * ✦ For each node, all simple paths from the node to the descendant leaves
  *   contain the same number of black nodes.
  */
-enum Color {
+export enum Color {
 	Red = "RED",
 	Black = "BLACK",
 }
@@ -24,7 +24,7 @@ enum Color {
 /**
  * Represents a node storing an interval in a red-black tree.
  */
-type IntervalTreeNode<T> = {
+export type IntervalTreeNode<T> = {
 	data: T;
 	interval: Interval;
 	left: IntervalTreeNode<T> | null;
