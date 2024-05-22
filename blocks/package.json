@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"main": "src/index.ts",
 	"scripts": {
+		"test": "jest",
 		"storybook": "storybook dev -p 6006",
 		"build-storybook": "storybook build",
 		"test-format": "prettier --check \"**/*.{js,jsx,ts,tsx}\""
