@@ -88,8 +88,41 @@ export class IntervalTree<T> {
 	 * Queries the tree for all intervals that overlap with the given interval.
 	 */
 	query(interval: Interval): T[] {
-		// [TODO] Needs to be implemented.
-		return [];
+		const result: T[] = [];
+
+		if (this.root !== null) {
+			this.search(this.root, interval, result);
+		}
+
+		return result;
+	}
+
+	/**
+	 * Search for intervals that overlap with the given interval in the subtree.
+	 */
+	private search(node: IntervalTreeNode<T>, interval: Interval, result: T[]) {
+		if (node === null) {
+			return;
+		}
+
+		if (this.overlaps(node.interval, interval)) {
+			result.push(node.data);
+		}
+
+		if (node.left !== null && node.left.max >= interval.low) {
+			this.search(node.left, interval, result);
+		}
+
+		if (node.right !== null && node.interval.low <= interval.high) {
+			this.search(node.right, interval, result);
+		}
+	}
+
+	/**
+	 * Returns `true` if the given intervals overlap, `false` otherwise.
+	 */
+	private overlaps(a: Interval, b: Interval): boolean {
+		return a.low <= b.high && b.low <= a.high;
 	}
 
 	/**
