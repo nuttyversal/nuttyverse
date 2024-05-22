@@ -56,10 +56,13 @@ export class IntervalTree<T> {
 		const node = this.createNode(interval, data);
 
 		let x = this.root;
-		let y = null;
+		let y: IntervalTreeNode<T> | null = null;
 
 		while (x !== null) {
 			y = x;
+
+			// Update the maximum high value in the subtree rooted at x.
+			x.max = Math.max(x.max, node.max);
 
 			if (node.interval.low < x.interval.low) {
 				x = x.left;
