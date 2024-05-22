@@ -49,13 +49,35 @@ export class IntervalTree<T> {
 		this.root = null;
 	}
 
-	insert(interval: Interval) {
+	/**
+	 * Inserts a new interval with the given data into the tree.
+	 */
+	insert(interval: Interval, data: T) {
 		// [TODO] Needs to be implemented.
+		const node = this.createNode(interval, data);
 	}
 
+	/**
+	 * Queries the tree for all intervals that overlap with the given interval.
+	 */
 	query(interval: Interval): T[] {
 		// [TODO] Needs to be implemented.
 		return [];
+	}
+
+	/**
+	 * Creates a new node with the given interval and data.
+	 */
+	private createNode(interval: Interval, data: T): IntervalTreeNode<T> {
+		return {
+			data,
+			interval,
+			left: null,
+			right: null,
+			parent: null,
+			color: Color.Red,
+			max: interval.high,
+		};
 	}
 
 	private rebalance() {
