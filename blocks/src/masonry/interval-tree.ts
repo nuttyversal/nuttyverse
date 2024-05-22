@@ -53,8 +53,32 @@ export class IntervalTree<T> {
 	 * Inserts a new interval with the given data into the tree.
 	 */
 	insert(interval: Interval, data: T) {
-		// [TODO] Needs to be implemented.
 		const node = this.createNode(interval, data);
+
+		let x = this.root;
+		let y = null;
+
+		while (x !== null) {
+			y = x;
+
+			if (node.interval.low < x.interval.low) {
+				x = x.left;
+			} else {
+				x = x.right;
+			}
+		}
+
+		node.parent = y;
+
+		if (y === null) {
+			this.root = node;
+		} else if (node.interval.low < y.interval.low) {
+			y.left = node;
+		} else {
+			y.right = node;
+		}
+
+		this.rebalance();
 	}
 
 	/**
