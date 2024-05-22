@@ -78,7 +78,7 @@ export class IntervalTree<T> {
 			y.right = node;
 		}
 
-		this.rebalance();
+		this.rebalance(node);
 	}
 
 	/**
@@ -104,8 +104,59 @@ export class IntervalTree<T> {
 		};
 	}
 
-	private rebalance() {
-		// [TODO] Needs to be implemented.
+	/**
+	 * Rebalances the tree to maintain the red-black properties of the tree.
+	 */
+	private rebalance(node: IntervalTreeNode<T>) {
+		let z = node;
+
+		while (z.parent!.color === Color.Red) {
+			if (z.parent === z.parent!.parent!.left) {
+				const y = z.parent!.parent!.right;
+
+				// Case 1: z's uncle y is red.
+				if (y!.color === Color.Red) {
+					z.parent!.color = Color.Black;
+					y!.color = Color.Black;
+					z.parent!.parent!.color = Color.Red;
+					z = z.parent!.parent!;
+				} else {
+					// Case 2: z's uncle y is black and z is a right child.
+					if (z === z.parent!.right) {
+						z = z.parent!;
+						this.rotateLeft(z);
+					}
+
+					// Case 3: z's uncle y is black and z is a left child.
+					z.parent!.color = Color.Black;
+					z.parent!.parent!.color = Color.Red;
+					this.rotateRight(z.parent!.parent!);
+				}
+			} else {
+				const y = z.parent!.parent!.left;
+
+				// Case 1: z's uncle y is red.
+				if (y!.color === Color.Red) {
+					z.parent!.color = Color.Black;
+					y!.color = Color.Black;
+					z.parent!.parent!.color = Color.Red;
+					z = z.parent!.parent!;
+				} else {
+					// Case 2: z's uncle y is black and z is a left child.
+					if (z === z.parent!.left) {
+						z = z.parent!;
+						this.rotateRight(z);
+					}
+
+					// Case 3: z's uncle y is black and z is a right child.
+					z.parent!.color = Color.Black;
+					z.parent!.parent!.color = Color.Red;
+					this.rotateLeft(z.parent!.parent!);
+				}
+			}
+		}
+
+		this.root!.color = Color.Black;
 	}
 
 	/**
