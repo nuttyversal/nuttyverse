@@ -145,6 +145,18 @@ export class IntervalTree<T> {
 
 		y.left = x;
 		x.parent = y;
+
+		x.max = Math.max(
+			x.interval.high,
+			x.left?.max ?? -Infinity,
+			x.right?.max ?? -Infinity,
+		);
+
+		y.max = Math.max(
+			y.interval.high,
+			y.left?.max ?? -Infinity,
+			y.right?.max ?? -Infinity,
+		);
 	}
 
 	/**
@@ -184,5 +196,17 @@ export class IntervalTree<T> {
 
 		x.right = y;
 		y.parent = x;
+
+		y.max = Math.max(
+			y.interval.high,
+			y.left?.max ?? -Infinity,
+			y.right?.max ?? -Infinity,
+		);
+
+		x.max = Math.max(
+			x.interval.high,
+			x.left?.max ?? -Infinity,
+			x.right?.max ?? -Infinity,
+		);
 	}
 }
