@@ -96,7 +96,31 @@ export class IntervalTree<T> {
 	 *      └─┘   └─┘      └─┘   └─┘
 	 */
 	private rotateLeft(node: IntervalTreeNode<T>) {
-		// [TODO] Needs to be implemented.
+		const x = node;
+
+		if (x.right === null) {
+			throw new Error("Cannot rotate left with null right child.");
+		}
+
+		const y = x.right;
+		x.right = y.left;
+
+		if (y.left !== null) {
+			y.left.parent = x;
+		}
+
+		y.parent = x.parent;
+
+		if (x.parent === null) {
+			this.root = y;
+		} else if (x === x.parent.left) {
+			x.parent.left = y;
+		} else {
+			x.parent.right = y;
+		}
+
+		y.left = x;
+		x.parent = y;
 	}
 
 	/**
@@ -111,6 +135,30 @@ export class IntervalTree<T> {
 	 * └─┘   └─┘                  └─┘   └─┘
 	 */
 	private rotateRight(node: IntervalTreeNode<T>) {
-		// [TODO] Needs to be implemented.
+		const y = node;
+
+		if (y.left === null) {
+			throw new Error("Cannot rotate right with null left child.");
+		}
+
+		const x = y.left;
+		y.left = x.right;
+
+		if (x.right !== null) {
+			x.right.parent = y;
+		}
+
+		x.parent = y.parent;
+
+		if (y.parent === null) {
+			this.root = x;
+		} else if (y === y.parent.right) {
+			y.parent.right = x;
+		} else {
+			y.parent.left = x;
+		}
+
+		x.right = y;
+		y.parent = x;
 	}
 }
