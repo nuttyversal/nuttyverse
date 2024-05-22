@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { CSSProperties, ReactNode } from "react";
+import { CSSProperties, ReactNode, forwardRef } from "react";
 import { container } from "./ScrollContainer.css";
 
 type ScrollContainerProps = {
@@ -19,14 +19,16 @@ type ScrollContainerProps = {
 	style?: CSSProperties;
 };
 
-export const ScrollContainer: React.FC<ScrollContainerProps> = (props) => {
-	console.log(props.className);
-	return (
-		<div
-			className={classNames([container, props.className])}
-			style={props.style}
-		>
-			{props.children}
-		</div>
-	);
-};
+export const ScrollContainer = forwardRef<HTMLDivElement, ScrollContainerProps>(
+	(props, ref) => {
+		return (
+			<div
+				ref={ref}
+				className={classNames([container, props.className])}
+				style={props.style}
+			>
+				{props.children}
+			</div>
+		);
+	},
+);
