@@ -98,6 +98,28 @@ export class IntervalTree<T> {
 	}
 
 	/**
+	 * Traverses the tree in-order and calls the callback function for each node.
+	 */
+	traverse(callback: (node: IntervalTreeNode<T>) => void) {
+		this.traverseSubtree(this.root, callback);
+	}
+
+	/**
+	 * Traverses the tree in-order and calls the callback function for each node
+	 * in the subtree rooted at the given node.
+	 */
+	private traverseSubtree(
+		node: IntervalTreeNode<T> | null,
+		callback: (node: IntervalTreeNode<T>) => void,
+	) {
+		if (node !== null) {
+			this.traverseSubtree(node.left, callback);
+			callback(node);
+			this.traverseSubtree(node.right, callback);
+		}
+	}
+
+	/**
 	 * Search for intervals that overlap with the given interval in the subtree.
 	 */
 	private search(node: IntervalTreeNode<T>, interval: Interval, result: T[]) {
