@@ -4,6 +4,7 @@ import { colors } from "~/styles/themes/contract.css";
 import { spacing } from "~/styles/tokens/spacing";
 import {
 	BoundingBox,
+	MasonryContentBlock,
 	MasonryLayoutInput,
 	MasonryLayoutOutput,
 	Position,
@@ -12,24 +13,7 @@ import {
 } from "./layout";
 import { IntervalTree } from "./interval-tree";
 import { breakpoints } from "./constants";
-import { contentContainer, contentBlock } from "./Masonry.css";
-
-export type MasonryContentBlock = {
-	/**
-	 * A unique key to identify the content block.
-	 */
-	key: string;
-
-	/**
-	 * The element to render as a content block in the masonry.
-	 */
-	content: ReactNode;
-
-	/**
-	 * The (static) dimensions of the content block.
-	 */
-	boundingBox: BoundingBox;
-};
+import { contentContainer, contentBlock, backdrop } from "./Masonry.css";
 
 type MasonryProps = {
 	/**
@@ -267,30 +251,36 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 	};
 
 	return (
-		<ScrollContainer
-			ref={scrollContainerRef}
-			className={props.className}
-			style={props.style}
-		>
-			<div
-				ref={contentContainerRef}
-				className={contentContainer}
-				style={containerStyles}
+		<>
+			<ScrollContainer
+				ref={scrollContainerRef}
+				className={props.className}
+				style={props.style}
 			>
-				{visibleContentBlocks.map((block) => {
-					return (
-						<MasonryBlock
-							key={block.key}
-							boundingBox={block.boundingBox}
-							position={block.position}
-							anchor={props.debug && block.key === anchorKeyRef.current}
-						>
-							{block.content}
-						</MasonryBlock>
-					);
-				})}
-			</div>
-		</ScrollContainer>
+				<div
+					ref={contentContainerRef}
+					className={contentContainer}
+					style={containerStyles}
+				>
+					{visibleContentBlocks.map((block) => {
+						return (
+							<MasonryBlock
+								key={block.key}
+								boundingBox={block.boundingBox}
+								position={block.position}
+								anchor={
+									props.debug && block.key === anchorKeyRef.current
+								}
+							>
+								{block.content}
+							</MasonryBlock>
+						);
+					})}
+				</div>
+			</ScrollContainer>
+
+			<LightboxBackdrop />
+		</>
 	);
 };
 
@@ -331,4 +321,8 @@ const MasonryBlock: React.FC<MasonryBlockProps> = (props) => {
 			{props.children}
 		</div>
 	);
+};
+
+const LightboxBackdrop: React.FC = () => {
+	return <div className={backdrop} />;
 };

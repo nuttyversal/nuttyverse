@@ -1,4 +1,6 @@
 import { keyframes, style } from "@vanilla-extract/css";
+import { colors } from "~/styles/themes/contract.css";
+import { spacing } from "~/styles/tokens/spacing";
 
 export const contentContainer = style({
 	position: "relative",
@@ -17,4 +19,17 @@ const fadeIn = keyframes({
 export const contentBlock = style({
 	position: "absolute",
 	animation: `${fadeIn} 200ms ease-in`,
+});
+
+export const backdrop = style({
+	animation: `${fadeIn} 200ms ease-in`,
+	background: colors.gray.alpha["03"],
+	backdropFilter: `blur(${spacing[1]})`,
+	position: "absolute",
+	top: 0,
+	left: 0,
+	height: "100%",
+	width: "100%",
+	overflow: "hidden",
+	zIndex: 100,
 });
