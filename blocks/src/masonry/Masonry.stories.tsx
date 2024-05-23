@@ -44,6 +44,8 @@ const contentBlocks: MasonryContentBlock[] = Array.from({ length: 1000 }).map(
 
 export const Component: Story = {
 	render: () => {
-		return <Masonry contentBlocks={contentBlocks} />;
+		return (
+			<Masonry contentBlocks={contentBlocks} style={{ height: "800px" }} />
+		);
 	},
 };

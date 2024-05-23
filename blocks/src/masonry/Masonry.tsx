@@ -1,4 +1,3 @@
-import classNames from "classnames";
 import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
 import { ScrollContainer } from "~/atoms/ScrollContainer";
 import {
@@ -190,10 +189,14 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 	};
 
 	return (
-		<ScrollContainer ref={scrollContainerRef} style={{ height: "800px" }}>
+		<ScrollContainer
+			ref={scrollContainerRef}
+			className={props.className}
+			style={props.style}
+		>
 			<div
 				ref={contentContainerRef}
-				className={classNames([contentContainer, props.className])}
+				className={contentContainer}
 				style={containerStyles}
 			>
 				{visibleContentBlocks.map((block, index) => {
