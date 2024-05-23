@@ -1,14 +1,17 @@
 import classNames from "classnames";
 import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
+import { ScrollContainer } from "~/atoms/ScrollContainer";
 import {
 	BoundingBox,
 	MasonryLayoutInput,
 	MasonryLayoutOutput,
 	Position,
+	WithPosition,
 	layoutContentBlocks,
 } from "./layout";
+import { IntervalTree } from "./interval-tree";
 import { breakpoints } from "./constants";
-import { container, contentBlock } from "./Masonry.css";
+import { contentContainer, contentBlock } from "./Masonry.css";
 
 export type MasonryContentBlock = {
 	/**
@@ -40,16 +43,19 @@ type MasonryProps = {
 };
 
 export const Masonry: React.FC<MasonryProps> = (props) => {
-	const containerRef = useRef<HTMLDivElement>(null);
+	const layoutConfigRef = useRef<MasonryLayoutOutput | null>(null);
+	const scrollContainerRef = useRef<HTMLDivElement>(null);
+	const contentContainerRef = useRef<HTMLDivElement>(null);
 	const [containerWidth, setContainerWidth] = useState(0);
 
-	const [layoutConfig, setLayoutConfig] = useState<MasonryLayoutOutput>({
-		contentBlocks: [],
-		contentContainerWidth: 0,
-		contentContainerHeight: 0,
-		columnCount: 0,
-		paddingSize: 0,
-	});
+	const [visibleContentBlocks, setVisibleContentBlocks] = useState<
+		(MasonryContentBlock & WithPosition)[]
+	>([]);
+
+	// An interval tree to efficiently query for visible content blocks.
+	// This tree stores the indices of the content blocks, which are then
+	// returned from the window query.
+	const intervalTree = useRef(new IntervalTree<number>());
 
 	// Observe changes to the width of the masonry container.
 	useEffect(() => {
@@ -75,20 +81,27 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 		// we'll limit the debounce delay to 8 ms (120 Hz).
 		const observer = new ResizeObserver(debounce(handleResize, 8));
 
-		if (containerRef.current) {
-			observer.observe(containerRef.current);
+		if (contentContainerRef.current) {
+			observer.observe(contentContainerRef.current);
 		}
 
 		return () => {
-			if (containerRef.current) {
-				observer.unobserve(containerRef.current);
+			if (contentContainerRef.current) {
+				observer.unobserve(contentContainerRef.current);
 			}
 		};
-	}, [containerRef.current]);
+	}, [contentContainerRef.current]);
 
 	// Whenever the masonry container width changes, re-run the layout
 	// algorithm to reflow the content blocks.
-	useEffect(() => {
+	useEffect(() => computeLayout(), []);
+	useEffect(() => computeLayout(), [containerWidth, props.contentBlocks]);
+
+	const computeLayout = () => {
+		if (containerWidth === 0) {
+			return;
+		}
+
 		let columnCount = 0;
 
 		for (const [width, columns] of Object.entries(breakpoints)) {
@@ -107,32 +120,95 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 		};
 
 		const layoutOutput = layoutContentBlocks(layoutInput);
-		setLayoutConfig(layoutOutput);
-	}, [containerWidth, props.contentBlocks]);
+		layoutConfigRef.current = layoutOutput;
+
+		const tree = new IntervalTree<number>();
+		layoutConfigRef.current.contentBlocks.forEach((block, index) => {
+			tree.insert(
+				{
+					low: block.position.y,
+					high: block.position.y + block.boundingBox.height,
+				},
+				index,
+			);
+		});
+
+		intervalTree.current = tree;
+		updateVisibleContentBlocks();
+	};
+
+	// Update the visible content blocks whenever the user scrolls the container.
+	useEffect(() => {
+		if (scrollContainerRef.current) {
+			scrollContainerRef.current.addEventListener(
+				"scroll",
+				updateVisibleContentBlocks,
+			);
+		}
+
+		return () => {
+			if (scrollContainerRef.current) {
+				scrollContainerRef.current.removeEventListener(
+					"scroll",
+					updateVisibleContentBlocks,
+				);
+			}
+		};
+	}, [scrollContainerRef.current]);
+
+	/**
+	 * Update the visible content blocks whenever the user scrolls the container.
+	 */
+	const updateVisibleContentBlocks = () => {
+		if (!scrollContainerRef.current || !layoutConfigRef.current) {
+			return;
+		}
+
+		const scrollBuffer = 200;
+		const scrollTop = scrollContainerRef.current.scrollTop;
+		const scrollBottom = scrollTop + scrollContainerRef.current.clientHeight;
+
+		const visibleContentBlockIndices = intervalTree.current.query({
+			low: scrollTop - scrollBuffer,
+			high: scrollBottom + scrollBuffer,
+		});
+
+		const visibleContentBlocks = visibleContentBlockIndices
+			.map((index) => layoutConfigRef.current?.contentBlocks[index])
+			.filter((block): block is MasonryContentBlock & WithPosition => {
+				return block != null;
+			});
+
+		setVisibleContentBlocks(visibleContentBlocks);
+	};
 
 	const containerStyles = {
 		...props.style,
-		height: `${layoutConfig.contentContainerHeight}px`,
+		height: layoutConfigRef.current
+			? `${layoutConfigRef.current.contentContainerHeight}px`
+			: "auto",
 	};
 
 	return (
-		<div
-			ref={containerRef}
-			className={classNames([container, props.className])}
-			style={containerStyles}
-		>
-			{layoutConfig.contentBlocks.map((block, index) => {
-				return (
-					<MasonryBlock
-						key={index}
-						boundingBox={block.boundingBox}
-						position={block.position}
-					>
-						{block.content}
-					</MasonryBlock>
-				);
-			})}
-		</div>
+		<ScrollContainer ref={scrollContainerRef} style={{ height: "800px" }}>
+			<div
+				ref={contentContainerRef}
+				className={classNames([contentContainer, props.className])}
+				style={containerStyles}
+			>
+				{visibleContentBlocks.map((block, index) => {
+					return (
+						<MasonryBlock
+							key={index}
+							boundingBox={block.boundingBox}
+							position={block.position}
+						>
+							{block.content}
+						</MasonryBlock>
+					);
+				})}
+			</div>
+		</ScrollContainer>
 	);
 };
 

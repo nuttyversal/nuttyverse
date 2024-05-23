@@ -1,6 +1,6 @@
 import { style } from "@vanilla-extract/css";
 
-export const container = style({
+export const contentContainer = style({
 	position: "relative",
 	width: "100%",
 });

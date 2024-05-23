@@ -38,7 +38,7 @@ const generateMasonryContentBlock = (): MasonryContentBlock => {
 	};
 };
 
-const contentBlocks: MasonryContentBlock[] = Array.from({ length: 100 }).map(
+const contentBlocks: MasonryContentBlock[] = Array.from({ length: 1000 }).map(
 	() => generateMasonryContentBlock(),
 );
 
