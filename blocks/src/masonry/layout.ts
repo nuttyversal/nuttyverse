@@ -39,6 +39,16 @@ export type MasonryContentBlock = {
 	 * The (static) dimensions of the content block.
 	 */
 	boundingBox: BoundingBox;
+
+	/**
+	 * The content block that precedes this one in the list of content blocks.
+	 */
+	previous: MasonryContentBlock | null;
+
+	/**
+	 * The content block that follows this one in the list of content blocks.
+	 */
+	next: MasonryContentBlock | null;
 };
 
 /**
@@ -158,7 +168,17 @@ export function layoutContentBlocks(
 					columnIndex * input.paddingSize,
 				y: lowestCursorPosition,
 			},
+			previous: null,
+			next: null,
 		};
+
+		// Link the content block with the previous one.
+		if (annotatedContentBlocks.length > 0) {
+			const previousContentBlock =
+				annotatedContentBlocks[annotatedContentBlocks.length - 1];
+			annotatedContentBlock.previous = previousContentBlock;
+			previousContentBlock.next = annotatedContentBlock;
+		}
 
 		annotatedContentBlocks.push(annotatedContentBlock);
 		contentBlockMap.set(contentBlock.key, annotatedContentBlock);
