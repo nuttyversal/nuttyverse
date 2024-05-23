@@ -176,7 +176,7 @@ export class IntervalTree<T> {
 				const y = z.parent!.parent!.right;
 
 				// Case 1: z's uncle y is red.
-				if (y && y.color === Color.Red) {
+				if (y !== null && y.color === Color.Red) {
 					z.parent.color = Color.Black;
 					y.color = Color.Black;
 					z.parent.parent!.color = Color.Red;
@@ -197,7 +197,7 @@ export class IntervalTree<T> {
 				const y = z.parent.parent!.left;
 
 				// Case 1: z's uncle y is red.
-				if (y && y.color === Color.Red) {
+				if (y !== null && y.color === Color.Red) {
 					z.parent.color = Color.Black;
 					y.color = Color.Black;
 					z.parent.parent!.color = Color.Red;

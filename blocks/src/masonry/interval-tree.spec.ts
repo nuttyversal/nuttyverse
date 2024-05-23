@@ -1,9 +1,4 @@
-import {
-	IntervalTree,
-	Interval,
-	Color,
-	IntervalTreeNode,
-} from "./interval-tree";
+import { IntervalTree, IntervalTreeNode, Color } from "./interval-tree";
 
 /**
  * Property #1: A node is either red or black.
@@ -30,8 +25,8 @@ function isPropertyTwoSatisfied<T>(tree: IntervalTree<T>): boolean {
 /**
  * Property #3: All leaves are black.
  */
-function isPropertyThreeSatisfied<T>(tree: IntervalTree<T>): boolean {
-	// Implicitly satisfied because the leaves are null nodes.
+function isPropertyThreeSatisfied<T>(_: IntervalTree<T>): boolean {
+	// Implicitly satisfied by construction because the leaves are null nodes.
 	return true;
 }
 
@@ -48,14 +43,6 @@ function isPropertyFourSatisfied<T>(tree: IntervalTree<T>): boolean {
 			}
 
 			if (node.right && node.right.color !== Color.Black) {
-				isSatified = false;
-			}
-		} else if (node.color === Color.Black) {
-			if (node.left && node.left.color === Color.Red) {
-				isSatified = false;
-			}
-
-			if (node.right && node.right.color === Color.Red) {
 				isSatified = false;
 			}
 		}
@@ -127,22 +114,12 @@ describe("IntervalTree", () => {
 		expect(isPropertyFiveSatisfied(tree)).toBe(true);
 	});
 
-	test("should insert and balance the intervals correctly", () => {
-		const intervals: Interval[] = [
-			{ low: 15, high: 20 },
-			{ low: 10, high: 30 },
-			{ low: 17, high: 19 },
-			{ low: 5, high: 20 },
-			{ low: 12, high: 15 },
-			{ low: 30, high: 40 },
-		];
-
-		intervals.forEach((interval, index) => {
-			tree.insert(interval, index);
-		});
-
-		expect(tree.root).not.toBeNull();
-		expect(tree.root!.color).toBe(Color.Black);
+	test("should handle large number of insertions", () => {
+		for (let i = 0; i < 1000; i++) {
+			const low = Math.floor(Math.random() * 1000);
+			const high = low + Math.floor(Math.random() * 10);
+			tree.insert({ low, high }, i);
+		}
 
 		// Check if the red-black tree properties are satisfied.
 		expect(isPropertyOneSatisfied(tree)).toBe(true);
