@@ -1,4 +1,91 @@
-import { IntervalTree, Interval, Color } from "./interval-tree";
+import {
+	IntervalTree,
+	Interval,
+	Color,
+	IntervalTreeNode,
+} from "./interval-tree";
+
+/**
+ * Property #1: A node is either red or black.
+ */
+function isPropertyOneSatisfied<T>(tree: IntervalTree<T>): boolean {
+	let isSatified = true;
+
+	tree.traverse((node) => {
+		if (node.color !== Color.Red && node.color !== Color.Black) {
+			isSatified = false;
+		}
+	});
+
+	return isSatified;
+}
+
+/**
+ * Property #2: The root is black.
+ */
+function isPropertyTwoSatisfied<T>(tree: IntervalTree<T>): boolean {
+	return tree.root?.color === Color.Black;
+}
+
+/**
+ * Property #3: All leaves are black.
+ */
+function isPropertyThreeSatisfied<T>(tree: IntervalTree<T>): boolean {
+	let isSatified = true;
+
+	tree.traverse((node) => {
+		if (!node.left && !node.right && node.color !== Color.Black) {
+			isSatified = false;
+		}
+	});
+
+	return isSatified;
+}
+
+/**
+ * Property #4: If a red node has children, they are black.
+ */
+function isPropertyFourSatisfied<T>(tree: IntervalTree<T>): boolean {
+	let isSatified = true;
+
+	tree.traverse((node) => {
+		if (node.color === Color.Red) {
+			if (node.left && node.left.color !== Color.Black) {
+				isSatified = false;
+			}
+
+			if (node.right && node.right.color !== Color.Black) {
+				isSatified = false;
+			}
+		}
+	});
+
+	return isSatified;
+}
+
+/**
+ * Property #5: All paths from a node to its leaves have the same number of black nodes.
+ */
+function isPropertyFiveSatisfied<T>(tree: IntervalTree<T>): boolean {
+	let isSatified = true;
+
+	const blackHeight = (node: IntervalTreeNode<T> | null): number => {
+		if (!node) {
+			return 1;
+		}
+
+		const leftHeight = blackHeight(node.left);
+		const rightHeight = blackHeight(node.right);
+
+		if (leftHeight !== rightHeight) {
+			isSatified = false;
+		}
+
+		return leftHeight + (node.color === Color.Black ? 1 : 0);
+	};
+
+	return isSatified;
+}
 
 describe("IntervalTree", () => {
 	let tree: IntervalTree<number>;
@@ -13,6 +100,13 @@ describe("IntervalTree", () => {
 
 		result = tree.query({ low: 5, high: 7 });
 		expect(result).toEqual([]);
+
+		// Check if the red-black tree properties are satisfied.
+		expect(isPropertyOneSatisfied(tree)).toBe(true);
+		expect(isPropertyTwoSatisfied(tree)).toBe(true);
+		expect(isPropertyThreeSatisfied(tree)).toBe(true);
+		expect(isPropertyFourSatisfied(tree)).toBe(true);
+		expect(isPropertyFiveSatisfied(tree)).toBe(true);
 	});
 
 	test("should handle single node insertion and query", () => {
@@ -23,6 +117,13 @@ describe("IntervalTree", () => {
 
 		result = tree.query({ low: 5, high: 7 });
 		expect(result).toEqual([]);
+
+		// Check if the red-black tree properties are satisfied.
+		expect(isPropertyOneSatisfied(tree)).toBe(true);
+		expect(isPropertyTwoSatisfied(tree)).toBe(true);
+		expect(isPropertyThreeSatisfied(tree)).toBe(true);
+		expect(isPropertyFourSatisfied(tree)).toBe(true);
+		expect(isPropertyFiveSatisfied(tree)).toBe(true);
 	});
 
 	test("should insert and balance the intervals correctly", () => {
@@ -41,6 +142,13 @@ describe("IntervalTree", () => {
 
 		expect(tree.root).not.toBeNull();
 		expect(tree.root!.color).toBe(Color.Black);
+
+		// Check if the red-black tree properties are satisfied.
+		expect(isPropertyOneSatisfied(tree)).toBe(true);
+		expect(isPropertyTwoSatisfied(tree)).toBe(true);
+		expect(isPropertyThreeSatisfied(tree)).toBe(true);
+		expect(isPropertyFourSatisfied(tree)).toBe(true);
+		expect(isPropertyFiveSatisfied(tree)).toBe(true);
 	});
 
 	test("should correctly query overlapping intervals", () => {
@@ -57,5 +165,12 @@ describe("IntervalTree", () => {
 
 		const nonOverlapping = tree.query({ low: 50, high: 60 });
 		expect(nonOverlapping).toHaveLength(0);
+
+		// Check if the red-black tree properties are satisfied.
+		expect(isPropertyOneSatisfied(tree)).toBe(true);
+		expect(isPropertyTwoSatisfied(tree)).toBe(true);
+		expect(isPropertyThreeSatisfied(tree)).toBe(true);
+		expect(isPropertyFourSatisfied(tree)).toBe(true);
+		expect(isPropertyFiveSatisfied(tree)).toBe(true);
 	});
 });
