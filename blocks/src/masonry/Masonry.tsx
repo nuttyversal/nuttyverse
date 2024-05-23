@@ -14,6 +14,11 @@ import { contentContainer, contentBlock } from "./Masonry.css";
 
 export type MasonryContentBlock = {
 	/**
+	 * A unique key to identify the content block.
+	 */
+	key: string;
+
+	/**
 	 * The element to render as a content block in the masonry.
 	 */
 	content: ReactNode;
@@ -39,6 +44,11 @@ type MasonryProps = {
 	 * Additional styles to apply to the masonry container.
 	 */
 	style?: CSSProperties;
+
+	/**
+	 * Whether to enable debug mode for the masonry layout.
+	 */
+	debug?: boolean;
 };
 
 export const Masonry: React.FC<MasonryProps> = (props) => {
@@ -46,7 +56,8 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const contentContainerRef = useRef<HTMLDivElement>(null);
 	const [containerWidth, setContainerWidth] = useState(0);
-	const anchorIndexRef = useRef<number>(0);
+	const anchorKeyRef = useRef<string>("");
+	const preventScrollEvent = useRef(false);
 
 	const [visibleContentBlocks, setVisibleContentBlocks] = useState<
 		(MasonryContentBlock & WithPosition)[]
@@ -55,7 +66,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 	// An interval tree to efficiently query for visible content blocks.
 	// This tree stores the indices of the content blocks, which are then
 	// returned from the window query.
-	const intervalTree = useRef(new IntervalTree<number>());
+	const intervalTree = useRef(new IntervalTree<string>());
 
 	// Observe changes to the width of the masonry container.
 	useEffect(() => {
@@ -122,25 +133,47 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 		const layoutOutput = layoutContentBlocks(layoutInput);
 		layoutConfigRef.current = layoutOutput;
 
-		const tree = new IntervalTree<number>();
-		layoutConfigRef.current.contentBlocks.forEach((block, index) => {
+		const tree = new IntervalTree<string>();
+		layoutConfigRef.current.contentBlocks.forEach((block) => {
 			tree.insert(
 				{
 					low: block.position.y,
 					high: block.position.y + block.boundingBox.height,
 				},
-				index,
+				block.key,
 			);
 		});
 
 		intervalTree.current = tree;
+
+		// Re-center the anchor block in the scroll container.
+		const anchorBlock = layoutConfigRef.current.contentBlockMap.get(
+			anchorKeyRef.current,
+		);
+
+		if (scrollContainerRef.current && anchorBlock) {
+			// Prevent the scroll event from triggering an update to the anchor
+			// block when we reposition the scroll container.
+			preventScrollEvent.current = true;
+
+			scrollContainerRef.current.scrollTop =
+				anchorBlock.position.y +
+				0.5 * anchorBlock.boundingBox.height -
+				0.5 * scrollContainerRef.current.clientHeight;
+		}
+
 		updateVisibleContentBlocks();
 	};
 
 	// Update the visible content blocks whenever the user scrolls the container.
 	useEffect(() => {
 		const handleScroll = () => {
-			updateVisibleContentBlocks();
+			if (preventScrollEvent.current) {
+				preventScrollEvent.current = false;
+				return;
+			}
+
+			updateVisibleContentBlocks({ updateAnchor: true });
 		};
 
 		if (scrollContainerRef.current) {
@@ -160,7 +193,11 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 	/**
 	 * Update the visible content blocks whenever the user scrolls the container.
 	 */
-	const updateVisibleContentBlocks = () => {
+	const updateVisibleContentBlocks = ({
+		updateAnchor,
+	}: {
+		updateAnchor?: boolean;
+	} = {}) => {
 		if (!scrollContainerRef.current || !layoutConfigRef.current) {
 			return;
 		}
@@ -169,19 +206,22 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 		const scrollTop = scrollContainerRef.current.scrollTop;
 		const scrollBottom = scrollTop + scrollContainerRef.current.clientHeight;
 
-		const visibleContentBlockIndices = intervalTree.current.query({
+		const visibleContentBlockKeys = intervalTree.current.query({
 			low: scrollTop - scrollBuffer,
 			high: scrollBottom + scrollBuffer,
 		});
 
-		const visibleContentBlocks = visibleContentBlockIndices
-			.map((index) => layoutConfigRef.current?.contentBlocks[index])
+		const visibleContentBlocks = visibleContentBlockKeys
+			.map((key) => layoutConfigRef.current?.contentBlockMap.get(key))
 			.filter((block): block is MasonryContentBlock & WithPosition => {
 				return block != null;
 			});
 
 		setVisibleContentBlocks(visibleContentBlocks);
-		updateAnchorIndex(visibleContentBlocks);
+
+		if (updateAnchor) {
+			updateAnchorIndex(visibleContentBlocks);
+		}
 	};
 
 	/**
@@ -201,20 +241,20 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 
 		// Find the visible content block that is closest to the center of the
 		// scroll container viewport.
-		let anchorIndex = 0;
+		let anchorKey = "";
 		let minDistance = Infinity;
 
-		for (const [index, block] of visibleContentBlocks.entries()) {
+		for (const block of visibleContentBlocks) {
 			const blockCenter = block.position.y + 0.5 * block.boundingBox.height;
 			const distance = Math.abs(scrollCenter - blockCenter);
 
 			if (distance < minDistance) {
-				anchorIndex = index;
+				anchorKey = block.key;
 				minDistance = distance;
 			}
 		}
 
-		anchorIndexRef.current = anchorIndex;
+		anchorKeyRef.current = anchorKey;
 	};
 
 	const containerStyles = {
@@ -235,13 +275,13 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 				className={contentContainer}
 				style={containerStyles}
 			>
-				{visibleContentBlocks.map((block, index) => {
+				{visibleContentBlocks.map((block) => {
 					return (
 						<MasonryBlock
-							key={index}
+							key={block.key}
 							boundingBox={block.boundingBox}
 							position={block.position}
-							anchor={index === anchorIndexRef.current}
+							anchor={props.debug && block.key === anchorKeyRef.current}
 						>
 							{block.content}
 						</MasonryBlock>

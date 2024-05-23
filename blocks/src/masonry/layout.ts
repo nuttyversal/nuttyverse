@@ -26,6 +26,11 @@ export type WithPosition = {
 
 export type MasonryContentBlock = {
 	/**
+	 * A unique key to identify the content block.
+	 */
+	key: string;
+
+	/**
 	 * The element to render as a content block in the masonry.
 	 */
 	content: ReactNode;
@@ -72,6 +77,12 @@ export type MasonryLayoutOutput = {
 	contentBlocks: (MasonryContentBlock & WithPosition)[];
 
 	/**
+	 * A map of content block keys to their respective content blocks annotated
+	 * with their relative positions within the Masonry layout.
+	 */
+	contentBlockMap: Map<string, MasonryContentBlock & WithPosition>;
+
+	/**
 	 * The width of the content container.
 	 */
 	contentContainerWidth: number;
@@ -111,6 +122,10 @@ export function layoutContentBlocks(
 	// As the content blocks get laid out, they will have their relative
 	// positions within the Masonry content container annotated.
 	const annotatedContentBlocks: (MasonryContentBlock & WithPosition)[] = [];
+	const contentBlockMap = new Map<
+		string,
+		MasonryContentBlock & WithPosition
+	>();
 
 	for (const contentBlock of input.contentBlocks) {
 		// Figure out which column to insert the next content block into.
@@ -133,7 +148,8 @@ export function layoutContentBlocks(
 		};
 
 		// Annotate the position of the next content block.
-		annotatedContentBlocks.push({
+		const annotatedContentBlock: MasonryContentBlock & WithPosition = {
+			key: contentBlock.key,
 			content: contentBlock.content,
 			boundingBox: resizedBoundingBox,
 			position: {
@@ -142,7 +158,10 @@ export function layoutContentBlocks(
 					columnIndex * input.paddingSize,
 				y: lowestCursorPosition,
 			},
-		});
+		};
+
+		annotatedContentBlocks.push(annotatedContentBlock);
+		contentBlockMap.set(contentBlock.key, annotatedContentBlock);
 
 		// Update the column cursor position.
 		columnCursors[columnIndex] +=
@@ -155,6 +174,7 @@ export function layoutContentBlocks(
 
 	return {
 		contentBlocks: annotatedContentBlocks,
+		contentBlockMap,
 		contentContainerWidth: input.contentContainerWidth,
 		contentContainerHeight: computedContainerHeight,
 		columnCount: input.columnCount,

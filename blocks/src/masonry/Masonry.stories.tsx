@@ -26,6 +26,7 @@ const generateMasonryContentBlock = (): MasonryContentBlock => {
 	const imageSrc = `https://placehold.co/${dimensions}`;
 
 	return {
+		key: Math.random().toString(36).substring(7),
 		content: (
 			<Image
 				src={imageSrc}
@@ -45,7 +46,11 @@ const contentBlocks: MasonryContentBlock[] = Array.from({ length: 1000 }).map(
 export const Component: Story = {
 	render: () => {
 		return (
-			<Masonry contentBlocks={contentBlocks} style={{ height: "800px" }} />
+			<Masonry
+				contentBlocks={contentBlocks}
+				style={{ height: "800px" }}
+				debug
+			/>
 		);
 	},
 };
