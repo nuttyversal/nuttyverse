@@ -1,5 +1,7 @@
 import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
 import { ScrollContainer } from "~/atoms/ScrollContainer";
+import { colors } from "~/styles/themes/contract.css";
+import { spacing } from "~/styles/tokens/spacing";
 import {
 	BoundingBox,
 	MasonryLayoutInput,
@@ -319,7 +321,9 @@ const MasonryBlock: React.FC<MasonryBlockProps> = (props) => {
 		width: props.boundingBox.width,
 		height: props.boundingBox.height,
 		transform: `translate(${props.position.x}px, ${props.position.y}px)`,
-		border: props.anchor ? "10px solid #ff0000" : "none",
+		borderWidth: props.anchor ? spacing[2] : spacing[0],
+		borderColor: props.anchor ? colors.yellow.solid[10] : undefined,
+		borderStyle: props.anchor ? "solid" : undefined,
 	};
 
 	return (
