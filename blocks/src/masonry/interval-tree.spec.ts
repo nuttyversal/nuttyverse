@@ -72,6 +72,15 @@ function isPropertyFiveSatisfied<T>(tree: IntervalTree<T>): boolean {
 		return leftHeight + (node.color === Color.Black ? 1 : 0);
 	};
 
+	tree.traverse((node) => {
+		const leftHeight = blackHeight(node.left);
+		const rightHeight = blackHeight(node.right);
+
+		if (leftHeight !== rightHeight) {
+			isSatified = false;
+		}
+	});
+
 	return isSatified;
 }
 
