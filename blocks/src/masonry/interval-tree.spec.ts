@@ -24,22 +24,15 @@ function isPropertyOneSatisfied<T>(tree: IntervalTree<T>): boolean {
  * Property #2: The root is black.
  */
 function isPropertyTwoSatisfied<T>(tree: IntervalTree<T>): boolean {
-	return tree.root?.color === Color.Black;
+	return tree.root === null || tree.root.color === Color.Black;
 }
 
 /**
  * Property #3: All leaves are black.
  */
 function isPropertyThreeSatisfied<T>(tree: IntervalTree<T>): boolean {
-	let isSatified = true;
-
-	tree.traverse((node) => {
-		if (!node.left && !node.right && node.color !== Color.Black) {
-			isSatified = false;
-		}
-	});
-
-	return isSatified;
+	// Implicitly satisfied because the leaves are null nodes.
+	return true;
 }
 
 /**
@@ -55,6 +48,14 @@ function isPropertyFourSatisfied<T>(tree: IntervalTree<T>): boolean {
 			}
 
 			if (node.right && node.right.color !== Color.Black) {
+				isSatified = false;
+			}
+		} else if (node.color === Color.Black) {
+			if (node.left && node.left.color === Color.Red) {
+				isSatified = false;
+			}
+
+			if (node.right && node.right.color === Color.Red) {
 				isSatified = false;
 			}
 		}
