@@ -46,6 +46,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const contentContainerRef = useRef<HTMLDivElement>(null);
 	const [containerWidth, setContainerWidth] = useState(0);
+	const anchorIndexRef = useRef<number>(0);
 
 	const [visibleContentBlocks, setVisibleContentBlocks] = useState<
 		(MasonryContentBlock & WithPosition)[]
@@ -138,18 +139,19 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 
 	// Update the visible content blocks whenever the user scrolls the container.
 	useEffect(() => {
+		const handleScroll = () => {
+			updateVisibleContentBlocks();
+		};
+
 		if (scrollContainerRef.current) {
-			scrollContainerRef.current.addEventListener(
-				"scroll",
-				updateVisibleContentBlocks,
-			);
+			scrollContainerRef.current.addEventListener("scroll", handleScroll);
 		}
 
 		return () => {
 			if (scrollContainerRef.current) {
 				scrollContainerRef.current.removeEventListener(
 					"scroll",
-					updateVisibleContentBlocks,
+					handleScroll,
 				);
 			}
 		};
@@ -179,6 +181,40 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 			});
 
 		setVisibleContentBlocks(visibleContentBlocks);
+		updateAnchorIndex(visibleContentBlocks);
+	};
+
+	/**
+	 * Update the anchor index to a content block that intersects the middle of
+	 * the scroll container viewport.
+	 */
+	const updateAnchorIndex = (
+		visibleContentBlocks: (MasonryContentBlock & WithPosition)[],
+	) => {
+		if (!scrollContainerRef.current || !layoutConfigRef.current) {
+			return 0;
+		}
+
+		const scrollCenter =
+			scrollContainerRef.current.scrollTop +
+			0.5 * scrollContainerRef.current.clientHeight;
+
+		// Find the visible content block that is closest to the center of the
+		// scroll container viewport.
+		let anchorIndex = 0;
+		let minDistance = Infinity;
+
+		for (const [index, block] of visibleContentBlocks.entries()) {
+			const blockCenter = block.position.y + 0.5 * block.boundingBox.height;
+			const distance = Math.abs(scrollCenter - blockCenter);
+
+			if (distance < minDistance) {
+				anchorIndex = index;
+				minDistance = distance;
+			}
+		}
+
+		anchorIndexRef.current = anchorIndex;
 	};
 
 	const containerStyles = {
@@ -205,6 +241,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 							key={index}
 							boundingBox={block.boundingBox}
 							position={block.position}
+							anchor={index === anchorIndexRef.current}
 						>
 							{block.content}
 						</MasonryBlock>
@@ -230,6 +267,11 @@ type MasonryBlockProps = {
 	 * The position of the masonry block.
 	 */
 	position: Position;
+
+	/**
+	 * Whether the block is the anchor block.
+	 */
+	anchor?: boolean;
 };
 
 const MasonryBlock: React.FC<MasonryBlockProps> = (props) => {
@@ -237,6 +279,7 @@ const MasonryBlock: React.FC<MasonryBlockProps> = (props) => {
 		width: props.boundingBox.width,
 		height: props.boundingBox.height,
 		transform: `translate(${props.position.x}px, ${props.position.y}px)`,
+		border: props.anchor ? "10px solid #ff0000" : "none",
 	};
 
 	return (
