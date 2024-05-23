@@ -154,15 +154,15 @@ export class IntervalTree<T> {
 				const y = z.parent!.parent!.right;
 
 				// Case 1: z's uncle y is red.
-				if (y!.color === Color.Red) {
-					z.parent!.color = Color.Black;
-					y!.color = Color.Black;
-					z.parent!.parent!.color = Color.Red;
+				if (y && y.color === Color.Red) {
+					z.parent.color = Color.Black;
+					y.color = Color.Black;
+					z.parent.parent!.color = Color.Red;
 					z = z.parent!.parent!;
 				} else {
 					// Case 2: z's uncle y is black and z is a right child.
-					if (z === z.parent!.right) {
-						z = z.parent!;
+					if (z === z.parent.right) {
+						z = z.parent;
 						this.rotateLeft(z);
 					}
 
@@ -172,18 +172,18 @@ export class IntervalTree<T> {
 					this.rotateRight(z.parent!.parent!);
 				}
 			} else {
-				const y = z.parent!.parent!.left;
+				const y = z.parent.parent!.left;
 
 				// Case 1: z's uncle y is red.
-				if (y!.color === Color.Red) {
-					z.parent!.color = Color.Black;
-					y!.color = Color.Black;
-					z.parent!.parent!.color = Color.Red;
-					z = z.parent!.parent!;
+				if (y && y.color === Color.Red) {
+					z.parent.color = Color.Black;
+					y.color = Color.Black;
+					z.parent.parent!.color = Color.Red;
+					z = z.parent.parent!;
 				} else {
 					// Case 2: z's uncle y is black and z is a left child.
-					if (z === z.parent!.left) {
-						z = z.parent!;
+					if (z === z.parent.left) {
+						z = z.parent;
 						this.rotateRight(z);
 					}
 
