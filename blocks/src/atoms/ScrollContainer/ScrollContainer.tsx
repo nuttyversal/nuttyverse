@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { CSSProperties, ReactNode, forwardRef } from "react";
+import { CSSProperties, ComponentProps, ReactNode, forwardRef } from "react";
 import { container } from "./ScrollContainer.css";
 
 type ScrollContainerProps = {
@@ -17,15 +17,18 @@ type ScrollContainerProps = {
 	 * Additional styles to apply to the scroll container.
 	 */
 	style?: CSSProperties;
-};
+} & ComponentProps<"div">;
 
 export const ScrollContainer = forwardRef<HTMLDivElement, ScrollContainerProps>(
 	(props, ref) => {
+		const { className, style, ...rest } = props;
+
 		return (
 			<div
 				ref={ref}
-				className={classNames([container, props.className])}
-				style={props.style}
+				className={classNames([container, className])}
+				style={style}
+				{...rest}
 			>
 				{props.children}
 			</div>
