@@ -21,6 +21,7 @@
 		"@vanilla-extract/sprinkles": "^1.6.1",
 		"classnames": "^2.5.1",
 		"date-fns": "^3.6.0",
+		"gsap": "^3.12.5",
 		"highlight.js": "^11.9.0",
 		"nanostores": "^0.10.3",
 		"react": "^18.2.0",
