@@ -51,7 +51,7 @@ export const Component: Story = {
 		return (
 			<Masonry
 				contentBlocks={contentBlocks}
-				style={{ height: "800px" }}
+				style={{ height: "90vh" }}
 				debug
 			/>
 		);

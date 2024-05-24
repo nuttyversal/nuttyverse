@@ -19,6 +19,7 @@ const fadeIn = keyframes({
 export const contentBlock = style({
 	position: "absolute",
 	animation: `${fadeIn} 200ms ease-in`,
+	cursor: "pointer",
 });
 
 export const backdrop = style({
@@ -32,4 +33,26 @@ export const backdrop = style({
 	width: "100%",
 	overflow: "hidden",
 	zIndex: 100,
+});
+
+export const lightboxContainer = style({
+	display: "flex",
+	justifyContent: "center",
+	alignItems: "center",
+	animation: `${fadeIn} 200ms ease-in`,
+	position: "fixed",
+	top: 0,
+	left: 0,
+	width: "100%",
+	height: "100%",
+	zIndex: 200,
+});
+
+export const lightboxContent = style({
+	overflowY: "auto",
+	margin: "auto",
+	height: "auto",
+	width: "auto",
+	maxWidth: "80%",
+	maxHeight: "90%",
 });

@@ -1,5 +1,5 @@
 import { useStore } from "@nanostores/react";
-import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import { ScrollContainer } from "~/atoms/ScrollContainer";
 import { colors } from "~/styles/themes/contract.css";
 import { spacing } from "~/styles/tokens/spacing";
@@ -22,7 +22,13 @@ import {
 	setPreventScroll,
 	clearPreventScroll,
 } from "./store";
-import { contentContainer, contentBlock, backdrop } from "./Masonry.css";
+import {
+	contentContainer,
+	contentBlock,
+	backdrop,
+	lightboxContainer,
+	lightboxContent,
+} from "./Masonry.css";
 
 type MasonryProps = {
 	/**
@@ -330,15 +336,32 @@ const MasonryBlock: React.FC<MasonryBlockProps> = (props) => {
 	);
 };
 
-type LightboxProps = {};
-
-const Lightbox: React.FC<LightboxProps> = (props) => {
+const Lightbox: React.FC = () => {
 	const isLightboxOpen = useStore($isLightboxOpen);
+	const anchor = useStore($anchor);
+
+	// Close the lightbox only when the user clicks outside of the content.
+	const closeOnlyOverContainer = (event: React.MouseEvent) => {
+		if (event.target === event.currentTarget) {
+			closeLightbox();
+		}
+	};
 
 	return (
 		<>
-			{isLightboxOpen && (
-				<div className={backdrop} onMouseDown={closeLightbox} />
+			{isLightboxOpen && anchor && (
+				<>
+					<div
+						className={lightboxContainer}
+						onMouseDown={closeOnlyOverContainer}
+					>
+						<ScrollContainer className={lightboxContent}>
+							{anchor.content}
+						</ScrollContainer>
+					</div>
+
+					<div className={backdrop} onMouseDown={closeLightbox} />
+				</>
 			)}
 		</>
 	);
