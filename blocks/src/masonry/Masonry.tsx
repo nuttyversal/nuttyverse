@@ -412,7 +412,7 @@ const Lightbox: React.FC = () => {
 	// Focus the lightbox container when it opens.
 	useEffect(() => {
 		if (isLightboxOpen && containerRef.current) {
-			containerRef.current.focus();
+			setTimeout(() => containerRef.current?.focus(), 0);
 		}
 	}, [isLightboxOpen, anchor]);
 
