@@ -33,9 +33,12 @@ const generateMasonryContentBlock = (): MasonryContentBlock => {
 				height="100%"
 				width="100%"
 				style={{ objectFit: "cover" }}
+				draggable={false}
 			/>
 		),
 		boundingBox,
+		previous: null,
+		next: null,
 	};
 };
 
