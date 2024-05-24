@@ -163,6 +163,9 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 
 		if (anchorKey) {
 			anchorBlock = layoutConfigRef.current.contentBlockMap.get(anchorKey);
+
+			// Re-set anchor to update linked list pointers.
+			setAnchor(anchorBlock ?? null);
 		}
 
 		if (scrollContainerRef.current && anchorBlock) {
@@ -181,7 +184,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 
 	// Update the visible content blocks whenever the user scrolls the container.
 	useEffect(() => {
-		const handleScroll = (e: Event) => {
+		const handleScroll = () => {
 			if (
 				$preventNextScroll.get() ||
 				$scrollLock.get() ||
