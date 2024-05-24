@@ -397,6 +397,8 @@ const Lightbox: React.FC = () => {
 			goNext();
 		} else if (event.key === "ArrowLeft") {
 			goPrevious();
+		} else if (event.key === "Enter") {
+			openLightbox();
 		} else if (event.key === "Escape") {
 			closeLightbox();
 		}
