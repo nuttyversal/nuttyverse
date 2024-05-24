@@ -378,6 +378,7 @@ const MasonryBlock: React.FC<MasonryBlockProps> = (props) => {
 };
 
 const Lightbox: React.FC = () => {
+	const containerRef = useRef<HTMLDivElement>(null);
 	const isLightboxOpen = useStore($isLightboxOpen);
 	const anchor = useStore($anchor);
 
@@ -404,17 +405,24 @@ const Lightbox: React.FC = () => {
 		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, []);
 
+	// Focus the lightbox container when it opens.
+	useEffect(() => {
+		if (isLightboxOpen && containerRef.current) {
+			containerRef.current.focus();
+		}
+	}, [isLightboxOpen, anchor]);
+
 	return (
 		<>
 			{isLightboxOpen && anchor && (
-				<div
+				<ScrollContainer
+					ref={containerRef}
 					className={classNames([lightboxContainer, backdrop])}
 					onMouseDown={closeOnlyOverContainer}
+					tabIndex={0}
 				>
-					<ScrollContainer className={lightboxContent}>
-						{anchor.content}
-					</ScrollContainer>
-				</div>
+					<div className={lightboxContent}>{anchor.content}</div>
+				</ScrollContainer>
 			)}
 		</>
 	);
