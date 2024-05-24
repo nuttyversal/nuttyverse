@@ -223,12 +223,15 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 					anchor.position.y +
 					0.5 * anchor.boundingBox.height -
 					0.5 * scrollContainerRef.current.clientHeight,
-				duration: 0.3,
+				duration: 0.5,
+			});
+
+			tween.current.eventCallback("onUpdate", () => {
+				updateVisibleContentBlocks();
 			});
 
 			tween.current.eventCallback("onComplete", () => {
 				clearScrollLock();
-				computeLayout();
 				tween.current = null;
 			});
 		}
