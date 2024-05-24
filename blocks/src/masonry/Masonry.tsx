@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import { useStore } from "@nanostores/react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { ScrollContainer } from "~/atoms/ScrollContainer";
@@ -369,18 +370,14 @@ const Lightbox: React.FC = () => {
 	return (
 		<>
 			{isLightboxOpen && anchor && (
-				<>
-					<div
-						className={lightboxContainer}
-						onMouseDown={closeOnlyOverContainer}
-					>
-						<ScrollContainer className={lightboxContent}>
-							{anchor.content}
-						</ScrollContainer>
-					</div>
-
-					<div className={backdrop} onMouseDown={closeLightbox} />
-				</>
+				<div
+					className={classNames([lightboxContainer, backdrop])}
+					onMouseDown={closeOnlyOverContainer}
+				>
+					<ScrollContainer className={lightboxContent}>
+						{anchor.content}
+					</ScrollContainer>
+				</div>
 			)}
 		</>
 	);
