@@ -69,6 +69,7 @@ export function goPrevious() {
 		setAnchor(previous);
 	}
 }
+
 /**
  * A flag that can be set to ignore a scroll event once.
  */
