@@ -350,24 +350,21 @@ const Lightbox: React.FC = () => {
 		}
 	};
 
-	// Left and right arrow key navigation for the lightbox.
+	// Keyboard navigation for the lightbox.
 	const handleKeyDown = (event: KeyboardEvent) => {
 		if (event.key === "ArrowRight") {
 			goNext();
 		} else if (event.key === "ArrowLeft") {
 			goPrevious();
+		} else if (event.key === "Escape") {
+			closeLightbox();
 		}
 	};
 
 	useEffect(() => {
-		if (isLightboxOpen) {
-			window.addEventListener("keydown", handleKeyDown);
-		}
-
-		return () => {
-			window.removeEventListener("keydown", handleKeyDown);
-		};
-	}, [isLightboxOpen]);
+		window.addEventListener("keydown", handleKeyDown);
+		return () => window.removeEventListener("keydown", handleKeyDown);
+	}, []);
 
 	return (
 		<>
