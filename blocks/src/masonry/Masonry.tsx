@@ -1,3 +1,4 @@
+import { useStore } from "@nanostores/react";
 import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
 import { ScrollContainer } from "~/atoms/ScrollContainer";
 import { colors } from "~/styles/themes/contract.css";
@@ -13,6 +14,7 @@ import {
 } from "./layout";
 import { IntervalTree } from "./interval-tree";
 import { breakpoints } from "./constants";
+import { $anchor, setAnchor } from "./store";
 import { contentContainer, contentBlock, backdrop } from "./Masonry.css";
 
 type MasonryProps = {
@@ -38,11 +40,12 @@ type MasonryProps = {
 };
 
 export const Masonry: React.FC<MasonryProps> = (props) => {
+	const anchor = useStore($anchor);
+
 	const layoutConfigRef = useRef<MasonryLayoutOutput | null>(null);
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const contentContainerRef = useRef<HTMLDivElement>(null);
 	const [containerWidth, setContainerWidth] = useState(0);
-	const anchorKeyRef = useRef<string>("");
 	const preventScrollEvent = useRef(false);
 
 	const [visibleContentBlocks, setVisibleContentBlocks] = useState<
@@ -133,9 +136,12 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 		intervalTree.current = tree;
 
 		// Re-center the anchor block in the scroll container.
-		const anchorBlock = layoutConfigRef.current.contentBlockMap.get(
-			anchorKeyRef.current,
-		);
+		const anchorKey = $anchor.get()?.key;
+		let anchorBlock = null;
+
+		if (anchorKey) {
+			anchorBlock = layoutConfigRef.current.contentBlockMap.get(anchorKey);
+		}
 
 		if (scrollContainerRef.current && anchorBlock) {
 			// Prevent the scroll event from triggering an update to the anchor
@@ -199,9 +205,13 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 
 		const visibleContentBlocks = visibleContentBlockKeys
 			.map((key) => layoutConfigRef.current?.contentBlockMap.get(key))
-			.filter((block): block is MasonryContentBlock & WithPosition => {
-				return block != null;
-			});
+			.filter(
+				(
+					block,
+				): block is MasonryContentBlock<WithPosition> & WithPosition => {
+					return block != null;
+				},
+			);
 
 		setVisibleContentBlocks(visibleContentBlocks);
 
@@ -240,7 +250,8 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 			}
 		}
 
-		anchorKeyRef.current = anchorKey;
+		const anchor = layoutConfigRef.current.contentBlockMap.get(anchorKey);
+		setAnchor(anchor ?? null);
 	};
 
 	const containerStyles = {
@@ -268,9 +279,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 								key={block.key}
 								boundingBox={block.boundingBox}
 								position={block.position}
-								anchor={
-									props.debug && block.key === anchorKeyRef.current
-								}
+								anchor={props.debug && block.key === anchor?.key}
 							>
 								{block.content}
 							</MasonryBlock>
@@ -279,7 +288,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 				</div>
 			</ScrollContainer>
 
-			<LightboxBackdrop />
+			{/* <LightboxBackdrop /> */}
 		</>
 	);
 };

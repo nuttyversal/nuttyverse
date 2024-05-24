@@ -1,5 +1,5 @@
 import { atom } from "nanostores";
-import { MasonryContentBlock } from "./layout";
+import { MasonryContentBlock, WithPosition } from "./layout";
 
 /**
  * Is the lightbox open? 💡
@@ -9,12 +9,16 @@ export const $isLightboxOpen = atom<boolean>(false);
 /**
  * The currently selected anchor block.
  */
-export const $anchor = atom<MasonryContentBlock | null>(null);
+export const $anchor = atom<
+	(MasonryContentBlock<WithPosition> & WithPosition) | null
+>(null);
 
 /**
  * Set the anchor content block.
  */
-export function setAnchor(block: MasonryContentBlock) {
+export function setAnchor(
+	block: (MasonryContentBlock<WithPosition> & WithPosition) | null,
+) {
 	$anchor.set(block);
 }
 

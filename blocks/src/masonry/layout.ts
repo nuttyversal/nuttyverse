@@ -24,7 +24,7 @@ export type WithPosition = {
 	position: Position;
 };
 
-export type MasonryContentBlock = {
+export type MasonryContentBlock<Mixin = {}> = {
 	/**
 	 * A unique key to identify the content block.
 	 */
@@ -43,12 +43,12 @@ export type MasonryContentBlock = {
 	/**
 	 * The content block that precedes this one in the list of content blocks.
 	 */
-	previous: MasonryContentBlock | null;
+	previous: (MasonryContentBlock<Mixin> & Mixin) | null;
 
 	/**
 	 * The content block that follows this one in the list of content blocks.
 	 */
-	next: MasonryContentBlock | null;
+	next: (MasonryContentBlock<Mixin> & Mixin) | null;
 };
 
 /**
@@ -90,7 +90,10 @@ export type MasonryLayoutOutput = {
 	 * A map of content block keys to their respective content blocks annotated
 	 * with their relative positions within the Masonry layout.
 	 */
-	contentBlockMap: Map<string, MasonryContentBlock & WithPosition>;
+	contentBlockMap: Map<
+		string,
+		MasonryContentBlock<WithPosition> & WithPosition
+	>;
 
 	/**
 	 * The width of the content container.
@@ -131,10 +134,12 @@ export function layoutContentBlocks(
 
 	// As the content blocks get laid out, they will have their relative
 	// positions within the Masonry content container annotated.
-	const annotatedContentBlocks: (MasonryContentBlock & WithPosition)[] = [];
+	const annotatedContentBlocks: (MasonryContentBlock<WithPosition> &
+		WithPosition)[] = [];
+
 	const contentBlockMap = new Map<
 		string,
-		MasonryContentBlock & WithPosition
+		MasonryContentBlock<WithPosition> & WithPosition
 	>();
 
 	for (const contentBlock of input.contentBlocks) {
@@ -158,7 +163,8 @@ export function layoutContentBlocks(
 		};
 
 		// Annotate the position of the next content block.
-		const annotatedContentBlock: MasonryContentBlock & WithPosition = {
+		const annotatedContentBlock: MasonryContentBlock<WithPosition> &
+			WithPosition = {
 			key: contentBlock.key,
 			content: contentBlock.content,
 			boundingBox: resizedBoundingBox,
