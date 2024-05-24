@@ -4,17 +4,24 @@ import { ScrollContainer } from "~/atoms/ScrollContainer";
 import { colors } from "~/styles/themes/contract.css";
 import { spacing } from "~/styles/tokens/spacing";
 import {
-	BoundingBox,
 	MasonryContentBlock,
 	MasonryLayoutInput,
 	MasonryLayoutOutput,
-	Position,
 	WithPosition,
 	layoutContentBlocks,
 } from "./layout";
 import { IntervalTree } from "./interval-tree";
 import { breakpoints } from "./constants";
-import { $anchor, setAnchor } from "./store";
+import {
+	$anchor,
+	$isLightboxOpen,
+	$preventScroll,
+	setAnchor,
+	openLightbox,
+	closeLightbox,
+	setPreventScroll,
+	clearPreventScroll,
+} from "./store";
 import { contentContainer, contentBlock, backdrop } from "./Masonry.css";
 
 type MasonryProps = {
@@ -46,10 +53,9 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const contentContainerRef = useRef<HTMLDivElement>(null);
 	const [containerWidth, setContainerWidth] = useState(0);
-	const preventScrollEvent = useRef(false);
 
 	const [visibleContentBlocks, setVisibleContentBlocks] = useState<
-		(MasonryContentBlock & WithPosition)[]
+		(MasonryContentBlock<WithPosition> & WithPosition)[]
 	>([]);
 
 	// An interval tree to efficiently query for visible content blocks.
@@ -146,7 +152,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 		if (scrollContainerRef.current && anchorBlock) {
 			// Prevent the scroll event from triggering an update to the anchor
 			// block when we reposition the scroll container.
-			preventScrollEvent.current = true;
+			setPreventScroll();
 
 			scrollContainerRef.current.scrollTop =
 				anchorBlock.position.y +
@@ -160,8 +166,8 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 	// Update the visible content blocks whenever the user scrolls the container.
 	useEffect(() => {
 		const handleScroll = () => {
-			if (preventScrollEvent.current) {
-				preventScrollEvent.current = false;
+			if ($preventScroll.get()) {
+				clearPreventScroll();
 				return;
 			}
 
@@ -277,37 +283,23 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 						return (
 							<MasonryBlock
 								key={block.key}
-								boundingBox={block.boundingBox}
-								position={block.position}
+								contentBlock={block}
 								anchor={props.debug && block.key === anchor?.key}
-							>
-								{block.content}
-							</MasonryBlock>
+							/>
 						);
 					})}
 				</div>
 			</ScrollContainer>
-
-			{/* <LightboxBackdrop /> */}
+			<Lightbox />
 		</>
 	);
 };
 
 type MasonryBlockProps = {
 	/**
-	 * The content of the masonry block.
+	 * The content block to render.
 	 */
-	children: ReactNode;
-
-	/**
-	 * The dimensions of the masonry block.
-	 */
-	boundingBox: BoundingBox;
-
-	/**
-	 * The position of the masonry block.
-	 */
-	position: Position;
+	contentBlock: MasonryContentBlock<WithPosition> & WithPosition;
 
 	/**
 	 * Whether the block is the anchor block.
@@ -317,21 +309,37 @@ type MasonryBlockProps = {
 
 const MasonryBlock: React.FC<MasonryBlockProps> = (props) => {
 	const blockStyles: CSSProperties = {
-		width: props.boundingBox.width,
-		height: props.boundingBox.height,
-		transform: `translate(${props.position.x}px, ${props.position.y}px)`,
+		width: props.contentBlock.boundingBox.width,
+		height: props.contentBlock.boundingBox.height,
+		transform: `translate(${props.contentBlock.position.x}px, ${props.contentBlock.position.y}px)`,
 		borderWidth: props.anchor ? spacing[2] : spacing[0],
 		borderColor: props.anchor ? colors.yellow.solid[10] : undefined,
 		borderStyle: props.anchor ? "solid" : undefined,
 	};
 
+	const open = () => {
+		setAnchor(props.contentBlock);
+		setPreventScroll();
+		openLightbox();
+	};
+
 	return (
-		<div className={contentBlock} style={blockStyles}>
-			{props.children}
+		<div className={contentBlock} style={blockStyles} onMouseDown={open}>
+			{props.contentBlock.content}
 		</div>
 	);
 };
 
-const LightboxBackdrop: React.FC = () => {
-	return <div className={backdrop} />;
+type LightboxProps = {};
+
+const Lightbox: React.FC<LightboxProps> = (props) => {
+	const isLightboxOpen = useStore($isLightboxOpen);
+
+	return (
+		<>
+			{isLightboxOpen && (
+				<div className={backdrop} onMouseDown={closeLightbox} />
+			)}
+		</>
+	);
 };

@@ -7,6 +7,20 @@ import { MasonryContentBlock, WithPosition } from "./layout";
 export const $isLightboxOpen = atom<boolean>(false);
 
 /**
+ * Open the lightbox.
+ */
+export function openLightbox() {
+	$isLightboxOpen.set(true);
+}
+
+/**
+ * Close the lightbox.
+ */
+export function closeLightbox() {
+	$isLightboxOpen.set(false);
+}
+
+/**
  * The currently selected anchor block.
  */
 export const $anchor = atom<
@@ -55,17 +69,21 @@ export function goPrevious() {
 		setAnchor(previous);
 	}
 }
+/**
+ * A flag that can be set to ignore a scroll event once.
+ */
+export const $preventScroll = atom<boolean>(false);
 
 /**
- * Open the lightbox.
+ * Set the flag to prevent scroll events from being processed.
  */
-export function openLightbox() {
-	$isLightboxOpen.set(true);
+export function setPreventScroll() {
+	$preventScroll.set(true);
 }
 
 /**
- * Close the lightbox.
+ * Clear the flag to allow scroll events to be processed.
  */
-export function closeLightbox() {
-	$isLightboxOpen.set(false);
+export function clearPreventScroll() {
+	$preventScroll.set(false);
 }
