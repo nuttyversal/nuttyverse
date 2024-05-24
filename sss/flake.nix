@@ -26,6 +26,9 @@
 						# Python
 						python3Full
 						poetry
+
+						# Processing
+						ffmpeg
 					];
 
 					shellHook = ''
