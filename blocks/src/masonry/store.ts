@@ -28,12 +28,26 @@ export const $anchor = atom<
 >(null);
 
 /**
+ * A flag that can be set to trigger a scroll to the anchor block.
+ */
+export const $scrollToAnchor = atom<boolean>(false);
+
+/**
  * Set the anchor content block.
  */
 export function setAnchor(
 	block: (MasonryContentBlock<WithPosition> & WithPosition) | null,
+	scrollTo = false,
 ) {
 	$anchor.set(block);
+	$scrollToAnchor.set(scrollTo);
+}
+
+/**
+ * Clear the scroll-to-anchor flag.
+ */
+export function clearScrollToAnchor() {
+	$scrollToAnchor.set(false);
 }
 
 /**
@@ -49,7 +63,7 @@ export function goNext() {
 	const next = anchor.next;
 
 	if (next) {
-		setAnchor(next);
+		setAnchor(next, true);
 	}
 }
 
@@ -66,25 +80,44 @@ export function goPrevious() {
 	const previous = anchor.previous;
 
 	if (previous) {
-		setAnchor(previous);
+		setAnchor(previous, true);
 	}
 }
 
 /**
  * A flag that can be set to ignore a scroll event once.
  */
-export const $preventScroll = atom<boolean>(false);
+export const $preventNextScroll = atom<boolean>(false);
 
 /**
  * Set the flag to prevent scroll events from being processed.
  */
-export function setPreventScroll() {
-	$preventScroll.set(true);
+export function setPreventNextScroll() {
+	$preventNextScroll.set(true);
 }
 
 /**
  * Clear the flag to allow scroll events to be processed.
  */
-export function clearPreventScroll() {
-	$preventScroll.set(false);
+export function clearPreventNextScroll() {
+	$preventNextScroll.set(false);
+}
+
+/**
+ * A flag that can be set to ignore all scroll events until unset.
+ */
+export const $scrollLock = atom<boolean>(false);
+
+/**
+ * Set the flag to prevent all scroll events from being processed.
+ */
+export function setScrollLock() {
+	$scrollLock.set(true);
+}
+
+/**
+ * Clear the flag to allow scroll events to be processed.
+ */
+export function clearScrollLock() {
+	$scrollLock.set(false);
 }

@@ -1,3 +1,4 @@
+import { gsap } from "gsap";
 import classNames from "classnames";
 import { useStore } from "@nanostores/react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
@@ -15,13 +16,18 @@ import { IntervalTree } from "./interval-tree";
 import { breakpoints } from "./constants";
 import {
 	$anchor,
+	$scrollToAnchor,
 	$isLightboxOpen,
-	$preventScroll,
+	$preventNextScroll,
+	$scrollLock,
 	setAnchor,
+	clearScrollToAnchor,
 	openLightbox,
 	closeLightbox,
-	setPreventScroll,
-	clearPreventScroll,
+	setPreventNextScroll,
+	clearPreventNextScroll,
+	setScrollLock,
+	clearScrollLock,
 	goNext,
 	goPrevious,
 } from "./store";
@@ -57,7 +63,8 @@ type MasonryProps = {
 
 export const Masonry: React.FC<MasonryProps> = (props) => {
 	const anchor = useStore($anchor);
-
+	const scrollToAnchor = useStore($scrollToAnchor);
+	const tween = useRef<gsap.core.Tween | null>(null);
 	const layoutConfigRef = useRef<MasonryLayoutOutput | null>(null);
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const contentContainerRef = useRef<HTMLDivElement>(null);
@@ -161,7 +168,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 		if (scrollContainerRef.current && anchorBlock) {
 			// Prevent the scroll event from triggering an update to the anchor
 			// block when we reposition the scroll container.
-			setPreventScroll();
+			setPreventNextScroll();
 
 			scrollContainerRef.current.scrollTop =
 				anchorBlock.position.y +
@@ -174,9 +181,13 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 
 	// Update the visible content blocks whenever the user scrolls the container.
 	useEffect(() => {
-		const handleScroll = () => {
-			if ($preventScroll.get()) {
-				clearPreventScroll();
+		const handleScroll = (e: Event) => {
+			if (
+				$preventNextScroll.get() ||
+				$scrollLock.get() ||
+				tween.current !== null
+			) {
+				clearPreventNextScroll();
 				return;
 			}
 
@@ -196,6 +207,32 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 			}
 		};
 	}, [scrollContainerRef.current]);
+
+	// Scroll to the anchor block when it updates.
+	useEffect(() => {
+		if (scrollContainerRef.current && anchor && scrollToAnchor) {
+			clearScrollToAnchor();
+			setScrollLock();
+
+			if (tween.current) {
+				tween.current.kill();
+			}
+
+			tween.current = gsap.to(scrollContainerRef.current, {
+				scrollTop:
+					anchor.position.y +
+					0.5 * anchor.boundingBox.height -
+					0.5 * scrollContainerRef.current.clientHeight,
+				duration: 0.3,
+			});
+
+			tween.current.eventCallback("onComplete", () => {
+				clearScrollLock();
+				computeLayout();
+				tween.current = null;
+			});
+		}
+	}, [anchor]);
 
 	/**
 	 * Update the visible content blocks whenever the user scrolls the container.
@@ -328,8 +365,8 @@ const MasonryBlock: React.FC<MasonryBlockProps> = (props) => {
 	};
 
 	const open = () => {
-		setAnchor(props.contentBlock);
-		setPreventScroll();
+		setAnchor(props.contentBlock, true);
+		setPreventNextScroll();
 		openLightbox();
 	};
 
