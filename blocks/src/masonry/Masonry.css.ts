@@ -36,23 +36,18 @@ export const backdrop = style({
 });
 
 export const lightboxContainer = style({
+	overflow: "auto",
+	padding: spacing[16],
 	display: "flex",
 	justifyContent: "center",
 	alignItems: "center",
 	animation: `${fadeIn} 200ms ease-in`,
-	position: "fixed",
-	top: 0,
-	left: 0,
-	width: "100%",
-	height: "100%",
 	zIndex: 200,
 });
 
 export const lightboxContent = style({
-	overflowY: "auto",
+	objectFit: "contain",
 	margin: "auto",
 	height: "auto",
 	width: "auto",
-	maxWidth: "80%",
-	maxHeight: "90%",
 });
