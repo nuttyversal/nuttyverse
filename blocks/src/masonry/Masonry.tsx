@@ -21,6 +21,8 @@ import {
 	closeLightbox,
 	setPreventScroll,
 	clearPreventScroll,
+	goNext,
+	goPrevious,
 } from "./store";
 import {
 	contentContainer,
@@ -296,6 +298,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 					})}
 				</div>
 			</ScrollContainer>
+
 			<Lightbox />
 		</>
 	);
@@ -346,6 +349,25 @@ const Lightbox: React.FC = () => {
 			closeLightbox();
 		}
 	};
+
+	// Left and right arrow key navigation for the lightbox.
+	const handleKeyDown = (event: KeyboardEvent) => {
+		if (event.key === "ArrowRight") {
+			goNext();
+		} else if (event.key === "ArrowLeft") {
+			goPrevious();
+		}
+	};
+
+	useEffect(() => {
+		if (isLightboxOpen) {
+			window.addEventListener("keydown", handleKeyDown);
+		}
+
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown);
+		};
+	}, [isLightboxOpen]);
 
 	return (
 		<>
