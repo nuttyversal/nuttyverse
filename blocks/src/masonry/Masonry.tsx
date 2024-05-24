@@ -246,7 +246,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 			return;
 		}
 
-		const scrollBuffer = 200;
+		const scrollBuffer = 500;
 		const scrollTop = scrollContainerRef.current.scrollTop;
 		const scrollBottom = scrollTop + scrollContainerRef.current.clientHeight;
 
