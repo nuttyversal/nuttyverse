@@ -8,3 +8,13 @@ export const breakpoints: Record<number, number> = {
 	1000: 3,
 	Infinity: 4,
 };
+
+/**
+ * The amount of space above and below the viewport to render content.
+ */
+export const scrollBuffer = 500;
+
+/**
+ * The amount of space between blocks in the Masonry layout.
+ */
+export const blockPadding = 12;

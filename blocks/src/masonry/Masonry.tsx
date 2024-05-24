@@ -13,7 +13,7 @@ import {
 	layoutContentBlocks,
 } from "./layout";
 import { IntervalTree } from "./interval-tree";
-import { breakpoints } from "./constants";
+import { blockPadding, breakpoints, scrollBuffer } from "./constants";
 import {
 	$anchor,
 	$scrollToAnchor,
@@ -137,7 +137,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 		const layoutInput: MasonryLayoutInput = {
 			contentBlocks: props.contentBlocks,
 			contentContainerWidth: containerWidth,
-			paddingSize: 12,
+			paddingSize: blockPadding,
 			columnCount,
 		};
 
@@ -249,7 +249,6 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 			return;
 		}
 
-		const scrollBuffer = 500;
 		const scrollTop = scrollContainerRef.current.scrollTop;
 		const scrollBottom = scrollTop + scrollContainerRef.current.clientHeight;
 
