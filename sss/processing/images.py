@@ -65,6 +65,7 @@ def process_image(data: io.BytesIO) -> processing.models.ProcessingResult:
 
 	return processing.models.ProcessingResult(
 		creation_timestamp=timestamp,
+		dimensions=image.size,
 		original_bytes=data,
 		original_size=data.getbuffer().nbytes,
 		compressed_bytes=output,
@@ -91,3 +92,4 @@ with open("/Users/nutty/Downloads/IMG_2301.HEIC", "rb") as f:
 
 	# Print compression statistics.
 	print(result["original_size"], result["compressed_size"])
+	print(result["dimensions"])
