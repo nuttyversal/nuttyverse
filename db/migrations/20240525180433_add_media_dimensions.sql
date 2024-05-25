@@ -1,0 +1,9 @@
+-- migrate:up
+ALTER TABLE media
+ADD COLUMN width INTEGER NOT NULL,
+ADD COLUMN height INTEGER NOT NULL;
+
+-- migrate:down
+ALTER TABLE media
+DROP COLUMN IF EXISTS width,
+DROP COLUMN IF EXISTS height;

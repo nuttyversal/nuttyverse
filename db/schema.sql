@@ -36,7 +36,9 @@ CREATE TABLE public.media (
 	created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
 	updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
 	original_object_id uuid NOT NULL,
-	compressed_object_id uuid NOT NULL
+	compressed_object_id uuid NOT NULL,
+	width integer NOT NULL,
+	height integer NOT NULL
 );
 
 
@@ -135,4 +137,5 @@ ALTER TABLE ONLY public.media
 
 INSERT INTO public.schema_migrations (version) VALUES
 	('20240518021715'),
-	('20240524233947');
+	('20240524233947'),
+	('20240525180433');
