@@ -34,13 +34,7 @@ export type NavigationItemProps = {
 
 export const NavigationItem: React.FC<NavigationItemProps> = (props) => {
 	return (
-		<li
-			className={container}
-			onMouseDown={() => {
-				// Immediately navigate to the link when mouse down.
-				document.location = props.href;
-			}}
-		>
+		<li className={container}>
 			<Text
 				as="a"
 				href={props.href}
