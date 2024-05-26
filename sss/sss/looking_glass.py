@@ -17,6 +17,12 @@ def upload_object():
 	Upload a media object (image | video) to the Looking Glass service.
 	"""
 
+	# Read the description from the request.
+	description = request.form.get("description")
+
+	if description is None:
+		return jsonify({ "error": "Description is required." }), 400
+
 	# Retrieve the file from the request.
 	file = request.files.get("file")
 
@@ -71,10 +77,12 @@ def upload_object():
 	client.upload_media(
 		database=database,
 		media_id=media_id,
+		captured_at=processing_result["creation_timestamp"],
 		original_object_id=original_object["object_id"],
 		compressed_object_id=compressed_object["object_id"],
 		width=processing_result["dimensions"][0],
 		height=processing_result["dimensions"][1],
+		description=description,
 	)
 
 	response = {
