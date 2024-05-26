@@ -61,71 +61,100 @@ export const Debug: Story = {
 
 const objects = [
 	{
-		bucket_name: "looking-glass",
-		object_name: "018fb3a4-d269-7d85-b3d7-ce3c06b44074/compressed.webp",
-		height: 4032,
-		width: 3024,
+		compressed_bucket_name: "looking-glass",
+		compressed_object_name:
+			"018fb6fd-33ab-77ae-8c0e-91e8ebc4236e/compressed.webp",
+		preview_bucket_name: "looking-glass",
+		preview_object_name: "018fb6fd-33ab-77ae-8c0e-91e8ebc4236e/preview.webp",
+		width: 1008,
+		height: 756,
 	},
 	{
-		bucket_name: "looking-glass",
-		object_name: "018fb3a6-7b41-7b20-aafb-73de38d8830c/compressed.webm",
-		height: 1676,
-		width: 1256,
+		compressed_bucket_name: "looking-glass",
+		compressed_object_name:
+			"018fb6fd-02c7-78b0-8289-db5bc16b00e5/compressed.webp",
+		preview_bucket_name: "looking-glass",
+		preview_object_name: "018fb6fd-02c7-78b0-8289-db5bc16b00e5/preview.webp",
+		width: 655,
+		height: 561,
 	},
 	{
-		bucket_name: "looking-glass",
-		object_name: "018fb3b1-08cb-70f5-b26c-27eeadf3b27b/compressed.webp",
-		height: 3024,
-		width: 4032,
+		compressed_bucket_name: "looking-glass",
+		compressed_object_name:
+			"018fb6fc-c98d-792b-9184-b9fea619aa1b/compressed.webp",
+		preview_bucket_name: "looking-glass",
+		preview_object_name: "018fb6fc-c98d-792b-9184-b9fea619aa1b/preview.webp",
+		width: 756,
+		height: 1008,
 	},
 	{
-		bucket_name: "looking-glass",
-		object_name: "018fb3b6-371b-75c2-9402-e9c10b8e553b/compressed.webp",
-		height: 4032,
-		width: 3024,
-	},
-	{
-		bucket_name: "looking-glass",
-		object_name: "018fb3b7-b8da-73fc-91f6-fbf4179ad5a3/compressed.webp",
-		height: 4032,
-		width: 3024,
-	},
-	{
-		bucket_name: "looking-glass",
-		object_name: "018fb3b8-f1df-7a63-b8a9-0f4635afbeea/compressed.webm",
-		height: 1412,
+		compressed_bucket_name: "looking-glass",
+		compressed_object_name:
+			"018fb6fc-97cc-70c5-8d81-8e443f8d1d6a/compressed.webm",
+		preview_bucket_name: "looking-glass",
+		preview_object_name: "018fb6fc-97cc-70c5-8d81-8e443f8d1d6a/preview.webm",
 		width: 1060,
+		height: 1412,
 	},
 	{
-		bucket_name: "looking-glass",
-		object_name: "018fb3ba-409a-79bc-a5b5-0b63c92c22a0/compressed.webp",
-		height: 4032,
-		width: 3024,
+		compressed_bucket_name: "looking-glass",
+		compressed_object_name:
+			"018fb6f9-b2a2-786f-9bc0-c58084d797cb/compressed.webm",
+		preview_bucket_name: "looking-glass",
+		preview_object_name: "018fb6f9-b2a2-786f-9bc0-c58084d797cb/preview.webm",
+		width: 1256,
+		height: 1676,
 	},
 	{
-		bucket_name: "looking-glass",
-		object_name: "018fb3bc-db31-7f84-a877-15f70f3f694c/compressed.webp",
-		height: 2247,
-		width: 2625,
+		compressed_bucket_name: "looking-glass",
+		compressed_object_name:
+			"018fb6fb-fd48-7bbe-b6da-1bafe52d5e12/compressed.webp",
+		preview_bucket_name: "looking-glass",
+		preview_object_name: "018fb6fb-fd48-7bbe-b6da-1bafe52d5e12/preview.webp",
+		width: 756,
+		height: 1008,
 	},
 	{
-		bucket_name: "looking-glass",
-		object_name: "018fb3bd-f710-713a-b62c-1bcb60d57b23/compressed.webp",
-		height: 3024,
-		width: 4032,
+		compressed_bucket_name: "looking-glass",
+		compressed_object_name:
+			"018fb6fb-c5d4-7c77-b054-927a7c905629/compressed.webp",
+		preview_bucket_name: "looking-glass",
+		preview_object_name: "018fb6fb-c5d4-7c77-b054-927a7c905629/preview.webp",
+		width: 756,
+		height: 1008,
 	},
-].reverse();
+	{
+		compressed_bucket_name: "looking-glass",
+		compressed_object_name:
+			"018fb6fb-7245-7518-937a-7b56e7a18f9f/compressed.webp",
+		preview_bucket_name: "looking-glass",
+		preview_object_name: "018fb6fb-7245-7518-937a-7b56e7a18f9f/preview.webp",
+		width: 1008,
+		height: 756,
+	},
+	{
+		compressed_bucket_name: "looking-glass",
+		compressed_object_name:
+			"018fb6f8-e4dd-72bf-ae05-8d51befa7cd7/compressed.webp",
+		preview_bucket_name: "looking-glass",
+		preview_object_name: "018fb6f8-e4dd-72bf-ae05-8d51befa7cd7/preview.webp",
+		width: 756,
+		height: 1008,
+	},
+];
 
 export const LookingGlass: Story = {
 	render: () => {
 		const contentBlocks: MasonryContentBlock[] = objects.map((object) => {
-			const objectSrc = `https://minio.nuttyver.se/${object.bucket_name}/${object.object_name}`;
+			const objectSrc = `https://minio.nuttyver.se/${object.compressed_bucket_name}/${object.compressed_object_name}`;
+			const previewSrc = `https://minio.nuttyver.se/${object.preview_bucket_name}/${object.preview_object_name}`;
 
 			return {
-				key: object.object_name,
+				key: object.compressed_object_name,
 				content: objectSrc.endsWith(".webp") ? (
 					<Image
 						src={objectSrc}
+						previewSrc={previewSrc}
 						height="100%"
 						width="100%"
 						style={{ objectFit: "cover" }}
@@ -134,6 +163,7 @@ export const LookingGlass: Story = {
 				) : (
 					<Video
 						src={objectSrc}
+						previewSrc={previewSrc}
 						height="100%"
 						width="100%"
 						style={{ objectFit: "cover" }}
