@@ -2,11 +2,11 @@ import io
 
 from flask import Flask, request, jsonify
 
-import client
+from sss.looking_glass import looking_glass
 
 
 app = Flask(__name__)
-spaceship_storage = client.SpaceshipStorage()
+app.register_blueprint(looking_glass, url_prefix="/looking-glass")
 
 
 @app.route("/")
