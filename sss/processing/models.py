@@ -11,3 +11,5 @@ class ProcessingResult(typing.TypedDict):
 	original_size: int
 	compressed_bytes: io.BytesIO
 	compressed_size: int
+	preview_bytes: io.BytesIO
+	preview_size: int

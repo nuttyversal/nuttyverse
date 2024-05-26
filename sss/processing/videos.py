@@ -75,26 +75,40 @@ def process_video(data: io.BytesIO) -> processing.models.ProcessingResult:
 		f.write(data.read())
 	
 	# Compress the video using ffmpeg.
-	process = (
+	compression_process = (
 		ffmpeg
 		.input(filename)
 		.output("pipe:", format="webm", vcodec="libvpx-vp9", acodec="libvorbis")
 		.run_async(pipe_stdout=True, pipe_stderr=True)
 	)
 
+	# Generate a preview of the video.
+	preview_process = (
+		ffmpeg
+		.input(filename)
+		.output("pipe:", format="webm", vcodec="libvpx-vp9", acodec="libvorbis", vf="scale=120:-1")
+		.run_async(pipe_stdout=True, pipe_stderr=True)
+	)
+
 	# Read the compressed video from the process.
-	output = io.BytesIO()
-	for chunk in process.stdout:
-		output.write(chunk)
-	
+	compressed_output = io.BytesIO()
+	for chunk in compression_process.stdout:
+		compressed_output.write(chunk)
+
+	# Read the preview video from the process.
+	preview_output = io.BytesIO()
+	for chunk in preview_process.stdout:
+		preview_output.write(chunk)
+
 	# Wait for the process to finish.
-	process.wait()
+	compression_process.wait()
+	preview_process.wait()
 
 	# Remove the temporary file.
 	subprocess.run(["rm", filename])
 
 	# Read stderr text from the process.
-	_, stderr = process.communicate()
+	_, stderr = compression_process.communicate()
 
 	# Parse the creation timestamp from stderr.
 	timestamp = parse_creation_timestamp(stderr)
@@ -108,16 +122,9 @@ def process_video(data: io.BytesIO) -> processing.models.ProcessingResult:
 		dimensions=(width, height),
 		original_bytes=data,
 		original_size=data.getbuffer().nbytes,
-		compressed_bytes=output,
-		compressed_size=output.getbuffer().nbytes,
+		compressed_bytes=compressed_output,
+		compressed_size=compressed_output.getbuffer().nbytes,
+		preview_bytes=preview_output,
+		preview_size=preview_output.getbuffer().nbytes,
 	)
 	
-
-# with open("/Users/nutty/Downloads/IMG_2250.mov", "rb") as f:
-# 	result = process_video(io.BytesIO(f.read()))
-# 	print(result["original_size"], result["compressed_size"])
-# 	print(result["creation_timestamp"])
-# 	print(result["dimensions"])
-
-# 	with open("/Users/nutty/Downloads/IMG_2250.webm", "wb") as f:
-# 		f.write(result["compressed_bytes"].getvalue())

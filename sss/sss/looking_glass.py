@@ -60,16 +60,25 @@ def upload_object():
 	)
 
 	if processing_result["content_type"] == "image":
-		compressed_file_ext = "webp"
+		processed_file_ext = "webp"
 	elif processing_result["content_type"] == "video":
-		compressed_file_ext = "webm"
+		processed_file_ext = "webm"
 
 	compressed_object = client.store_object(
 		minio=minio,
 		database=database,
 		bucket_name="looking-glass",
-		object_name=f"{media_id}/compressed.{compressed_file_ext}",
+		object_name=f"{media_id}/compressed.{processed_file_ext}",
 		data=processing_result["compressed_bytes"],
+		content_type=file.content_type,
+	)
+
+	preview_object = client.store_object(
+		minio=minio,
+		database=database,
+		bucket_name="looking-glass",
+		object_name=f"{media_id}/preview.{processed_file_ext}",
+		data=processing_result["preview_bytes"],
 		content_type=file.content_type,
 	)
 
@@ -80,6 +89,7 @@ def upload_object():
 		captured_at=processing_result["creation_timestamp"],
 		original_object_id=original_object["object_id"],
 		compressed_object_id=compressed_object["object_id"],
+		preview_object_id=preview_object["object_id"],
 		width=processing_result["dimensions"][0],
 		height=processing_result["dimensions"][1],
 		description=description,
@@ -103,11 +113,21 @@ def list_objects():
 
 	with database.cursor(cursor_factory=client.psycopg2.extras.RealDictCursor) as cursor:
 		select_query = """
-			SELECT bucket_name, object_name, width, height
-			FROM media
-			INNER JOIN objects ON media.compressed_object_id = objects.id
-			WHERE bucket_name = 'looking-glass'
-			ORDER BY captured_at DESC
+			SELECT
+				co.bucket_name AS compressed_bucket_name,
+				co.object_name AS compressed_object_name,
+				po.bucket_name AS preview_bucket_name,
+				po.object_name AS preview_object_name,
+				m.width,
+				m.height
+			FROM
+				media m
+				INNER JOIN objects co ON m.compressed_object_id = co.id
+				INNER JOIN objects po ON m.preview_object_id = po.id
+			WHERE
+				co.bucket_name = 'looking-glass'
+			ORDER BY
+				m.captured_at DESC
 		"""
 
 		cursor.execute(select_query)

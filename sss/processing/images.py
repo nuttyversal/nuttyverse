@@ -56,9 +56,17 @@ def process_image(data: io.BytesIO) -> processing.models.ProcessingResult:
 	# Open the image and save it as WebP.
 	data.seek(0)
 	image = Image.open(data)
-	output = io.BytesIO()
-	image.save(output, "WEBP", quality=80, method=6)
-	output.seek(0)
+	compressed_output = io.BytesIO()
+	image.save(compressed_output, "WEBP", quality=80, method=6)
+	compressed_output.seek(0)
+
+	# Generate a preview of the image.
+	data.seek(0)
+	image = Image.open(data)
+	image.thumbnail((image.width // 4, image.height // 4))
+	preview_output = io.BytesIO()
+	image.save(preview_output, "WEBP", quality=0, method=6)
+	preview_output.seek(0)
 
 	# Parse the date and time from the image.
 	timestamp = parse_creation_timestamp(io.BytesIO(data.getvalue()))
@@ -69,28 +77,8 @@ def process_image(data: io.BytesIO) -> processing.models.ProcessingResult:
 		dimensions=image.size,
 		original_bytes=data,
 		original_size=data.getbuffer().nbytes,
-		compressed_bytes=output,
-		compressed_size=output.getbuffer().nbytes,
+		compressed_bytes=compressed_output,
+		compressed_size=compressed_output.getbuffer().nbytes,
+		preview_bytes=preview_output,
+		preview_size=preview_output.getbuffer().nbytes,
 	)
-
-
-# # Test read_image_tags by loading an image and printing its tags.
-# with open("/Users/nutty/Downloads/test_output.webp", "rb") as f:
-# 	tags = read_image_tags(io.BytesIO(f.read()))
-# 	print(tags)
-
-# # Test parse_datetime by loading an image and printing its date.
-# with open("/Users/nutty/Downloads/test_output.webp", "rb") as f:
-# 	date = parse_creation_timestamp(io.BytesIO(f.read()))
-# 	print(date)
-
-# # Test convert_to_webp by loading an image and saving it as WebP.
-# with open("/Users/nutty/Downloads/IMG_2301.HEIC", "rb") as f:
-# 	result = process_image(io.BytesIO(f.read()))
-
-# 	with open("/Users/nutty/Downloads/test_output2.webp", "wb") as f:
-# 		f.write(result["compressed_bytes"].read())
-
-# 	# Print compression statistics.
-# 	print(result["original_size"], result["compressed_size"])
-# 	print(result["dimensions"])

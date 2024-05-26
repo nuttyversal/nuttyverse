@@ -103,17 +103,17 @@ def list_objects(database: psycopg2.extensions.connection, bucket_name: str) -> 
 	return result
 
 
-def upload_media(database: psycopg2.extensions.connection, media_id: str, captured_at: datetime.datetime, original_object_id: str, compressed_object_id: str, width: int, height: int, description: str) -> None:
+def upload_media(database: psycopg2.extensions.connection, media_id: str, captured_at: datetime.datetime, original_object_id: str, compressed_object_id: str, preview_object_id: str, width: int, height: int, description: str) -> None:
 	"""
 	Upload media metadata to the database.
 	"""
 
 	with database.cursor() as cursor:
 		query = """
-			INSERT INTO media (id, captured_at, original_object_id, compressed_object_id, width, height, description)
-			VALUES (%s, %s, %s, %s, %s, %s, %s)
+			INSERT INTO media (id, captured_at, original_object_id, compressed_object_id, preview_object_id, width, height, description)
+			VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
 		"""
 
-		values = (media_id, captured_at, original_object_id, compressed_object_id, width, height, description)
+		values = (media_id, captured_at, original_object_id, compressed_object_id, preview_object_id, width, height, description)
 		cursor.execute(query, values)
 		database.commit()
