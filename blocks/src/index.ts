@@ -22,6 +22,7 @@ import { Text } from "~/atoms/Text";
 import { Title } from "~/atoms/Title";
 import { TootContainer } from "~/atoms/TootContainer";
 import { TootContent } from "~/atoms/TootContent";
+import { Video } from "~/atoms/Video";
 
 import { ChibiButton } from "~/molecules/ChibiButton";
 import { ExploreInnerWorld } from "~/molecules/ExploreInnerWorld";
@@ -64,6 +65,7 @@ export {
 	Title,
 	TootContainer,
 	TootContent,
+	Video,
 
 	// Molecules
 	ChibiButton,
