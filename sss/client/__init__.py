@@ -1,137 +1,118 @@
 import io
-import os
 import typing
 
 from minio import Minio
 import psycopg2
 import psycopg2.extras
+import psycopg2.extensions
 import uuid_utils
 
 import client.errors
 import client.models
 
 
-class SpaceshipStorage:
-	def __init__(self):
-		if os.environ.get("MINIO_ENDPOINT", None) is None:
-			raise client.errors.MissingConfigError("MinIO endpoint not specified.")
+def store_object(minio: Minio, database: psycopg2.extensions.connection, bucket_name: str, object_name: str, data: io.BytesIO, content_type: str | None) -> client.models.StoreObjectResult:
+	"""
+	Store an object in the object storage service and record its metadata in the database.
+	"""
 
-		if os.environ.get("MINIO_REGION", None) is None:
-			raise client.errors.MissingConfigError("MinIO region not specified.")
+	object_id = str(uuid_utils.uuid7())
 
-		if os.environ.get("MINIO_ACCESS_KEY") is None:
-			raise client.errors.MissingConfigError("MinIO access key not specified.")
+	with database.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+		query = """
+			INSERT INTO objects (id, bucket_name, object_name)
+			VALUES (%s, %s, %s)
+			ON CONFLICT (bucket_name, object_name)
+			DO UPDATE SET
+				updated_at = CURRENT_TIMESTAMP
+			RETURNING id, (xmax = 0) AS inserted
+		"""
 
-		if os.environ.get("MINIO_SECRET_KEY") is None:
-			raise client.errors.MissingConfigError("MinIO secret key not specified.")
+		values = (object_id, bucket_name, object_name)
+		cursor.execute(query, values)
+		result = cursor.fetchone()
+		database.commit()
 
-		self.client = Minio(
-			os.environ["MINIO_ENDPOINT"],
-			region=os.environ["MINIO_REGION"],
-			access_key=os.environ["MINIO_ACCESS_KEY"],
-			secret_key=os.environ["MINIO_SECRET_KEY"],
-		)
+	data.seek(0)
 
-		if os.environ.get("DATABASE_NAME", None) is None:
-			raise client.errors.MissingConfigError("Database name not specified.")
+	minio.put_object(
+		bucket_name=bucket_name,
+		object_name=object_name,
+		data=data,
+		length=data.getbuffer().nbytes,
+		content_type=content_type,
+	)
 
-		if os.environ.get("DATABASE_USER", None) is None:
-			raise client.errors.MissingConfigError("Database user not specified.")
+	return client.models.StoreObjectResult(
+		object_id=object_id if result["inserted"] else result["id"],
+		inserted=result["inserted"],
+	)
 
-		if os.environ.get("DATABASE_PASSWORD", None) is None:
-			raise client.errors.MissingConfigError("Database password not specified.")
+def delete_object(minio: Minio, database: psycopg2.extensions.connection, id: str):
+	"""
+	Delete an object from the object storage service and remove its metadata from the database.
+	"""
 
-		if os.environ.get("DATABASE_HOST", None) is None:
-			raise client.errors.MissingConfigError("Database host not specified.")
+	with database.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+		select_query = """
+			SELECT bucket_name, object_name
+			FROM objects
+			WHERE id = %s
+		"""
 
-		if os.environ.get("DATABASE_PORT", None) is None:
-			raise client.errors.MissingConfigError("Database port not specified.")
+		cursor.execute(select_query, (id,))
+		result = cursor.fetchone()
 
-		self.connection = psycopg2.connect(
-			dbname=os.environ["DATABASE_NAME"],
-			user=os.environ["DATABASE_USER"],
-			password=os.environ["DATABASE_PASSWORD"],
-			host=os.environ["DATABASE_HOST"],
-			port=os.environ["DATABASE_PORT"],
-		)
+		if not result:
+			raise client.errors.ObjectNotFoundError("Object does not exist.")
 
-	def store_object(self, bucket_name: str, object_name: str, data: io.BytesIO, content_type: str | None) -> client.models.StoreObjectResult:
-		object_id = str(uuid_utils.uuid7())
+		bucket_name = result["bucket_name"]
+		object_name = result["object_name"]
 
-		with self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
-			query = """
-				INSERT INTO objects (id, bucket_name, object_name)
-				VALUES (%s, %s, %s)
-				ON CONFLICT (bucket_name, object_name)
-				DO UPDATE SET
-					updated_at = CURRENT_TIMESTAMP
-				RETURNING id, (xmax = 0) AS inserted
-			"""
-
-			values = (object_id, bucket_name, object_name)
-			cursor.execute(query, values)
-			result = cursor.fetchone()
-			self.connection.commit()
-
-		self.client.put_object(
-			bucket_name=bucket_name,
-			object_name=object_name,
-			data=data,
-			length=data.getbuffer().nbytes,
-			content_type=content_type,
-		)
-
-		return client.models.StoreObjectResult(
-			object_id=object_id if result["inserted"] else result["id"],
-			inserted=result["inserted"],
-		)
-
-	def delete_object(self, id: str):
-		with self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
-			select_query = """
-				SELECT bucket_name, object_name
-				FROM objects
+	with database:
+		with database.cursor() as cursor:
+			delete_query = """
+				DELETE FROM objects
 				WHERE id = %s
 			"""
 
-			cursor.execute(select_query, (id,))
-			result = cursor.fetchone()
+			cursor.execute(delete_query, (id,))
+			database.commit()
 
-			if not result:
-				raise client.errors.ObjectNotFoundError("Object does not exist.")
+		minio.remove_object(
+			bucket_name=bucket_name,
+			object_name=object_name,
+		)
 
-			bucket_name = result["bucket_name"]
-			object_name = result["object_name"]
+def list_objects(database: psycopg2.extensions.connection, bucket_name: str) -> typing.List[client.models.SpaceshipObject]:
+	"""
+	List all objects in a bucket.
+	"""
 
-		with self.connection:
-			with self.connection.cursor() as cursor:
-				delete_query = """
-					DELETE FROM objects
-					WHERE id = %s
-				"""
+	with database.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+		select_query = """
+			SELECT id, created_at, updated_at, bucket_name, object_name
+			FROM objects
+			WHERE bucket_name = %s
+		"""
 
-				cursor.execute(delete_query, (id,))
-				self.connection.commit()
+		cursor.execute(select_query, (bucket_name,))
+		result = cursor.fetchall()
 
-			self.client.remove_object(
-				bucket_name=bucket_name,
-				object_name=object_name,
-			)
-
-	def list_objects(self, bucket_name: str) -> typing.List[client.models.SpaceshipObject]:
-		with self.connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)	as cursor:
-			select_query = """
-				SELECT id, created_at, updated_at, bucket_name, object_name
-				FROM objects
-				WHERE bucket_name = %s
-			"""
-
-			cursor.execute(select_query, (bucket_name,))
-			result = cursor.fetchall()
-
-		return result
+	return result
 
 
-def test():
-	client = SpaceshipStorage()
-	store_result = client.store_object("looking-glass", "folder4/message.txt", io.BytesIO(b"hello"))
+def upload_media(database: psycopg2.extensions.connection, media_id: str, original_object_id: str, compressed_object_id: str, width: int, height: int) -> None:
+	"""
+	Upload media metadata to the database.
+	"""
+
+	with database.cursor() as cursor:
+		query = """
+			INSERT INTO media (id, original_object_id, compressed_object_id, width, height)
+			VALUES (%s, %s, %s, %s, %s)
+		"""
+
+		values = (media_id, original_object_id, compressed_object_id, width, height)
+		cursor.execute(query, values)
+		database.commit()
