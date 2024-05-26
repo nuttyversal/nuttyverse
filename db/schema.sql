@@ -55,7 +55,7 @@ CREATE TABLE public.objects (
 	updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
 	bucket_name character varying(255) NOT NULL,
 	object_name character varying(255) NOT NULL,
-	media_type character varying(255) NOT NULL,
+	content_type character varying(255) NOT NULL,
 	size bigint NOT NULL
 );
 
@@ -155,4 +155,5 @@ INSERT INTO public.schema_migrations (version) VALUES
 	('20240526060328'),
 	('20240526062818'),
 	('20240526194304'),
-	('20240526214330');
+	('20240526214330'),
+	('20240526215821');
