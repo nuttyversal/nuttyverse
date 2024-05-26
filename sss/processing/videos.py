@@ -103,6 +103,7 @@ def process_video(data: io.BytesIO) -> processing.models.ProcessingResult:
 	width, height = parse_video_dimensions(stderr)
 
 	return processing.models.ProcessingResult(
+		content_type="video",
 		creation_timestamp=timestamp,
 		dimensions=(width, height),
 		original_bytes=data,
@@ -112,11 +113,11 @@ def process_video(data: io.BytesIO) -> processing.models.ProcessingResult:
 	)
 	
 
-with open("/Users/nutty/Downloads/IMG_2250.mov", "rb") as f:
-	result = process_video(io.BytesIO(f.read()))
-	print(result["original_size"], result["compressed_size"])
-	print(result["creation_timestamp"])
-	print(result["dimensions"])
+# with open("/Users/nutty/Downloads/IMG_2250.mov", "rb") as f:
+# 	result = process_video(io.BytesIO(f.read()))
+# 	print(result["original_size"], result["compressed_size"])
+# 	print(result["creation_timestamp"])
+# 	print(result["dimensions"])
 
-	with open("/Users/nutty/Downloads/IMG_2250.webm", "wb") as f:
-		f.write(result["compressed_bytes"].getvalue())
+# 	with open("/Users/nutty/Downloads/IMG_2250.webm", "wb") as f:
+# 		f.write(result["compressed_bytes"].getvalue())

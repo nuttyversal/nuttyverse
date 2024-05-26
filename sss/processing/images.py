@@ -64,6 +64,7 @@ def process_image(data: io.BytesIO) -> processing.models.ProcessingResult:
 	timestamp = parse_creation_timestamp(io.BytesIO(data.getvalue()))
 
 	return processing.models.ProcessingResult(
+		content_type="image",
 		creation_timestamp=timestamp,
 		dimensions=image.size,
 		original_bytes=data,
@@ -73,23 +74,23 @@ def process_image(data: io.BytesIO) -> processing.models.ProcessingResult:
 	)
 
 
-# Test read_image_tags by loading an image and printing its tags.
-with open("/Users/nutty/Downloads/test_output.webp", "rb") as f:
-	tags = read_image_tags(io.BytesIO(f.read()))
-	print(tags)
+# # Test read_image_tags by loading an image and printing its tags.
+# with open("/Users/nutty/Downloads/test_output.webp", "rb") as f:
+# 	tags = read_image_tags(io.BytesIO(f.read()))
+# 	print(tags)
 
-# Test parse_datetime by loading an image and printing its date.
-with open("/Users/nutty/Downloads/test_output.webp", "rb") as f:
-	date = parse_creation_timestamp(io.BytesIO(f.read()))
-	print(date)
+# # Test parse_datetime by loading an image and printing its date.
+# with open("/Users/nutty/Downloads/test_output.webp", "rb") as f:
+# 	date = parse_creation_timestamp(io.BytesIO(f.read()))
+# 	print(date)
 
-# Test convert_to_webp by loading an image and saving it as WebP.
-with open("/Users/nutty/Downloads/IMG_2301.HEIC", "rb") as f:
-	result = process_image(io.BytesIO(f.read()))
+# # Test convert_to_webp by loading an image and saving it as WebP.
+# with open("/Users/nutty/Downloads/IMG_2301.HEIC", "rb") as f:
+# 	result = process_image(io.BytesIO(f.read()))
 
-	with open("/Users/nutty/Downloads/test_output2.webp", "wb") as f:
-		f.write(result["compressed_bytes"].read())
+# 	with open("/Users/nutty/Downloads/test_output2.webp", "wb") as f:
+# 		f.write(result["compressed_bytes"].read())
 
-	# Print compression statistics.
-	print(result["original_size"], result["compressed_size"])
-	print(result["dimensions"])
+# 	# Print compression statistics.
+# 	print(result["original_size"], result["compressed_size"])
+# 	print(result["dimensions"])

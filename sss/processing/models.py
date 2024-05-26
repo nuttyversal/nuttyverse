@@ -4,6 +4,7 @@ import typing
 
 
 class ProcessingResult(typing.TypedDict):
+	content_type: typing.Literal["image", "video"]
 	creation_timestamp: typing.Optional[datetime.datetime]
 	dimensions: typing.Tuple[int, int]
 	original_bytes: io.BytesIO
