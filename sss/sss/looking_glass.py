@@ -95,7 +95,8 @@ def upload_object():
 @looking_glass.route("/objects", methods=["GET"])
 def list_objects():
 	"""
-	List all objects associated with Looking Glass media in the database.
+	List all objects associated with Looking Glass media in the database sorted
+	in reverse chronological order.
 	"""
 
 	database = client.connections.get_database()
@@ -106,6 +107,7 @@ def list_objects():
 			FROM media
 			INNER JOIN objects ON media.compressed_object_id = objects.id
 			WHERE bucket_name = 'looking-glass'
+			ORDER BY captured_at DESC
 		"""
 
 		cursor.execute(select_query)
