@@ -21,15 +21,15 @@ def store_object(minio: Minio, database: psycopg2.extensions.connection, bucket_
 
 	with database.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
 		query = """
-			INSERT INTO objects (id, bucket_name, object_name)
-			VALUES (%s, %s, %s)
+			INSERT INTO objects (id, bucket_name, object_name, content_type, size)
+			VALUES (%s, %s, %s, %s, %s)
 			ON CONFLICT (bucket_name, object_name)
 			DO UPDATE SET
 				updated_at = CURRENT_TIMESTAMP
 			RETURNING id, (xmax = 0) AS inserted
 		"""
 
-		values = (object_id, bucket_name, object_name)
+		values = (object_id, bucket_name, object_name, content_type, data.getbuffer().nbytes)
 		cursor.execute(query, values)
 		result = cursor.fetchone()
 		database.commit()
@@ -48,6 +48,7 @@ def store_object(minio: Minio, database: psycopg2.extensions.connection, bucket_
 		object_id=object_id if result["inserted"] else result["id"],
 		inserted=result["inserted"],
 	)
+
 
 def delete_object(minio: Minio, database: psycopg2.extensions.connection, id: str):
 	"""
@@ -84,6 +85,7 @@ def delete_object(minio: Minio, database: psycopg2.extensions.connection, id: st
 			bucket_name=bucket_name,
 			object_name=object_name,
 		)
+
 
 def list_objects(database: psycopg2.extensions.connection, bucket_name: str) -> typing.List[client.models.SpaceshipObject]:
 	"""

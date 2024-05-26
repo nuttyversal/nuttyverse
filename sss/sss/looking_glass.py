@@ -61,8 +61,10 @@ def upload_object():
 
 	if processing_result["content_type"] == "image":
 		processed_file_ext = "webp"
+		processed_file_media_type = "image/webp"
 	elif processing_result["content_type"] == "video":
 		processed_file_ext = "webm"
+		processed_file_media_type = "video/webm"
 
 	compressed_object = client.store_object(
 		minio=minio,
@@ -70,7 +72,7 @@ def upload_object():
 		bucket_name="looking-glass",
 		object_name=f"{media_id}/compressed.{processed_file_ext}",
 		data=processing_result["compressed_bytes"],
-		content_type=file.content_type,
+		content_type=processed_file_media_type,
 	)
 
 	preview_object = client.store_object(
@@ -79,7 +81,7 @@ def upload_object():
 		bucket_name="looking-glass",
 		object_name=f"{media_id}/preview.{processed_file_ext}",
 		data=processing_result["preview_bytes"],
-		content_type=file.content_type,
+		content_type=processed_file_media_type,
 	)
 
 	# Record the metadata in the database.
