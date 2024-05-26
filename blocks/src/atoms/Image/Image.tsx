@@ -2,6 +2,7 @@ import classNames from "classnames";
 import {
 	container,
 	image,
+	loadingContainer,
 	withGaussianBlur,
 	withPixelatedRendering,
 } from "./Image.css";
@@ -48,7 +49,7 @@ const ImageComponent = (props: ImageProps) => {
 	});
 
 	return (
-		<div className={container}>
+		<div className={imageSrc === previewSrc ? loadingContainer : container}>
 			<img src={imageSrc} className={imageClassNames} {...htmlImgProps} />
 		</div>
 	);

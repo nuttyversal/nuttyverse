@@ -8,6 +8,12 @@ export const container = style({
 	borderStyle: "solid",
 });
 
+export const loadingContainer = style({
+	borderColor: colors.gray.solid["11"],
+	transition: "all 300ms ease-out",
+	opacity: 0.2,
+});
+
 export const image = style({
 	filter: "none",
 	transition: "filter 500ms ease-out",
