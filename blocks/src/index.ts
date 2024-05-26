@@ -33,8 +33,9 @@ import { MessageOfTheDay } from "./molecules/MessageOfTheDay";
 import { NavigationItemList } from "./molecules/NavigationItemList";
 import { TootBubble } from "~/molecules/TootBubble";
 
-import { Header } from "~/organisms/Header";
 import { Footer } from "~/organisms/Footer";
+import { Header } from "~/organisms/Header";
+import { LookingGlass } from "~/organisms/LookingGlass";
 import { Sidebar } from "~/organisms/Sidebar";
 
 import { useThemeSwitcher } from "~/styles/themes/contract";
@@ -78,8 +79,9 @@ export {
 	TootBubble,
 
 	// Organisms
-	Header,
 	Footer,
+	Header,
+	LookingGlass,
 	Sidebar,
 
 	// Utilities
