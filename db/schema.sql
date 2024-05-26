@@ -39,7 +39,8 @@ CREATE TABLE public.media (
 	compressed_object_id uuid NOT NULL,
 	width integer NOT NULL,
 	height integer NOT NULL,
-	description text NOT NULL
+	description text NOT NULL,
+	captured_at timestamp without time zone
 );
 
 
@@ -140,4 +141,5 @@ INSERT INTO public.schema_migrations (version) VALUES
 	('20240518021715'),
 	('20240524233947'),
 	('20240525180433'),
-	('20240526060328');
+	('20240526060328'),
+	('20240526062818');
