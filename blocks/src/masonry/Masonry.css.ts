@@ -32,7 +32,7 @@ export const backdrop = style({
 	height: "100%",
 	width: "100%",
 	overflow: "hidden",
-	zIndex: 100,
+	zIndex: 1000,
 });
 
 export const lightboxContainer = style({
@@ -42,7 +42,7 @@ export const lightboxContainer = style({
 	justifyContent: "center",
 	alignItems: "center",
 	animation: `${fadeIn} 200ms ease-in`,
-	zIndex: 200,
+	zIndex: 2000,
 });
 
 export const lightboxContent = style({

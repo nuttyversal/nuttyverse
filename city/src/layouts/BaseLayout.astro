@@ -1,6 +1,6 @@
 ---
 import { ViewTransitions } from "astro:transitions";
-import { Header, Sidebar, TootBubble } from "@nuttyverse/blocks";
+import { Header, Lightbox, Sidebar, TootBubble } from "@nuttyverse/blocks";
 import {
 	body,
 	slot,
@@ -106,11 +106,10 @@ const { title } = Astro.props.frontmatter || Astro.props;
 			</div>
 
 			<div class={responsiveSidebar}>
-				<Sidebar
-					className={responsiveSidebar}
-					client:only="react"
-				/>
+				<Sidebar className={responsiveSidebar} client:only="react" />
 			</div>
 		</div>
+
+		<Lightbox client:only="react" />
 	</body>
 </html>

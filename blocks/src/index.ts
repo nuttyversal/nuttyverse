@@ -38,6 +38,8 @@ import { Header } from "~/organisms/Header";
 import { LookingGlass } from "~/organisms/LookingGlass";
 import { Sidebar } from "~/organisms/Sidebar";
 
+import { Masonry, Lightbox } from "~/masonry";
+
 import { useThemeSwitcher } from "~/styles/themes/contract";
 
 export {
@@ -83,6 +85,10 @@ export {
 	Header,
 	LookingGlass,
 	Sidebar,
+
+	// Masonry
+	Masonry,
+	Lightbox,
 
 	// Utilities
 	useThemeSwitcher,

@@ -341,8 +341,6 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 					})}
 				</div>
 			</ScrollContainer>
-
-			<Lightbox />
 		</>
 	);
 };
@@ -382,7 +380,7 @@ const MasonryBlock: React.FC<MasonryBlockProps> = (props) => {
 	);
 };
 
-const Lightbox: React.FC = () => {
+export const Lightbox: React.FC = () => {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const isLightboxOpen = useStore($isLightboxOpen);
 	const anchor = useStore($anchor);
