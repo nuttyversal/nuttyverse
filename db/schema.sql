@@ -40,7 +40,8 @@ CREATE TABLE public.media (
 	width integer NOT NULL,
 	height integer NOT NULL,
 	description text NOT NULL,
-	captured_at timestamp without time zone
+	captured_at timestamp without time zone,
+	preview_object_id uuid NOT NULL
 );
 
 
@@ -129,6 +130,14 @@ ALTER TABLE ONLY public.media
 
 
 --
+-- Name: media fk_preview_object; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.media
+	ADD CONSTRAINT fk_preview_object FOREIGN KEY (preview_object_id) REFERENCES public.objects(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -142,4 +151,5 @@ INSERT INTO public.schema_migrations (version) VALUES
 	('20240524233947'),
 	('20240525180433'),
 	('20240526060328'),
-	('20240526062818');
+	('20240526062818'),
+	('20240526194304');
