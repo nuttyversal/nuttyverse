@@ -41,4 +41,6 @@ export const spacing = {
 	"80": "20rem",
 	"96": "24rem",
 	"144": "36rem",
+	"192": "48rem",
+	"256": "64rem",
 } as const;

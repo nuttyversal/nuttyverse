@@ -56,4 +56,5 @@ export const lightboxContent = style({
 	margin: "auto",
 	height: "auto",
 	width: "auto",
+	maxWidth: spacing[256],
 });
