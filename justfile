@@ -10,3 +10,6 @@ deploy:
 		--flake .#nuttycloud \
 		--build-host versal@nuttycloud \
 		--target-host versal@nuttycloud
+
+update:
+	nix flake update
