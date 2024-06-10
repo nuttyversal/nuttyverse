@@ -36,12 +36,16 @@ export const Video = (props: VideoProps) => {
 		}
 	}, []);
 
+	const containerClassNames = classNames(container, {
+		[loadingContainer]: videoSrc === previewSrc,
+	});
+
 	const videoClassNames = classNames(video, {
 		[withGaussianBlur]: videoSrc === previewSrc,
 	});
 
 	return (
-		<div className={videoSrc === previewSrc ? loadingContainer : container}>
+		<div className={containerClassNames}>
 			<video
 				src={videoSrc}
 				className={videoClassNames}

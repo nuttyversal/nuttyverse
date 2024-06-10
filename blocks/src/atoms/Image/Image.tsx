@@ -43,13 +43,17 @@ const ImageComponent = (props: ImageProps) => {
 		}
 	}, [src, previewSrc]);
 
+	const containerClassNames = classNames(container, {
+		[loadingContainer]: imageSrc === previewSrc,
+	});
+
 	const imageClassNames = classNames(image, {
 		[withPixelatedRendering]: pixelated,
 		[withGaussianBlur]: imageSrc === previewSrc,
 	});
 
 	return (
-		<div className={imageSrc === previewSrc ? loadingContainer : container}>
+		<div className={containerClassNames}>
 			<img src={imageSrc} className={imageClassNames} {...htmlImgProps} />
 		</div>
 	);
