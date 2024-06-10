@@ -53,9 +53,12 @@ def process_image(data: io.BytesIO) -> processing.models.ProcessingResult:
 	This will also strip any metadata from the image.
 	"""
 
-	# Open the image and save it as WebP.
+	# Open the image and save it as WebP. The max width is 1024 px.
 	data.seek(0)
 	image = Image.open(data)
+	scaled_width = 1024 # px
+	scaled_height = int(image.height * (scaled_width / image.width))
+	image.thumbnail((scaled_width, scaled_height))
 	compressed_output = io.BytesIO()
 	image.save(compressed_output, "WEBP", quality=80, method=6)
 	compressed_output.seek(0)
