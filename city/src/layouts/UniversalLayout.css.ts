@@ -3,12 +3,9 @@ import { layout, spacing } from "@nuttyverse/blocks";
 
 export const main = style({
 	width: "100%",
-});
-
-export const container = style({
-	marginBottom: "1rem",
 	height: `calc(100dvh - ${layout.headerHeight.wide} - ${layout.footerHeight.wide})`,
 	maxHeight: `calc(100dvh - ${layout.headerHeight.wide} - ${layout.footerHeight.wide})`,
+	marginBottom: spacing[2],
 
 	"@media": {
 		[`screen and (max-width: ${spacing[144]})`]: {

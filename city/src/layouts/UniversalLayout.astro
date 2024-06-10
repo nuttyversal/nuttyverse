@@ -1,7 +1,7 @@
 ---
-import { Footer, ScrollContainer } from "@nuttyverse/blocks";
+import { Footer } from "@nuttyverse/blocks";
 import BaseLayout from "./BaseLayout.astro";
-import { main, container } from "./UniversalLayout.css.ts";
+import { main } from "./UniversalLayout.css.ts";
 
 type Props = {
 	title?: string;
@@ -13,9 +13,7 @@ const { title } = Astro.props.frontmatter || Astro.props;
 
 <BaseLayout title={title}>
 	<main class={main} transition:animate="fade">
-		<ScrollContainer className={container}>
-			<slot />
-		</ScrollContainer>
+		<slot />
 	</main>
 	<Footer />
 </BaseLayout>
