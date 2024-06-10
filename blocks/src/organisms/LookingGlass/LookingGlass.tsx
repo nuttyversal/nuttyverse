@@ -105,6 +105,7 @@ export const LookingGlass: React.FC = () => {
 			key: object.compressed_object_name,
 			content: objectSrc.endsWith(".webp") ? (
 				<Image
+					key={objectSrc}
 					src={objectSrc}
 					previewSrc={previewSrc}
 					height="100%"
@@ -114,6 +115,7 @@ export const LookingGlass: React.FC = () => {
 				/>
 			) : (
 				<Video
+					key={objectSrc}
 					src={objectSrc}
 					previewSrc={previewSrc}
 					height="100%"
@@ -124,7 +126,11 @@ export const LookingGlass: React.FC = () => {
 					loop={true}
 				/>
 			),
-			boundingBox: {
+			masonryBoundingBox: {
+				width: object.width,
+				height: object.height,
+			},
+			lightboxBoundingBox: {
 				width: object.width,
 				height: object.height,
 			},

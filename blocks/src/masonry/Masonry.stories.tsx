@@ -37,7 +37,8 @@ const generateMasonryContentBlock = (): MasonryContentBlock => {
 				draggable={false}
 			/>
 		),
-		boundingBox,
+		masonryBoundingBox: boundingBox,
+		lightboxBoundingBox: boundingBox,
 		previous: null,
 		next: null,
 	};
@@ -172,7 +173,11 @@ export const LookingGlass: Story = {
 						loop={true}
 					/>
 				),
-				boundingBox: {
+				masonryBoundingBox: {
+					width: object.width,
+					height: object.height,
+				},
+				lightboxBoundingBox: {
 					width: object.width,
 					height: object.height,
 				},

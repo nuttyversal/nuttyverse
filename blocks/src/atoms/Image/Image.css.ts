@@ -2,6 +2,8 @@ import { style } from "@vanilla-extract/css";
 import { colors } from "~/styles/themes/contract.css";
 
 export const container = style({
+	height: "100%",
+	width: "100%",
 	borderColor: colors.gray.solid["12"],
 	borderWidth: "3px",
 	borderRadius: "3px",
@@ -11,7 +13,7 @@ export const container = style({
 
 export const loadingContainer = style({
 	borderColor: colors.gray.solid["11"],
-	opacity: 0,
+	opacity: 0.2,
 });
 
 export const image = style({

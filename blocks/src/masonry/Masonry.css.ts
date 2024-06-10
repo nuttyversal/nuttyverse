@@ -52,8 +52,6 @@ export const lightboxContainer = style({
 });
 
 export const lightboxContent = style({
-	objectFit: "contain",
+	objectFit: "cover",
 	margin: "auto",
-	height: "auto",
-	width: "auto",
 });

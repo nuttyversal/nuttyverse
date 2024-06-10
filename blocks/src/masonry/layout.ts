@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { content } from "~/atoms/TootContent/TootContent.css";
 
 /**
  * Represents bounding box dimensions.
@@ -38,7 +39,12 @@ export type MasonryContentBlock<Mixin = {}> = {
 	/**
 	 * The (static) dimensions of the content block.
 	 */
-	boundingBox: BoundingBox;
+	masonryBoundingBox: BoundingBox;
+
+	/**
+	 * The (static) dimensions of the lightbox content.
+	 */
+	lightboxBoundingBox: BoundingBox;
 
 	/**
 	 * The content block that precedes this one in the list of content blocks.
@@ -158,8 +164,8 @@ export function layoutContentBlocks(
 		const resizedBoundingBox: BoundingBox = {
 			width: singleColumnWidth,
 			height:
-				(singleColumnWidth / contentBlock.boundingBox.width) *
-				contentBlock.boundingBox.height,
+				(singleColumnWidth / contentBlock.masonryBoundingBox.width) *
+				contentBlock.masonryBoundingBox.height,
 		};
 
 		// Annotate the position of the next content block.
@@ -167,7 +173,8 @@ export function layoutContentBlocks(
 			WithPosition = {
 			key: contentBlock.key,
 			content: contentBlock.content,
-			boundingBox: resizedBoundingBox,
+			masonryBoundingBox: resizedBoundingBox,
+			lightboxBoundingBox: contentBlock.lightboxBoundingBox,
 			position: {
 				x:
 					columnIndex * singleColumnWidth +
