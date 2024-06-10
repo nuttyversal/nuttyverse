@@ -63,7 +63,9 @@ def process_image(data: io.BytesIO) -> processing.models.ProcessingResult:
 	# Generate a preview of the image.
 	data.seek(0)
 	image = Image.open(data)
-	image.thumbnail((image.width // 4, image.height // 4))
+	scaled_width = 32 # px
+	scaled_height = int(image.height * (scaled_width / image.width))
+	image.thumbnail((scaled_width, scaled_height))
 	preview_output = io.BytesIO()
 	image.save(preview_output, "WEBP", quality=0, method=6)
 	preview_output.seek(0)
