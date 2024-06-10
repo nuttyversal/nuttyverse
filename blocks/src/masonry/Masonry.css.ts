@@ -43,6 +43,12 @@ export const lightboxContainer = style({
 	alignItems: "center",
 	animation: `${fadeIn} 200ms ease-in`,
 	zIndex: 2000,
+
+	"@media": {
+		"screen and (max-width: 768px)": {
+			padding: spacing[4],
+		},
+	},
 });
 
 export const lightboxContent = style({
