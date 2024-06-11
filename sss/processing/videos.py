@@ -74,19 +74,19 @@ def process_video(data: io.BytesIO) -> processing.models.ProcessingResult:
 	with open(filename, "wb") as f:
 		f.write(data.read())
 	
-	# Compress the video using ffmpeg.
+	# Compress the video using ffmpeg (scaled to 1024 pixel width).
 	compression_process = (
 		ffmpeg
 		.input(filename)
-		.output("pipe:", format="webm", vcodec="libvpx-vp9", acodec="libvorbis")
+		.output("pipe:", format="webm", vcodec="libvpx-vp9", acodec="libvorbis", vf="scale=1024:-1")
 		.run_async(pipe_stdout=True, pipe_stderr=True)
 	)
 
-	# Generate a preview of the video.
+	# Generate a preview of the video (scaled to 32 pixel width).
 	preview_process = (
 		ffmpeg
 		.input(filename)
-		.output("pipe:", format="webm", vcodec="libvpx-vp9", acodec="libvorbis", vf="scale=120:-1")
+		.output("pipe:", format="webm", vcodec="libvpx-vp9", acodec="libvorbis", vf="scale=32:-1")
 		.run_async(pipe_stdout=True, pipe_stderr=True)
 	)
 
@@ -127,4 +127,3 @@ def process_video(data: io.BytesIO) -> processing.models.ProcessingResult:
 		preview_bytes=preview_output,
 		preview_size=preview_output.getbuffer().nbytes,
 	)
-	
