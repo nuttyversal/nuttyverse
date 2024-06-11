@@ -45,7 +45,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
 		{
 			name: "Code",
 			icon: faCode,
-			href: "https://code.nuttyver.se/",
+			href: "https://code.nuttyver.se/observable/nuttyverse",
 			external: true,
 		},
 		{
