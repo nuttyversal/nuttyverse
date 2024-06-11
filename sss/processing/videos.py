@@ -39,7 +39,7 @@ def parse_creation_timestamp(stderr: str) -> typing.Optional[datetime.datetime]:
 	return timestamp
 
 
-def parse_video_dimensions(stderr: str) -> typing.Tuple[int, int]:
+def parse_video_dimensions(stderr: str, target_width: int) -> typing.Tuple[int, int]:
 	"""
 	Parses the dimensions of a video from the stderr of an ffmpeg process.
 	"""
@@ -52,7 +52,8 @@ def parse_video_dimensions(stderr: str) -> typing.Tuple[int, int]:
 				dimensions = re.search(r"\d{3,4}x\d{3,4}", line).group()
 				width, height = map(int, dimensions.split("x"))
 
-				return width, height
+				if width == target_width:
+					return width, height
 
 			except (IndexError, ValueError):
 				continue
@@ -114,7 +115,7 @@ def process_video(data: io.BytesIO) -> processing.models.ProcessingResult:
 	timestamp = parse_creation_timestamp(stderr)
 
 	# Parse the dimensions from stderr.
-	width, height = parse_video_dimensions(stderr)
+	width, height = parse_video_dimensions(stderr, target_width=1024)
 
 	return processing.models.ProcessingResult(
 		content_type="video",

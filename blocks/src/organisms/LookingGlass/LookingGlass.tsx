@@ -12,8 +12,8 @@ export const LookingGlass: React.FC = () => {
 			preview_bucket_name: "looking-glass",
 			preview_object_name:
 				"0190051f-4e10-72e7-b910-abc430473c16/preview.webm",
-			height: 1280,
-			width: 1708,
+			height: 767,
+			width: 1024,
 		},
 		{
 			compressed_bucket_name: "looking-glass",
@@ -22,8 +22,8 @@ export const LookingGlass: React.FC = () => {
 			preview_bucket_name: "looking-glass",
 			preview_object_name:
 				"0190051e-9ac6-7a56-ae9d-0e310635ea45/preview.webm",
-			height: 1504,
-			width: 1206,
+			height: 1277,
+			width: 1024,
 		},
 		{
 			compressed_bucket_name: "looking-glass",
@@ -52,8 +52,8 @@ export const LookingGlass: React.FC = () => {
 			preview_bucket_name: "looking-glass",
 			preview_object_name:
 				"01900511-6b87-7329-a3cc-c9f023273257/preview.webm",
-			height: 1292,
-			width: 1722,
+			height: 768,
+			width: 1024,
 		},
 		{
 			compressed_bucket_name: "looking-glass",
@@ -82,8 +82,8 @@ export const LookingGlass: React.FC = () => {
 			preview_bucket_name: "looking-glass",
 			preview_object_name:
 				"018fb6fc-97cc-70c5-8d81-8e443f8d1d6a/preview.webm",
-			height: 1412,
-			width: 1060,
+			height: 1364,
+			width: 1024,
 		},
 		{
 			compressed_bucket_name: "looking-glass",
@@ -92,8 +92,8 @@ export const LookingGlass: React.FC = () => {
 			preview_bucket_name: "looking-glass",
 			preview_object_name:
 				"018fb6f9-b2a2-786f-9bc0-c58084d797cb/preview.webm",
-			height: 1676,
-			width: 1256,
+			height: 1366,
+			width: 1024,
 		},
 		{
 			compressed_bucket_name: "looking-glass",
