@@ -1,5 +1,5 @@
 ---
-import { Title, LookingGlass, spacing } from "@nuttyverse/blocks";
+import { LookingGlass, Text, QuoteBlock, spacing } from "@nuttyverse/blocks";
 import UniversalLayout from "../layouts/UniversalLayout.astro";
 ---
 
@@ -10,9 +10,24 @@ import UniversalLayout from "../layouts/UniversalLayout.astro";
 			flexDirection: "column",
 			height: "100%",
 			gap: spacing[2],
+			paddingLeft: spacing[4],
+			paddingRight: spacing[4],
 		}}
 	>
-		<Title>☙ Looking Glass ❧</Title>
+		<QuoteBlock
+			citation="https://code.nuttyver.se/observable/nuttyverse/src/branch/main/curse.txt"
+			style={{
+				width: "100%",
+				marginTop: spacing[2],
+				marginBottom: spacing[2],
+			}}
+		>
+			<Text wdth={120} weight={500} marginless>
+				“A dream is not reality, but who's to say which is which?”
+			</Text>
+			<Text size="base" marginless>― Alice Through the Looking Glass</Text>
+		</QuoteBlock>
+
 		<LookingGlass client:only="react" />
 	</div>
 </UniversalLayout>
