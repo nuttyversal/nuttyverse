@@ -121,7 +121,7 @@ def upload_media(database: psycopg2.extensions.connection, media_id: str, captur
 		database.commit()
 
 
-def update_media(database: psycopg2.extensions.connection, media_id: str, compressed_object_id: str, preview_object_id: str) -> None:
+def update_media(database: psycopg2.extensions.connection, media_id: str, compressed_object_id: str, preview_object_id: str, width: int, height: int) -> None:
 	"""
 	Update media metadata in the database with new object IDs for the compressed
 	and preview images.
@@ -130,10 +130,10 @@ def update_media(database: psycopg2.extensions.connection, media_id: str, compre
 	with database.cursor() as cursor:
 		query = """
 			UPDATE media
-			SET compressed_object_id = %s, preview_object_id = %s
+			SET compressed_object_id = %s, preview_object_id = %s, width = %s, height = %s
 			WHERE id = %s
 		"""
 
-		values = (compressed_object_id, preview_object_id, media_id)
+		values = (compressed_object_id, preview_object_id, width, height, media_id)
 		cursor.execute(query, values)
 		database.commit()

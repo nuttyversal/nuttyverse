@@ -204,6 +204,8 @@ def reprocess_objects():
 			media_id=record["media_id"],
 			compressed_object_id=compressed_object["object_id"],
 			preview_object_id=preview_object["object_id"],
+			width=processing_result["dimensions"][0],
+			height=processing_result["dimensions"][1],
 		)
 
 		result["processed"] += 1

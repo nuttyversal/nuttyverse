@@ -63,6 +63,9 @@ def process_image(data: io.BytesIO) -> processing.models.ProcessingResult:
 	image.save(compressed_output, "WEBP", quality=80, method=6)
 	compressed_output.seek(0)
 
+	# Take note of the compressed image dimensions.
+	compressed_dimensions = (scaled_width, scaled_height)
+
 	# Generate a preview of the image.
 	data.seek(0)
 	image = Image.open(data)
@@ -79,7 +82,7 @@ def process_image(data: io.BytesIO) -> processing.models.ProcessingResult:
 	return processing.models.ProcessingResult(
 		content_type="image",
 		creation_timestamp=timestamp,
-		dimensions=image.size,
+		dimensions=compressed_dimensions,
 		original_bytes=data,
 		original_size=data.getbuffer().nbytes,
 		compressed_bytes=compressed_output,
