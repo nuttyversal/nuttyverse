@@ -20,6 +20,7 @@ import { QuoteBlock } from "~/atoms/QuoteBlock";
 import { ScrollContainer } from "~/atoms/ScrollContainer";
 import { Text } from "~/atoms/Text";
 import { Title } from "~/atoms/Title";
+import { Tooltip } from "~/atoms/Tooltip";
 import { TootContainer } from "~/atoms/TootContainer";
 import { TootContent } from "~/atoms/TootContent";
 import { Video } from "~/atoms/Video";
@@ -66,6 +67,7 @@ export {
 	ScrollContainer,
 	Text,
 	Title,
+	Tooltip,
 	TootContainer,
 	TootContent,
 	Video,
