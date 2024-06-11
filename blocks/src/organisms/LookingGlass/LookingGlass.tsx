@@ -18,6 +18,16 @@ export const LookingGlass: React.FC = () => {
 		{
 			compressed_bucket_name: "looking-glass",
 			compressed_object_name:
+				"0190053f-b8ee-7e23-aebd-bbe330a920de/compressed.webp",
+			preview_bucket_name: "looking-glass",
+			preview_object_name:
+				"0190053f-b8ee-7e23-aebd-bbe330a920de/preview.webp",
+			height: 645,
+			width: 1024,
+		},
+		{
+			compressed_bucket_name: "looking-glass",
+			compressed_object_name:
 				"0190051e-9ac6-7a56-ae9d-0e310635ea45/compressed.webm",
 			preview_bucket_name: "looking-glass",
 			preview_object_name:
