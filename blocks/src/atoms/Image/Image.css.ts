@@ -8,7 +8,7 @@ export const container = style({
 	borderWidth: "3px",
 	borderRadius: "3px",
 	borderStyle: "solid",
-	transition: "all 500ms linear",
+	transition: "all 300ms linear",
 });
 
 export const loadingContainer = style({
@@ -18,7 +18,7 @@ export const loadingContainer = style({
 
 export const image = style({
 	filter: "none",
-	transition: "filter 500ms linear",
+	transition: "filter 300ms linear",
 });
 
 export const withPixelatedRendering = style({
