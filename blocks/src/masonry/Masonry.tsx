@@ -1,7 +1,13 @@
 import { gsap } from "gsap";
 import classNames from "classnames";
 import { useStore } from "@nanostores/react";
-import { CSSProperties, useEffect, useRef, useState } from "react";
+import {
+	CSSProperties,
+	MouseEventHandler,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import { ScrollContainer } from "~/atoms/ScrollContainer";
 import { colors } from "~/styles/themes/contract.css";
 import { spacing } from "~/styles/tokens/spacing";
@@ -368,7 +374,13 @@ const MasonryBlock: React.FC<MasonryBlockProps> = (props) => {
 		borderStyle: props.anchor ? "solid" : undefined,
 	};
 
-	const open = () => {
+	const open: MouseEventHandler = (e) => {
+		const leftMouseButton = 0;
+
+		if (e.button !== leftMouseButton) {
+			return;
+		}
+
 		setAnchor(props.contentBlock, true);
 		setPreventNextScroll();
 		openLightbox();
