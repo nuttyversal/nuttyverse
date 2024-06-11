@@ -21,6 +21,7 @@ import { ScrollContainer } from "~/atoms/ScrollContainer";
 import { Text } from "~/atoms/Text";
 import { Title } from "~/atoms/Title";
 import { Tooltip } from "~/atoms/Tooltip";
+import { TooltipContainer } from "~/atoms/TooltipContainer";
 import { TootContainer } from "~/atoms/TootContainer";
 import { TootContent } from "~/atoms/TootContent";
 import { Video } from "~/atoms/Video";
@@ -68,6 +69,7 @@ export {
 	Text,
 	Title,
 	Tooltip,
+	TooltipContainer,
 	TootContainer,
 	TootContent,
 	Video,

@@ -39,7 +39,7 @@ export const Tooltip: React.FC<TooltipProps> = (props) => {
 			// Center the tooltip just above the mouse cursor.
 			const { width, height } = tooltipRef.current.getBoundingClientRect();
 			const x = mouseX - width / 2;
-			const y = mouseY - height + 10;
+			const y = mouseY - height - 4;
 
 			// Tween the tooltip to the new position.
 			gsap.to(tooltipRef.current, {
