@@ -2,6 +2,10 @@ import { style } from "@vanilla-extract/css";
 import { colors } from "~/styles/themes/contract.css";
 import { spacing } from "~/styles/tokens/spacing";
 
+export const gradientContainer = style({
+	position: "relative",
+});
+
 export const container = style({
 	overflowY: "scroll",
 	height: "100%",
@@ -17,7 +21,7 @@ export const gradientOverlay = style({
 	right: 0,
 	height: spacing[16],
 	pointerEvents: "none",
-	zIndex: 1,
+	zIndex: 3000,
 });
 
 export const topGradient = style({

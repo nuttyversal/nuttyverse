@@ -14,6 +14,7 @@ import {
 	gradientOverlay,
 	topGradient,
 	bottomGradient,
+	gradientContainer,
 } from "./ScrollContainer.css";
 
 type ScrollContainerProps = {
@@ -88,9 +89,7 @@ export const ScrollContainer = forwardRef<HTMLDivElement, ScrollContainerProps>(
 		}, [containerRef.current]);
 
 		return (
-			<div
-				style={{ position: "relative", overflow: "hidden", height: "100%" }}
-			>
+			<div className={classNames(gradientContainer, container, className)}>
 				<div
 					ref={topGradientRef}
 					className={classNames(gradientOverlay, topGradient)}

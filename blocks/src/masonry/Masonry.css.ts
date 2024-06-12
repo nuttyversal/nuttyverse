@@ -36,6 +36,7 @@ export const backdrop = style({
 });
 
 export const lightboxContainer = style({
+	position: "absolute",
 	overflow: "auto",
 	padding: spacing[16],
 	display: "flex",
