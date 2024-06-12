@@ -1,13 +1,11 @@
-import classNames from "classnames";
-import gsap from "gsap";
+import { MouseEventHandler, ReactNode, useEffect } from "react";
+import { useStore } from "@nanostores/react";
 import {
-	MouseEventHandler,
-	ReactNode,
-	useEffect,
-	useRef,
-	useState,
-} from "react";
-import { hidden, tooltip } from "./Tooltip.css";
+	TooltipContent,
+	$activeTooltip,
+	hideTooltip,
+	showTooltip,
+} from "./store";
 
 type TooltipProps = {
 	/**
@@ -18,73 +16,32 @@ type TooltipProps = {
 	/**
 	 * Specifies the tooltip's content.
 	 */
-	content: ReactNode;
+	content: TooltipContent;
 };
 
 export const Tooltip: React.FC<TooltipProps> = (props) => {
-	const tooltipRef = useRef<HTMLDivElement>(null);
-	const [isVisible, setIsVisible] = useState(false);
-	const { x: mouseX, y: mouseY } = useMousePosition();
+	const activeTooltip = useStore($activeTooltip);
 
 	const handleMouseEnter: MouseEventHandler = () => {
-		setIsVisible(true);
+		showTooltip(props.content);
 	};
 
 	const handleMouseLeave: MouseEventHandler = () => {
-		setIsVisible(false);
+		hideTooltip();
 	};
 
+	// Hide the tooltip if the component unmounts.
 	useEffect(() => {
-		if (isVisible && tooltipRef.current) {
-			// Center the tooltip just above the mouse cursor.
-			const { width, height } = tooltipRef.current.getBoundingClientRect();
-			const x = mouseX - width / 2;
-			const y = mouseY - height - 4;
-
-			// Tween the tooltip to the new position.
-			gsap.to(tooltipRef.current, {
-				x,
-				y,
-				ease: "power2.out",
-				duration: 0.2,
-			});
-		}
-	}, [mouseX, mouseY]);
-
-	const tooltipClassNames = classNames(tooltip, {
-		[hidden]: !isVisible,
-	});
-
-	return (
-		<div>
-			<div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-				{props.children}
-			</div>
-
-			<div className={tooltipClassNames} ref={tooltipRef}>
-				{props.content}
-			</div>
-		</div>
-	);
-};
-
-/**
- * A hook that returns the current mouse position.
- */
-const useMousePosition = () => {
-	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-	const handleMouseMove = (e: MouseEvent) => {
-		setMousePosition({
-			x: e.clientX,
-			y: e.clientY,
-		});
-	};
-
-	useEffect(() => {
-		window.addEventListener("mousemove", handleMouseMove);
-		return () => window.removeEventListener("mousemove", handleMouseMove);
+		return () => {
+			if (props.content === activeTooltip) {
+				hideTooltip();
+			}
+		};
 	}, []);
 
-	return mousePosition;
+	return (
+		<div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+			{props.children}
+		</div>
+	);
 };

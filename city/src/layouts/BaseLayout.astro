@@ -1,6 +1,6 @@
 ---
 import { ViewTransitions } from "astro:transitions";
-import { Header, Lightbox, Sidebar, TootBubble } from "@nuttyverse/blocks";
+import { Header, Lightbox, Sidebar, TootBubble, TooltipProvider } from "@nuttyverse/blocks";
 import {
 	body,
 	slot,
@@ -111,5 +111,6 @@ const { title } = Astro.props.frontmatter || Astro.props;
 		</div>
 
 		<Lightbox client:only="react" />
+		<TooltipProvider client:only="react" />
 	</body>
 </html>
