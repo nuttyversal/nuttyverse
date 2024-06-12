@@ -437,6 +437,16 @@ export const Lightbox: React.FC = () => {
 		height: `${anchor?.lightboxBoundingBox.height}px`,
 	} as const;
 
+	// Close the lightbox when the page changes.
+	useEffect(() => {
+		const handleNavigation = () => {
+			closeLightbox();
+		};
+
+		window.addEventListener("popstate", handleNavigation);
+		return () => window.removeEventListener("popstate", handleNavigation);
+	}, []);
+
 	return (
 		<>
 			{isLightboxOpen && anchor && (
