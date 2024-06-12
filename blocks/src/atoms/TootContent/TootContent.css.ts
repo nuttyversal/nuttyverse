@@ -22,6 +22,16 @@ globalStyle(`${content} *`, {
 	fontSize: `${experimentalTypeScale.smol} !important`,
 });
 
+globalStyle(`${content} a`, {
+	fontFeatureSettings: `"smcp" 1, "c2sc" 1`,
+	fontVariant: "all-small-caps",
+	fontVariantCaps: "all-small-caps",
+	textUnderlineOffset: "3px",
+	fontFamily: "Nure",
+	textDecoration: "none",
+	color: colors.blue.solid["05"],
+});
+
 export const metadata = style({
 	display: "flex",
 	alignItems: "center",
