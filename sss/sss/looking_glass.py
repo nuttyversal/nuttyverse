@@ -229,6 +229,7 @@ def list_objects():
 				co.object_name AS compressed_object_name,
 				po.bucket_name AS preview_bucket_name,
 				po.object_name AS preview_object_name,
+				m.description AS description,
 				m.width,
 				m.height
 			FROM
