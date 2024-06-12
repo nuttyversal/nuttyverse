@@ -1,5 +1,5 @@
 import { NavigationItem, NavigationItemProps } from "~/atoms/NavigationItem";
-import { navigation } from "./NavigationItemList.css";
+import { navigation, menu } from "./NavigationItemList.css";
 
 type NavigationItemListProps = {
 	/**
@@ -13,9 +13,11 @@ export const NavigationItemList: React.FC<NavigationItemListProps> = (
 ) => {
 	return (
 		<nav className={navigation}>
-			{props.items.map((item) => (
-				<NavigationItem key={item.name} {...item} />
-			))}
+			<menu className={menu}>
+				{props.items.map((item) => (
+					<NavigationItem key={item.name} {...item} />
+				))}
+			</menu>
 		</nav>
 	);
 };
