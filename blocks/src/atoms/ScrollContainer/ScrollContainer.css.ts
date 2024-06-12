@@ -2,8 +2,8 @@ import { style } from "@vanilla-extract/css";
 import { colors } from "~/styles/themes/contract.css";
 
 export const container = style({
-	position: "relative",
 	overflowY: "scroll",
+	height: "100%",
 	scrollbarColor: `${colors.gray.solid["12"]} ${colors.gray.solid["01"]}`,
 	scrollbarGutter: "stable",
 	scrollbarWidth: "thin",
@@ -25,6 +25,6 @@ export const topGradient = style({
 });
 
 export const bottomGradient = style({
-	top: 0,
+	bottom: 0,
 	backgroundImage: `linear-gradient(0deg, ${colors.gray.solid["01"]} 0%, transparent 100%)`,
 });

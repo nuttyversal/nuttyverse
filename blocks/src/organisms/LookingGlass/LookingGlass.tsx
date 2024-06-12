@@ -227,5 +227,5 @@ export const LookingGlass: React.FC = () => {
 		};
 	});
 
-	return <Masonry contentBlocks={contentBlocks} style={{ height: "90vh" }} />;
+	return <Masonry contentBlocks={contentBlocks} />;
 };

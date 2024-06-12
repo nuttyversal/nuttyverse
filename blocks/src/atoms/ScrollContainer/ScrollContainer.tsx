@@ -58,15 +58,6 @@ export const ScrollContainer = forwardRef<HTMLDivElement, ScrollContainerProps>(
 				1,
 			);
 
-			// Translate the gradients based on scroll position.
-			gsap.set(topGradientRef.current, {
-				y: scrollTop,
-			});
-
-			gsap.set(bottomGradientRef.current, {
-				y: scrollTop + clientHeight - 64 /* height */ + 1 /* buffer */,
-			});
-
 			// Fade the gradients based on scroll position.
 			gsap.to(topGradientRef.current, {
 				opacity: topFadeOpacity,
@@ -98,30 +89,36 @@ export const ScrollContainer = forwardRef<HTMLDivElement, ScrollContainerProps>(
 
 		return (
 			<div
-				ref={(node) => {
-					const mutableContainerRef =
-						containerRef as MutableRefObject<HTMLDivElement | null>;
-
-					mutableContainerRef.current = node;
-
-					if (ref) {
-						if (typeof ref === "function") {
-							ref(node);
-						} else {
-							ref.current = node;
-						}
-					}
-				}}
-				className={classNames([container, className])}
-				style={style}
-				{...rest}
+				style={{ position: "relative", overflow: "hidden", height: "100%" }}
 			>
 				<div
 					ref={topGradientRef}
 					className={classNames(gradientOverlay, topGradient)}
 					style={{ opacity: 0 }}
 				/>
-				{props.children}
+
+				<div
+					ref={(node) => {
+						const mutableContainerRef =
+							containerRef as MutableRefObject<HTMLDivElement | null>;
+
+						mutableContainerRef.current = node;
+
+						if (ref) {
+							if (typeof ref === "function") {
+								ref(node);
+							} else {
+								ref.current = node;
+							}
+						}
+					}}
+					className={classNames([container, className])}
+					style={style}
+					{...rest}
+				>
+					{props.children}
+				</div>
+
 				<div
 					ref={bottomGradientRef}
 					className={classNames(gradientOverlay, bottomGradient)}
