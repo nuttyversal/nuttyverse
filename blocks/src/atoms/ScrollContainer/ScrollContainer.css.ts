@@ -1,5 +1,6 @@
 import { style } from "@vanilla-extract/css";
 import { colors } from "~/styles/themes/contract.css";
+import { spacing } from "~/styles/tokens/spacing";
 
 export const container = style({
 	overflowY: "scroll",
@@ -14,7 +15,7 @@ export const gradientOverlay = style({
 	position: "absolute",
 	left: 0,
 	right: 0,
-	height: "64px",
+	height: spacing[16],
 	pointerEvents: "none",
 	zIndex: 1,
 });
