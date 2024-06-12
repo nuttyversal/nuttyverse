@@ -56,7 +56,7 @@ export const LookingGlass: React.FC = () => {
 			compressed_object_name:
 				"018fb6fd-02c7-78b0-8289-db5bc16b00e5/compressed.webp",
 			description:
-				'Jacob Collier playing "Little Blue" his five-string guitar. I\'m DAEAD!',
+				'Jacob Collier playing "Little Blue" on his five-string guitar. I\'m DAEAD!',
 			preview_bucket_name: "looking-glass",
 			preview_object_name:
 				"018fb6fd-02c7-78b0-8289-db5bc16b00e5/preview.webp",
@@ -68,7 +68,7 @@ export const LookingGlass: React.FC = () => {
 			compressed_object_name:
 				"01900511-6b87-7329-a3cc-c9f023273257/compressed.webm",
 			description:
-				"As the sun sets, it casts a shimmering, golden path over the estuary.",
+				"As the sun sets, it casts a shimmering path over the estuary.",
 			preview_bucket_name: "looking-glass",
 			preview_object_name:
 				"01900511-6b87-7329-a3cc-c9f023273257/preview.webm",
