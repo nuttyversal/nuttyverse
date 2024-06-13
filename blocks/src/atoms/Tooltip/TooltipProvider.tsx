@@ -14,9 +14,15 @@ import { $activeTooltip, $isTooltipVisible, hideTooltip } from "./store";
  */
 export const TooltipProvider = () => {
 	const tooltipRef = useRef<HTMLDivElement>(null);
-	const activeTooltip = useStore($activeTooltip);
 	const isTooltipVisible = useStore($isTooltipVisible);
 	const { x: mouseX, y: mouseY } = useMousePosition();
+
+	// The active tooltip content.
+	const activeTooltip = useStore($activeTooltip);
+
+	// The active tooltip component (the content converted into ReactNode).
+	const [activeTooltipComponent, setActiveTooltipComponent] =
+		useState<ReactNode | null>(null);
 
 	useEffect(() => {
 		// Is the tooltip visible?
@@ -57,29 +63,30 @@ export const TooltipProvider = () => {
 		return () => window.removeEventListener("popstate", handleNavigation);
 	}, []);
 
-	// Hydrate the tooltip component.
-	let tooltipComponent: ReactNode = null;
-
-	if (activeTooltip) {
-		switch (activeTooltip.type) {
-			case "text":
-				tooltipComponent = (
-					<TooltipContainer>
-						<Text size="smol" marginless>
-							{activeTooltip.content}
-						</Text>
-					</TooltipContainer>
-				);
-				break;
-			case "element":
-				tooltipComponent = (
-					<TooltipContainer>{activeTooltip.element}</TooltipContainer>
-				);
-				break;
-			default:
-				break;
+	const updateTooltip = () => {
+		if (activeTooltip) {
+			switch (activeTooltip.type) {
+				case "text":
+					setActiveTooltipComponent(
+						<TooltipContainer>
+							<Text size="smol" marginless>
+								{activeTooltip.content}
+							</Text>
+						</TooltipContainer>,
+					);
+					break;
+				case "element":
+					setActiveTooltipComponent(
+						<TooltipContainer>{activeTooltip.element}</TooltipContainer>,
+					);
+					break;
+				default:
+					break;
+			}
 		}
-	}
+	};
+
+	useEffect(() => updateTooltip(), [activeTooltip]);
 
 	const tooltipClasses = classNames(tooltip, {
 		[hidden]: !isTooltipVisible,
@@ -87,7 +94,7 @@ export const TooltipProvider = () => {
 
 	return (
 		<div ref={tooltipRef} className={tooltipClasses}>
-			{tooltipComponent}
+			{activeTooltipComponent}
 		</div>
 	);
 };

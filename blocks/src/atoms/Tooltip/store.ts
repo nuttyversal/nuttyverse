@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { atom } from "nanostores";
 
 /**
@@ -11,7 +12,7 @@ export type TooltipContent =
 	  }
 	| {
 			type: "element";
-			element: JSX.Element;
+			element: ReactNode;
 	  };
 
 /**
@@ -23,6 +24,13 @@ export const $activeTooltip = atom<TooltipContent | null>(null);
  * Whether the tooltip is currently visible. This is used to trigger animations.
  */
 export const $isTooltipVisible = atom<boolean>(false);
+
+/**
+ * Update the active tooltip content.
+ */
+export function updateTooltip(content: TooltipContent) {
+	$activeTooltip.set(content);
+}
 
 /**
  * Show a tooltip with the given content.

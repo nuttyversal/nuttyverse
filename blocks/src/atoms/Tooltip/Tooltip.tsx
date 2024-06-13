@@ -5,6 +5,7 @@ import {
 	$activeTooltip,
 	hideTooltip,
 	showTooltip,
+	updateTooltip,
 } from "./store";
 
 type TooltipProps = {
@@ -39,6 +40,11 @@ export const Tooltip: React.FC<TooltipProps> = (props) => {
 	const handleMouseLeave: MouseEventHandler = () => {
 		hideTooltip();
 	};
+
+	// Update the tooltip content if the content changes.
+	useEffect(() => {
+		updateTooltip(props.content);
+	}, [props.content]);
 
 	// Hide the tooltip if the component unmounts.
 	useEffect(() => {
