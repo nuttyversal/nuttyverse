@@ -2,7 +2,8 @@ import classNames from "classnames";
 import gsap from "gsap";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { useStore } from "@nanostores/react";
-import { TooltipContainer } from "../TooltipContainer";
+import { Text } from "~/atoms/Text";
+import { TooltipContainer } from "~/atoms/TooltipContainer";
 import { tooltip, hidden } from "./Tooltip.css";
 import { $activeTooltip, $isTooltipVisible, hideTooltip } from "./store";
 
@@ -63,7 +64,11 @@ export const TooltipProvider = () => {
 		switch (activeTooltip.type) {
 			case "text":
 				tooltipComponent = (
-					<TooltipContainer>{activeTooltip.content}</TooltipContainer>
+					<TooltipContainer>
+						<Text size="smol" marginless>
+							{activeTooltip.content}
+						</Text>
+					</TooltipContainer>
 				);
 				break;
 			case "element":
