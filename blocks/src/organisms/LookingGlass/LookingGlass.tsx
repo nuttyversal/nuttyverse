@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import { Masonry, MasonryContentBlock } from "~/masonry";
 import { Image } from "~/atoms/Image";
+import { Tooltip } from "~/atoms/Tooltip";
 import { Video } from "~/atoms/Video";
-import { Tooltip, TooltipContainer } from "~/index";
 
 export const LookingGlass: React.FC = () => {
 	// [TODO] Replace with API response.
@@ -169,58 +169,66 @@ export const LookingGlass: React.FC = () => {
 
 	const contentBlocks: MasonryContentBlock[] = objects.map((object) => {
 		let content: ReactNode;
+		let contentWithTooltip: ReactNode;
 
 		const objectSrc = `https://minio.nuttyver.se/${object.compressed_bucket_name}/${object.compressed_object_name}`;
 		const previewSrc = `https://minio.nuttyver.se/${object.preview_bucket_name}/${object.preview_object_name}`;
 
-		const tooltipContent = {
-			type: "text",
-			content: object.description,
-		} as const;
-
 		if (objectSrc.endsWith(".webp")) {
 			content = (
-				<Tooltip content={tooltipContent}>
-					<Image
-						key={objectSrc}
-						src={objectSrc}
-						previewSrc={previewSrc}
-						alt={object.description}
-						height="100%"
-						width="100%"
-						style={{ objectFit: "cover" }}
-						draggable={false}
-					/>
-				</Tooltip>
+				<Image
+					key={objectSrc}
+					src={objectSrc}
+					previewSrc={previewSrc}
+					alt={object.description}
+					height="100%"
+					width="100%"
+					style={{ objectFit: "cover" }}
+					draggable={false}
+				/>
 			);
 		} else {
 			content = (
-				<Tooltip content={tooltipContent}>
-					<Video
-						key={objectSrc}
-						src={objectSrc}
-						previewSrc={previewSrc}
-						height="100%"
-						width="100%"
-						style={{ objectFit: "cover" }}
-						draggable={false}
-						autoPlay={true}
-						loop={true}
-					/>
-				</Tooltip>
+				<Video
+					key={objectSrc}
+					src={objectSrc}
+					previewSrc={previewSrc}
+					height="100%"
+					width="100%"
+					style={{ objectFit: "cover" }}
+					draggable={false}
+					autoPlay={true}
+					loop={true}
+				/>
 			);
 		}
 
+		contentWithTooltip = (
+			<Tooltip
+				content={{
+					type: "text",
+					content: object.description,
+				}}
+			>
+				{content}
+			</Tooltip>
+		);
+
 		return {
 			key: object.compressed_object_name,
-			content: content,
-			masonryBoundingBox: {
-				width: object.width,
-				height: object.height,
+			masonry: {
+				content: contentWithTooltip,
+				boundingBox: {
+					width: object.width,
+					height: object.height,
+				},
 			},
-			lightboxBoundingBox: {
-				width: object.width,
-				height: object.height,
+			lightbox: {
+				content: content,
+				boundingBox: {
+					width: object.width,
+					height: object.height,
+				},
 			},
 			previous: null,
 			next: null,

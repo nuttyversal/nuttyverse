@@ -26,19 +26,26 @@ const generateMasonryContentBlock = (): MasonryContentBlock => {
 	const dimensions = `${boundingBox.width}x${boundingBox.height}`;
 	const imageSrc = `https://placehold.co/${dimensions}`;
 
+	const content = (
+		<Image
+			src={imageSrc}
+			height="100%"
+			width="100%"
+			style={{ objectFit: "cover" }}
+			draggable={false}
+		/>
+	);
+
 	return {
 		key: Math.random().toString(36).substring(7),
-		content: (
-			<Image
-				src={imageSrc}
-				height="100%"
-				width="100%"
-				style={{ objectFit: "cover" }}
-				draggable={false}
-			/>
-		),
-		masonryBoundingBox: boundingBox,
-		lightboxBoundingBox: boundingBox,
+		masonry: {
+			content,
+			boundingBox,
+		},
+		lightbox: {
+			content,
+			boundingBox,
+		},
 		previous: null,
 		next: null,
 	};
@@ -150,36 +157,42 @@ export const LookingGlass: Story = {
 			const objectSrc = `https://minio.nuttyver.se/${object.compressed_bucket_name}/${object.compressed_object_name}`;
 			const previewSrc = `https://minio.nuttyver.se/${object.preview_bucket_name}/${object.preview_object_name}`;
 
+			const boundingBox = {
+				width: object.width,
+				height: object.height,
+			};
+
+			const content = objectSrc.endsWith(".webp") ? (
+				<Image
+					src={objectSrc}
+					previewSrc={previewSrc}
+					height="100%"
+					width="100%"
+					style={{ objectFit: "cover" }}
+					draggable={false}
+				/>
+			) : (
+				<Video
+					src={objectSrc}
+					previewSrc={previewSrc}
+					height="100%"
+					width="100%"
+					style={{ objectFit: "cover" }}
+					draggable={false}
+					autoPlay={true}
+					loop={true}
+				/>
+			);
+
 			return {
 				key: object.compressed_object_name,
-				content: objectSrc.endsWith(".webp") ? (
-					<Image
-						src={objectSrc}
-						previewSrc={previewSrc}
-						height="100%"
-						width="100%"
-						style={{ objectFit: "cover" }}
-						draggable={false}
-					/>
-				) : (
-					<Video
-						src={objectSrc}
-						previewSrc={previewSrc}
-						height="100%"
-						width="100%"
-						style={{ objectFit: "cover" }}
-						draggable={false}
-						autoPlay={true}
-						loop={true}
-					/>
-				),
-				masonryBoundingBox: {
-					width: object.width,
-					height: object.height,
+				masonry: {
+					content,
+					boundingBox,
 				},
-				lightboxBoundingBox: {
-					width: object.width,
-					height: object.height,
+				lightbox: {
+					content,
+					boundingBox,
 				},
 				previous: null,
 				next: null,

@@ -155,7 +155,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 			tree.insert(
 				{
 					low: block.position.y,
-					high: block.position.y + block.masonryBoundingBox.height,
+					high: block.position.y + block.masonry.boundingBox.height,
 				},
 				block.key,
 			);
@@ -181,7 +181,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 
 			scrollContainerRef.current.scrollTop =
 				anchorBlock.position.y +
-				0.5 * anchorBlock.masonryBoundingBox.height -
+				0.5 * anchorBlock.masonry.boundingBox.height -
 				0.5 * scrollContainerRef.current.clientHeight;
 		}
 
@@ -230,7 +230,7 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 			tween.current = gsap.to(scrollContainerRef.current, {
 				scrollTop:
 					anchor.position.y +
-					0.5 * anchor.masonryBoundingBox.height -
+					0.5 * anchor.masonry.boundingBox.height -
 					0.5 * scrollContainerRef.current.clientHeight,
 				duration: 0.5,
 			});
@@ -305,7 +305,8 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 
 		for (const block of visibleContentBlocks) {
 			const blockCenter =
-				block.position.y + 0.5 * block.masonryBoundingBox.height;
+				block.position.y + 0.5 * block.masonry.boundingBox.height;
+
 			const distance = Math.abs(scrollCenter - blockCenter);
 
 			if (distance < minDistance) {
@@ -366,8 +367,8 @@ type MasonryBlockProps = {
 
 const MasonryBlock: React.FC<MasonryBlockProps> = (props) => {
 	const blockStyles: CSSProperties = {
-		width: props.contentBlock.masonryBoundingBox.width,
-		height: props.contentBlock.masonryBoundingBox.height,
+		width: props.contentBlock.masonry.boundingBox.width,
+		height: props.contentBlock.masonry.boundingBox.height,
 		transform: `translate(${props.contentBlock.position.x}px, ${props.contentBlock.position.y}px)`,
 		borderWidth: props.anchor ? spacing[2] : spacing[0],
 		borderColor: props.anchor ? colors.yellow.solid[10] : undefined,
@@ -388,7 +389,7 @@ const MasonryBlock: React.FC<MasonryBlockProps> = (props) => {
 
 	return (
 		<div className={contentBlock} style={blockStyles} onMouseDown={open}>
-			{props.contentBlock.content}
+			{props.contentBlock.masonry.content}
 		</div>
 	);
 };
@@ -433,8 +434,8 @@ export const Lightbox: React.FC = () => {
 	// Force the width of the lightbox container to match the width of the
 	// content block so that the preview image stretches to fill it.
 	const contentStyles = {
-		width: `${anchor?.lightboxBoundingBox.width}px`,
-		height: `${anchor?.lightboxBoundingBox.height}px`,
+		width: `${anchor?.lightbox.boundingBox.width}px`,
+		height: `${anchor?.lightbox.boundingBox.height}px`,
 	} as const;
 
 	// Close the lightbox when the page changes.
@@ -457,7 +458,7 @@ export const Lightbox: React.FC = () => {
 					tabIndex={0}
 				>
 					<div className={lightboxContent} style={contentStyles}>
-						{anchor.content}
+						{anchor.lightbox.content}
 					</div>
 				</ScrollContainer>
 			)}

@@ -31,20 +31,29 @@ export type MasonryContentBlock<Mixin = {}> = {
 	 */
 	key: string;
 
-	/**
-	 * The element to render as a content block in the masonry.
-	 */
-	content: ReactNode;
+	masonry: {
+		/**
+		 * The element to render as a content block in the masonry.
+		 */
+		content: ReactNode;
 
-	/**
-	 * The (static) dimensions of the content block.
-	 */
-	masonryBoundingBox: BoundingBox;
+		/**
+		 * The (static) dimensions of the content block.
+		 */
+		boundingBox: BoundingBox;
+	};
 
-	/**
-	 * The (static) dimensions of the lightbox content.
-	 */
-	lightboxBoundingBox: BoundingBox;
+	lightbox: {
+		/**
+		 * The element to render in the lightbox when the content block is clicked.
+		 */
+		content: ReactNode;
+
+		/**
+		 * The (static) dimensions of the lightbox content.
+		 */
+		boundingBox: BoundingBox;
+	};
 
 	/**
 	 * The content block that precedes this one in the list of content blocks.
@@ -164,17 +173,22 @@ export function layoutContentBlocks(
 		const resizedBoundingBox: BoundingBox = {
 			width: singleColumnWidth,
 			height:
-				(singleColumnWidth / contentBlock.masonryBoundingBox.width) *
-				contentBlock.masonryBoundingBox.height,
+				(singleColumnWidth / contentBlock.masonry.boundingBox.width) *
+				contentBlock.masonry.boundingBox.height,
 		};
 
 		// Annotate the position of the next content block.
 		const annotatedContentBlock: MasonryContentBlock<WithPosition> &
 			WithPosition = {
 			key: contentBlock.key,
-			content: contentBlock.content,
-			masonryBoundingBox: resizedBoundingBox,
-			lightboxBoundingBox: contentBlock.lightboxBoundingBox,
+			masonry: {
+				content: contentBlock.masonry.content,
+				boundingBox: resizedBoundingBox,
+			},
+			lightbox: {
+				content: contentBlock.lightbox.content,
+				boundingBox: contentBlock.lightbox.boundingBox,
+			},
 			position: {
 				x:
 					columnIndex * singleColumnWidth +
