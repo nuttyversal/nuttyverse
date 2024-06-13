@@ -10,7 +10,7 @@ import {
 	useRef,
 } from "react";
 import {
-	container,
+	scrollContainer,
 	gradientOverlay,
 	topGradient,
 	bottomGradient,
@@ -89,7 +89,7 @@ export const ScrollContainer = forwardRef<HTMLDivElement, ScrollContainerProps>(
 		}, [containerRef.current]);
 
 		return (
-			<div className={classNames(gradientContainer, container, className)}>
+			<div className={classNames(gradientContainer, className)}>
 				<div
 					ref={topGradientRef}
 					className={classNames(gradientOverlay, topGradient)}
@@ -111,7 +111,7 @@ export const ScrollContainer = forwardRef<HTMLDivElement, ScrollContainerProps>(
 							}
 						}
 					}}
-					className={classNames([container, className])}
+					className={classNames([scrollContainer, className])}
 					style={style}
 					{...rest}
 				>

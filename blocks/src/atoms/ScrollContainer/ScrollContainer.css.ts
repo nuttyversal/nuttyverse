@@ -3,10 +3,12 @@ import { colors } from "~/styles/themes/contract.css";
 import { spacing } from "~/styles/tokens/spacing";
 
 export const gradientContainer = style({
+	overflowY: "hidden",
 	position: "relative",
+	height: "100%",
 });
 
-export const container = style({
+export const scrollContainer = style({
 	overflowY: "scroll",
 	height: "100%",
 	scrollbarColor: `${colors.gray.solid["12"]} ${colors.gray.solid["01"]}`,
