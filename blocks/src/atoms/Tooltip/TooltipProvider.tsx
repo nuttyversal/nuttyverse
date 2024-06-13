@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import gsap from "gsap";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useStore } from "@nanostores/react";
 import { Text } from "~/atoms/Text";
 import { TooltipContainer } from "~/atoms/TooltipContainer";
@@ -24,7 +24,30 @@ export const TooltipProvider = () => {
 	const [activeTooltipComponent, setActiveTooltipComponent] =
 		useState<ReactNode | null>(null);
 
-	useEffect(() => {
+	const updateTooltipContent = () => {
+		if (activeTooltip) {
+			switch (activeTooltip.type) {
+				case "text":
+					setActiveTooltipComponent(
+						<TooltipContainer>
+							<Text size="smol" marginless>
+								{activeTooltip.content}
+							</Text>
+						</TooltipContainer>,
+					);
+					break;
+				case "element":
+					setActiveTooltipComponent(
+						<TooltipContainer>{activeTooltip.element}</TooltipContainer>,
+					);
+					break;
+				default:
+					break;
+			}
+		}
+	};
+
+	const updateTooltipPosition = () => {
 		// Is the tooltip visible?
 		const isVisible = activeTooltip !== null;
 
@@ -51,7 +74,17 @@ export const TooltipProvider = () => {
 				duration: 0.2,
 			});
 		}
-	}, [activeTooltip, mouseX, mouseY]);
+	};
+
+	// Update the tooltip content when it changes.
+	useEffect(() => {
+		updateTooltipContent();
+	}, [activeTooltip]);
+
+	// Update the tooltip position when the mouse moves.
+	useLayoutEffect(() => {
+		updateTooltipPosition();
+	}, [activeTooltipComponent, mouseX, mouseY]);
 
 	// Hide the tooltip when the page changes.
 	useEffect(() => {
@@ -62,31 +95,6 @@ export const TooltipProvider = () => {
 		window.addEventListener("popstate", handleNavigation);
 		return () => window.removeEventListener("popstate", handleNavigation);
 	}, []);
-
-	const updateTooltip = () => {
-		if (activeTooltip) {
-			switch (activeTooltip.type) {
-				case "text":
-					setActiveTooltipComponent(
-						<TooltipContainer>
-							<Text size="smol" marginless>
-								{activeTooltip.content}
-							</Text>
-						</TooltipContainer>,
-					);
-					break;
-				case "element":
-					setActiveTooltipComponent(
-						<TooltipContainer>{activeTooltip.element}</TooltipContainer>,
-					);
-					break;
-				default:
-					break;
-			}
-		}
-	};
-
-	useEffect(() => updateTooltip(), [activeTooltip]);
 
 	const tooltipClasses = classNames(tooltip, {
 		[hidden]: !isTooltipVisible,
