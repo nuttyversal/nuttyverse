@@ -33,6 +33,7 @@ export const backdrop = style({
 	width: "100%",
 	overflow: "hidden",
 	zIndex: 1000,
+	cursor: "pointer",
 });
 
 export const lightboxContainer = style({
@@ -55,4 +56,5 @@ export const lightboxContainer = style({
 export const lightboxContent = style({
 	objectFit: "cover",
 	margin: "auto",
+	cursor: "default",
 });
