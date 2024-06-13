@@ -24,3 +24,7 @@ export const base = style({
 		},
 	},
 });
+
+export const tooltip = style({
+	lineHeight: 0,
+});
