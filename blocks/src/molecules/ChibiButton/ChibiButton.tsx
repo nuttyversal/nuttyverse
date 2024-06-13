@@ -1,8 +1,8 @@
 import classNames from "classnames";
 import { ReactNode, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoon } from "@fortawesome/pro-regular-svg-icons/faMoon";
-import { faSun } from "@fortawesome/pro-regular-svg-icons/faSun";
+import { faMoon } from "@fortawesome/pro-solid-svg-icons/faMoon";
+import { faSun } from "@fortawesome/pro-solid-svg-icons/faSun";
 import { useStore } from "@nanostores/react";
 import { $theme } from "~/styles/themes/contract";
 import { spacing } from "~/styles/tokens/spacing";
@@ -22,11 +22,11 @@ export const ChibiButton: React.FC<ChibiButtonProps> = (props) => {
 	useEffect(() => {
 		if (theme === "dark") {
 			setIcon(
-				<FontAwesomeIcon style={{ height: spacing[4] }} icon={faMoon} />,
+				<FontAwesomeIcon style={{ height: spacing[4] }} icon={faSun} />,
 			);
 		} else {
 			setIcon(
-				<FontAwesomeIcon style={{ height: spacing[4] }} icon={faSun} />,
+				<FontAwesomeIcon style={{ height: spacing[4] }} icon={faMoon} />,
 			);
 		}
 	}, [theme]);
