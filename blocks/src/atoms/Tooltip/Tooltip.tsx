@@ -17,6 +17,16 @@ type TooltipProps = {
 	 * Specifies the tooltip's content.
 	 */
 	content: TooltipContent;
+
+	/**
+	 * Additional classes to apply to the tooltip.
+	 */
+	className?: string;
+
+	/**
+	 * Additional styles to apply to the tooltip.
+	 */
+	style?: React.CSSProperties;
 };
 
 export const Tooltip: React.FC<TooltipProps> = (props) => {
@@ -40,7 +50,12 @@ export const Tooltip: React.FC<TooltipProps> = (props) => {
 	}, []);
 
 	return (
-		<div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+		<div
+			className={props.className}
+			style={props.style}
+			onMouseEnter={handleMouseEnter}
+			onMouseLeave={handleMouseLeave}
+		>
 			{props.children}
 		</div>
 	);
