@@ -22,12 +22,12 @@ async function setupRedisClient() {
 		},
 	});
 
-	client.on("error", (err) => {
+	try {
+		await client.connect();
+		await client.auth({ password: process.env.REDIS_PASSWORD ?? "" });
+	} catch (err) {
 		console.error(err);
-	});
-
-	await client.connect();
-	await client.auth({ password: process.env.REDIS_PASSWORD ?? "" });
+	}
 
 	return client;
 }
