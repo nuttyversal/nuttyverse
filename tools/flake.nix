@@ -30,6 +30,11 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
+		music = {
+			url = "./music";
+			inputs.nixpkgs.follows = "nixpkgs";
+		};
+
 		nvim = {
 			url = "./nvim";
 			inputs.nixpkgs.follows = "nixpkgs";
