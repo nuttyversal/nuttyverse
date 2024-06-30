@@ -1,4 +1,3 @@
-
 {
 	description = "Music engraving";
 
