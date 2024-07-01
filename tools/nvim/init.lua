@@ -96,7 +96,7 @@ if vim.g.neovide then
 	vim.g.neovide_padding_right = 16
 	vim.g.neovide_padding_left = 16
 
-	vim.o.guifont = "PragmataPro Liga:h16"
+	vim.o.guifont = "PragmataPro Mono Liga:h16"
 	vim.o.linespace = 2
 
 	-- Allow clipboard copy-pasta.
