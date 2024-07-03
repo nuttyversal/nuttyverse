@@ -49,7 +49,7 @@ require("nvim-tree").setup({
 		icons = {
 			show = {
 				file = false,
-				folder = false,
+				folder = true,
 				folder_arrow = false,
 				git = true,
 			},
