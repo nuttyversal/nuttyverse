@@ -1,9 +1,10 @@
 #!/usr/bin/env -S just --justfile
 
 install:
-	pnpm install	
-	
+	pnpm install
+
 test:
+	pnpm run test
 	pnpm run test-format
 
 build:
