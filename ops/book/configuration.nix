@@ -3,7 +3,11 @@
 {
 	environment = {
 		darwinConfig = "$HOME/Code/nuttyverse/ops/book/configuration.nix";
-		systemPackages = pkgs.lib.attrsets.attrValues inputs.tools.packages.aarch64-darwin;
+
+		systemPackages = pkgs.lib.attrsets.attrValues inputs.tools.packages.aarch64-darwin ++ [
+			# Used for remote deployments.
+			pkgs.nixos-rebuild
+		];
 	};
 
 	nixpkgs = {
