@@ -1,5 +1,7 @@
 #!/usr/bin/env -S just --justfile
 
+set dotenv-load
+
 install:
 	pnpm install
 
