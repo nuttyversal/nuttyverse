@@ -21,7 +21,7 @@ type Story = StoryObj<typeof Video>;
 
 export const Component: Story = {
 	args: {
-		src: "https://minio.nuttyver.se/looking-glass/018fb3a6-7b41-7b20-aafb-73de38d8830c/compressed.webm",
+		src: "https://minio.nuttyver.se/looking-glass/0190051e-9ac6-7a56-ae9d-0e310635ea45/compressed.webm",
 		width: "100%",
 		autoPlay: true,
 		loop: true,
