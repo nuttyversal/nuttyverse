@@ -22,5 +22,6 @@ type Story = StoryObj<typeof Image>;
 export const Component: Story = {
 	args: {
 		width: "100%",
+		src: "https://minio.nuttyver.se/looking-glass/01900502-47a6-788a-bca1-f361b3dab5a8/compressed.webp",
 	},
 };
