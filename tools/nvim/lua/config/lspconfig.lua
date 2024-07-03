@@ -4,7 +4,10 @@ local opts = { noremap = true, silent = true }
 vim.keymap.set("n", "<space>e", vim.diagnostic.open_float, opts)
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
-vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist, opts)
+
+vim.keymap.set("n", "<space>q", function()
+	require("telescope.builtin").diagnostics({ bufnr = 0 })
+end)
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
@@ -30,7 +33,7 @@ local on_attach = function(client, bufnr)
 	end, bufopts)
 
 	vim.keymap.set("n", "ge", function()
-		require("telescope.builtin").diagnostics({ bufnr = 0 })
+		require("telescope.builtin").diagnostics()
 	end, bufopts)
 
 	vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
@@ -106,6 +109,7 @@ local servers = {
 require("mason").setup()
 
 local ensure_installed = vim.tbl_keys(servers)
+
 vim.list_extend(ensure_installed, {
 	"stylua", -- Used to format Lua code
 })
