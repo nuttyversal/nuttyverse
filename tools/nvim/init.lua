@@ -43,6 +43,12 @@ vim.o.expandtab = true
 vim.o.shiftwidth = 3
 vim.o.tabstop = 3
 
+-- Strip trailing whitespace on save.
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+	pattern = { "*" },
+	command = [[%s/\s\+$//e]],
+})
+
 --
 -- Searching
 --
