@@ -167,6 +167,7 @@ require("lazy").setup("plugins")
 --
 
 require("config.autocomplete")
+require("config.bufferline")
 require("config.catppuccin")
 require("config.conform")
 require("config.diffview")
