@@ -112,7 +112,6 @@ local ensure_installed = vim.tbl_keys(servers)
 
 vim.list_extend(ensure_installed, {
 	"astro", -- Used for Astro files
-	"just", -- Used for Justfiles
 	"stylua", -- Used to format Lua code
 })
 
