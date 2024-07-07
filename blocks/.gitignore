@@ -4,6 +4,9 @@ node_modules/
 # build output
 storybook-static/
 
+# test output
+coverage/
+
 # environment
 .env
 
