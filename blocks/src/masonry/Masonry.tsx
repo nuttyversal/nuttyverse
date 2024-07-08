@@ -8,7 +8,11 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { ScrollContainer } from "~/atoms/ScrollContainer";
+import {
+	ScrollContainer,
+	ScrollGradient,
+	ScrollGradientContainer,
+} from "~/atoms/ScrollContainer";
 import { colors } from "~/styles/themes/contract.css";
 import { spacing } from "~/styles/tokens/spacing";
 import {
@@ -327,7 +331,8 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 	};
 
 	return (
-		<>
+		<ScrollGradientContainer>
+			<ScrollGradient part="top" />
 			<ScrollContainer
 				ref={scrollContainerRef}
 				className={props.className}
@@ -349,7 +354,8 @@ export const Masonry: React.FC<MasonryProps> = (props) => {
 					})}
 				</div>
 			</ScrollContainer>
-		</>
+			<ScrollGradient part="bottom" />
+		</ScrollGradientContainer>
 	);
 };
 
