@@ -18,6 +18,10 @@ type HeadingProps = {
 };
 
 export const Heading: React.FC<HeadingProps> = (props) => {
+	if (props.type === ("h1" as string)) {
+		throw new Error("'h1' not allowed. Use the Title component instead.");
+	}
+
 	const sizeToken = (
 		{
 			h2: "4xl",
