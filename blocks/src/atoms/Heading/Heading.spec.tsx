@@ -1,6 +1,5 @@
-import { ComponentProps } from "react";
 import { render } from "@testing-library/react";
-import "@testing-library/jest-dom";
+import React, { ComponentProps } from "react";
 import { Heading } from "./Heading";
 
 const headingContent = "Heading";
@@ -22,6 +21,10 @@ describe("Heading", () => {
 
 	it("should throw an error if the type is 'h1'", () => {
 		// Arrange
+		const spy = jest.spyOn(console, "error");
+		spy.mockImplementation(() => {});
+
+		// Act
 		const renderError = () => {
 			const h1 = "h1" as ComponentProps<typeof Heading>["type"];
 			render(<Heading type={h1}>{headingContent}</Heading>);
