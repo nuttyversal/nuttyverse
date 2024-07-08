@@ -17,7 +17,11 @@ import { Logo } from "~/atoms/Logo";
 import { Marquee } from "~/atoms/Marquee";
 import { NavigationItem } from "~/atoms/NavigationItem";
 import { QuoteBlock } from "~/atoms/QuoteBlock";
-import { ScrollContainer } from "~/atoms/ScrollContainer";
+import {
+	ScrollContainer,
+	ScrollGradient,
+	ScrollGradientContainer,
+} from "~/atoms/ScrollContainer";
 import { Text } from "~/atoms/Text";
 import { Title } from "~/atoms/Title";
 import { Tooltip, TooltipProvider } from "~/atoms/Tooltip";
