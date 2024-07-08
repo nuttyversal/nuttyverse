@@ -24,11 +24,11 @@ export const Heading: React.FC<HeadingProps> = (props) => {
 
 	const sizeToken = (
 		{
-			h2: "4xl",
-			h3: "3xl",
-			h4: "2xl",
-			h5: "xl",
-			h6: "base",
+			h2: "3xl",
+			h3: "2xl",
+			h4: "xl",
+			h5: "base",
+			h6: "smol",
 		} as const
 	)[props.type as string];
 

@@ -19,7 +19,7 @@ export const Title: React.FC<TitleProps> = (props) => {
 	return (
 		<Text as="h1" className={title} weight={500} wdth={75} marginless>
 			{props.fleuron && (
-				<Text size="5xl" className={fleuron} marginless>
+				<Text size="7xl" className={fleuron} marginless>
 					☙
 				</Text>
 			)}
@@ -28,7 +28,7 @@ export const Title: React.FC<TitleProps> = (props) => {
 
 			{props.fleuron && (
 				<Text
-					size="5xl"
+					size="7xl"
 					className={classNames([fleuron, mirror])}
 					marginless
 				>

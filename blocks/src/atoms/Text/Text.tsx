@@ -73,12 +73,12 @@ export const Text = <Component extends React.ElementType>(
 		if (["h1", "h2", "h3", "h4", "h5", "h6"].includes(Component)) {
 			inferredFontSize = (
 				{
-					h1: "5xl",
-					h2: "4xl",
-					h3: "3xl",
-					h4: "2xl",
-					h5: "xl",
-					h6: "base",
+					h1: "4xl",
+					h2: "3xl",
+					h3: "2xl",
+					h4: "xl",
+					h5: "base",
+					h6: "smol",
 				} as const
 			)[Component as string];
 		} else {

@@ -13,6 +13,7 @@ export const title = style({
 	textTransform: "uppercase",
 	letterSpacing: "0.03rem",
 	textAlign: "center",
+	height: spacing[16],
 });
 
 export const fleuron = style({
