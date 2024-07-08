@@ -36,6 +36,7 @@ export const ScrollContainer = forwardRef<HTMLDivElement, ScrollContainerProps>(
 				}}
 				className={classNames([scrollContainer, className])}
 				style={style}
+				data-testid="scroll-container"
 				{...rest}
 			>
 				{props.children}

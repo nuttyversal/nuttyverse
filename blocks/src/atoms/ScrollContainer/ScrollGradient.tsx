@@ -90,6 +90,11 @@ export const ScrollGradient: React.FC<ScrollGradientProps> = (props) => {
 				props.part === "top" ? topGradient : bottomGradient,
 			)}
 			style={{ opacity: 0 }}
+			data-testid={
+				props.part === "top"
+					? "scroll-gradient-top"
+					: "scroll-gradient-bottom"
+			}
 		/>
 	);
 };
