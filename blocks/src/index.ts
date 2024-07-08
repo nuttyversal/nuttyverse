@@ -70,6 +70,8 @@ export {
 	NavigationItem,
 	QuoteBlock,
 	ScrollContainer,
+	ScrollGradient,
+	ScrollGradientContainer,
 	Text,
 	Title,
 	Tooltip,

@@ -5,6 +5,8 @@ import {
 	Link,
 	ListItem,
 	ScrollContainer,
+	ScrollGradient,
+	ScrollGradientContainer,
 	Text,
 	Title,
 	QuoteBlock,
@@ -27,151 +29,196 @@ import UniversalLayout from "../layouts/UniversalLayout.astro";
 	>
 		<Title>☙ Colophon ❧</Title>
 
-		<ScrollContainer style={{ flex: 1 }} client:only="react">
-			<div
-				style={{ width: "100%", paddingLeft: "1rem", paddingRight: "1rem" }}
-			>
-				<Text dropCap
-					>The Nuttyverse is a personal publishing platform for my creative
-					and recreational pursuits, imbued with ♌-energy and a pinch of
-					whimsical delusion. It has been slowly expanding since July 2023.</Text
+		<ScrollGradientContainer>
+			<ScrollGradient part="top" client:only="react" />
+			<ScrollContainer style={{ flex: 1 }}>
+				<div
+					style={{
+						width: "100%",
+						paddingLeft: "1rem",
+						paddingRight: "1rem",
+					}}
 				>
-			</div>
-			<Heading type="h2">Ethos</Heading>
-			<div
-				style={{ width: "100%", paddingLeft: "1rem", paddingRight: "1rem" }}
-			>
-				<Text
-					>Like many others in the <Link
-						href="https://neocities.org/"
-						newTab>Neocities</Link
-					> community, I have become discontent with how corporatized the Internet
-					has become. I yearn for the early days of the web that felt more personal
-					and less commercialized. So this is my contribution to bringing back
-					that lost individual creativity of the web.</Text
+					<Text dropCap
+						>The Nuttyverse is a personal publishing platform for my
+						creative and recreational pursuits, imbued with ♌-energy and
+						a pinch of whimsical delusion. It has been slowly expanding
+						since July 2023.</Text
+					>
+				</div>
+
+				<Heading type="h2">Ethos</Heading>
+
+				<div
+					style={{
+						width: "100%",
+						paddingLeft: "1rem",
+						paddingRight: "1rem",
+					}}
 				>
-				<Text
-					>This website will be under construction indefinitely, most
-					definitely. You see, I have perfectionistic tendencies, and so I
-					often find myself absorbed in the small details that don't
-					matter. But please, do not misunderstand: that is exactly the
-					point.</Text
+					<Text>
+						Like many others in the
+						<Link href="https://neocities.org/" newTab>Neocities</Link>
+						community, I have become discontent with how corporatized the Internet
+						has become. I yearn for the early days of the web that felt more
+						personal and less commercialized. So this is my contribution to
+						bringing back that lost individual creativity of the web.
+					</Text>
+
+					<Text>
+						This website will be under construction indefinitely, most
+						definitely. You see, I have perfectionistic tendencies, and so
+						I often find myself absorbed in the small details that don't
+						matter. But please, do not misunderstand: that is exactly the
+						point.
+					</Text>
+
+					<Text>
+						The minutiae brings me joy, and I am just going to play with
+						it. As the physicist Richard Feynman put it,
+						<Link
+							href="https://www.asc.ohio-state.edu/kilcup.1/262/feynman.html"
+							newTab
+						>
+							"There's no importance whatsoever. I'm just doing it for
+							the fun of it."
+						</Link>
+						I wish to pursue webmastery with that same kind of autotelic attitude.
+					</Text>
+				</div>
+
+				<Heading type="h2">Technology</Heading>
+
+				<div
+					style={{
+						width: "100%",
+						paddingLeft: "1rem",
+						paddingRight: "1rem",
+					}}
 				>
-				<Text
-					>The minutiae brings me joy, and I am just going to play with it.
-					As the physicist Richard Feynman put it, <Link
-						href="https://www.asc.ohio-state.edu/kilcup.1/262/feynman.html"
-						newTab
-						>"There's no importance whatsoever. I'm just doing it for the
-						fun of it."</Link
-					> I wish to pursue webmastery with that same kind of autotelic attitude.</Text
-				>
-			</div>
-			<Heading type="h2">Technology</Heading>
-			<div
-				style={{ width: "100%", paddingLeft: "1rem", paddingRight: "1rem" }}
-			>
-				<Text
-					>The Nuttyverse is (over-)engineered as a set of polyglot
-					μ-services running in a swarm of Docker containers deployed on a
-					bare-metal NixOS server -- with the exception of this static
-					website that you are currently navigating, which is deployed on
-					Neocities.</Text
-				>
-				<Text
-					>If you are interested in taking a peek into the internals, the
-					code happens to be open-sourced and published in a <Link
-						href="https://code.nuttyver.se/observable/nuttyverse"
-						newTab>git monorepo</Link
-					>. But don't let me find you blatantly copying it... or else!
-				</Text>
-			</div>
-			<CodeBlock
-				client:visible="react"
-				language="bash"
-				code={`
+					<Text
+						>The Nuttyverse is (over-)engineered as a set of polyglot
+						μ-services running in a swarm of Docker containers deployed on
+						a bare-metal NixOS server -- with the exception of this static
+						website that you are currently navigating, which is deployed
+						on Neocities.</Text
+					>
+					<Text
+						>If you are interested in taking a peek into the internals,
+						the code happens to be open-sourced and published in a <Link
+							href="https://code.nuttyver.se/observable/nuttyverse"
+							newTab>git monorepo</Link
+						>. But don't let me find you blatantly copying it... or else!
+					</Text>
+				</div>
+				<CodeBlock
+					client:visible="react"
+					language="bash"
+					code={`
 git clone https://code.nuttyver.se/observable/nuttyverse.git
 cd nuttyverse && cat curse.txt
 			`.trim()}
-			/>
-			<div
-				style={{ width: "100%", paddingLeft: "1rem", paddingRight: "1rem" }}
-			>
-				<QuoteBlock
-					citation="https://code.nuttyver.se/observable/nuttyverse/src/branch/main/curse.txt"
-					style={{ marginTop: "1.2rem", marginBottom: "1.2rem" }}
+				/>
+				<div
+					style={{
+						width: "100%",
+						paddingLeft: "1rem",
+						paddingRight: "1rem",
+					}}
 				>
-					<pre
-						style={{
-							fontFamily: "PragmataPro Fraktur",
-							fontSize: experimentalTypeScale.smol,
-							color: colors.gray.solid["12"],
-						}}>
+					<QuoteBlock
+						citation="https://code.nuttyver.se/observable/nuttyverse/src/branch/main/curse.txt"
+						style={{ marginTop: "1.2rem", marginBottom: "1.2rem" }}
+					>
+						<pre
+							style={{
+								fontFamily: "PragmataPro Fraktur",
+								fontSize: experimentalTypeScale.smol,
+								color: colors.gray.solid["12"],
+							}}>
 "Please peruse & muse upon the code,
 but best not fork it," Nutty implores,
 lest, cursed, it might just explode,
 "For my style is mine & yours is yours."</pre>
-				</QuoteBlock>
+					</QuoteBlock>
 
-				<Text
-					>I read on Wikipedia that colophons would sometimes contain <Link
-						href="https://en.wikipedia.org/wiki/Book_curse"
-						newTab>book curses</Link
-					> in early printed publications. I found that idea to be quite amusing,
-					so I thought to irreverently place one in mine. <Link
-						href="https://www.youtube.com/watch?v=v4YnyVdMjG4"
-						newTab>Muahahaha</Link
-					>, it's such an evil thing to do! It feels delightfully roguish.</Text
+					<Text>
+						I read on Wikipedia that colophons would sometimes contain
+						<Link href="https://en.wikipedia.org/wiki/Book_curse" newTab>
+							book curses
+						</Link>
+						in early printed publications. I found that idea to be quite amusing,
+						so I thought to irreverently place one in mine.
+						<Link
+							href="https://www.youtube.com/watch?v=v4YnyVdMjG4"
+							newTab>Muahahaha</Link
+						>, it's such an evil thing to do! It feels delightfully
+						roguish.
+					</Text>
+				</div>
+
+				<Heading type="h2">Typography</Heading>
+
+				<div
+					style={{
+						width: "100%",
+						paddingLeft: "1rem",
+						paddingRight: "1rem",
+					}}
 				>
-			</div>
-			<Heading type="h2">Typography</Heading>
-			<div
-				style={{ width: "100%", paddingLeft: "1rem", paddingRight: "1rem" }}
-			>
-				<Text>
-					<UnorderedList>
-						<ListItem
-							>Words are set in <span
-								style={{
-									fontFamily: "Nure",
-									fontWeight: "bold",
-								}}>Nure</span
-							> and <span
-								style={{
-									fontFamily: "PragmataPro Fraktur",
-									fontWeight: "bold",
-								}}>PragmataPro Fraktur</span
-							>.</ListItem
-						>
-						<ListItem
-							>Code is set in <span
-								style={{
-									fontFamily: "PragmataPro Liga",
-									fontWeight: "bold",
-								}}>PragmataPro Liga</span
-							>.</ListItem
-						>
-						<ListItem
-							>Icons are set with
-							<span
-								style={{
-									fontFamily: "'FSD Emoji'",
-									fontWeight: "bold",
-									fontVariantLigatures: "none",
-								}}>FSD Emoji 😀</span
-							> and
-							<span
-								style={{
-									fontFamily: "'Font Awesome 6 Pro'",
-									fontWeight: "bold",
-									fontVariantLigatures: "none",
-								}}>Font Awesome </span
+					<Text>
+						<UnorderedList>
+							<ListItem>
+								Words are set in <span
+									style={{
+										fontFamily: "Nure",
+										fontWeight: "bold",
+									}}>Nure</span
+								> and <span
+									style={{
+										fontFamily: "PragmataPro Fraktur",
+										fontWeight: "bold",
+									}}>PragmataPro Fraktur</span
+								>.</ListItem
 							>
-							.</ListItem
-						>
-					</UnorderedList>
-				</Text>
-			</div>
-		</ScrollContainer>
+							<ListItem>
+								Code is set in
+								<span
+									style={{
+										fontFamily: "PragmataPro Liga",
+										fontWeight: "bold",
+									}}
+								>
+									PragmataPro Liga
+								</span>.
+							</ListItem>
+							<ListItem>
+								Icons are set with
+								<span
+									style={{
+										fontFamily: "'FSD Emoji'",
+										fontWeight: "bold",
+										fontVariantLigatures: "none",
+									}}
+								>
+									FSD Emoji 😀
+								</span>
+								and
+								<span
+									style={{
+										fontFamily: "'Font Awesome 6 Pro'",
+										fontWeight: "bold",
+										fontVariantLigatures: "none",
+									}}
+								>
+									Font Awesome 
+								</span>.
+							</ListItem>
+						</UnorderedList>
+					</Text>
+				</div>
+			</ScrollContainer>
+			<ScrollGradient part="bottom" client:only="react" />
+		</ScrollGradientContainer>
 	</div>
 </UniversalLayout>

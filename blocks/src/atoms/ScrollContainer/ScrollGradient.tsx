@@ -22,7 +22,15 @@ export const ScrollGradient: React.FC<ScrollGradientProps> = (props) => {
 
 	// Get a reference to the scroll container.
 	useEffect(() => {
-		const parent = gradientRef.current?.parentElement;
+		let parent = gradientRef.current?.parentElement;
+
+		// [NOTE] If this element is rendered in an Astro island with a
+		// client:* directive, then this component will be wrapped in a
+		// <astro-island> custom element. In this case, we will want to
+		// traverse one more level up to find the ScrollGradientContainer.
+		if (!parent?.classList.contains(gradientContainer)) {
+			parent = parent?.parentElement;
+		}
 
 		if (!parent || !parent.classList.contains(gradientContainer)) {
 			throw new Error(
