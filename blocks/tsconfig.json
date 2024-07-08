@@ -7,6 +7,5 @@
 			"~/*": ["*"]
 		},
 		"jsx": "react-jsx"
-	},
-	"include": ["./jest.setup.ts"]
+	}
 }

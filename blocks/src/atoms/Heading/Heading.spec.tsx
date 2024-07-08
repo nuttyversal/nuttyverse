@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import React, { ComponentProps } from "react";
+import { ComponentProps } from "react";
 import { Heading } from "./Heading";
 
 const headingContent = "Heading";
