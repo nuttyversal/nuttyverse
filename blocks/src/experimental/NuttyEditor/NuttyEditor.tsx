@@ -3,6 +3,7 @@ import { basicSetup } from "codemirror";
 import { EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { vim } from "@replit/codemirror-vim";
+import { editorContainer } from "./NuttyEditor.css";
 
 export const NuttyEditor: React.FC = () => {
 	const editorContainerRef = useRef<HTMLDivElement>(null);
@@ -21,5 +22,5 @@ export const NuttyEditor: React.FC = () => {
 		}
 	}, []);
 
-	return <div ref={editorContainerRef} />;
+	return <div ref={editorContainerRef} className={editorContainer} />;
 };
