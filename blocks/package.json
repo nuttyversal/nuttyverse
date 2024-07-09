@@ -18,6 +18,8 @@
 		"@fortawesome/pro-regular-svg-icons": "^6.5.2",
 		"@fortawesome/pro-solid-svg-icons": "^6.5.2",
 		"@fortawesome/react-fontawesome": "^0.2.2",
+		"@mdx-js/mdx": "^3.0.1",
+		"@mdx-js/react": "^3.0.1",
 		"@nanostores/react": "^0.7.2",
 		"@radix-ui/colors": "^3.0.0",
 		"@replit/codemirror-vim": "^6.2.1",
@@ -35,6 +37,7 @@
 		"react-dom": "^18.3.1"
 	},
 	"devDependencies": {
+		"@mdx-js/rollup": "^3.0.1",
 		"@storybook/addon-essentials": "^8.1.11",
 		"@storybook/addon-interactions": "^8.1.11",
 		"@storybook/addon-links": "^8.1.11",
@@ -47,6 +50,7 @@
 		"@testing-library/jest-dom": "^6.4.6",
 		"@testing-library/react": "^16.0.0",
 		"@types/jest": "^29.5.12",
+		"@types/mdx": "^2.0.13",
 		"@types/react": "^18.3.3",
 		"@types/react-dom": "^18.3.0",
 		"@vanilla-extract/jest-transform": "^1.1.7",
