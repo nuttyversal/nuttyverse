@@ -9,6 +9,9 @@
 		"test-format": "prettier --check \"**/*.{js,jsx,ts,tsx}\""
 	},
 	"dependencies": {
+		"@codemirror/commands": "^6.6.0",
+		"@codemirror/state": "^6.4.1",
+		"@codemirror/view": "^6.28.4",
 		"@fortawesome/fontawesome-svg-core": "^6.5.2",
 		"@fortawesome/free-brands-svg-icons": "^6.5.2",
 		"@fortawesome/pro-regular-svg-icons": "^6.5.2",
