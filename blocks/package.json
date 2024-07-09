@@ -24,6 +24,7 @@
 		"@vanilla-extract/recipes": "^0.5.3",
 		"@vanilla-extract/sprinkles": "^1.6.2",
 		"classnames": "^2.5.1",
+		"codemirror": "^6.0.1",
 		"date-fns": "^3.6.0",
 		"gsap": "^3.12.5",
 		"highlight.js": "^11.10.0",

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
+import { basicSetup } from "codemirror";
 import { EditorState } from "@codemirror/state";
-import { EditorView, keymap } from "@codemirror/view";
-import { defaultKeymap } from "@codemirror/commands";
+import { EditorView } from "@codemirror/view";
 import { vim } from "@replit/codemirror-vim";
 
 export const NuttyEditor: React.FC = () => {
@@ -11,7 +11,7 @@ export const NuttyEditor: React.FC = () => {
 		if (editorContainerRef.current) {
 			const initialState = EditorState.create({
 				doc: "Nutty Editor",
-				extensions: [vim(), keymap.of(defaultKeymap)],
+				extensions: [vim(), basicSetup],
 			});
 
 			new EditorView({
