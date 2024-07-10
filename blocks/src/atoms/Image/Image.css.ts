@@ -4,10 +4,6 @@ import { colors } from "~/styles/themes/contract.css";
 export const container = style({
 	height: "100%",
 	width: "100%",
-	borderColor: colors.gray.solid["12"],
-	borderWidth: "3px",
-	borderRadius: "3px",
-	borderStyle: "solid",
 	transition: "all 300ms linear",
 });
 
@@ -17,6 +13,11 @@ export const loadingContainer = style({
 });
 
 export const image = style({
+	borderColor: colors.gray.solid["12"],
+	borderWidth: "2px",
+	borderRadius: "3px",
+	borderStyle: "solid",
+
 	filter: "none",
 	transition: "filter 300ms linear",
 });
