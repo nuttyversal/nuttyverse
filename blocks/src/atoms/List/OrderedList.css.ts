@@ -3,9 +3,11 @@ import { spacing } from "~/styles/tokens/spacing";
 
 export const orderedList = style({
 	fontFamily: "Nure",
-	paddingLeft: spacing[4],
+	paddingLeft: spacing[0],
 	listStyleType: "none",
 	counterReset: "ordered-list",
+	marginTop: "1em",
+	marginBottom: "1em",
 });
 
 globalStyle(`${orderedList} li::before`, {
@@ -18,7 +20,9 @@ globalStyle(`${orderedList} li::before`, {
 	justifyContent: "center",
 	alignItems: "center",
 	width: spacing[8],
-
 	float: "left",
-	marginLeft: -spacing[2],
+});
+
+globalStyle(`${orderedList} li`, {
+	marginLeft: `-${spacing[0.5]}`,
 });
