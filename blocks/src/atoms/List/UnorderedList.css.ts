@@ -10,5 +10,10 @@ export const unorderedList = style({
 globalStyle(`${unorderedList} li::before`, {
 	fontFamily: "Nure",
 	content: "✦",
-	marginRight: spacing[2],
+
+	display: "flex",
+	justifyContent: "center",
+	alignItems: "center",
+	width: spacing[8],
+	float: "left",
 });
