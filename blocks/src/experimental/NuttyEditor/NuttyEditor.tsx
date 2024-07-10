@@ -9,6 +9,7 @@ import { MDXComponents, MDXContent } from "mdx/types";
 import { evaluate } from "@mdx-js/mdx";
 import { vim } from "@replit/codemirror-vim";
 import { CodeBlock } from "~/atoms/CodeBlock";
+import { ContentContainer } from "~/atoms/ContentContainer";
 import { Heading } from "~/atoms/Heading";
 import { Image } from "~/atoms/Image";
 import { Link } from "~/atoms/Link";
@@ -18,6 +19,7 @@ import { Text } from "~/atoms/Text";
 import { QuoteBlock } from "~/atoms/QuoteBlock";
 import { Video } from "~/atoms/Video";
 import { editorContainer } from "./NuttyEditor.css";
+import { rewriteParagraphs } from "./plugins";
 
 // List of components that can be used in the MDX editor.
 const componentRegistry: MDXComponents = {
@@ -51,7 +53,10 @@ export const NuttyEditor: React.FC = () => {
 				const { default: MdxContent } = await evaluate(
 					update.state.doc.toString(),
 					// @ts-expect-error: `runtime` types are broken.
-					runtime,
+					{
+						...runtime,
+						remarkPlugins: [rewriteParagraphs],
+					},
 				);
 
 				mdxContent.current = MdxContent;
@@ -121,7 +126,7 @@ export const NuttyEditor: React.FC = () => {
 		<div style={{ display: "flex", flexDirection: "column", gap: "1em" }}>
 			<div ref={editorContainerRef} className={editorContainer} />
 			<hr />
-			<div>{renderMdx()}</div>
+			<ContentContainer>{renderMdx()}</ContentContainer>
 		</div>
 	);
 };

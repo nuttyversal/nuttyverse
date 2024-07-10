@@ -34,7 +34,9 @@
 		"howler": "^2.2.4",
 		"nanostores": "^0.10.3",
 		"react": "^18.3.1",
-		"react-dom": "^18.3.1"
+		"react-dom": "^18.3.1",
+		"unified": "^11.0.5",
+		"unist-util-visit": "^5.0.0"
 	},
 	"devDependencies": {
 		"@mdx-js/rollup": "^3.0.1",
@@ -53,6 +55,7 @@
 		"@types/mdx": "^2.0.13",
 		"@types/react": "^18.3.3",
 		"@types/react-dom": "^18.3.0",
+		"@types/unist": "^3.0.2",
 		"@vanilla-extract/jest-transform": "^1.1.7",
 		"@vanilla-extract/vite-plugin": "^3.9.5",
 		"@vitejs/plugin-react": "^4.3.1",

@@ -86,6 +86,12 @@ importers:
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
+      unified:
+        specifier: ^11.0.5
+        version: 11.0.5
+      unist-util-visit:
+        specifier: ^5.0.0
+        version: 5.0.0
     devDependencies:
       '@mdx-js/rollup':
         specifier: ^3.0.1
@@ -135,6 +141,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
+      '@types/unist':
+        specifier: ^3.0.2
+        version: 3.0.2
       '@vanilla-extract/jest-transform':
         specifier: ^1.1.7
         version: 1.1.7(@types/node@20.14.10)(sass@1.72.0)
