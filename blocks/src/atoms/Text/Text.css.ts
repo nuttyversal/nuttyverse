@@ -75,6 +75,10 @@ globalStyle("*", {
 	hyphens: "auto",
 });
 
+globalStyle(".katex *", {
+	fontFamily: "unset",
+});
+
 export const base = style({
 	color: colors.gray.solid["12"],
 });

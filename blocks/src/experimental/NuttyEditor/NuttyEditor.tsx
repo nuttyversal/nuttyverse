@@ -8,6 +8,9 @@ import { indentWithTab } from "@codemirror/commands";
 import { MDXComponents, MDXContent } from "mdx/types";
 import { evaluate } from "@mdx-js/mdx";
 import { vim } from "@replit/codemirror-vim";
+import rehypeKatex from "rehype-katex";
+import remarkMath from "remark-math";
+import "katex/dist/katex.css";
 import { Code } from "~/atoms/Code";
 import { CodeBlock } from "~/atoms/CodeBlock";
 import { ContentContainer } from "~/atoms/ContentContainer";
@@ -66,7 +69,9 @@ export const NuttyEditor: React.FC = () => {
 					// @ts-expect-error: `runtime` types are broken.
 					{
 						...runtime,
+						rehypePlugins: [rehypeKatex],
 						remarkPlugins: [
+							remarkMath,
 							rewriteCodeInline,
 							rewriteCodeBlocks,
 							rewriteHeaders,
