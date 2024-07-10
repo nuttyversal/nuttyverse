@@ -8,6 +8,7 @@ import { indentWithTab } from "@codemirror/commands";
 import { MDXComponents, MDXContent } from "mdx/types";
 import { evaluate } from "@mdx-js/mdx";
 import { vim } from "@replit/codemirror-vim";
+import { Code } from "~/atoms/Code";
 import { CodeBlock } from "~/atoms/CodeBlock";
 import { ContentContainer } from "~/atoms/ContentContainer";
 import { Heading } from "~/atoms/Heading";
@@ -20,6 +21,7 @@ import { QuoteBlock } from "~/atoms/QuoteBlock";
 import { Video } from "~/atoms/Video";
 import { editorContainer } from "./NuttyEditor.css";
 import {
+	rewriteCodeInline,
 	rewriteHeaders,
 	rewriteImages,
 	rewriteLinks,
@@ -29,6 +31,7 @@ import {
 
 // List of components that can be used in the MDX editor.
 const componentRegistry: MDXComponents = {
+	Code,
 	CodeBlock,
 	Heading,
 	Image,
@@ -62,6 +65,7 @@ export const NuttyEditor: React.FC = () => {
 					{
 						...runtime,
 						remarkPlugins: [
+							rewriteCodeInline,
 							rewriteHeaders,
 							rewriteImages,
 							rewriteLinks,

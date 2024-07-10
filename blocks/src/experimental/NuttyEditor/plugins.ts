@@ -167,3 +167,28 @@ export const rewriteQuoteBlocks: Plugin = () => {
 		);
 	};
 };
+
+export const rewriteCodeInline: Plugin = () => {
+	return (tree) => {
+		visit(
+			tree,
+			"inlineCode",
+			(
+				node: (Node | Parent) & { value: string },
+				index: number | null,
+				parent: Parent | null,
+			) => {
+				if (parent !== null && index !== null) {
+					const component = {
+						type: "mdxJsxFlowElement",
+						name: "Code",
+						attributes: [createAttribute("children", node.value)],
+						children: [] as Node[],
+					};
+
+					parent.children[index] = component;
+				}
+			},
+		);
+	};
+};
