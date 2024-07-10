@@ -8,6 +8,7 @@ import { experimentalTypeScale } from "~/styles/tokens/typography";
 
 import { Button } from "~/atoms/Button";
 import { Chibi } from "~/atoms/Chibi";
+import { Code } from "~/atoms/Code";
 import { CodeBlock } from "~/atoms/CodeBlock";
 import { ContentContainer } from "~/atoms/ContentContainer";
 import { Heading } from "~/atoms/Heading";
@@ -59,6 +60,7 @@ export {
 	// Atoms
 	Button,
 	Chibi,
+	Code,
 	CodeBlock,
 	ContentContainer,
 	Heading,
