@@ -6,8 +6,6 @@ export const orderedList = style({
 	paddingLeft: spacing[0],
 	listStyleType: "none",
 	counterReset: "ordered-list",
-	marginTop: "1em",
-	marginBottom: "1em",
 });
 
 globalStyle(`${orderedList} li::before`, {

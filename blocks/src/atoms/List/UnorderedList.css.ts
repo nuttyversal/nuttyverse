@@ -5,8 +5,6 @@ export const unorderedList = style({
 	fontFamily: "Nure",
 	paddingLeft: spacing[0],
 	listStyleType: "none",
-	marginTop: "1em",
-	marginBottom: "1em",
 });
 
 globalStyle(`${unorderedList} li::before`, {
