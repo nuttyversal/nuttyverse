@@ -3,7 +3,7 @@ import * as runtime from "react/jsx-runtime";
 import { basicSetup } from "codemirror";
 import { indentUnit } from "@codemirror/language";
 import { EditorState } from "@codemirror/state";
-import { EditorView, keymap } from "@codemirror/view";
+import { EditorView, ViewUpdate, keymap } from "@codemirror/view";
 import { indentWithTab } from "@codemirror/commands";
 import { evaluate } from "@mdx-js/mdx";
 import { vim } from "@replit/codemirror-vim";
@@ -14,8 +14,51 @@ export const NuttyEditor: React.FC = () => {
 	const editorContainerRef = useRef<HTMLDivElement>(null);
 	const editorViewRef = useRef<EditorView | null>(null);
 	const [documentText, setDocumentText] = useState<string>("");
+	const mdxError = useRef<string | null>(null);
 	const mdxContent = useRef<MDXContent | null>(null);
-	const Content = mdxContent.current ?? Fragment;
+
+	async function compileMdx(update: ViewUpdate) {
+		if (update.docChanged) {
+			// Store the document text.
+			setDocumentText(update.state.doc.toString());
+
+			try {
+				// Compile the document text.
+				const { default: MdxContent } = await evaluate(
+					update.state.doc.toString(),
+					// @ts-expect-error: `runtime` types are broken.
+					runtime,
+				);
+
+				mdxContent.current = MdxContent;
+				mdxError.current = null;
+			} catch (e) {
+				mdxError.current = String(e);
+			}
+		}
+	}
+
+	function renderMdx() {
+		let Content: JSX.Element = <Fragment />;
+
+		try {
+			if (mdxContent.current) {
+				Content = mdxContent.current({});
+			}
+		} catch (e) {
+			mdxError.current = String(e);
+		}
+
+		if (mdxError.current) {
+			Content = (
+				<pre style={{ color: "red", textWrap: "pretty" }}>
+					{mdxError.current}
+				</pre>
+			);
+		}
+
+		return Content;
+	}
 
 	useEffect(() => {
 		if (editorContainerRef.current) {
@@ -36,22 +79,8 @@ export const NuttyEditor: React.FC = () => {
 					EditorState.tabSize.of(3),
 					keymap.of([indentWithTab]),
 
-					// Listen to state changes.
-					EditorView.updateListener.of(async (update) => {
-						if (update.docChanged) {
-							// Store the document text.
-							setDocumentText(update.state.doc.toString());
-
-							// Compile and evaluate the document text into a functional component.
-							const { default: MdxContent } = await evaluate(
-								update.state.doc.toString(),
-								// @ts-expect-error: `runtime` types are broken.
-								runtime,
-							);
-
-							mdxContent.current = MdxContent;
-						}
-					}),
+					// Compile MDX.
+					EditorView.updateListener.of(compileMdx),
 				],
 			});
 
@@ -66,7 +95,7 @@ export const NuttyEditor: React.FC = () => {
 		<div style={{ display: "flex", flexDirection: "column", gap: "1em" }}>
 			<div ref={editorContainerRef} className={editorContainer} />
 			<hr />
-			<Content />
+			{renderMdx()}
 		</div>
 	);
 };
