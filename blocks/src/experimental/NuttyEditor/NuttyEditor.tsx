@@ -24,6 +24,7 @@ import {
 	rewriteImages,
 	rewriteLinks,
 	rewriteParagraphs,
+	rewriteQuoteBlocks,
 } from "./plugins";
 
 // List of components that can be used in the MDX editor.
@@ -65,6 +66,7 @@ export const NuttyEditor: React.FC = () => {
 							rewriteImages,
 							rewriteLinks,
 							rewriteParagraphs,
+							rewriteQuoteBlocks,
 						],
 					},
 				);

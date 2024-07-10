@@ -23,7 +23,7 @@ export const rewriteParagraphs: Plugin = () => {
 			tree,
 			"paragraph",
 			(node: Node | Parent, index: number | null, parent: Parent | null) => {
-				if (parent !== null && index !== null) {
+				if (parent !== null && parent.type === "root" && index !== null) {
 					const textComponent = {
 						type: "mdxJsxFlowElement",
 						name: "Text",
@@ -135,6 +135,31 @@ export const rewriteImages: Plugin = () => {
 						],
 						children: [] as Node[],
 					};
+
+					parent.children[index] = component;
+				}
+			},
+		);
+	};
+};
+
+export const rewriteQuoteBlocks: Plugin = () => {
+	return (tree) => {
+		visit(
+			tree,
+			"blockquote",
+			(node: Node | Parent, index: number | null, parent: Parent | null) => {
+				if (parent !== null && index !== null) {
+					const component = {
+						type: "mdxJsxFlowElement",
+						name: "QuoteBlock",
+						attributes: [],
+						children: [] as Node[],
+					};
+
+					if ("children" in node) {
+						component.children = node.children;
+					}
 
 					parent.children[index] = component;
 				}
