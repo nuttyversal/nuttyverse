@@ -44,8 +44,6 @@ export const rewriteParagraphs: Plugin = () => {
 
 export const rewriteHeaders: Plugin = () => {
 	return (tree) => {
-		visit(tree, console.log);
-
 		visit(
 			tree,
 			"heading",
@@ -71,6 +69,39 @@ export const rewriteHeaders: Plugin = () => {
 							attributes: [createAttribute("type", `h${node.depth}`)],
 							children: [] as Node[],
 						};
+					}
+
+					if ("children" in node) {
+						component.children = node.children;
+					}
+
+					parent.children[index] = component;
+				}
+			},
+		);
+	};
+};
+
+export const rewriteLinks: Plugin = () => {
+	return (tree) => {
+		visit(
+			tree,
+			"link",
+			(
+				node: (Node | Parent) & { url: string },
+				index: number | null,
+				parent: Parent | null,
+			) => {
+				if (parent !== null && index !== null) {
+					const component = {
+						type: "mdxJsxFlowElement",
+						name: "Link",
+						attributes: [createAttribute("href", node.url)],
+						children: [] as Node[],
+					};
+
+					if (!node.url.startsWith("/")) {
+						component.attributes.push(createAttribute("newTab", "true"));
 					}
 
 					if ("children" in node) {
