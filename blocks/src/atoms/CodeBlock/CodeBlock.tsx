@@ -13,6 +13,8 @@ import "./themes/override.css";
 highlightjs.registerLanguage("bash", bash);
 highlightjs.registerLanguage("typescript", typescript);
 
+const supportedLanguages = ["bash", "typescript"] as const;
+
 type CodeBlockProps = {
 	/**
 	 * The code snippet to render.
@@ -22,7 +24,7 @@ type CodeBlockProps = {
 	/**
 	 * The code snippet language.
 	 */
-	language: "bash" | "typescript";
+	language: (typeof supportedLanguages)[number];
 
 	/**
 	 * If enabled (`true`), disables the application of natural margin styles.
@@ -31,16 +33,24 @@ type CodeBlockProps = {
 };
 
 export const CodeBlock: React.FC<CodeBlockProps> = (props) => {
-	const highlightedCode = highlightjs.highlight(props.code, {
-		language: props.language,
-	}).value;
-
 	// Consistent rem-based margin.
 	const margin = "1.2rem 0";
 
 	const containerStyles = {
 		margin: props.marginless ? undefined : margin,
 	};
+
+	if (!supportedLanguages.includes(props.language)) {
+		return (
+			<pre className={container} style={containerStyles}>
+				<code className={code}>{props.code}</code>
+			</pre>
+		);
+	}
+
+	const highlightedCode = highlightjs.highlight(props.code, {
+		language: props.language,
+	}).value;
 
 	return (
 		<pre className={container} style={containerStyles}>
