@@ -114,3 +114,31 @@ export const rewriteLinks: Plugin = () => {
 		);
 	};
 };
+
+export const rewriteImages: Plugin = () => {
+	return (tree) => {
+		visit(
+			tree,
+			"image",
+			(
+				node: (Node | Parent) & { url: string; alt: string },
+				index: number | null,
+				parent: Parent | null,
+			) => {
+				if (parent !== null && index !== null) {
+					const component = {
+						type: "mdxJsxFlowElement",
+						name: "Image",
+						attributes: [
+							createAttribute("src", node.url),
+							createAttribute("alt", node.alt),
+						],
+						children: [] as Node[],
+					};
+
+					parent.children[index] = component;
+				}
+			},
+		);
+	};
+};

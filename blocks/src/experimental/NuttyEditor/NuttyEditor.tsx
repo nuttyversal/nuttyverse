@@ -19,7 +19,12 @@ import { Text } from "~/atoms/Text";
 import { QuoteBlock } from "~/atoms/QuoteBlock";
 import { Video } from "~/atoms/Video";
 import { editorContainer } from "./NuttyEditor.css";
-import { rewriteHeaders, rewriteLinks, rewriteParagraphs } from "./plugins";
+import {
+	rewriteHeaders,
+	rewriteImages,
+	rewriteLinks,
+	rewriteParagraphs,
+} from "./plugins";
 
 // List of components that can be used in the MDX editor.
 const componentRegistry: MDXComponents = {
@@ -56,9 +61,10 @@ export const NuttyEditor: React.FC = () => {
 					{
 						...runtime,
 						remarkPlugins: [
-							rewriteParagraphs,
 							rewriteHeaders,
+							rewriteImages,
 							rewriteLinks,
+							rewriteParagraphs,
 						],
 					},
 				);
