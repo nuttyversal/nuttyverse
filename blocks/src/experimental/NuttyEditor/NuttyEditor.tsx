@@ -26,6 +26,7 @@ import {
 	rewriteHeaders,
 	rewriteImages,
 	rewriteLinks,
+	rewriteLists,
 	rewriteParagraphs,
 	rewriteQuoteBlocks,
 } from "./plugins";
@@ -71,6 +72,7 @@ export const NuttyEditor: React.FC = () => {
 							rewriteHeaders,
 							rewriteImages,
 							rewriteLinks,
+							rewriteLists,
 							rewriteParagraphs,
 							rewriteQuoteBlocks,
 						],

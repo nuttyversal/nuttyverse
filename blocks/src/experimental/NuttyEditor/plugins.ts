@@ -214,7 +214,34 @@ export const rewriteCodeBlocks: Plugin = () => {
 						children: [] as Node[],
 					};
 
-					console.log(component);
+					parent.children[index] = component;
+				}
+			},
+		);
+	};
+};
+
+export const rewriteLists: Plugin = () => {
+	return (tree) => {
+		visit(
+			tree,
+			"list",
+			(
+				node: (Node | Parent) & { ordered: boolean },
+				index: number | null,
+				parent: Parent | null,
+			) => {
+				if (parent !== null && index !== null) {
+					const component = {
+						type: "mdxJsxFlowElement",
+						name: node.ordered ? "OrderedList" : "UnorderedList",
+						attributes: [],
+						children: [] as Node[],
+					};
+
+					if ("children" in node) {
+						component.children = node.children;
+					}
 
 					parent.children[index] = component;
 				}
