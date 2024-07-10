@@ -19,7 +19,7 @@ import { Text } from "~/atoms/Text";
 import { QuoteBlock } from "~/atoms/QuoteBlock";
 import { Video } from "~/atoms/Video";
 import { editorContainer } from "./NuttyEditor.css";
-import { rewriteParagraphs } from "./plugins";
+import { rewriteHeaders, rewriteParagraphs } from "./plugins";
 
 // List of components that can be used in the MDX editor.
 const componentRegistry: MDXComponents = {
@@ -55,7 +55,7 @@ export const NuttyEditor: React.FC = () => {
 					// @ts-expect-error: `runtime` types are broken.
 					{
 						...runtime,
-						remarkPlugins: [rewriteParagraphs],
+						remarkPlugins: [rewriteParagraphs, rewriteHeaders],
 					},
 				);
 
