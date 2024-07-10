@@ -22,6 +22,7 @@ import { Video } from "~/atoms/Video";
 import { editorContainer } from "./NuttyEditor.css";
 import {
 	rewriteCodeInline,
+	rewriteCodeBlocks,
 	rewriteHeaders,
 	rewriteImages,
 	rewriteLinks,
@@ -66,6 +67,7 @@ export const NuttyEditor: React.FC = () => {
 						...runtime,
 						remarkPlugins: [
 							rewriteCodeInline,
+							rewriteCodeBlocks,
 							rewriteHeaders,
 							rewriteImages,
 							rewriteLinks,

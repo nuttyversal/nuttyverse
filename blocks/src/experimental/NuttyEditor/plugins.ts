@@ -192,3 +192,33 @@ export const rewriteCodeInline: Plugin = () => {
 		);
 	};
 };
+
+export const rewriteCodeBlocks: Plugin = () => {
+	return (tree) => {
+		visit(
+			tree,
+			"code",
+			(
+				node: (Node | Parent) & { lang: string; value: string },
+				index: number | null,
+				parent: Parent | null,
+			) => {
+				if (parent !== null && index !== null) {
+					const component = {
+						type: "mdxJsxFlowElement",
+						name: "CodeBlock",
+						attributes: [
+							createAttribute("code", node.value),
+							createAttribute("language", node.lang ?? ""),
+						],
+						children: [] as Node[],
+					};
+
+					console.log(component);
+
+					parent.children[index] = component;
+				}
+			},
+		);
+	};
+};
