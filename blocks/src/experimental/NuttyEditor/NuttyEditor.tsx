@@ -5,10 +5,34 @@ import { indentUnit } from "@codemirror/language";
 import { EditorState } from "@codemirror/state";
 import { EditorView, ViewUpdate, keymap } from "@codemirror/view";
 import { indentWithTab } from "@codemirror/commands";
+import { MDXComponents, MDXContent } from "mdx/types";
 import { evaluate } from "@mdx-js/mdx";
 import { vim } from "@replit/codemirror-vim";
+import { CodeBlock } from "~/atoms/CodeBlock";
+import { Heading } from "~/atoms/Heading";
+import { Image } from "~/atoms/Image";
+import { Link } from "~/atoms/Link";
+import { ListItem, OrderedList, UnorderedList } from "~/atoms/List";
+import { Title } from "~/atoms/Title";
+import { Text } from "~/atoms/Text";
+import { QuoteBlock } from "~/atoms/QuoteBlock";
+import { Video } from "~/atoms/Video";
 import { editorContainer } from "./NuttyEditor.css";
-import { MDXContent } from "mdx/types";
+
+// List of components that can be used in the MDX editor.
+const componentRegistry: MDXComponents = {
+	CodeBlock,
+	Heading,
+	Image,
+	Link,
+	ListItem,
+	OrderedList,
+	UnorderedList,
+	Title,
+	Text,
+	QuoteBlock,
+	Video,
+};
 
 export const NuttyEditor: React.FC = () => {
 	const editorContainerRef = useRef<HTMLDivElement>(null);
@@ -43,7 +67,9 @@ export const NuttyEditor: React.FC = () => {
 
 		try {
 			if (mdxContent.current) {
-				Content = mdxContent.current({});
+				Content = mdxContent.current({
+					components: componentRegistry,
+				});
 			}
 		} catch (e) {
 			mdxError.current = String(e);
@@ -95,7 +121,7 @@ export const NuttyEditor: React.FC = () => {
 		<div style={{ display: "flex", flexDirection: "column", gap: "1em" }}>
 			<div ref={editorContainerRef} className={editorContainer} />
 			<hr />
-			{renderMdx()}
+			<div>{renderMdx()}</div>
 		</div>
 	);
 };
