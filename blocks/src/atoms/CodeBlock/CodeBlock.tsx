@@ -23,6 +23,11 @@ type CodeBlockProps = {
 	 * The code snippet language.
 	 */
 	language: "bash" | "typescript";
+
+	/**
+	 * If enabled (`true`), disables the application of natural margin styles.
+	 */
+	marginless?: boolean;
 };
 
 export const CodeBlock: React.FC<CodeBlockProps> = (props) => {
@@ -30,8 +35,15 @@ export const CodeBlock: React.FC<CodeBlockProps> = (props) => {
 		language: props.language,
 	}).value;
 
+	// Consistent rem-based margin.
+	const margin = "1.2rem 0";
+
+	const containerStyles = {
+		margin: props.marginless ? undefined : margin,
+	};
+
 	return (
-		<pre className={container}>
+		<pre className={container} style={containerStyles}>
 			<code
 				dangerouslySetInnerHTML={{ __html: highlightedCode }}
 				className={code}
