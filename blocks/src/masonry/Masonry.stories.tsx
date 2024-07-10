@@ -33,6 +33,7 @@ const generateMasonryContentBlock = (): MasonryContentBlock => {
 			width="100%"
 			style={{ objectFit: "cover" }}
 			draggable={false}
+			marginless
 		/>
 	);
 
@@ -170,6 +171,7 @@ export const LookingGlass: Story = {
 					width="100%"
 					style={{ objectFit: "cover" }}
 					draggable={false}
+					marginless
 				/>
 			) : (
 				<Video
@@ -181,6 +183,7 @@ export const LookingGlass: Story = {
 					draggable={false}
 					autoPlay={true}
 					loop={true}
+					marginless
 				/>
 			);
 

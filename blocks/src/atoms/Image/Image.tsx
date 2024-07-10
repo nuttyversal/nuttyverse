@@ -25,6 +25,11 @@ type ImageProps = {
 	 * for rendering pixel art at increased sizes without blurring.
 	 */
 	pixelated?: boolean;
+
+	/**
+	 * If enabled (`true`), disables the application of natural margin styles.
+	 */
+	marginless?: boolean;
 } & React.ComponentPropsWithoutRef<"img">;
 
 const ImageComponent = (props: ImageProps) => {
@@ -43,6 +48,13 @@ const ImageComponent = (props: ImageProps) => {
 		}
 	}, [src, previewSrc]);
 
+	// Consistent rem-based margin.
+	const margin = "1.2rem 0";
+
+	const containerStyles = {
+		margin: props.marginless ? undefined : margin,
+	};
+
 	const containerClassNames = classNames(container, {
 		[loadingContainer]: imageSrc === previewSrc,
 	});
@@ -53,7 +65,7 @@ const ImageComponent = (props: ImageProps) => {
 	});
 
 	return (
-		<div className={containerClassNames}>
+		<div className={containerClassNames} style={containerStyles}>
 			<img src={imageSrc} className={imageClassNames} {...htmlImgProps} />
 		</div>
 	);

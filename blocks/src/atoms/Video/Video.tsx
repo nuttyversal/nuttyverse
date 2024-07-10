@@ -18,6 +18,11 @@ type VideoProps = {
 	 * video is loading.
 	 */
 	previewSrc?: string;
+
+	/**
+	 * If enabled (`true`), disables the application of natural margin styles.
+	 */
+	marginless?: boolean;
 } & React.ComponentPropsWithoutRef<"video">;
 
 export const Video = (props: VideoProps) => {
@@ -36,6 +41,13 @@ export const Video = (props: VideoProps) => {
 		}
 	}, []);
 
+	// Consistent rem-based margin.
+	const margin = "1.2rem 0";
+
+	const containerStyles = {
+		margin: props.marginless ? undefined : margin,
+	};
+
 	const containerClassNames = classNames(container, {
 		[loadingContainer]: videoSrc === previewSrc,
 	});
@@ -45,7 +57,7 @@ export const Video = (props: VideoProps) => {
 	});
 
 	return (
-		<div className={containerClassNames}>
+		<div className={containerClassNames} style={containerStyles}>
 			<video
 				src={videoSrc}
 				className={videoClassNames}

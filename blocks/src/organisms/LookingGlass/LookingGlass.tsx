@@ -185,6 +185,7 @@ export const LookingGlass: React.FC = () => {
 					width="100%"
 					style={{ objectFit: "cover" }}
 					draggable={false}
+					marginless
 				/>
 			);
 		} else {
@@ -199,6 +200,7 @@ export const LookingGlass: React.FC = () => {
 					draggable={false}
 					autoPlay={true}
 					loop={true}
+					marginless
 				/>
 			);
 		}
