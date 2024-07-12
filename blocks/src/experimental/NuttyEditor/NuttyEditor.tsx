@@ -5,6 +5,8 @@ import { indentUnit } from "@codemirror/language";
 import { EditorState } from "@codemirror/state";
 import { EditorView, ViewUpdate, keymap } from "@codemirror/view";
 import { indentWithTab } from "@codemirror/commands";
+import { markdownLanguage } from "@codemirror/lang-markdown";
+import { githubLightTheme } from "@fsegurai/codemirror-theme-github-light";
 import { MDXComponents, MDXContent } from "mdx/types";
 import { evaluate } from "@mdx-js/mdx";
 import { vim } from "@replit/codemirror-vim";
@@ -129,6 +131,7 @@ export const NuttyEditor: React.FC = () => {
 				extensions: [
 					vim(),
 					basicSetup,
+					githubLightTheme,
 
 					// Tab indentation.
 					indentUnit.of("\t"),
@@ -136,6 +139,7 @@ export const NuttyEditor: React.FC = () => {
 					keymap.of([indentWithTab]),
 
 					// Compile MDX.
+					markdownLanguage,
 					EditorView.updateListener.of(compileMdx),
 				],
 			});
