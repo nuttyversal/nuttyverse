@@ -6,7 +6,6 @@ import { experimentalTypeScale } from "~/styles/tokens/typography";
 export const inlineCode = style({
 	fontFamily: "PragmataPro Mono Liga",
 	fontSize: experimentalTypeScale.smol,
-	fontWeight: "bold",
 
 	marginLeft: spacing[0.5],
 	marginRight: spacing[0.5],
