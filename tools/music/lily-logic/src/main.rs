@@ -160,6 +160,19 @@ fn parse_event(input: &str) -> IResult<&str, Event> {
 	})
 }
 
+fn parse_events(input: &str) -> Vec<Event> {
+	let mut events = Vec::new();
+	let lines = input.lines();
+
+	for line in lines {
+		if let Ok((_, event)) = parse_event(line) {
+			events.push(event);
+		}
+	}
+
+	events
+}
+
 #[cfg(test)]
 mod tests {
 	use super::*;
@@ -280,6 +293,98 @@ mod tests {
 				}
 			))
 		)
+	}
+
+	#[test]
+	fn test_parse_events() {
+		let input = "
+ 	  	 30 2 1 1 	 Note	 1	 A3	 90	 0 0 1 80
+			 Rel Vel			 64
+ 	  	 30 2 2 81 	 Note	 1	 D4	 90	 0 0 1 80
+			 Rel Vel			 64
+ 	  	 30 2 3 161 	 Note	 1	 C♯4	 90	 0 0 1 80
+			 Rel Vel			 64
+ 	  	 30 3 1 1 	 Note	 1	 A3	 90	 0 2 0 0
+			 Rel Vel			 64
+		";
+
+		assert_eq!(
+			parse_events(input),
+			vec![
+				Event {
+					note: Note {
+						pitch: Pitch::A,
+						octave: 3
+					},
+					position: Time {
+						bar: 30,
+						beat: 2,
+						division: 1,
+						ticks: 1
+					},
+					length: Time {
+						bar: 0,
+						beat: 0,
+						division: 1,
+						ticks: 80
+					}
+				},
+				Event {
+					note: Note {
+						pitch: Pitch::D,
+						octave: 4
+					},
+					position: Time {
+						bar: 30,
+						beat: 2,
+						division: 2,
+						ticks: 81
+					},
+					length: Time {
+						bar: 0,
+						beat: 0,
+						division: 1,
+						ticks: 80
+					}
+				},
+				Event {
+					note: Note {
+						pitch: Pitch::Cis,
+						octave: 4
+					},
+					position: Time {
+						bar: 30,
+						beat: 2,
+						division: 3,
+						ticks: 161
+					},
+					length: Time {
+						bar: 0,
+						beat: 0,
+						division: 1,
+						ticks: 80
+					}
+				},
+				Event {
+					note: Note {
+						pitch: Pitch::A,
+						octave: 3
+					},
+					position: Time {
+						bar: 30,
+						beat: 3,
+						division: 1,
+						ticks: 1
+					},
+					length: Time {
+						bar: 0,
+						beat: 2,
+						division: 0,
+						ticks: 0
+					}
+				}
+			]
+		);
 	}
 }
 
