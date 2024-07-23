@@ -33,21 +33,44 @@ struct Time {
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 enum Pitch {
+	/// C
 	C,
+
+	/// C♯
 	Cis,
+
+	/// D
 	D,
+
+	/// D♯
 	Dis,
+
+	/// E
 	E,
+
+	/// F
 	F,
+
+	/// F♯
 	Fis,
+
+	/// G
 	G,
+
+	/// G♯
 	Gis,
+
+	/// A
 	A,
+
+	/// A♯
 	Ais,
+
+	/// B
 	B,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 struct Note {
 	/// The pitch of the note.
 	pitch: Pitch,
@@ -171,6 +194,65 @@ fn parse_events(input: &str) -> Vec<Event> {
 	}
 
 	events
+}
+
+fn engrave_starting_note(note: Note) -> String {
+	let mut output = String::new();
+
+	let pitch = match note.pitch {
+		Pitch::C => "c",
+		Pitch::Cis => "cis",
+		Pitch::D => "d",
+		Pitch::Dis => "dis",
+		Pitch::E => "e",
+		Pitch::F => "f",
+		Pitch::Fis => "fis",
+		Pitch::G => "g",
+		Pitch::Gis => "gis",
+		Pitch::A => "a",
+		Pitch::Ais => "ais",
+		Pitch::B => "b",
+	};
+
+	let octave = match note.octave {
+		0 => ",,,",
+		1 => ",,",
+		2 => ",",
+		3 => "",
+		4 => "'",
+		5 => "''",
+		6 => "'''",
+		7 => "''''",
+		8 => "'''''",
+		9 => "''''''",
+		_ => unreachable!(),
+	};
+
+	output.push_str(pitch);
+	output.push_str(octave);
+
+	output
+}
+
+fn engrave_events(events: Vec<Event>) -> Result<String, Box<dyn Error>> {
+	let mut output = String::new();
+
+	output.push_str("\\relative { ");
+
+	if let Some(head) = events.first() {
+		output.push_str(&engrave_starting_note(head.note));
+
+		let (_, tail) = events.split_at(1);
+
+		for event in tail {
+			output.push_str(" ");
+			output.push_str(&engrave_starting_note(event.note));
+		}
+	}
+
+	output.push_str(" }");
+
+	Ok(output)
 }
 
 #[cfg(test)]
@@ -389,32 +471,73 @@ mod tests {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-	let time_signature = TimeSignature {
-		numerator: 4,
-		denominator: 4,
-	};
+	let excerpt = "
+ 	  	 27 1 1 1 	 Note	 1	 A3	 90	 0 2 1 0
+			 Rel Vel			 64
+ 	  	 27 3 2 1 	 Note	 1	 G3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 27 3 3 1 	 Note	 1	 F♯3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 27 3 4 1 	 Note	 1	 E3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 27 4 1 1 	 Note	 1	 D3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 27 4 2 1 	 Note	 1	 C♯3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 27 4 3 1 	 Note	 1	 D3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 27 4 4 1 	 Note	 1	 E3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 28 1 1 1 	 Note	 1	 B2	 90	 0 0 3 0
+			 Rel Vel			 64
+ 	  	 28 1 4 1 	 Note	 1	 A2	 90	 0 3 1 0
+			 Rel Vel			 64
+ 	  	 29 1 1 1 	 Note	 1	 D3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 29 1 2 1 	 Note	 1	 E3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 29 1 3 1 	 Note	 1	 C♯4	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 29 1 4 1 	 Note	 1	 E3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 29 2 1 1 	 Note	 1	 D3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 29 2 2 1 	 Note	 1	 B3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 29 2 3 1 	 Note	 1	 D3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 29 2 4 1 	 Note	 1	 C♯3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 29 3 1 1 	 Note	 1	 A3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 29 3 2 1 	 Note	 1	 C♯3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 29 3 3 1 	 Note	 1	 B2	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 29 3 4 1 	 Note	 1	 G3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 29 4 1 1 	 Note	 1	 B2	 90	 0 1 0 0
+			 Rel Vel			 64
+ 	  	 30 1 1 1 	 Note	 1	 F♯3	 90	 0 0 3 0
+			 Rel Vel			 64
+ 	  	 30 1 4 1 	 Note	 1	 G3	 90	 0 0 1 0
+			 Rel Vel			 64
+ 	  	 30 2 1 1 	 Note	 1	 A3	 90	 0 0 1 80
+			 Rel Vel			 64
+ 	  	 30 2 2 81 	 Note	 1	 D4	 90	 0 0 1 80
+			 Rel Vel			 64
+ 	  	 30 2 3 161 	 Note	 1	 C♯4	 90	 0 0 1 80
+			 Rel Vel			 64
+ 	  	 30 3 1 1 	 Note	 1	 A3	 90	 0 2 0 0
+			 Rel Vel			 64
+	";
 
-	let note = Note {
-		pitch: Pitch::C,
-		octave: 4,
-	};
+	let events = parse_events(excerpt);
+	let event_count = events.len();
+	let engraving = engrave_events(events)?;
 
-	let time = Time {
-		bar: 1,
-		beat: 1,
-		division: 1,
-		ticks: 1,
-	};
-
-	let event = Event {
-		note,
-		position: time,
-		length: time,
-	};
-
-	println!("{:?}", time_signature);
-	println!("{:?}", time);
-	println!("{:?}", event);
+	println!("Parsed {} events", event_count);
+	println!("{}", engraving);
 
 	Ok(())
 }
