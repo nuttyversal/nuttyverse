@@ -49,6 +49,7 @@
 					# Rust
 					cargo = pkgs.cargo;
 					rustc = pkgs.rustc;
+					rustfmt = pkgs.rustfmt;
 				};
 
 				devShells.default = pkgs.mkShell {
