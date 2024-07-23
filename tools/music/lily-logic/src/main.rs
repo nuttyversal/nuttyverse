@@ -79,7 +79,7 @@ struct Note {
 	octave: u8,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 struct Event {
 	/// The note that the event represents.
 	note: Note,
@@ -89,6 +89,54 @@ struct Event {
 
 	/// The length of the event in the sequence.
 	length: Time,
+}
+
+#[derive(Debug)]
+struct EngravingState {
+	/// The time signature of the engraving.
+	time_signature: TimeSignature,
+
+	/// The Logic Pro events to be engraved.
+	events: Vec<Event>,
+
+	/// A tuple representing the current event being engraved and the
+	/// number of ticks remaining in the current event.
+	cursor: (usize, u16),
+
+	/// The note that was last engraved.
+	last_note: Option<Note>,
+
+	/// The number of ticks (or pulses) remaining in the current bar.
+	/// Logic Pro uses a 960 ticks per quarter note resolution.
+	ticks_remaining_in_bar: u16,
+
+	/// The number of ticks (or pulses) remaining in the current beat.
+	/// Logic Pro uses a 960 ticks per quarter note resolution.
+	ticks_remaining_in_beat: u16,
+
+	/// The LilyPond output notation.
+	output: String,
+}
+
+impl EngravingState {
+	fn new(time_signature: TimeSignature, events: Vec<Event>) -> EngravingState {
+		let ticks_per_beat = 3840 / time_signature.denominator as u16;
+		let ticks_per_bar = ticks_per_beat * time_signature.numerator as u16;
+
+		EngravingState {
+			time_signature,
+			events,
+			cursor: (0, 0),
+			last_note: None,
+			ticks_remaining_in_bar: ticks_per_bar,
+			ticks_remaining_in_beat: ticks_per_beat,
+			output: String::new(),
+		}
+	}
+
+	fn is_complete(&self) -> bool {
+		self.cursor.0 >= self.events.len()
+	}
 }
 
 fn parse_time(input: &str) -> IResult<&str, Time> {
@@ -196,10 +244,14 @@ fn parse_events(input: &str) -> Vec<Event> {
 	events
 }
 
-fn engrave_starting_note(note: Note) -> String {
-	let mut output = String::new();
+fn engrave_starting_note(state: &mut EngravingState) -> () {
+	if state.events.len() == 0 {
+		return;
+	}
 
-	let pitch = match note.pitch {
+	let starting_note = state.events[0].note;
+
+	let pitch = match starting_note.pitch {
 		Pitch::C => "c",
 		Pitch::Cis => "cis",
 		Pitch::D => "d",
@@ -214,7 +266,7 @@ fn engrave_starting_note(note: Note) -> String {
 		Pitch::B => "b",
 	};
 
-	let octave = match note.octave {
+	let octave = match starting_note.octave {
 		0 => ",,,",
 		1 => ",,",
 		2 => ",",
@@ -228,31 +280,53 @@ fn engrave_starting_note(note: Note) -> String {
 		_ => unreachable!(),
 	};
 
-	output.push_str(pitch);
-	output.push_str(octave);
-
-	output
+	state.output.push_str(pitch);
+	state.output.push_str(octave);
+	state.last_note = Some(starting_note);
+	state.cursor.0 += 1;
 }
 
-fn engrave_events(events: Vec<Event>) -> Result<String, Box<dyn Error>> {
-	let mut output = String::new();
+fn engrave_next_note(state: &mut EngravingState) -> () {
+	let current_event = state.events[state.cursor.0];
+	let current_note = current_event.note;
 
-	output.push_str("\\relative { ");
+	let pitch = match current_note.pitch {
+		Pitch::C => "c",
+		Pitch::Cis => "cis",
+		Pitch::D => "d",
+		Pitch::Dis => "dis",
+		Pitch::E => "e",
+		Pitch::F => "f",
+		Pitch::Fis => "fis",
+		Pitch::G => "g",
+		Pitch::Gis => "gis",
+		Pitch::A => "a",
+		Pitch::Ais => "ais",
+		Pitch::B => "b",
+	};
 
-	if let Some(head) = events.first() {
-		output.push_str(&engrave_starting_note(head.note));
+	state.output.push_str(pitch);
+	state.last_note = Some(current_note);
+	state.cursor.0 += 1;
+}
 
-		let (_, tail) = events.split_at(1);
+fn engrave_events(
+	time_signature: TimeSignature,
+	events: Vec<Event>,
+) -> Result<String, Box<dyn Error>> {
+	let mut state = EngravingState::new(time_signature, events);
 
-		for event in tail {
-			output.push_str(" ");
-			output.push_str(&engrave_starting_note(event.note));
-		}
+	state.output.push_str("\\relative { ");
+	engrave_starting_note(&mut state);
+
+	while !state.is_complete() {
+		state.output.push_str(" ");
+		engrave_next_note(&mut state);
 	}
 
-	output.push_str(" }");
+	state.output.push_str(" }");
 
-	Ok(output)
+	Ok(state.output)
 }
 
 #[cfg(test)]
@@ -534,7 +608,13 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 	let events = parse_events(excerpt);
 	let event_count = events.len();
-	let engraving = engrave_events(events)?;
+
+	let common_time = TimeSignature {
+		numerator: 4,
+		denominator: 4,
+	};
+
+	let engraving = engrave_events(common_time, events)?;
 
 	println!("Parsed {} events", event_count);
 	println!("{}", engraving);
