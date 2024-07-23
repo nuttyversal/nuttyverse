@@ -2,6 +2,7 @@ use std::error::Error;
 
 use nom::branch::alt;
 use nom::bytes::complete::tag;
+use nom::character::complete::{space1, u16, u8};
 use nom::combinator::value;
 use nom::sequence::tuple;
 use nom::IResult;
@@ -15,7 +16,7 @@ struct TimeSignature {
 	denominator: u8,
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 struct Time {
 	/// The bar number (one-based indexing).
 	bar: u16,
@@ -67,6 +68,36 @@ struct Event {
 	length: Time,
 }
 
+fn parse_time(input: &str) -> IResult<&str, Time> {
+	let parse_bar = u16;
+	let parse_beat = u16;
+	let parse_division = u16;
+	let parse_ticks = u16;
+
+	let mut parse = tuple((
+		parse_bar,
+		space1,
+		parse_beat,
+		space1,
+		parse_division,
+		space1,
+		parse_ticks,
+	));
+
+	parse(input).map(|(next_input, output)| {
+		let (bar, _, beat, _, division, _, ticks) = output;
+
+		let time = Time {
+			bar,
+			beat,
+			division,
+			ticks,
+		};
+
+		(next_input, time)
+	})
+}
+
 fn parse_note(input: &str) -> IResult<&str, Note> {
 	let parse_pitch = alt((
 		value(Pitch::Cis, tag("C♯")),
@@ -83,21 +114,15 @@ fn parse_note(input: &str) -> IResult<&str, Note> {
 		value(Pitch::B, tag("B")),
 	));
 
-	let parse_octave = alt((
-		value(0, tag("0")),
-		value(1, tag("1")),
-		value(2, tag("2")),
-		value(3, tag("3")),
-		value(4, tag("4")),
-		value(5, tag("5")),
-		value(6, tag("6")),
-		value(7, tag("7")),
-		value(8, tag("8")),
-		value(9, tag("9")),
-	));
+	let parse_octave = u8;
+	let mut parse = tuple((parse_pitch, parse_octave));
 
-	tuple((parse_pitch, parse_octave))(input)
-		.map(|(next_input, (pitch, octave))| (next_input, Note { pitch, octave }))
+	parse(input).map(|(next_input, output)| {
+		let (pitch, octave) = output;
+		let note = Note { pitch, octave };
+
+		(next_input, note)
+	})
 }
 
 #[cfg(test)]
@@ -135,6 +160,35 @@ mod tests {
 				Note {
 					pitch: Pitch::Gis,
 					octave: 2
+				}
+			))
+		);
+	}
+
+	#[test]
+	fn test_parse_time() {
+		assert_eq!(
+			parse_time("1 1 1 1"),
+			Ok((
+				"",
+				Time {
+					bar: 1,
+					beat: 1,
+					division: 1,
+					ticks: 1
+				}
+			))
+		);
+
+		assert_eq!(
+			parse_time("30 2 3 161"),
+			Ok((
+				"",
+				Time {
+					bar: 30,
+					beat: 2,
+					division: 3,
+					ticks: 161
 				}
 			))
 		);
