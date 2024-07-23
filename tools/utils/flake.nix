@@ -45,6 +45,10 @@
 					prettier = pkgs.nodePackages.prettier;
 					ts-node = pkgs.nodePackages.ts-node;
 					typescript = pkgs.nodePackages.typescript;
+
+					# Rust
+					cargo = pkgs.cargo;
+					rustc = pkgs.rustc;
 				};
 
 				devShells.default = pkgs.mkShell {
