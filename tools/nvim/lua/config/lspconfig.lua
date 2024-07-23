@@ -98,6 +98,23 @@ local servers = {
 		on_attach = on_attach,
 		capabilities = cmp_capabilities,
 		handlers = handlers,
+		settings = {
+			["rust-analyzer"] = {
+				imports = {
+					granularity = {
+						group = "module",
+					},
+					cargo = {
+						buildScripts = {
+							enable = true,
+						},
+					},
+					procMacro = {
+						enable = true,
+					},
+				},
+			},
+		},
 	},
 	tsserver = {
 		on_attach = on_attach,
