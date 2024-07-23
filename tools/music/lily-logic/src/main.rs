@@ -2,7 +2,7 @@ use std::error::Error;
 
 use nom::branch::alt;
 use nom::bytes::complete::tag;
-use nom::character::complete::{space1, u16, u8};
+use nom::character::complete::{space0, space1, u16, u8};
 use nom::combinator::value;
 use nom::sequence::tuple;
 use nom::IResult;
@@ -16,7 +16,7 @@ struct TimeSignature {
 	denominator: u8,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 struct Time {
 	/// The bar number (one-based indexing).
 	bar: u16,
@@ -31,7 +31,7 @@ struct Time {
 	ticks: u16,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 enum Pitch {
 	C,
 	Cis,
@@ -47,7 +47,7 @@ enum Pitch {
 	B,
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq)]
 struct Note {
 	/// The pitch of the note.
 	pitch: Pitch,
@@ -56,7 +56,7 @@ struct Note {
 	octave: u8,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 struct Event {
 	/// The note that the event represents.
 	note: Note,
@@ -122,6 +122,41 @@ fn parse_note(input: &str) -> IResult<&str, Note> {
 		let note = Note { pitch, octave };
 
 		(next_input, note)
+	})
+}
+
+fn parse_event(input: &str) -> IResult<&str, Event> {
+	let parse_delimiter = space0;
+	let parse_tag = tag("Note");
+	let parse_channel = u8;
+	let parse_velocity = u8;
+
+	let mut parse = tuple((
+		parse_delimiter,
+		parse_time,
+		parse_delimiter,
+		parse_tag,
+		parse_delimiter,
+		parse_channel,
+		parse_delimiter,
+		parse_note,
+		parse_delimiter,
+		parse_velocity,
+		parse_delimiter,
+		parse_time,
+		parse_delimiter,
+	));
+
+	parse(input).map(|(next_input, output)| {
+		let (_, position, _, _, _, _, _, note, _, _, _, length, _) = output;
+
+		let event = Event {
+			note,
+			position,
+			length,
+		};
+
+		(next_input, event)
 	})
 }
 
@@ -192,6 +227,59 @@ mod tests {
 				}
 			))
 		);
+	}
+
+	#[test]
+	fn test_parse_event() {
+		assert_eq!(
+			parse_event(" 	  	 27 1 1 1 	 Note	 1	 A3	 90	 0 2 1 0"),
+			Ok((
+				"",
+				Event {
+					note: Note {
+						pitch: Pitch::A,
+						octave: 3
+					},
+					position: Time {
+						bar: 27,
+						beat: 1,
+						division: 1,
+						ticks: 1
+					},
+					length: Time {
+						bar: 0,
+						beat: 2,
+						division: 1,
+						ticks: 0
+					}
+				}
+			))
+		);
+
+		assert_eq!(
+			parse_event(" 	  	 30 2 3 161 	 Note	 1	 C♯4	 90	 0 0 1 80"),
+			Ok((
+				"",
+				Event {
+					note: Note {
+						pitch: Pitch::Cis,
+						octave: 4
+					},
+					position: Time {
+						bar: 30,
+						beat: 2,
+						division: 3,
+						ticks: 161
+					},
+					length: Time {
+						bar: 0,
+						beat: 0,
+						division: 1,
+						ticks: 80
+					}
+				}
+			))
+		)
 	}
 }
 
