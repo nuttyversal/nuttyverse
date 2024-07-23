@@ -1,3 +1,5 @@
+use std::error::Error;
+
 #[derive(Debug, Clone, Copy)]
 struct TimeSignature {
 	/// The number of beats in a bar.
@@ -23,7 +25,35 @@ struct Time {
 }
 
 #[derive(Debug)]
+enum Pitch {
+	C,
+	Cis,
+	D,
+	Dis,
+	E,
+	F,
+	Fis,
+	G,
+	Gis,
+	A,
+	Ais,
+	B,
+}
+
+#[derive(Debug)]
+struct Note {
+	/// The pitch of the note.
+	pitch: Pitch,
+
+	/// The octave of the note.
+	octave: u8,
+}
+
+#[derive(Debug)]
 struct Event {
+	/// The note that the event represents.
+	note: Note,
+
 	/// The position of the event in the sequence.
 	position: Time,
 
@@ -31,10 +61,15 @@ struct Event {
 	length: Time,
 }
 
-fn main() {
+fn main() -> Result<(), Box<dyn Error>> {
 	let time_signature = TimeSignature {
 		numerator: 4,
 		denominator: 4,
+	};
+
+	let note = Note {
+		pitch: Pitch::C,
+		octave: 4,
 	};
 
 	let time = Time {
@@ -45,6 +80,7 @@ fn main() {
 	};
 
 	let event = Event {
+		note,
 		position: time,
 		length: time,
 	};
@@ -52,4 +88,6 @@ fn main() {
 	println!("{:?}", time_signature);
 	println!("{:?}", time);
 	println!("{:?}", event);
+
+	Ok(())
 }
