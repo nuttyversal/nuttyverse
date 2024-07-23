@@ -46,10 +46,8 @@
 					ts-node = pkgs.nodePackages.ts-node;
 					typescript = pkgs.nodePackages.typescript;
 
-					# Rust
-					cargo = pkgs.cargo;
-					rustc = pkgs.rustc;
-					rustfmt = pkgs.rustfmt;
+					# Rust (make sure to run `rustup default nightly`)
+					rustup = pkgs.rustup;
 				};
 
 				devShells.default = pkgs.mkShell {
