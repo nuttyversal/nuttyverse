@@ -132,50 +132,61 @@ impl Event {
 }
 
 #[derive(Debug)]
-struct EngravingState {
+struct Engraver {
+	/// The events to be engraved.
+	events: Vec<Event>,
+
+	/// The event that was last engraved previously.
+	previous_event: Option<Note>,
+
 	/// The time signature of the engraving.
 	time_signature: TimeSignature,
 
-	/// The Logic Pro events to be engraved.
-	events: Vec<Event>,
+	/// The index of the current event being engraved.
+	current_note_index: usize,
 
-	/// A tuple representing the current event being engraved and the
-	/// number of ticks remaining in the current event.
-	cursor: (usize, u16),
+	/// The number of ticks remaining in the current event.
+	ticks_remaining_in_event: u16,
 
-	/// The note that was last engraved.
-	last_note: Option<Note>,
-
-	/// The number of ticks (or pulses) remaining in the current bar.
-	/// Logic Pro uses a 960 ticks per quarter note resolution.
+	/// The number of ticks remaining in the current bar.
 	ticks_remaining_in_bar: u16,
 
-	/// The number of ticks (or pulses) remaining in the current beat.
-	/// Logic Pro uses a 960 ticks per quarter note resolution.
+	/// The number of ticks remaining in the current beat.
 	ticks_remaining_in_beat: u16,
 
 	/// The LilyPond output notation.
 	output: String,
 }
 
-impl EngravingState {
-	fn new(time_signature: TimeSignature, events: Vec<Event>) -> EngravingState {
+impl Engraver {
+	fn new(time_signature: TimeSignature, events: Vec<Event>) -> Engraver {
 		let ticks_per_beat = 3840 / time_signature.denominator as u16;
 		let ticks_per_bar = ticks_per_beat * time_signature.numerator as u16;
 
-		EngravingState {
-			time_signature,
+		let first_event_ticks = if let Some(first_event) = events.first() {
+			first_event.ticks(time_signature)
+		} else {
+			0
+		};
+
+		Engraver {
 			events,
-			cursor: (0, 0),
-			last_note: None,
+			previous_event: None,
+			time_signature,
+			current_note_index: 0,
+			ticks_remaining_in_event: first_event_ticks,
 			ticks_remaining_in_bar: ticks_per_bar,
 			ticks_remaining_in_beat: ticks_per_beat,
 			output: String::new(),
 		}
 	}
 
+	fn engrave(&mut self) -> () {
+		todo!("Generate LilyPond notation for the parsed event list.")
+	}
+
 	fn is_complete(&self) -> bool {
-		self.cursor.0 >= self.events.len()
+		self.current_note_index >= self.events.len()
 	}
 }
 
@@ -284,7 +295,7 @@ fn parse_events(input: &str) -> Vec<Event> {
 	events
 }
 
-fn engrave_starting_note(state: &mut EngravingState) -> () {
+fn engrave_starting_note(state: &mut Engraver) -> () {
 	if state.events.len() == 0 {
 		return;
 	}
@@ -322,12 +333,12 @@ fn engrave_starting_note(state: &mut EngravingState) -> () {
 
 	state.output.push_str(pitch);
 	state.output.push_str(octave);
-	state.last_note = Some(starting_note);
-	state.cursor.0 += 1;
+	state.previous_event = Some(starting_note);
+	state.current_note_index += 1;
 }
 
-fn engrave_next_note(state: &mut EngravingState) -> () {
-	let current_event = state.events[state.cursor.0];
+fn engrave_next_note(state: &mut Engraver) -> () {
+	let current_event = state.events[state.current_note_index];
 	let current_note = current_event.note;
 
 	let pitch = match current_note.pitch {
@@ -346,15 +357,15 @@ fn engrave_next_note(state: &mut EngravingState) -> () {
 	};
 
 	state.output.push_str(pitch);
-	state.last_note = Some(current_note);
-	state.cursor.0 += 1;
+	state.previous_event = Some(current_note);
+	state.current_note_index += 1;
 }
 
 fn engrave_events(
 	time_signature: TimeSignature,
 	events: Vec<Event>,
 ) -> Result<String, Box<dyn Error>> {
-	let mut state = EngravingState::new(time_signature, events);
+	let mut state = Engraver::new(time_signature, events);
 
 	state.output.push_str("\\relative { ");
 	engrave_starting_note(&mut state);
