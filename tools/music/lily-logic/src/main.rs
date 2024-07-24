@@ -112,6 +112,30 @@ struct Event {
 	length: Time,
 }
 
+impl Event {
+	fn ticks(&self, time_signature: TimeSignature) -> u16 {
+		// Each subdivision in Logic Pro is a 16th note.
+		let ticks_per_division = 240;
+
+		// The number of ticks in a beat is determined by which note value represents one beat.
+		let ticks_per_beat = match time_signature.denominator {
+			1 => 3840,
+			2 => 1920,
+			4 => 960,
+			8 => 480,
+			16 => 240,
+			32 => 120,
+			_ => unreachable!(),
+		};
+
+		// Convert the units of time into ticks.
+		self.length.bar * ticks_per_beat * time_signature.numerator as u16
+			+ self.length.beat * ticks_per_beat
+			+ self.length.division * ticks_per_division
+			+ self.length.ticks
+	}
+}
+
 #[derive(Debug)]
 struct EngravingState {
 	/// The time signature of the engraving.
@@ -390,6 +414,88 @@ mod tests {
 			}
 			.to_midi_value(),
 			116
+		);
+	}
+
+	#[test]
+	fn test_event_ticks() {
+		let time_signature = TimeSignature {
+			numerator: 4,
+			denominator: 4,
+		};
+
+		assert_eq!(
+			Event {
+				note: Note {
+					pitch: Pitch::C,
+					octave: 4
+				},
+				position: Time {
+					bar: 1,
+					beat: 1,
+					division: 1,
+					ticks: 1
+				},
+				length: Time {
+					bar: 0,
+					beat: 2,
+					division: 1,
+					ticks: 0
+				}
+			}
+			.ticks(time_signature),
+			2160
+		);
+
+		assert_eq!(
+			Event {
+				note: Note {
+					pitch: Pitch::D,
+					octave: 5
+				},
+				position: Time {
+					bar: 2,
+					beat: 3,
+					division: 1,
+					ticks: 161
+				},
+				length: Time {
+					bar: 1,
+					beat: 0,
+					division: 1,
+					ticks: 80
+				}
+			}
+			.ticks(time_signature),
+			4160
+		);
+
+		let time_signature = TimeSignature {
+			numerator: 6,
+			denominator: 8,
+		};
+
+		assert_eq!(
+			Event {
+				note: Note {
+					pitch: Pitch::D,
+					octave: 5
+				},
+				position: Time {
+					bar: 2,
+					beat: 3,
+					division: 1,
+					ticks: 161
+				},
+				length: Time {
+					bar: 1,
+					beat: 0,
+					division: 1,
+					ticks: 80
+				}
+			}
+			.ticks(time_signature),
+			3200
 		);
 	}
 
