@@ -1,3 +1,4 @@
+use core::panic;
 use std::error::Error;
 
 use nom::branch::alt;
@@ -138,6 +139,44 @@ impl Note {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
+struct Ticks {
+	value: u16,
+}
+
+impl Ticks {
+	fn new(value: u16) -> Ticks {
+		Ticks { value }
+	}
+
+	fn set(&mut self, value: u16) {
+		self.value = value;
+	}
+
+	fn decrement(&mut self, value: u16) {
+		self.value -= value;
+	}
+
+	fn to_lilypond(&self) -> String {
+		match self.value {
+			3840 => "1".to_string(),
+			2880 => "2.".to_string(),
+			1920 => "2".to_string(),
+			1440 => "4.".to_string(),
+			960 => "4".to_string(),
+			720 => "8.".to_string(),
+			480 => "8".to_string(),
+			360 => "16.".to_string(),
+			240 => "16".to_string(),
+			180 => "32.".to_string(),
+			120 => "32".to_string(),
+			90 => "64.".to_string(),
+			60 => "64".to_string(),
+			_ => panic!("Failed to convert ticks into LilyPond notation."),
+		}
+	}
+}
+
+#[derive(Debug, Clone, Copy, PartialEq)]
 struct Event {
 	/// The note that the event represents.
 	note: Note,
@@ -150,7 +189,7 @@ struct Event {
 }
 
 impl Event {
-	fn ticks(&self, time_signature: TimeSignature) -> u16 {
+	fn ticks(&self, time_signature: TimeSignature) -> Ticks {
 		// A tick represents a 1/3840th note (960 PPQN).
 		let ticks_in_whole_note = 3840;
 
@@ -161,10 +200,12 @@ impl Event {
 		let ticks_per_beat = ticks_in_whole_note / time_signature.denominator as u16;
 
 		// Convert the units of time into ticks.
-		self.length.bar * ticks_per_beat * time_signature.numerator as u16
-			+ self.length.beat * ticks_per_beat
-			+ self.length.division * ticks_per_division
-			+ self.length.ticks
+		Ticks::new(
+			self.length.bar * ticks_per_beat * time_signature.numerator as u16
+				+ self.length.beat * ticks_per_beat
+				+ self.length.division * ticks_per_division
+				+ self.length.ticks,
+		)
 	}
 }
 
@@ -183,13 +224,13 @@ struct Engraver {
 	current_note_index: usize,
 
 	/// The number of ticks remaining in the current event.
-	ticks_remaining_in_event: u16,
+	ticks_remaining_in_event: Ticks,
 
 	/// The number of ticks remaining in the current bar.
-	ticks_remaining_in_bar: u16,
+	ticks_remaining_in_bar: Ticks,
 
 	/// The number of ticks remaining in the current beat.
-	ticks_remaining_in_beat: u16,
+	ticks_remaining_in_beat: Ticks,
 
 	/// The LilyPond output notation.
 	output: String,
@@ -201,7 +242,7 @@ impl Engraver {
 		let ticks_per_bar = ticks_per_beat * time_signature.numerator as u16;
 
 		let first_event_ticks = if let Some(first_event) = events.first() {
-			first_event.ticks(time_signature)
+			first_event.ticks(time_signature).value
 		} else {
 			0
 		};
@@ -211,15 +252,15 @@ impl Engraver {
 			previous_event: None,
 			time_signature,
 			current_note_index: 0,
-			ticks_remaining_in_event: first_event_ticks,
-			ticks_remaining_in_bar: ticks_per_bar,
-			ticks_remaining_in_beat: ticks_per_beat,
+			ticks_remaining_in_event: Ticks::new(first_event_ticks),
+			ticks_remaining_in_bar: Ticks::new(ticks_per_bar),
+			ticks_remaining_in_beat: Ticks::new(ticks_per_beat),
 			output: String::new(),
 		}
 	}
 
 	fn engrave(&mut self) -> String {
-		while !self.is_complete() {
+		while !self.has_next_event() {
 			self.engrave_next_event();
 		}
 
@@ -230,21 +271,81 @@ impl Engraver {
 	fn engrave_next_event(&mut self) -> () {
 		let current_event = self.events[self.current_note_index];
 
-		if self.previous_event.is_some() {
+		while self.ticks_remaining_in_event.value > 0 {
+			self.output.push_str(current_event.note.pitch.to_lilypond());
+
+			// If the event is longer than the beat, split it into multiple beats.
+			if self.ticks_remaining_in_event.value > self.ticks_remaining_in_beat.value {
+				self
+					.output
+					.push_str(self.ticks_remaining_in_beat.to_lilypond().as_str());
+
+				self
+					.ticks_remaining_in_event
+					.decrement(self.ticks_remaining_in_beat.value);
+
+				self
+					.ticks_remaining_in_bar
+					.decrement(self.ticks_remaining_in_beat.value);
+
+				self
+					.ticks_remaining_in_beat
+					.decrement(self.ticks_remaining_in_beat.value);
+
+				if self.ticks_remaining_in_event.value > 0 {
+					// Tie this note into the next note.
+					self.output.push_str("~");
+				}
+			} else {
+				self
+					.output
+					.push_str(self.ticks_remaining_in_event.to_lilypond().as_str());
+
+				self
+					.ticks_remaining_in_bar
+					.decrement(self.ticks_remaining_in_event.value);
+
+				self
+					.ticks_remaining_in_beat
+					.decrement(self.ticks_remaining_in_event.value);
+
+				self.ticks_remaining_in_event.set(0);
+			}
+
+			if self.ticks_remaining_in_beat.value <= 0 {
+				// Reset the beat.
+				let ticks_per_beat = 3840 / self.time_signature.denominator as u16;
+				self.ticks_remaining_in_beat.set(ticks_per_beat)
+			}
+
+			if self.ticks_remaining_in_bar.value <= 0 {
+				// Reset the bar.
+				let ticks_per_beat = 3840 / self.time_signature.denominator as u16;
+				let ticks_per_bar = ticks_per_beat * self.time_signature.numerator as u16;
+				self.ticks_remaining_in_bar.set(ticks_per_bar);
+				self.output.push_str(" |");
+			}
+
+			// Write a space between notes.
 			self.output.push_str(" ");
 		}
 
-		self.output.push_str(current_event.note.pitch.to_lilypond());
+		// Update state.
+		self.ticks_remaining_in_event = match self.events.get(self.current_note_index + 1) {
+			Some(next_event) => next_event.ticks(self.time_signature),
+			None => Ticks::new(0),
+		};
+
 		self.previous_event = Some(current_event);
 		self.current_note_index += 1;
 	}
 
 	fn wrap_relative_command(&mut self) -> () {
 		self.output.insert_str(0, "\\relative { ");
-		self.output.push_str(" }");
+		self.output.push_str("}");
 	}
 
-	fn is_complete(&self) -> bool {
+	fn has_next_event(&self) -> bool {
 		self.current_note_index >= self.events.len()
 	}
 }
@@ -424,7 +525,7 @@ mod tests {
 				}
 			}
 			.ticks(time_signature),
-			2160
+			Ticks::new(2160)
 		);
 
 		assert_eq!(
@@ -447,7 +548,7 @@ mod tests {
 				}
 			}
 			.ticks(time_signature),
-			4160
+			Ticks::new(4160)
 		);
 
 		let time_signature = TimeSignature {
@@ -475,7 +576,7 @@ mod tests {
 				}
 			}
 			.ticks(time_signature),
-			3200
+			Ticks::new(3200)
 		);
 	}
 
@@ -742,14 +843,14 @@ fn main() -> Result<(), Box<dyn Error>> {
 			 Rel Vel			 64
  	  	 30 1 4 1 	 Note	 1	 G3	 90	 0 0 1 0
 			 Rel Vel			 64
- 	  	 30 2 1 1 	 Note	 1	 A3	 90	 0 0 1 80
-			 Rel Vel			 64
- 	  	 30 2 2 81 	 Note	 1	 D4	 90	 0 0 1 80
-			 Rel Vel			 64
- 	  	 30 2 3 161 	 Note	 1	 C♯4	 90	 0 0 1 80
-			 Rel Vel			 64
- 	  	 30 3 1 1 	 Note	 1	 A3	 90	 0 2 0 0
-			 Rel Vel			 64
+ 	  // 	 30 2 1 1 	 Note	 1	 A3	 90	 0 0 1 80
+			 // Rel Vel			 64
+ 	  // 	 30 2 2 81 	 Note	 1	 D4	 90	 0 0 1 80
+			 // Rel Vel			 64
+ 	  // 	 30 2 3 161 	 Note	 1	 C♯4	 90	 0 0 1 80
+			 // Rel Vel			 64
+ 	  // 	 30 3 1 1 	 Note	 1	 A3	 90	 0 2 0 0
+			 // Rel Vel			 64
 	";
 
 	let events = parse_events(excerpt);
