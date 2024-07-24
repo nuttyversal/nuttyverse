@@ -79,6 +79,27 @@ struct Note {
 	octave: u8,
 }
 
+impl Note {
+	fn to_midi_value(&self) -> u8 {
+		let pitch_value = match self.pitch {
+			Pitch::C => 0,
+			Pitch::Cis => 1,
+			Pitch::D => 2,
+			Pitch::Dis => 3,
+			Pitch::E => 4,
+			Pitch::F => 5,
+			Pitch::Fis => 6,
+			Pitch::G => 7,
+			Pitch::Gis => 8,
+			Pitch::A => 9,
+			Pitch::Ais => 10,
+			Pitch::B => 11,
+		};
+
+		12 * (self.octave + 1) + pitch_value
+	}
+}
+
 #[derive(Debug, Clone, Copy, PartialEq)]
 struct Event {
 	/// The note that the event represents.
@@ -332,6 +353,45 @@ fn engrave_events(
 #[cfg(test)]
 mod tests {
 	use super::*;
+
+	#[test]
+	fn test_note_to_midi_value() {
+		assert_eq!(
+			Note {
+				pitch: Pitch::Dis,
+				octave: 3
+			}
+			.to_midi_value(),
+			51
+		);
+
+		assert_eq!(
+			Note {
+				pitch: Pitch::E,
+				octave: 4
+			}
+			.to_midi_value(),
+			64
+		);
+
+		assert_eq!(
+			Note {
+				pitch: Pitch::Fis,
+				octave: 6
+			}
+			.to_midi_value(),
+			90
+		);
+
+		assert_eq!(
+			Note {
+				pitch: Pitch::Gis,
+				octave: 8
+			}
+			.to_midi_value(),
+			116
+		);
+	}
 
 	#[test]
 	fn test_parse_note() {
