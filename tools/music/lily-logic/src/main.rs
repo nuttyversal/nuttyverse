@@ -114,19 +114,14 @@ struct Event {
 
 impl Event {
 	fn ticks(&self, time_signature: TimeSignature) -> u16 {
+		// A tick represents a 1/3840th note (960 PPQN).
+		let ticks_in_whole_note = 3840;
+
 		// Each subdivision in Logic Pro is a 16th note.
 		let ticks_per_division = 240;
 
 		// The number of ticks in a beat is determined by which note value represents one beat.
-		let ticks_per_beat = match time_signature.denominator {
-			1 => 3840,
-			2 => 1920,
-			4 => 960,
-			8 => 480,
-			16 => 240,
-			32 => 120,
-			_ => unreachable!(),
-		};
+		let ticks_per_beat = ticks_in_whole_note / time_signature.denominator as u16;
 
 		// Convert the units of time into ticks.
 		self.length.bar * ticks_per_beat * time_signature.numerator as u16
