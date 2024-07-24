@@ -119,7 +119,31 @@ impl Note {
 		12 * (self.octave + 1) + pitch_value
 	}
 
-	fn to_lilypond(&self) -> String {
+	fn to_lilypond_relative(&self, previous_note: Note) -> String {
+		let previous = previous_note.to_midi_value();
+		let current = self.to_midi_value();
+
+		// The octave changing marks are used for intervals greater than a fourth, so
+		// we need to add a bias to the interval to derive the number of marks to use.
+		//
+		// [NOTE] This is a heuristic and may not be accurate for all cases. According to
+		// the LilyPond documentation, the interval is determined without considering the
+		// accidentals.
+		let bias = 5;
+		let octave_difference = ((current as i16 - previous as i16).abs() + bias) / 12;
+
+		let octave = if previous < current {
+			"'".repeat(octave_difference as usize)
+		} else if previous > current {
+			",".repeat(octave_difference as usize)
+		} else {
+			"".to_string()
+		};
+
+		return format!("{}{}", self.pitch.to_lilypond(), octave);
+	}
+
+	fn to_lilypond_absolute(&self) -> String {
 		let octave = match self.octave {
 			0 => ",,,",
 			1 => ",,",
@@ -272,7 +296,18 @@ impl Engraver {
 		let current_event = self.events[self.current_note_index];
 
 		while self.ticks_remaining_in_event.value > 0 {
-			self.output.push_str(current_event.note.pitch.to_lilypond());
+			if self.current_note_index == 0 {
+				self
+					.output
+					.push_str(current_event.note.to_lilypond_absolute().as_str());
+			} else {
+				self.output.push_str(
+					current_event
+						.note
+						.to_lilypond_relative(self.previous_event.unwrap().note)
+						.as_str(),
+				);
+			}
 
 			// If the event is longer than the beat, split it into multiple beats.
 			if self.ticks_remaining_in_event.value > self.ticks_remaining_in_beat.value {
