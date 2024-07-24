@@ -70,6 +70,25 @@ enum Pitch {
 	B,
 }
 
+impl Pitch {
+	fn to_lilypond(&self) -> &str {
+		match self {
+			Pitch::C => "c",
+			Pitch::Cis => "cis",
+			Pitch::D => "d",
+			Pitch::Dis => "dis",
+			Pitch::E => "e",
+			Pitch::F => "f",
+			Pitch::Fis => "fis",
+			Pitch::G => "g",
+			Pitch::Gis => "gis",
+			Pitch::A => "a",
+			Pitch::Ais => "ais",
+			Pitch::B => "b",
+		}
+	}
+}
+
 #[derive(Debug, Clone, Copy, PartialEq)]
 struct Note {
 	/// The pitch of the note.
@@ -97,6 +116,24 @@ impl Note {
 		};
 
 		12 * (self.octave + 1) + pitch_value
+	}
+
+	fn to_lilypond(&self) -> String {
+		let octave = match self.octave {
+			0 => ",,,",
+			1 => ",,",
+			2 => ",",
+			3 => "",
+			4 => "'",
+			5 => "''",
+			6 => "'''",
+			7 => "''''",
+			8 => "'''''",
+			9 => "''''''",
+			_ => unreachable!(),
+		};
+
+		return format!("{}{}", self.pitch.to_lilypond(), octave);
 	}
 }
 
@@ -302,37 +339,7 @@ fn engrave_starting_note(state: &mut Engraver) -> () {
 
 	let starting_note = state.events[0].note;
 
-	let pitch = match starting_note.pitch {
-		Pitch::C => "c",
-		Pitch::Cis => "cis",
-		Pitch::D => "d",
-		Pitch::Dis => "dis",
-		Pitch::E => "e",
-		Pitch::F => "f",
-		Pitch::Fis => "fis",
-		Pitch::G => "g",
-		Pitch::Gis => "gis",
-		Pitch::A => "a",
-		Pitch::Ais => "ais",
-		Pitch::B => "b",
-	};
-
-	let octave = match starting_note.octave {
-		0 => ",,,",
-		1 => ",,",
-		2 => ",",
-		3 => "",
-		4 => "'",
-		5 => "''",
-		6 => "'''",
-		7 => "''''",
-		8 => "'''''",
-		9 => "''''''",
-		_ => unreachable!(),
-	};
-
-	state.output.push_str(pitch);
-	state.output.push_str(octave);
+	state.output.push_str(&starting_note.to_lilypond());
 	state.previous_event = Some(starting_note);
 	state.current_note_index += 1;
 }
@@ -341,22 +348,7 @@ fn engrave_next_note(state: &mut Engraver) -> () {
 	let current_event = state.events[state.current_note_index];
 	let current_note = current_event.note;
 
-	let pitch = match current_note.pitch {
-		Pitch::C => "c",
-		Pitch::Cis => "cis",
-		Pitch::D => "d",
-		Pitch::Dis => "dis",
-		Pitch::E => "e",
-		Pitch::F => "f",
-		Pitch::Fis => "fis",
-		Pitch::G => "g",
-		Pitch::Gis => "gis",
-		Pitch::A => "a",
-		Pitch::Ais => "ais",
-		Pitch::B => "b",
-	};
-
-	state.output.push_str(pitch);
+	state.output.push_str(current_note.pitch.to_lilypond());
 	state.previous_event = Some(current_note);
 	state.current_note_index += 1;
 }
