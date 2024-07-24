@@ -174,7 +174,7 @@ struct Engraver {
 	events: Vec<Event>,
 
 	/// The event that was last engraved previously.
-	previous_event: Option<Note>,
+	previous_event: Option<Event>,
 
 	/// The time signature of the engraving.
 	time_signature: TimeSignature,
@@ -218,8 +218,30 @@ impl Engraver {
 		}
 	}
 
-	fn engrave(&mut self) -> () {
-		todo!("Generate LilyPond notation for the parsed event list.")
+	fn engrave(&mut self) -> String {
+		while !self.is_complete() {
+			self.engrave_next_event();
+		}
+
+		self.wrap_relative_command();
+		self.output.clone()
+	}
+
+	fn engrave_next_event(&mut self) -> () {
+		let current_event = self.events[self.current_note_index];
+
+		if self.previous_event.is_some() {
+			self.output.push_str(" ");
+		}
+
+		self.output.push_str(current_event.note.pitch.to_lilypond());
+		self.previous_event = Some(current_event);
+		self.current_note_index += 1;
+	}
+
+	fn wrap_relative_command(&mut self) -> () {
+		self.output.insert_str(0, "\\relative { ");
+		self.output.push_str(" }");
 	}
 
 	fn is_complete(&self) -> bool {
@@ -330,46 +352,6 @@ fn parse_events(input: &str) -> Vec<Event> {
 	}
 
 	events
-}
-
-fn engrave_starting_note(state: &mut Engraver) -> () {
-	if state.events.len() == 0 {
-		return;
-	}
-
-	let starting_note = state.events[0].note;
-
-	state.output.push_str(&starting_note.to_lilypond());
-	state.previous_event = Some(starting_note);
-	state.current_note_index += 1;
-}
-
-fn engrave_next_note(state: &mut Engraver) -> () {
-	let current_event = state.events[state.current_note_index];
-	let current_note = current_event.note;
-
-	state.output.push_str(current_note.pitch.to_lilypond());
-	state.previous_event = Some(current_note);
-	state.current_note_index += 1;
-}
-
-fn engrave_events(
-	time_signature: TimeSignature,
-	events: Vec<Event>,
-) -> Result<String, Box<dyn Error>> {
-	let mut state = Engraver::new(time_signature, events);
-
-	state.output.push_str("\\relative { ");
-	engrave_starting_note(&mut state);
-
-	while !state.is_complete() {
-		state.output.push_str(" ");
-		engrave_next_note(&mut state);
-	}
-
-	state.output.push_str(" }");
-
-	Ok(state.output)
 }
 
 #[cfg(test)]
@@ -778,10 +760,11 @@ fn main() -> Result<(), Box<dyn Error>> {
 		denominator: 4,
 	};
 
-	let engraving = engrave_events(common_time, events)?;
+	let mut engraver = Engraver::new(common_time, events);
+	let output = engraver.engrave();
 
 	println!("Parsed {} events", event_count);
-	println!("{}", engraving);
+	println!("{}", output);
 
 	Ok(())
 }
