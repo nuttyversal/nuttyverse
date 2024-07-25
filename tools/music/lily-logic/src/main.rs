@@ -3,7 +3,7 @@ use std::error::Error;
 
 use nom::branch::alt;
 use nom::bytes::complete::tag;
-use nom::character::complete::{space0, space1, u16, u8};
+use nom::character::complete::{space0, space1, u32, u8};
 use nom::combinator::value;
 use nom::sequence::tuple;
 use nom::IResult;
@@ -20,16 +20,37 @@ struct TimeSignature {
 #[derive(Debug, Clone, Copy, PartialEq)]
 struct Time {
 	/// The bar number (one-based indexing).
-	bar: u16,
+	bar: u32,
 
 	/// The beat number (one-based indexing).
-	beat: u16,
+	beat: u32,
 
 	/// The division number (one-based indexing).
-	division: u16,
+	division: u32,
 
 	/// The tick number (one-based indexing).
-	ticks: u16,
+	ticks: u32,
+}
+
+impl Time {
+	fn ticks(&self, time_signature: TimeSignature) -> Ticks {
+		// A tick represents a 1/3840th note (960 PPQN).
+		let ticks_in_whole_note = 3840;
+
+		// Each subdivision in Logic Pro is a 16th note.
+		let ticks_per_division = 240;
+
+		// The number of ticks in a beat is determined by which note value represents one beat.
+		let ticks_per_beat = ticks_in_whole_note / time_signature.denominator as u32;
+
+		// Convert the units of time into ticks.
+		Ticks::new(
+			self.bar * ticks_per_beat * time_signature.numerator as u32
+				+ self.beat * ticks_per_beat
+				+ self.division * ticks_per_division
+				+ self.ticks,
+		)
+	}
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -192,19 +213,23 @@ impl Note {
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 struct Ticks {
-	value: u16,
+	value: u32,
 }
 
 impl Ticks {
-	fn new(value: u16) -> Ticks {
+	fn new(value: u32) -> Ticks {
 		Ticks { value }
 	}
 
-	fn set(&mut self, value: u16) {
+	fn set(&mut self, value: u32) {
 		self.value = value;
 	}
 
-	fn decrement(&mut self, value: u16) {
+	fn increment(&mut self, value: u32) {
+		self.value += value;
+	}
+
+	fn decrement(&mut self, value: u32) {
 		self.value -= value;
 	}
 
@@ -240,27 +265,6 @@ struct Event {
 	length: Time,
 }
 
-impl Event {
-	fn ticks(&self, time_signature: TimeSignature) -> Ticks {
-		// A tick represents a 1/3840th note (960 PPQN).
-		let ticks_in_whole_note = 3840;
-
-		// Each subdivision in Logic Pro is a 16th note.
-		let ticks_per_division = 240;
-
-		// The number of ticks in a beat is determined by which note value represents one beat.
-		let ticks_per_beat = ticks_in_whole_note / time_signature.denominator as u16;
-
-		// Convert the units of time into ticks.
-		Ticks::new(
-			self.length.bar * ticks_per_beat * time_signature.numerator as u16
-				+ self.length.beat * ticks_per_beat
-				+ self.length.division * ticks_per_division
-				+ self.length.ticks,
-		)
-	}
-}
-
 #[derive(Debug)]
 struct Engraver {
 	/// The events to be engraved.
@@ -274,6 +278,9 @@ struct Engraver {
 
 	/// The index of the current event being engraved.
 	current_note_index: usize,
+
+	/// The current tick (output cursor).
+	current_tick: Ticks,
 
 	/// The number of ticks remaining in the current event.
 	ticks_remaining_in_event: Ticks,
@@ -290,11 +297,17 @@ struct Engraver {
 
 impl Engraver {
 	fn new(time_signature: TimeSignature, events: Vec<Event>) -> Engraver {
-		let ticks_per_beat = 3840 / time_signature.denominator as u16;
-		let ticks_per_bar = ticks_per_beat * time_signature.numerator as u16;
+		let ticks_per_beat = 3840 / time_signature.denominator as u32;
+		let ticks_per_bar = ticks_per_beat * time_signature.numerator as u32;
 
-		let first_event_ticks = if let Some(first_event) = events.first() {
-			first_event.ticks(time_signature).value
+		let first_event_position = if let Some(first_event) = events.first() {
+			first_event.position.ticks(time_signature).value
+		} else {
+			0
+		};
+
+		let first_event_length = if let Some(first_event) = events.first() {
+			first_event.length.ticks(time_signature).value
 		} else {
 			0
 		};
@@ -304,7 +317,8 @@ impl Engraver {
 			previous_event: None,
 			time_signature,
 			current_note_index: 0,
-			ticks_remaining_in_event: Ticks::new(first_event_ticks),
+			current_tick: Ticks::new(first_event_position - 1),
+			ticks_remaining_in_event: Ticks::new(first_event_length),
 			ticks_remaining_in_bar: Ticks::new(ticks_per_bar),
 			ticks_remaining_in_beat: Ticks::new(ticks_per_beat),
 			output: String::new(),
@@ -322,6 +336,12 @@ impl Engraver {
 
 	fn engrave_next_event(&mut self) -> () {
 		let current_event = self.events[self.current_note_index];
+
+		// [TODO] Implement rests.
+		assert_eq!(
+			current_event.position.ticks(self.time_signature).value,
+			self.current_tick.value + 1
+		);
 
 		while self.ticks_remaining_in_event.value > 0 {
 			if self.current_note_index == 0 {
@@ -342,6 +362,10 @@ impl Engraver {
 				self
 					.output
 					.push_str(self.ticks_remaining_in_beat.to_lilypond().as_str());
+
+				self
+					.current_tick
+					.increment(self.ticks_remaining_in_beat.value);
 
 				self
 					.ticks_remaining_in_event
@@ -365,6 +389,10 @@ impl Engraver {
 					.push_str(self.ticks_remaining_in_event.to_lilypond().as_str());
 
 				self
+					.current_tick
+					.increment(self.ticks_remaining_in_event.value);
+
+				self
 					.ticks_remaining_in_bar
 					.decrement(self.ticks_remaining_in_event.value);
 
@@ -377,14 +405,14 @@ impl Engraver {
 
 			if self.ticks_remaining_in_beat.value <= 0 {
 				// Reset the beat.
-				let ticks_per_beat = 3840 / self.time_signature.denominator as u16;
+				let ticks_per_beat = 3840 / self.time_signature.denominator as u32;
 				self.ticks_remaining_in_beat.set(ticks_per_beat)
 			}
 
 			if self.ticks_remaining_in_bar.value <= 0 {
 				// Reset the bar.
-				let ticks_per_beat = 3840 / self.time_signature.denominator as u16;
-				let ticks_per_bar = ticks_per_beat * self.time_signature.numerator as u16;
+				let ticks_per_beat = 3840 / self.time_signature.denominator as u32;
+				let ticks_per_bar = ticks_per_beat * self.time_signature.numerator as u32;
 				self.ticks_remaining_in_bar.set(ticks_per_bar);
 				self.output.push_str(" |");
 			}
@@ -395,7 +423,7 @@ impl Engraver {
 
 		// Update state.
 		self.ticks_remaining_in_event = match self.events.get(self.current_note_index + 1) {
-			Some(next_event) => next_event.ticks(self.time_signature),
+			Some(next_event) => next_event.length.ticks(self.time_signature),
 			None => Ticks::new(0),
 		};
 
@@ -414,10 +442,10 @@ impl Engraver {
 }
 
 fn parse_time(input: &str) -> IResult<&str, Time> {
-	let parse_bar = u16;
-	let parse_beat = u16;
-	let parse_division = u16;
-	let parse_ticks = u16;
+	let parse_bar = u32;
+	let parse_beat = u32;
+	let parse_division = u32;
+	let parse_ticks = u32;
 
 	let mut parse = tuple((
 		parse_bar,
@@ -587,6 +615,7 @@ mod tests {
 					ticks: 0
 				}
 			}
+			.length
 			.ticks(time_signature),
 			Ticks::new(2160)
 		);
@@ -610,6 +639,7 @@ mod tests {
 					ticks: 80
 				}
 			}
+			.length
 			.ticks(time_signature),
 			Ticks::new(4160)
 		);
@@ -638,6 +668,7 @@ mod tests {
 					ticks: 80
 				}
 			}
+			.length
 			.ticks(time_signature),
 			Ticks::new(3200)
 		);
