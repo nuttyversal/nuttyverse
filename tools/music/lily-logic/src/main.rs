@@ -119,23 +119,51 @@ impl Note {
 		12 * (self.octave + 1) + pitch_value
 	}
 
+	fn pitch_number(&self) -> u8 {
+		match self.pitch {
+			Pitch::C => 0,
+			Pitch::Cis => 0,
+			Pitch::D => 1,
+			Pitch::Dis => 1,
+			Pitch::E => 2,
+			Pitch::F => 3,
+			Pitch::Fis => 3,
+			Pitch::G => 4,
+			Pitch::Gis => 4,
+			Pitch::A => 5,
+			Pitch::Ais => 5,
+			Pitch::B => 6,
+		}
+	}
+
 	fn to_lilypond_relative(&self, previous_note: Note) -> String {
 		let previous = previous_note.to_midi_value();
 		let current = self.to_midi_value();
 
-		// The octave changing marks are used for intervals greater than a fourth, so
-		// we need to add a bias to the interval to derive the number of marks to use.
-		//
-		// [NOTE] This is a heuristic and may not be accurate for all cases. According to
-		// the LilyPond documentation, the interval is determined without considering the
-		// accidentals.
-		let bias = 5;
-		let octave_difference = ((current as i16 - previous as i16).abs() + bias) / 12;
+		// Octave changing marks are used for intervals greater than a fourth. When LilyPond
+		// determines the interval between two notes, it does not consider the quality of the
+		// interval. In other words, accidentals are ignored.
+		let interval_diff = (self.pitch_number() as i8) - (previous_note.pitch_number() as i8);
+		let octave_diff = (self.octave as i8) - (previous_note.octave as i8);
+
+		let num_octave_change_marks = {
+			let bias = 3; // fourth interval
+			let num_diatonic_notes = 7;
+			let diatonic_steps = octave_diff * num_diatonic_notes + interval_diff;
+
+			let octave_changes = if diatonic_steps > 0 {
+				(diatonic_steps + bias) / num_diatonic_notes
+			} else {
+				(diatonic_steps - bias) / num_diatonic_notes
+			};
+
+			octave_changes.abs()
+		};
 
 		let octave = if previous < current {
-			"'".repeat(octave_difference as usize)
+			"'".repeat(num_octave_change_marks as usize)
 		} else if previous > current {
-			",".repeat(octave_difference as usize)
+			",".repeat(num_octave_change_marks as usize)
 		} else {
 			"".to_string()
 		};
