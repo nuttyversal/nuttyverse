@@ -259,6 +259,25 @@ struct TimeSignature {
 	denominator: u8,
 }
 
+impl TimeSignature {
+	/// Returns the duration of a beat in ticks.
+	fn beat_duration(&self) -> u32 {
+		// Pulses per quarter note.
+		let ppqn = 960;
+
+		// The duration of a whole note in ticks.
+		let whole_note_duration = ppqn * 4;
+
+		// The duration of a beat in ticks.
+		whole_note_duration / self.denominator as u32
+	}
+
+	/// Returns the duration of a bar in ticks.
+	fn bar_duration(&self) -> u32 {
+		self.beat_duration() * self.numerator as u32
+	}
+}
+
 /// Represents a note in a sequence.
 struct SequencedNote {
 	/// The note that the event represents.
