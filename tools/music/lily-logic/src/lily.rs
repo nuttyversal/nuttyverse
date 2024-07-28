@@ -713,6 +713,41 @@ mod tests {
 	}
 
 	#[test]
+	fn test_absolute_note_ordering() {
+		let a = AbsolutePitch {
+			name: PitchName::C,
+			accidental: Accidental::Natural,
+			octave: 4,
+		};
+
+		let b = AbsolutePitch {
+			name: PitchName::C,
+			accidental: Accidental::DoubleFlat,
+			octave: 5,
+		};
+
+		let c = AbsolutePitch {
+			name: PitchName::D,
+			accidental: Accidental::DoubleSharp,
+			octave: 4,
+		};
+
+		let d = AbsolutePitch {
+			name: PitchName::B,
+			accidental: Accidental::Sharp,
+			octave: 3,
+		};
+
+		assert!(a < b);
+		assert!(a < c);
+		assert!(b > a);
+		assert!(b > c);
+		assert!(c > a);
+		assert!(c < b);
+		assert!(d == a);
+	}
+
+	#[test]
 	fn test_rest() {
 		assert_eq!(
 			Rest {

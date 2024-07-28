@@ -201,6 +201,51 @@ mod tests {
 	use super::*;
 
 	#[test]
+	fn test_time_ordering() {
+		assert!(
+			Time {
+				bar: 1,
+				beat: 1,
+				division: 1,
+				ticks: 1
+			} < Time {
+				bar: 1,
+				beat: 1,
+				division: 1,
+				ticks: 2
+			}
+		);
+
+		assert!(
+			Time {
+				bar: 1,
+				beat: 1,
+				division: 1,
+				ticks: 2
+			} > Time {
+				bar: 1,
+				beat: 1,
+				division: 1,
+				ticks: 1
+			}
+		);
+
+		assert!(
+			Time {
+				bar: 1,
+				beat: 1,
+				division: 1,
+				ticks: 1
+			} == Time {
+				bar: 1,
+				beat: 1,
+				division: 1,
+				ticks: 1
+			}
+		);
+	}
+
+	#[test]
 	fn test_parse_note() {
 		assert_eq!(
 			parse_note("C4"),
