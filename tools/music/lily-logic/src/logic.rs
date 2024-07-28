@@ -33,7 +33,7 @@ pub struct Note {
 }
 
 /// Represents a position or length of an event.
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Time {
 	/// The bar number.
 	bar: u32,
@@ -46,6 +46,23 @@ pub struct Time {
 
 	/// The tick number.
 	ticks: u32,
+}
+
+impl PartialOrd for Time {
+	fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+		Some(self.cmp(other))
+	}
+}
+
+impl Ord for Time {
+	fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+		self
+			.bar
+			.cmp(&other.bar)
+			.then(self.beat.cmp(&other.beat))
+			.then(self.division.cmp(&other.division))
+			.then(self.ticks.cmp(&other.ticks))
+	}
 }
 
 /// Represents a Logic Pro event.
