@@ -279,6 +279,7 @@ impl TimeSignature {
 }
 
 /// Represents a note in a sequence.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 struct SequencedNote {
 	/// The note that the event represents.
 	pitch: lily::AbsolutePitch,
@@ -288,6 +289,22 @@ struct SequencedNote {
 
 	/// The length of the event in the sequence.
 	length: logic::Time,
+}
+
+impl PartialOrd for SequencedNote {
+	fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+		Some(self.cmp(other))
+	}
+}
+
+impl Ord for SequencedNote {
+	fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+		self
+			.position
+			.cmp(&other.position)
+			.then(self.length.cmp(&other.length))
+			.then(self.pitch.cmp(&other.pitch))
+	}
 }
 
 /// Represents the context of a transformation.
