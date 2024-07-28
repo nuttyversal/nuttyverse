@@ -278,7 +278,9 @@ impl TimeSignature {
 	}
 }
 
-/// Represents a note in a sequence.
+/// Represents a note in a sequence. This is an intermediate representation that
+/// is used to transform Logic Pro events to LilyPond notes while preserving the
+/// timing information from the event.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 struct SequencedNote {
 	/// The note that the event represents.
@@ -304,6 +306,57 @@ impl Ord for SequencedNote {
 			.cmp(&other.position)
 			.then(self.length.cmp(&other.length))
 			.then(self.pitch.cmp(&other.pitch))
+	}
+}
+
+/// Represents a chord in a sequence. This is an intermediate representation that
+/// is used to cluster Logic Pro events to LilyPond chords while preserving the
+/// timing information from the events.
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct SequencedChord {
+	pitches: Vec<lily::AbsolutePitch>,
+	position: logic::Time,
+	length: logic::Time,
+}
+
+impl SequencedChord {
+	fn new(notes: &[&SequencedNote]) -> Self {
+		let pitches = notes.iter().map(|note| note.pitch).collect();
+
+		// Use the position of the first note for the chord position.
+		let position = notes[0].position;
+
+		// For length, use the longest note duration in the chord.
+		let length = notes
+			.iter()
+			.map(|note| note.length)
+			.max()
+			// Invariant: There are at least two notes in the chord.
+			// Therefore, the max() call will always return Some.
+			// But if it doesn't, we use the position as the length.
+			.unwrap_or(position);
+
+		SequencedChord {
+			pitches,
+			position,
+			length,
+		}
+	}
+}
+
+impl PartialOrd for SequencedChord {
+	fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+		Some(self.cmp(other))
+	}
+}
+
+impl Ord for SequencedChord {
+	fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+		self
+			.position
+			.cmp(&other.position)
+			.then(self.length.cmp(&other.length))
+			.then(self.pitches.cmp(&other.pitches))
 	}
 }
 
@@ -516,7 +569,7 @@ fn transform_spelling(
 }
 
 /// Transforms a Logic Pro event to a sequenced note.
-fn transform_event(event: logic::Event, context: TransformContext) -> SequencedNote {
+fn sequence_event(event: logic::Event, context: TransformContext) -> SequencedNote {
 	let pitch = transform_pitch(event.note.pitch, event.note.octave);
 	let pitch = transform_spelling(pitch, context);
 
@@ -528,11 +581,58 @@ fn transform_event(event: logic::Event, context: TransformContext) -> SequencedN
 }
 
 /// Transforms a list of Logic Pro events to a list of sequenced notes.
-fn transform_events(events: Vec<logic::Event>, context: TransformContext) -> Vec<SequencedNote> {
-	events
+fn sequence_events(events: Vec<logic::Event>, context: TransformContext) -> Vec<SequencedNote> {
+	let mut sequenced_notes: Vec<SequencedNote> = events
 		.into_iter()
-		.map(|event| transform_event(event, context))
-		.collect()
+		.map(|event| sequence_event(event, context))
+		.collect();
+
+	sequenced_notes.sort();
+	sequenced_notes
+}
+
+/// Identifies chords in a list of sequenced notes. Notes that are part
+/// of a chord are clustered together and returned as a sequenced chord.
+/// Notes that are *not* part of a chord are returned as single notes.
+fn identify_chords(notes: Vec<SequencedNote>) -> (Vec<SequencedNote>, Vec<SequencedChord>) {
+	let mut single_notes = Vec::new();
+	let mut chords = Vec::new();
+	let mut current_chord_notes = Vec::new();
+
+	for (i, note) in notes.iter().enumerate() {
+		if i == 0 || note.position == notes[i - 1].position {
+			// Add the note to the current (candidate) chord.
+			current_chord_notes.push(note);
+		} else {
+			// Process the accumulated notes
+			if current_chord_notes.len() >= 2 {
+				chords.push(SequencedChord::new(current_chord_notes.as_slice()));
+			} else {
+				// Add single notes to the single_notes vector.
+				single_notes.extend(current_chord_notes.iter().cloned());
+			}
+
+			// Start a new (candidate) chord.
+			current_chord_notes.clear();
+			current_chord_notes.push(note);
+		}
+	}
+
+	// Process the last group of notes.
+	if current_chord_notes.len() >= 2 {
+		chords.push(SequencedChord::new(current_chord_notes.as_slice()));
+	} else {
+		single_notes.extend(current_chord_notes.iter().cloned());
+	}
+
+	(single_notes, chords)
+}
+
+fn transform(events: Vec<logic::Event>, context: TransformContext) -> () {
+	let notes = sequence_events(events, context);
+	let (notes, chords) = identify_chords(notes);
+
+	todo!("Identify rests from gaps between notes and chords.")
 }
 
 #[cfg(test)]
