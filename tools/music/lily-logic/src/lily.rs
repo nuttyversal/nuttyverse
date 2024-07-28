@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 pub trait Engravable {
 	fn engrave(&self) -> String;
 }
@@ -81,7 +83,7 @@ impl Engravable for Accidental {
 
 /// Represents an octave changing mark in LilyPond, such as `'` or `,`.
 /// These are used to change the octave of a note in relative mode.
-enum OctaveChange {
+pub enum OctaveChange {
 	/// Number of octaves to raise.
 	Raise(u8),
 
@@ -126,7 +128,7 @@ impl Engravable for RelativePitch {
 }
 
 /// Represents a pitch in absolute mode.
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug)]
 pub struct AbsolutePitch {
 	/// The pitch of the note.
 	pub name: PitchName,
@@ -136,6 +138,51 @@ pub struct AbsolutePitch {
 
 	/// The octave of the note.
 	pub octave: u8,
+}
+
+impl AbsolutePitch {
+	/// Converts the pitch to a MIDI note value.
+	fn midi_value(&self) -> i32 {
+		let base_value = match self.name {
+			PitchName::C => 0,
+			PitchName::D => 2,
+			PitchName::E => 4,
+			PitchName::F => 5,
+			PitchName::G => 7,
+			PitchName::A => 9,
+			PitchName::B => 11,
+		};
+
+		let accidental_value = match self.accidental {
+			Accidental::DoubleFlat => -2,
+			Accidental::Flat => -1,
+			Accidental::Natural => 0,
+			Accidental::Sharp => 1,
+			Accidental::DoubleSharp => 2,
+		};
+
+		(self.octave as i32 + 1) * 12 + base_value + accidental_value
+	}
+}
+
+impl PartialEq for AbsolutePitch {
+	fn eq(&self, other: &Self) -> bool {
+		self.midi_value() == other.midi_value()
+	}
+}
+
+impl Eq for AbsolutePitch {}
+
+impl PartialOrd for AbsolutePitch {
+	fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+		Some(self.cmp(other))
+	}
+}
+
+impl Ord for AbsolutePitch {
+	fn cmp(&self, other: &Self) -> Ordering {
+		self.midi_value().cmp(&other.midi_value())
+	}
 }
 
 impl Engravable for AbsolutePitch {
