@@ -1,5 +1,4 @@
 use crate::lily;
-use crate::lily::AbsolutePitch;
 use crate::logic;
 
 /// Represents an accidental type.
@@ -401,154 +400,154 @@ fn transform_spelling(
 ) -> lily::AbsolutePitch {
 	let enharmonic_pitch = match pitch {
 		// C♯ is enharmonic to D♭.
-		AbsolutePitch {
+		lily::AbsolutePitch {
 			name: lily::PitchName::C,
 			accidental: lily::Accidental::Sharp,
 			octave,
-		} => AbsolutePitch {
+		} => lily::AbsolutePitch {
 			name: lily::PitchName::D,
 			accidental: lily::Accidental::Flat,
 			octave,
 		},
 
 		// D♭ is enharmonic to C♯.
-		AbsolutePitch {
+		lily::AbsolutePitch {
 			name: lily::PitchName::D,
 			accidental: lily::Accidental::Flat,
 			octave,
-		} => AbsolutePitch {
+		} => lily::AbsolutePitch {
 			name: lily::PitchName::C,
 			accidental: lily::Accidental::Sharp,
 			octave,
 		},
 
 		// D♯ is enharmonic to E♭.
-		AbsolutePitch {
+		lily::AbsolutePitch {
 			name: lily::PitchName::D,
 			accidental: lily::Accidental::Sharp,
 			octave,
-		} => AbsolutePitch {
+		} => lily::AbsolutePitch {
 			name: lily::PitchName::E,
 			accidental: lily::Accidental::Flat,
 			octave,
 		},
 
 		// E♭ is enharmonic to D♯.
-		AbsolutePitch {
+		lily::AbsolutePitch {
 			name: lily::PitchName::E,
 			accidental: lily::Accidental::Flat,
 			octave,
-		} => AbsolutePitch {
+		} => lily::AbsolutePitch {
 			name: lily::PitchName::D,
 			accidental: lily::Accidental::Sharp,
 			octave,
 		},
 
 		// F♯ is enharmonic to G♭.
-		AbsolutePitch {
+		lily::AbsolutePitch {
 			name: lily::PitchName::F,
 			accidental: lily::Accidental::Sharp,
 			octave,
-		} => AbsolutePitch {
+		} => lily::AbsolutePitch {
 			name: lily::PitchName::G,
 			accidental: lily::Accidental::Flat,
 			octave,
 		},
 
 		// G♭ is enharmonic to F♯.
-		AbsolutePitch {
+		lily::AbsolutePitch {
 			name: lily::PitchName::G,
 			accidental: lily::Accidental::Flat,
 			octave,
-		} => AbsolutePitch {
+		} => lily::AbsolutePitch {
 			name: lily::PitchName::F,
 			accidental: lily::Accidental::Sharp,
 			octave,
 		},
 
 		// G♯ is enharmonic to A♭.
-		AbsolutePitch {
+		lily::AbsolutePitch {
 			name: lily::PitchName::G,
 			accidental: lily::Accidental::Sharp,
 			octave,
-		} => AbsolutePitch {
+		} => lily::AbsolutePitch {
 			name: lily::PitchName::A,
 			accidental: lily::Accidental::Flat,
 			octave,
 		},
 
 		// A♭ is enharmonic to G♯.
-		AbsolutePitch {
+		lily::AbsolutePitch {
 			name: lily::PitchName::A,
 			accidental: lily::Accidental::Flat,
 			octave,
-		} => AbsolutePitch {
+		} => lily::AbsolutePitch {
 			name: lily::PitchName::G,
 			accidental: lily::Accidental::Sharp,
 			octave,
 		},
 
 		// A♯ is enharmonic to B♭.
-		AbsolutePitch {
+		lily::AbsolutePitch {
 			name: lily::PitchName::A,
 			accidental: lily::Accidental::Sharp,
 			octave,
-		} => AbsolutePitch {
+		} => lily::AbsolutePitch {
 			name: lily::PitchName::B,
 			accidental: lily::Accidental::Flat,
 			octave,
 		},
 
 		// B♭ is enharmonic to A♯.
-		AbsolutePitch {
+		lily::AbsolutePitch {
 			name: lily::PitchName::B,
 			accidental: lily::Accidental::Flat,
 			octave,
-		} => AbsolutePitch {
+		} => lily::AbsolutePitch {
 			name: lily::PitchName::A,
 			accidental: lily::Accidental::Sharp,
 			octave,
 		},
 
 		// B is enharmonic to C♭.
-		AbsolutePitch {
+		lily::AbsolutePitch {
 			name: lily::PitchName::B,
 			accidental: lily::Accidental::Natural,
 			octave,
-		} => AbsolutePitch {
+		} => lily::AbsolutePitch {
 			name: lily::PitchName::C,
 			accidental: lily::Accidental::Flat,
 			octave: octave + 1,
 		},
 
 		// C♭ is enharmonic to B.
-		AbsolutePitch {
+		lily::AbsolutePitch {
 			name: lily::PitchName::C,
 			accidental: lily::Accidental::Flat,
 			octave,
-		} => AbsolutePitch {
+		} => lily::AbsolutePitch {
 			name: lily::PitchName::B,
 			accidental: lily::Accidental::Natural,
 			octave: octave - 1,
 		},
 
 		// E is enharmonic to F♭.
-		AbsolutePitch {
+		lily::AbsolutePitch {
 			name: lily::PitchName::E,
 			accidental: lily::Accidental::Natural,
 			octave,
-		} => AbsolutePitch {
+		} => lily::AbsolutePitch {
 			name: lily::PitchName::F,
 			accidental: lily::Accidental::Flat,
 			octave,
 		},
 
 		// F♭ is enharmonic to E.
-		AbsolutePitch {
+		lily::AbsolutePitch {
 			name: lily::PitchName::F,
 			accidental: lily::Accidental::Flat,
 			octave,
-		} => AbsolutePitch {
+		} => lily::AbsolutePitch {
 			name: lily::PitchName::E,
 			accidental: lily::Accidental::Natural,
 			octave,
