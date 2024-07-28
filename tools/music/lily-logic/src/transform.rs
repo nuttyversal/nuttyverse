@@ -359,6 +359,36 @@ impl Ord for SequencedChord {
 	}
 }
 
+/// Represents a rest in a sequence. This is an intermediate representation that
+/// is used to keep track of gaps between notes and chords.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct SequencedRest {
+	position: logic::Time,
+	length: logic::Time,
+}
+
+impl PartialOrd for SequencedRest {
+	fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+		Some(self.cmp(other))
+	}
+}
+
+impl Ord for SequencedRest {
+	fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+		self
+			.position
+			.cmp(&other.position)
+			.then(self.length.cmp(&other.length))
+	}
+}
+
+/// Represents an element in a sequence.
+enum SequencedElement {
+	Note(SequencedNote),
+	Chord(SequencedChord),
+	Rest(SequencedRest),
+}
+
 /// Represents the context of a transformation.
 #[derive(Clone, Copy, Debug)]
 struct TransformContext {

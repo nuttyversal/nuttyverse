@@ -36,16 +36,16 @@ pub struct Note {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Time {
 	/// The bar number.
-	bar: u32,
+	pub bar: u32,
 
 	/// The beat number.
-	beat: u32,
+	pub beat: u32,
 
 	/// The division number.
-	division: u32,
+	pub division: u32,
 
 	/// The tick number.
-	ticks: u32,
+	pub ticks: u32,
 }
 
 impl PartialOrd for Time {
