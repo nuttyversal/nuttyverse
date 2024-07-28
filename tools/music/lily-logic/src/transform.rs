@@ -881,4 +881,110 @@ mod tests {
 			}
 		);
 	}
+
+	#[test]
+	fn test_identify_chords() {
+		let notes = vec![
+			SequencedNote {
+				pitch: lily::AbsolutePitch {
+					name: lily::PitchName::C,
+					accidental: lily::Accidental::Natural,
+					octave: 4,
+				},
+				position: logic::Time {
+					bar: 2,
+					beat: 1,
+					division: 1,
+					ticks: 1,
+				},
+				length: logic::Time {
+					bar: 1,
+					beat: 1,
+					division: 1,
+					ticks: 1,
+				},
+			},
+			SequencedNote {
+				pitch: lily::AbsolutePitch {
+					name: lily::PitchName::C,
+					accidental: lily::Accidental::Natural,
+					octave: 4,
+				},
+				position: logic::Time {
+					bar: 1,
+					beat: 1,
+					division: 1,
+					ticks: 1,
+				},
+				length: logic::Time {
+					bar: 1,
+					beat: 1,
+					division: 1,
+					ticks: 1,
+				},
+			},
+			SequencedNote {
+				pitch: lily::AbsolutePitch {
+					name: lily::PitchName::E,
+					accidental: lily::Accidental::Natural,
+					octave: 4,
+				},
+				position: logic::Time {
+					bar: 1,
+					beat: 1,
+					division: 1,
+					ticks: 1,
+				},
+				length: logic::Time {
+					bar: 1,
+					beat: 1,
+					division: 1,
+					ticks: 1,
+				},
+			},
+			SequencedNote {
+				pitch: lily::AbsolutePitch {
+					name: lily::PitchName::G,
+					accidental: lily::Accidental::Natural,
+					octave: 4,
+				},
+				position: logic::Time {
+					bar: 1,
+					beat: 1,
+					division: 1,
+					ticks: 1,
+				},
+				length: logic::Time {
+					bar: 1,
+					beat: 1,
+					division: 1,
+					ticks: 1,
+				},
+			},
+			SequencedNote {
+				pitch: lily::AbsolutePitch {
+					name: lily::PitchName::C,
+					accidental: lily::Accidental::Natural,
+					octave: 4,
+				},
+				position: logic::Time {
+					bar: 2,
+					beat: 1,
+					division: 1,
+					ticks: 1,
+				},
+				length: logic::Time {
+					bar: 1,
+					beat: 1,
+					division: 1,
+					ticks: 1,
+				},
+			},
+		];
+
+		let (single_notes, chords) = identify_chords(notes);
+
+		assert_eq!(single_notes.len(), 2);
+		assert_eq!(chords.len(), 1);
+	}
 }
