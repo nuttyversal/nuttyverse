@@ -510,6 +510,14 @@ fn transform_event(event: logic::Event, context: TransformContext) -> SequencedN
 	}
 }
 
+/// Transforms a list of Logic Pro events to a list of sequenced notes.
+fn transform_events(events: Vec<logic::Event>, context: TransformContext) -> Vec<SequencedNote> {
+	events
+		.into_iter()
+		.map(|event| transform_event(event, context))
+		.collect()
+}
+
 #[cfg(test)]
 mod tests {
 	use super::*;
