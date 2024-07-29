@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use crate::lily;
 use crate::logic;
 
@@ -389,6 +391,49 @@ enum SequencedElement {
 	Rest(SequencedRest),
 }
 
+impl SequencedElement {
+	/// Returns the position of the element.
+	fn position(&self) -> &logic::Time {
+		match self {
+			SequencedElement::Note(note) => &note.position,
+			SequencedElement::Chord(chord) => &chord.position,
+			SequencedElement::Rest(rest) => &rest.position,
+		}
+	}
+
+	/// Returns the length of the element.
+	fn length(&self) -> &logic::Time {
+		match self {
+			SequencedElement::Note(note) => &note.length,
+			SequencedElement::Chord(chord) => &chord.length,
+			SequencedElement::Rest(rest) => &rest.length,
+		}
+	}
+}
+
+impl PartialEq for SequencedElement {
+	fn eq(&self, other: &Self) -> bool {
+		self.position() == other.position() && self.length() == other.length()
+	}
+}
+
+impl Eq for SequencedElement {}
+
+impl PartialOrd for SequencedElement {
+	fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+		Some(self.cmp(other))
+	}
+}
+
+impl Ord for SequencedElement {
+	fn cmp(&self, other: &Self) -> Ordering {
+		self
+			.position()
+			.cmp(&other.position())
+			.then_with(|| self.length().cmp(&other.length()))
+	}
+}
+
 impl From<SequencedNote> for SequencedElement {
 	fn from(note: SequencedNote) -> Self {
 		SequencedElement::Note(note)
@@ -675,6 +720,7 @@ fn identify_chords(notes: Vec<SequencedNote>) -> Vec<SequencedElement> {
 		);
 	}
 
+	elements.sort();
 	elements
 }
 
