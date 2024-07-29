@@ -261,6 +261,15 @@ struct TimeSignature {
 }
 
 impl TimeSignature {
+	fn ticks(&self, time: logic::Time) -> u32 {
+		let bar_ticks = time.bar as u32 * self.bar_duration();
+		let beat_ticks = time.beat as u32 * self.beat_duration();
+		let division_ticks = time.division as u32 * self.division_duration();
+		let tick_ticks = time.ticks as u32;
+
+		bar_ticks + beat_ticks + division_ticks + tick_ticks
+	}
+
 	/// Returns the duration of a beat in ticks.
 	fn beat_duration(&self) -> u32 {
 		// Pulses per quarter note.
@@ -276,6 +285,12 @@ impl TimeSignature {
 	/// Returns the duration of a bar in ticks.
 	fn bar_duration(&self) -> u32 {
 		self.beat_duration() * self.numerator as u32
+	}
+
+	/// Returns the duration of a division in ticks.
+	fn division_duration(&self) -> u32 {
+		// Each subdivision is a sixteenth note.
+		240
 	}
 }
 
