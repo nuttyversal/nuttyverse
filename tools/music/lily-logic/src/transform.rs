@@ -389,6 +389,24 @@ enum SequencedElement {
 	Rest(SequencedRest),
 }
 
+impl From<SequencedNote> for SequencedElement {
+	fn from(note: SequencedNote) -> Self {
+		SequencedElement::Note(note)
+	}
+}
+
+impl From<SequencedChord> for SequencedElement {
+	fn from(chord: SequencedChord) -> Self {
+		SequencedElement::Chord(chord)
+	}
+}
+
+impl From<SequencedRest> for SequencedElement {
+	fn from(rest: SequencedRest) -> Self {
+		SequencedElement::Rest(rest)
+	}
+}
+
 /// Represents the context of a transformation.
 #[derive(Clone, Copy, Debug)]
 struct TransformContext {
@@ -623,9 +641,8 @@ fn sequence_events(events: Vec<logic::Event>, context: TransformContext) -> Vec<
 /// Identifies chords in a list of sequenced notes. Notes that are part
 /// of a chord are clustered together and returned as a sequenced chord.
 /// Notes that are *not* part of a chord are returned as single notes.
-fn identify_chords(notes: Vec<SequencedNote>) -> (Vec<SequencedNote>, Vec<SequencedChord>) {
-	let mut single_notes = Vec::new();
-	let mut chords = Vec::new();
+fn identify_chords(notes: Vec<SequencedNote>) -> Vec<SequencedElement> {
+	let mut elements = Vec::new();
 	let mut current_chord_notes = Vec::new();
 
 	for (i, note) in notes.iter().enumerate() {
@@ -635,10 +652,10 @@ fn identify_chords(notes: Vec<SequencedNote>) -> (Vec<SequencedNote>, Vec<Sequen
 		} else {
 			// Process the accumulated notes
 			if current_chord_notes.len() >= 2 {
-				chords.push(SequencedChord::new(current_chord_notes.as_slice()));
+				elements.push(SequencedChord::new(current_chord_notes.as_slice()).into());
 			} else {
-				// Add single notes to the single_notes vector.
-				single_notes.extend(current_chord_notes.iter().cloned());
+				// Add single notes to the elements vector.
+				elements.extend(current_chord_notes.iter().map(|&note| (*note).into()));
 			}
 
 			// Start a new (candidate) chord.
@@ -649,17 +666,21 @@ fn identify_chords(notes: Vec<SequencedNote>) -> (Vec<SequencedNote>, Vec<Sequen
 
 	// Process the last group of notes.
 	if current_chord_notes.len() >= 2 {
-		chords.push(SequencedChord::new(current_chord_notes.as_slice()));
+		elements.push(SequencedChord::new(current_chord_notes.as_slice()).into());
 	} else {
-		single_notes.extend(current_chord_notes.iter().cloned());
+		elements.extend(
+			current_chord_notes
+				.iter()
+				.map(|&note| SequencedElement::Note(*note)),
+		);
 	}
 
-	(single_notes, chords)
+	elements
 }
 
 fn transform(events: Vec<logic::Event>, context: TransformContext) -> () {
 	let notes = sequence_events(events, context);
-	let (notes, chords) = identify_chords(notes);
+	let elements = identify_chords(notes);
 
 	todo!("Identify rests from gaps between notes and chords.")
 }
@@ -1011,7 +1032,29 @@ mod tests {
 			},
 		];
 
-		let (single_notes, chords) = identify_chords(notes);
+		let elements = identify_chords(notes);
+
+		let single_notes: Vec<_> = elements
+			.iter()
+			.filter_map(|e| {
+				if let SequencedElement::Note(n) = e {
+					Some(n)
+				} else {
+					None
+				}
+			})
+			.collect();
+
+		let chords: Vec<_> = elements
+			.iter()
+			.filter_map(|e| {
+				if let SequencedElement::Chord(c) = e {
+					Some(c)
+				} else {
+					None
+				}
+			})
+			.collect();
 
 		assert_eq!(single_notes.len(), 2);
 		assert_eq!(chords.len(), 1);
