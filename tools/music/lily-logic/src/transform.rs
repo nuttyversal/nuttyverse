@@ -261,11 +261,24 @@ struct TimeSignature {
 }
 
 impl TimeSignature {
-	fn ticks(&self, time: logic::Time) -> u32 {
+	/// Returns the length of a time in ticks.
+	fn length_ticks(&self, time: logic::Time) -> u32 {
 		let bar_ticks = time.bar as u32 * self.bar_duration();
 		let beat_ticks = time.beat as u32 * self.beat_duration();
 		let division_ticks = time.division as u32 * self.division_duration();
 		let tick_ticks = time.ticks as u32;
+
+		bar_ticks + beat_ticks + division_ticks + tick_ticks
+	}
+
+	/// Returns the position of a time in ticks.
+	fn position_ticks(&self, time: logic::Time) -> u32 {
+		// The position in an event uses one-based indexing.
+		// The result will use zero-based indexing.
+		let bar_ticks = (time.bar as u32 - 1) * self.bar_duration();
+		let beat_ticks = (time.beat as u32 - 1) * self.beat_duration();
+		let division_ticks = (time.division as u32 - 1) * self.division_duration();
+		let tick_ticks = (time.ticks - 1) as u32;
 
 		bar_ticks + beat_ticks + division_ticks + tick_ticks
 	}
@@ -302,11 +315,11 @@ struct SequencedNote {
 	/// The note that the event represents.
 	pitch: lily::AbsolutePitch,
 
-	/// The position of the event in the sequence.
-	position: logic::Time,
+	/// The position of the event in the sequence (in ticks).
+	position: u32,
 
-	/// The length of the event in the sequence.
-	length: logic::Time,
+	/// The length of the event in the sequence (in ticks).
+	length: u32,
 }
 
 impl PartialOrd for SequencedNote {
@@ -330,9 +343,14 @@ impl Ord for SequencedNote {
 /// timing information from the events.
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct SequencedChord {
+	/// The pitches of the notes in the chord.
 	pitches: Vec<lily::AbsolutePitch>,
-	position: logic::Time,
-	length: logic::Time,
+
+	/// The position of the chord in the sequence (in ticks).
+	position: u32,
+
+	/// The length of the chord in the sequence (in ticks).
+	length: u32,
 }
 
 impl SequencedChord {
@@ -380,8 +398,11 @@ impl Ord for SequencedChord {
 /// is used to keep track of gaps between notes and chords.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 struct SequencedRest {
-	position: logic::Time,
-	length: logic::Time,
+	/// The position of the rest in the sequence (in ticks).
+	position: u32,
+
+	/// The length of the rest in the sequence (in ticks).
+	length: u32,
 }
 
 impl PartialOrd for SequencedRest {
@@ -409,20 +430,20 @@ enum SequencedElement {
 
 impl SequencedElement {
 	/// Returns the position of the element.
-	fn position(&self) -> &logic::Time {
+	fn position(&self) -> u32 {
 		match self {
-			SequencedElement::Note(note) => &note.position,
-			SequencedElement::Chord(chord) => &chord.position,
-			SequencedElement::Rest(rest) => &rest.position,
+			SequencedElement::Note(note) => note.position,
+			SequencedElement::Chord(chord) => chord.position,
+			SequencedElement::Rest(rest) => rest.position,
 		}
 	}
 
 	/// Returns the length of the element.
-	fn length(&self) -> &logic::Time {
+	fn length(&self) -> u32 {
 		match self {
-			SequencedElement::Note(note) => &note.length,
-			SequencedElement::Chord(chord) => &chord.length,
-			SequencedElement::Rest(rest) => &rest.length,
+			SequencedElement::Note(note) => note.length,
+			SequencedElement::Chord(chord) => chord.length,
+			SequencedElement::Rest(rest) => rest.length,
 		}
 	}
 }
@@ -683,8 +704,8 @@ fn sequence_event(event: logic::Event, context: TransformContext) -> SequencedNo
 
 	SequencedNote {
 		pitch,
-		position: event.position,
-		length: event.length,
+		position: context.time_signature.position_ticks(event.position),
+		length: context.time_signature.length_ticks(event.length),
 	}
 }
 
@@ -1003,18 +1024,8 @@ mod tests {
 				accidental: lily::Accidental::Natural,
 				octave: 4,
 			},
-			position: logic::Time {
-				bar: 1,
-				beat: 1,
-				division: 1,
-				ticks: 1,
-			},
-			length: logic::Time {
-				bar: 0,
-				beat: 1,
-				division: 0,
-				ticks: 0,
-			},
+			position: 0,
+			length: 480,
 		});
 
 		let note2 = SequencedElement::Note(SequencedNote {
@@ -1023,18 +1034,8 @@ mod tests {
 				accidental: lily::Accidental::Natural,
 				octave: 4,
 			},
-			position: logic::Time {
-				bar: 1,
-				beat: 1,
-				division: 1,
-				ticks: 1,
-			},
-			length: logic::Time {
-				bar: 0,
-				beat: 2,
-				division: 0,
-				ticks: 0,
-			},
+			position: 0,
+			length: 960,
 		});
 
 		let note3 = SequencedElement::Note(SequencedNote {
@@ -1043,18 +1044,8 @@ mod tests {
 				accidental: lily::Accidental::Natural,
 				octave: 4,
 			},
-			position: logic::Time {
-				bar: 1,
-				beat: 2,
-				division: 1,
-				ticks: 1,
-			},
-			length: logic::Time {
-				bar: 0,
-				beat: 1,
-				division: 0,
-				ticks: 0,
-			},
+			position: 480,
+			length: 480,
 		});
 
 		assert!(note1 < note2); // Same position, but note2 is longer
@@ -1076,18 +1067,8 @@ mod tests {
 					accidental: lily::Accidental::Natural,
 					octave: 4,
 				},
-				position: logic::Time {
-					bar: 2,
-					beat: 1,
-					division: 1,
-					ticks: 1,
-				},
-				length: logic::Time {
-					bar: 1,
-					beat: 1,
-					division: 1,
-					ticks: 1,
-				},
+				position: 960,
+				length: 960,
 			},
 			SequencedNote {
 				pitch: lily::AbsolutePitch {
@@ -1095,18 +1076,8 @@ mod tests {
 					accidental: lily::Accidental::Natural,
 					octave: 4,
 				},
-				position: logic::Time {
-					bar: 1,
-					beat: 1,
-					division: 1,
-					ticks: 1,
-				},
-				length: logic::Time {
-					bar: 1,
-					beat: 1,
-					division: 1,
-					ticks: 1,
-				},
+				position: 0,
+				length: 960,
 			},
 			SequencedNote {
 				pitch: lily::AbsolutePitch {
@@ -1114,18 +1085,8 @@ mod tests {
 					accidental: lily::Accidental::Natural,
 					octave: 4,
 				},
-				position: logic::Time {
-					bar: 1,
-					beat: 1,
-					division: 1,
-					ticks: 1,
-				},
-				length: logic::Time {
-					bar: 1,
-					beat: 1,
-					division: 1,
-					ticks: 1,
-				},
+				position: 0,
+				length: 960,
 			},
 			SequencedNote {
 				pitch: lily::AbsolutePitch {
@@ -1133,18 +1094,8 @@ mod tests {
 					accidental: lily::Accidental::Natural,
 					octave: 4,
 				},
-				position: logic::Time {
-					bar: 1,
-					beat: 1,
-					division: 1,
-					ticks: 1,
-				},
-				length: logic::Time {
-					bar: 1,
-					beat: 1,
-					division: 1,
-					ticks: 1,
-				},
+				position: 0,
+				length: 960,
 			},
 			SequencedNote {
 				pitch: lily::AbsolutePitch {
@@ -1152,18 +1103,8 @@ mod tests {
 					accidental: lily::Accidental::Natural,
 					octave: 4,
 				},
-				position: logic::Time {
-					bar: 2,
-					beat: 1,
-					division: 1,
-					ticks: 1,
-				},
-				length: logic::Time {
-					bar: 1,
-					beat: 1,
-					division: 1,
-					ticks: 1,
-				},
+				position: 960,
+				length: 960,
 			},
 		];
 
