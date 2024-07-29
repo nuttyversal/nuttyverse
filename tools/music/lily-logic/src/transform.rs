@@ -761,10 +761,57 @@ fn identify_chords(notes: Vec<SequencedNote>) -> Vec<SequencedElement> {
 	elements
 }
 
+/// Identifies rests in a list of sequenced elements. Rests are inserted
+/// between notes and chords to fill gaps in the sequence.
+fn identify_rests(
+	elements: Vec<SequencedElement>,
+	context: &TransformContext,
+) -> Vec<SequencedElement> {
+	if elements.is_empty() {
+		return vec![];
+	}
+
+	let mut new_elements = Vec::new();
+	let mut current_position = 0;
+	let ticks_per_bar = context.time_signature.bar_duration();
+
+	for element in elements.iter() {
+		// If there is a gap, then insert a rest.
+		if element.position() > current_position {
+			new_elements.push(
+				SequencedRest {
+					position: current_position,
+					length: element.position() - current_position,
+				}
+				.into(),
+			);
+		}
+
+		new_elements.push(element.clone());
+		current_position = element.position() + element.length();
+	}
+
+	// Do we need to insert a rest at the end?
+	if current_position % ticks_per_bar != 0 {
+		let rest_length = ticks_per_bar - (current_position % ticks_per_bar);
+
+		new_elements.push(
+			SequencedRest {
+				position: current_position,
+				length: rest_length,
+			}
+			.into(),
+		);
+	}
+
+	new_elements
+}
+
 /// The transformation pipeline.
 fn transform(events: Vec<logic::Event>, context: TransformContext) -> () {
 	let notes = sequence_events(events, context);
 	let elements = identify_chords(notes);
+	let elements = identify_rests(elements, &context);
 
 	todo!("Identify rests from gaps between notes and chords.")
 }
@@ -1134,5 +1181,64 @@ mod tests {
 
 		assert_eq!(single_notes.len(), 2);
 		assert_eq!(chords.len(), 1);
+	}
+
+	#[test]
+	fn test_identify_rests() {
+		let context = TransformContext {
+			key_signature: KeySignature::CMajor,
+			time_signature: TimeSignature {
+				numerator: 4,
+				denominator: 4,
+			},
+		};
+
+		let ticks_per_bar = 3840;
+		assert_eq!(context.time_signature.bar_duration(), ticks_per_bar);
+
+		let elements = vec![
+			SequencedNote {
+				pitch: lily::AbsolutePitch {
+					name: lily::PitchName::C,
+					accidental: lily::Accidental::Natural,
+					octave: 4,
+				},
+				// Eighth note.
+				position: 0,
+				length: 480,
+			}
+			.into(),
+			SequencedNote {
+				pitch: lily::AbsolutePitch {
+					name: lily::PitchName::E,
+					accidental: lily::Accidental::Natural,
+					octave: 4,
+				},
+				// Quarter note.
+				position: 960,
+				length: 960,
+			}
+			.into(),
+		];
+
+		let elements = identify_rests(elements, &context);
+
+		assert_eq!(elements.len(), 4);
+
+		match &elements[1] {
+			SequencedElement::Rest(rest) => {
+				assert_eq!(rest.position, 480);
+				assert_eq!(rest.length, 480);
+			}
+			_ => panic!("Expected a rest at index 1"),
+		}
+
+		match &elements[3] {
+			SequencedElement::Rest(rest) => {
+				assert_eq!(rest.position, 1920);
+				assert_eq!(rest.length, 1920);
+			}
+			_ => panic!("Expected a rest at index 3"),
+		}
 	}
 }
