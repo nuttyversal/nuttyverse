@@ -385,6 +385,7 @@ impl Ord for SequencedRest {
 }
 
 /// Represents an element in a sequence.
+#[derive(Clone, Debug)]
 enum SequencedElement {
 	Note(SequencedNote),
 	Chord(SequencedChord),
@@ -724,6 +725,7 @@ fn identify_chords(notes: Vec<SequencedNote>) -> Vec<SequencedElement> {
 	elements
 }
 
+/// The transformation pipeline.
 fn transform(events: Vec<logic::Event>, context: TransformContext) -> () {
 	let notes = sequence_events(events, context);
 	let elements = identify_chords(notes);
@@ -976,6 +978,78 @@ mod tests {
 				octave: 5
 			}
 		);
+	}
+
+	#[test]
+	fn test_sequenced_element_ordering() {
+		let note1 = SequencedElement::Note(SequencedNote {
+			pitch: lily::AbsolutePitch {
+				name: lily::PitchName::C,
+				accidental: lily::Accidental::Natural,
+				octave: 4,
+			},
+			position: logic::Time {
+				bar: 1,
+				beat: 1,
+				division: 1,
+				ticks: 1,
+			},
+			length: logic::Time {
+				bar: 0,
+				beat: 1,
+				division: 0,
+				ticks: 0,
+			},
+		});
+
+		let note2 = SequencedElement::Note(SequencedNote {
+			pitch: lily::AbsolutePitch {
+				name: lily::PitchName::D,
+				accidental: lily::Accidental::Natural,
+				octave: 4,
+			},
+			position: logic::Time {
+				bar: 1,
+				beat: 1,
+				division: 1,
+				ticks: 1,
+			},
+			length: logic::Time {
+				bar: 0,
+				beat: 2,
+				division: 0,
+				ticks: 0,
+			},
+		});
+
+		let note3 = SequencedElement::Note(SequencedNote {
+			pitch: lily::AbsolutePitch {
+				name: lily::PitchName::E,
+				accidental: lily::Accidental::Natural,
+				octave: 4,
+			},
+			position: logic::Time {
+				bar: 1,
+				beat: 2,
+				division: 1,
+				ticks: 1,
+			},
+			length: logic::Time {
+				bar: 0,
+				beat: 1,
+				division: 0,
+				ticks: 0,
+			},
+		});
+
+		assert!(note1 < note2); // Same position, but note2 is longer
+		assert!(note1 < note3); // note3 starts later
+		assert!(note2 < note3); // note3 starts later
+
+		let mut elements = vec![note3.clone(), note1.clone(), note2.clone()];
+		elements.sort();
+
+		assert_eq!(elements, vec![note1, note2, note3]);
 	}
 
 	#[test]
