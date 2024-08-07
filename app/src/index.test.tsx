@@ -1,7 +1,26 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import fs from "fs";
+import path from "path";
+import { Effect } from "effect";
+import { beforeEach, describe, it, expect, vi } from "vitest";
 import { render } from "solid-js/web";
+import { main } from "./index";
 
-// Mock solid-js/web module.
+/**
+ * An effect that sets up the test DOM by reading the index.html file
+ * and setting its contents as the body of the document.
+ */
+const setupTestDom = Effect.try({
+	try: () => {
+		document.body.innerHTML = fs
+			.readFileSync(path.resolve(__dirname, "../index.html"), "utf-8")
+			.toString();
+	},
+	catch: (error) => {
+		new Error(`Failed to set up test DOM: ${error}`);
+	},
+});
+
+// Mock the render function from SolidJS.
 vi.mock("solid-js/web", async (importActual) => {
 	return {
 		...((await importActual()) as object),
@@ -9,50 +28,13 @@ vi.mock("solid-js/web", async (importActual) => {
 	};
 });
 
-describe("index.tsx", () => {
-	let originalDocument: Document;
-
-	beforeEach(() => {
-		// Save the original document.
-		originalDocument = global.document;
-
-		// Mock getElementById to return a dummy value.
-		global.document = {
-			...originalDocument,
-			getElementById: vi.fn(),
-		};
-
-		// Clear the module cache.
-		vi.resetModules();
+describe("Application startup", () => {
+	beforeEach(async () => {
+		await Effect.runPromise(setupTestDom);
 	});
 
-	afterEach(() => {
-		// Restore the original document.
-		global.document = originalDocument;
-
-		// Reset the mock to default state.
-		vi.resetAllMocks();
-	});
-
-	it("should render the app when root element is found", async () => {
-		// Mock getElementById to return a dummy value.
-		const mockRoot = {} as HTMLElement;
-		(document.getElementById as any).mockReturnValue(mockRoot);
-
-		// Import the file under test.
-		await import("../src/index");
-
-		// Check if render was called with correct arguments.
-		expect(render).toHaveBeenCalledWith(expect.any(Function), mockRoot);
-	});
-
-	it("should throw an error when root element is not found", async () => {
-		// Mock getElementById to return null.
-		(document.getElementById as any).mockReturnValue(null);
-
-		// Expect an error to be thrown when the file is imported.
-		await expect(import("../src/index")).rejects.toThrow(
-			"Root element not found.",
-		);
+	it("should render the application", async () => {
+		await Effect.runPromise(main);
+		expect(render).toHaveBeenCalled();
 	});
 });

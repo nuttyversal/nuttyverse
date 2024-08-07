@@ -8,6 +8,9 @@ importers:
 
   app:
     dependencies:
+      effect:
+        specifier: ^3.6.1
+        version: 3.6.1
       solid-js:
         specifier: ^1.8.19
         version: 1.8.19
@@ -3636,6 +3639,9 @@ packages:
 
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
+
+  effect@3.6.1:
+    resolution: {integrity: sha512-RdHsRMuEUKgkhs3z2d5XI5SDADX0THDx6GjP1oJAAAM/w+oT5/3BpKZyg/05VHy7YfOUdaQbcDzFO6YowkqsSQ==}
 
   ejs@3.1.10:
     resolution: {integrity: sha512-UeJmFfOrAQS8OJWPZ4qtgHyWExa088/MtK5UEyoJGFH67cDEXkZSviOiKRCZ4Xij0zxI3JECgYs3oKx+AizQBA==}
@@ -10931,6 +10937,8 @@ snapshots:
   eastasianwidth@0.2.0: {}
 
   ee-first@1.1.1: {}
+
+  effect@3.6.1: {}
 
   ejs@3.1.10:
     dependencies:
