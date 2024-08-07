@@ -50,7 +50,7 @@ describe("index.tsx", () => {
 		// Mock getElementById to return null.
 		(document.getElementById as any).mockReturnValue(null);
 
-		// Expect an error to be thrown when the file is imported
+		// Expect an error to be thrown when the file is imported.
 		await expect(import("../src/index")).rejects.toThrow(
 			"Root element not found.",
 		);
