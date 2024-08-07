@@ -3,6 +3,7 @@
 	"description": "Nuttyverse Web UI",
 	"type": "module",
 	"scripts": {
+		"test": "vitest run --coverage",
 		"start": "vite",
 		"build": "vite build",
 		"preview": "vite preview"
@@ -11,10 +12,16 @@
 		"solid-js": "^1.8.19"
 	},
 	"devDependencies": {
+		"@solidjs/testing-library": "^0.8.9",
+		"@testing-library/jest-dom": "^6.4.6",
+		"@testing-library/user-event": "^14.5.2",
+		"@vitest/coverage-v8": "^2.0.5",
+		"jsdom": "^24.1.1",
 		"sass": "^1.66.1",
 		"typescript": "^5.5.3",
 		"vite": "^5.3.5",
 		"vite-plugin-solid": "^2.10.2",
-		"vite-tsconfig-paths": "^4.3.2"
+		"vite-tsconfig-paths": "^4.3.2",
+		"vitest": "^2.0.5"
 	}
 }
