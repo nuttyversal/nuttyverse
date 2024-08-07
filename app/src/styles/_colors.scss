@@ -1,0 +1,85 @@
+// Color palette generated from Radix UI. These colors provide a
+// consistent and accessible design system for building modern,
+// visually appealing user interfaces.
+
+// Not pure black (#000), but still quite dark. This provides a softer
+// alternative to absolute black for improved visual comfort.
+$black: #070707;
+
+// A fully transparent version of our custom black. Useful for
+// transitions and overlays where invisibility is needed.
+$black-invisible: #07070700;
+
+// An off-white, but still quite bright. This offers a gentler
+// alternative to pure white (#fff) for better readability.
+$white: #fcfcfc;
+
+// A fully transparent version of our custom white. Ideal for fades
+// and overlays requiring an invisible state.
+$white-invisible: #fcfcfc00;
+
+// Custom gray palette generated with specific parameters:
+//
+// ✦ Accent:     #070707
+// ✦ Gray:       #070707
+// ✦ Background: #fcfcfc
+//
+// This palette provides a range of gray tones for various UI needs.
+$gray: (
+  light: (
+    "01": #f9f9f9,
+    "02": #f5f5f5,
+    "03": #ececec,
+    "04": #e4e4e4,
+    "05": #dddddd,
+    "06": #d5d5d5,
+    "07": #c9c9c9,
+    "08": #b7b7b7,
+    "09": #878787,
+    "10": #7d7d7d,
+    "11": #5f5f5f,
+    "12": #1f1f1f
+  ),
+  light-alpha: (
+    "01": #00000003,
+    "02": #00000007,
+    "03": #00000010,
+    "04": #00000018,
+    "05": #0000001f,
+    "06": #00000027,
+    "07": #00000034,
+    "08": #00000046,
+    "09": #00000076,
+    "10": #00000081,
+    "11": #0000009f,
+    "12": #000000e0
+  ),
+  dark: (
+    "01": #070707,
+    "02": #171717,
+    "03": #212121,
+    "04": #292929,
+    "05": #313131,
+    "06": #3a3a3a,
+    "07": #484848,
+    "08": #606060,
+    "09": #6d6d6d,
+    "10": #7a7a7a,
+    "11": #b3b3b3,
+    "12": #eeeeee
+  ),
+  dark-alpha: (
+    "01": #00000000,
+    "02": #ffffff10,
+    "03": #ffffff1b,
+    "04": #ffffff23,
+    "05": #ffffff2b,
+    "06": #ffffff34,
+    "07": #ffffff43,
+    "08": #ffffff5c,
+    "09": #ffffff69,
+    "10": #ffffff76,
+    "11": #ffffffb1,
+    "12": #ffffffee
+  )
+);

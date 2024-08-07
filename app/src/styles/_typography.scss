@@ -1,0 +1,34 @@
+// Typographic scale based on the pitch ratio (6:5) -- a minor third.
+// This scale brings harmony and rhythm to the visual design, creating
+// a balanced and pleasing typographic hierarchy.
+
+$minor-third: 1.2;
+
+$type-scale: (
+	3xs: calc(1rem / pow(#{$minor-third}, 3)),
+	2xs: calc(1rem / pow(#{$minor-third}, 2)),
+	xs: calc(1rem / pow(#{$minor-third}, 1)),
+	base: calc(1rem * pow(#{$minor-third}, 0)),
+	xl: calc(1rem * pow(#{$minor-third}, 1)),
+	2xl: calc(1rem * pow(#{$minor-third}, 2)),
+	3xl: calc(1rem * pow(#{$minor-third}, 3)),
+	4xl: calc(1rem * pow(#{$minor-third}, 4)),
+	5xl: calc(1rem * pow(#{$minor-third}, 5)),
+	6xl: calc(1rem * pow(#{$minor-third}, 6)),
+	7xl: calc(1rem * pow(#{$minor-third}, 7)),
+);
+
+* {
+	// Apply fluid typography styles to tween the base font size between
+	// 14.4px (0.9rem) and 16px (1rem) when the viewport is in between
+	// 320px (20rem) and 960px (60rem).
+	//
+	// This calculator was used to figure out the clamp parameters:
+	// https://royalfig.github.io/fluid-typography-calculator/
+	font-size: clamp(0.9rem, 0.85rem + 0.25vw, 1rem);
+
+	font-family: 'FSD Emoji', Nure, sans-serif;
+	font-variation-settings: 'opsz' 18, 'wdth' 85;
+	font-feature-settings: 'kern' 1;
+	hyphens: auto;
+}
