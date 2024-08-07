@@ -1,6 +1,8 @@
 import { Effect, Option } from "effect";
 import { render } from "solid-js/web";
+import { Experiment } from "~/components/Experiment";
 import "~/styles/index.scss";
+import { themeService } from "./services/theme";
 
 /**
  * An effect that queries the root element of the application.
@@ -27,7 +29,7 @@ const getRootElement = Effect.try({
  */
 const renderApplication = (root: HTMLElement) => {
 	return Effect.try({
-		try: () => render(() => <div>Nuttyverse</div>, root),
+		try: () => render(() => <Experiment themeService={themeService} />, root),
 		catch: (error) => new Error(`Failed to render application: ${error}.`),
 	});
 };

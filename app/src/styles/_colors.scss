@@ -18,6 +18,10 @@ $white: #fcfcfc;
 // and overlays requiring an invisible state.
 $white-invisible: #fcfcfc00;
 
+// A slightly darker off-white applied to text in dark mode to reduce
+// contrast and improve readability.
+$white-text: #cccccc;
+
 // Custom gray palette generated with specific parameters:
 //
 // ✦ Accent:     #070707
@@ -83,3 +87,16 @@ $gray: (
     "12": #ffffffee
   )
 );
+
+// Light and dark mode is implemented by toggling the 'data-theme'
+// attribute on the root HTML element.
+
+[data-theme="light"] {
+	background: $white;
+	color: $black;
+}
+
+[data-theme="dark"] {
+	background: $black;
+	color: $white-text;
+}
