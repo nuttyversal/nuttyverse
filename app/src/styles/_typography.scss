@@ -2,6 +2,10 @@
 // This scale brings harmony and rhythm to the visual design, creating
 // a balanced and pleasing typographic hierarchy.
 
+@use "sass:map";
+@use "colors";
+@use "spacing";
+
 $minor-third: 1.2;
 
 $type-scale: (
@@ -31,4 +35,35 @@ $type-scale: (
 	font-variation-settings: 'opsz' 18, 'wdth' 85;
 	font-feature-settings: 'kern' 1;
 	hyphens: auto;
+}
+
+[data-theme='dark'] {
+	--background-color: #{colors.$black};
+	--foreground-color: #{colors.$white};
+}
+
+[data-theme='light'] {
+	--background-color: #{colors.$white};
+	--foreground-color: #{colors.$black};
+}
+
+.with-drop-cap {
+	&::first-letter {
+		// [HACK] Initially, 3 em was set to span two lines (2 * 1.5 em height),
+		// but this caused three-line spans in some viewports. Tests revealed a
+		// subtle -1 px adjustment consistently achieves the desired two-line
+		// effect, preserving visual harmony across all observed screen sizes.
+		font-size: calc(3em - 1px);
+
+		float: left;
+		font-family: PragmataPro Fraktur;
+		font-variant-ligatures: none;
+		font-weight: bold;
+		line-height: 1em;
+		margin-right: map.get(spacing.$tokens, "1");
+		margin-top: map.get(spacing.$tokens, "0");
+		color: var(--foreground-color);
+		background: var(--background-color);
+		background-clip: text;
+	}
 }

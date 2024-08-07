@@ -2,7 +2,9 @@
 // rem units instead of px to support dynamic root font sizes, allowing
 // for flexible scaling across different viewport sizes.
 
-$spacing: (
+@use "sass:map";
+
+$tokens: (
   "0": 0px,
   "px": 1px,
   "0.5": 0.125rem,
@@ -42,3 +44,12 @@ $spacing: (
   "192": 48rem,
   "256": 64rem
 );
+
+p {
+	margin-top: map.get($tokens, "4");
+	margin-bottom: map.get($tokens, "4");
+}
+
+.marginless {
+	margin: 0;
+}
