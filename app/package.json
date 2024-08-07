@@ -1,6 +1,18 @@
 {
 	"name": "@nuttyverse/app",
 	"description": "Nuttyverse Web UI",
-	"version": "1.0.0",
-	"main": "index.js"
+	"type": "module",
+	"scripts": {
+		"start": "vite",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"solid-js": "^1.8.19"
+	},
+	"devDependencies": {
+		"typescript": "^5.5.3",
+		"vite": "^5.3.5",
+		"vite-plugin-solid": "^2.10.2"
+	}
 }
