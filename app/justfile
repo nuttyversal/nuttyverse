@@ -1,0 +1,16 @@
+#!/usr/bin/env -S just --justfile
+
+set dotenv-load
+
+install:
+	pnpm install
+
+test:
+	pnpm run test
+	pnpm run test-format
+
+build:
+	pnpm run build
+
+start:
+	pnpm start
