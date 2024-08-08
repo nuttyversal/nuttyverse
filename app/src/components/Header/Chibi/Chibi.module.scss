@@ -20,7 +20,7 @@
 }
 
 .button {
-	transition: all 0.2s ease-out;
+	transition: transform 0.2s ease-out;
 	cursor: pointer;
 	background: none;
 	border: none;
@@ -28,11 +28,11 @@
 	padding: 0;
 
 	// Tuck the button underneath the header by a
-	// tiny bit to ensure there is no overlap.
+	// tiny bit to ensure there is no gap.
 	transform: translateY(map-get(styles.$spacing, "px"));
 
 	&:active {
-		transform: translateY(map-get(styles.$spacing, "2"));
+		transform: translateY(map-get(styles.$spacing, "1"));
 	}
 
 	@media all {
@@ -42,6 +42,6 @@
 
 	@media screen and (min-width: map-get(styles.$spacing, "144")) {
 		opacity: 1;
-		width: map-get(styles.$spacing, "32");
+		width: map-get(styles.$spacing, "28");
 	}
 }

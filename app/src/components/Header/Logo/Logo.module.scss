@@ -20,7 +20,7 @@
 }
 
 .button {
-	width: map-get(styles.$spacing, "96");
+	width: map-get(styles.$spacing, "80");
 	cursor: pointer;
 	background: none;
 	border: none;
@@ -28,7 +28,11 @@
 	padding: 0;
 	transition: all 0.2s ease-out;
 
+	// Tuck the button underneath the header by a
+	// tiny bit to ensure there is no gap.
+	transform: translateY(map-get(styles.$spacing, "px"));
+
 	&:active {
-		transform: translateY(map-get(styles.$spacing, "2"));
+		transform: translateY(map-get(styles.$spacing, "1"));
 	}
 }
