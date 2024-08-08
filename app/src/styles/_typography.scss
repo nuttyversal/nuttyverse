@@ -47,6 +47,19 @@ $type-scale: (
 	--foreground-color: #{colors.$black};
 }
 
+a {
+	font-feature-settings: 'smcp' 1, 'c2sc' 1;
+	font-variant: all-small-caps;
+	font-variant-caps: all-small-caps;
+	text-underline-offset: 3px;
+	text-decoration: none;
+	color: var(--foreground-color);
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
 .with-drop-cap {
 	&::first-letter {
 		// [HACK] Initially, 3 em was set to span two lines (2 * 1.5 em height),
