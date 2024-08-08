@@ -8,6 +8,9 @@ importers:
 
   app:
     dependencies:
+      '@solidjs/router':
+        specifier: ^0.14.1
+        version: 0.14.1(solid-js@1.8.19)
       effect:
         specifier: ^3.6.1
         version: 3.6.1
@@ -20,7 +23,7 @@ importers:
     devDependencies:
       '@solidjs/testing-library':
         specifier: ^0.8.9
-        version: 0.8.9(solid-js@1.8.19)
+        version: 0.8.9(@solidjs/router@0.14.1(solid-js@1.8.19))(solid-js@1.8.19)
       '@testing-library/jest-dom':
         specifier: ^6.4.6
         version: 6.4.6(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(vitest@2.0.5(@types/node@20.14.10)(jsdom@24.1.1)(sass@1.72.0))
@@ -2291,6 +2294,11 @@ packages:
 
   '@sinonjs/fake-timers@10.3.0':
     resolution: {integrity: sha512-V4BG07kuYSUkTCSBHG8G8TNhM+F19jXFWnQtzj+we8DrkpSBCee9Z3Ms8yiGer/dlmhe35/Xdgyo3/0rQKg7YA==}
+
+  '@solidjs/router@0.14.1':
+    resolution: {integrity: sha512-GumQ4jbt5xDngLypAndC4EjapY/3DP0G8Az4YWEVQHdCtjHwB8IOm32eEBxE9lKpOffbtXV0r/0X0mofHJ1m5w==}
+    peerDependencies:
+      solid-js: ^1.8.6
 
   '@solidjs/testing-library@0.8.9':
     resolution: {integrity: sha512-gcjTSHwzXqy8roTrDgHTasRkrUcWjVm/7T7wjUI5WNm2BdUTTi296CorTiIGQVFZg2BVYuwtJOzzNn71Y/QQfg==}
@@ -8875,10 +8883,16 @@ snapshots:
     dependencies:
       '@sinonjs/commons': 3.0.1
 
-  '@solidjs/testing-library@0.8.9(solid-js@1.8.19)':
+  '@solidjs/router@0.14.1(solid-js@1.8.19)':
+    dependencies:
+      solid-js: 1.8.19
+
+  '@solidjs/testing-library@0.8.9(@solidjs/router@0.14.1(solid-js@1.8.19))(solid-js@1.8.19)':
     dependencies:
       '@testing-library/dom': 10.4.0
       solid-js: 1.8.19
+    optionalDependencies:
+      '@solidjs/router': 0.14.1(solid-js@1.8.19)
 
   '@storybook/addon-actions@8.1.11':
     dependencies:

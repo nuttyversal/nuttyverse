@@ -1,8 +1,9 @@
 import { Effect, Option } from "effect";
 import { render } from "solid-js/web";
-import { Experiment } from "~/components/Experiment";
+import { NuttyverseRouter } from "~/pages/router";
 import { ServiceProvider } from "~/services/context";
 import "~/styles/index.scss";
+import { ScrollLayout } from "./components/ScrollLayout";
 
 /**
  * An effect that queries the root element of the application.
@@ -33,7 +34,9 @@ const renderApplication = (root: HTMLElement) => {
 			return render(
 				() => (
 					<ServiceProvider>
-						<Experiment />
+						<ScrollLayout>
+							<NuttyverseRouter />
+						</ScrollLayout>
 					</ServiceProvider>
 				),
 				root,

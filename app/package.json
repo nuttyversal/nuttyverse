@@ -10,6 +10,7 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
+		"@solidjs/router": "^0.14.1",
 		"effect": "^3.6.1",
 		"gsap": "^3.12.5",
 		"solid-js": "^1.8.19"
