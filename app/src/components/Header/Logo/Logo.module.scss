@@ -1,0 +1,34 @@
+@use "sass:map";
+@use "../../../styles";
+
+[data-theme='light'] {
+	--background-fill-color: #{map.get(styles.$gray, "light", "01")};
+	--foreground-fill-color: #{map.get(styles.$gray, "light", "12")};
+}
+
+[data-theme='dark'] {
+	--background-fill-color: #{map.get(styles.$gray, "dark", "01")};
+	--foreground-fill-color: #{map.get(styles.$gray, "dark", "12")};
+}
+
+.background {
+	fill: var(--background-fill-color);
+}
+
+.foreground {
+	fill: var(--foreground-fill-color);
+}
+
+.button {
+	width: map-get(styles.$spacing, "96");
+	cursor: pointer;
+	background: none;
+	border: none;
+	margin: 0;
+	padding: 0;
+	transition: all 0.2s ease-out;
+
+	&:active {
+		transform: translateY(map-get(styles.$spacing, "2"));
+	}
+}

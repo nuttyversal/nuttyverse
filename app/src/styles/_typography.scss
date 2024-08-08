@@ -38,13 +38,13 @@ $type-scale: (
 }
 
 [data-theme='light'] {
-	--background-color: #{colors.$white};
-	--foreground-color: #{colors.$black};
+	--background-color: #{map.get(colors.$gray, "light", "01")};
+	--foreground-color: #{map.get(colors.$gray, "light", "12")};
 }
 
 [data-theme='dark'] {
-	--background-color: #{colors.$black};
-	--foreground-color: #{colors.$white};
+	--background-color: #{map.get(colors.$gray, "dark", "01")};
+	--foreground-color: #{map.get(colors.$gray, "dark", "12")};
 }
 
 a {

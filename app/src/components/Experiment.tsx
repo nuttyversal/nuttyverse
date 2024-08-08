@@ -1,18 +1,12 @@
-import { Context } from "effect";
-import { Chibi } from "~/components/Chibi";
+import { Header } from "~/components/Header";
 import { Link } from "~/components/Link";
-import { ThemeService } from "~/services/theme";
 import styles from "./Experiment.module.scss";
 
-type Props = {
-	themeService: Context.Tag.Service<ThemeService>;
-};
-
-const Experiment = (props: Props) => {
+const Experiment = () => {
 	return (
 		<div class={styles.container}>
 			<div class={styles.content}>
-				<Chibi themeService={props.themeService} />
+				<Header />
 
 				<p class="with-drop-cap">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec

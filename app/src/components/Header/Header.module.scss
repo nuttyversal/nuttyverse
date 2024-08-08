@@ -1,0 +1,20 @@
+@use "sass:map";
+@use "../../styles";
+
+[data-theme='light'] {
+	--border-color: #{map.get(styles.$gray, "light", "12")};
+}
+
+[data-theme='dark'] {
+	--border-color: #{map.get(styles.$gray, "dark", "12")};
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: end;
+	width: 100%;
+
+	border-bottom: map.get(styles.$spacing, "2") solid var(--border-color);
+	border-radius: map.get(styles.$spacing, "2");
+}

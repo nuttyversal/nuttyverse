@@ -1,14 +1,14 @@
 @use "sass:map";
-@use "../../styles";
+@use "../../../styles";
 
 [data-theme='light'] {
-	--background-fill-color: #{styles.$white};
-	--foreground-fill-color: #{styles.$black};
+	--background-fill-color: #{map.get(styles.$gray, "light", "01")};
+	--foreground-fill-color: #{map.get(styles.$gray, "light", "12")};
 }
 
 [data-theme='dark'] {
-	--background-fill-color: #{styles.$black};
-	--foreground-fill-color: #{styles.$white};
+	--background-fill-color: #{map.get(styles.$gray, "dark", "01")};
+	--foreground-fill-color: #{map.get(styles.$gray, "dark", "12")};
 }
 
 .background {
@@ -26,6 +26,10 @@
 	border: none;
 	margin: 0;
 	padding: 0;
+
+	// Tuck the button underneath the header by a
+	// tiny bit to ensure there is no overlap.
+	transform: translateY(map-get(styles.$spacing, "px"));
 
 	&:active {
 		transform: translateY(map-get(styles.$spacing, "2"));

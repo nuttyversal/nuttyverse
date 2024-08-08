@@ -49,6 +49,7 @@ const Chibi = (props: Props) => {
 	return (
 		<button
 			class={styles.button}
+			style={props.style}
 			aria-label="Toggle theme"
 			onMouseDown={toggleThemeImmediately}
 			onClick={toggleThemeSlowly}
