@@ -11,6 +11,9 @@ importers:
       effect:
         specifier: ^3.6.1
         version: 3.6.1
+      gsap:
+        specifier: ^3.12.5
+        version: 3.12.5
       solid-js:
         specifier: ^1.8.19
         version: 1.8.19
