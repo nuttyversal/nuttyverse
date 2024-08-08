@@ -1,0 +1,21 @@
+@use "sass:map";
+@use "../../styles";
+
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	width: 100%;
+	min-height: 100vh;
+}
+
+.content {
+	max-width: 100%;
+}
+
+.main {
+	padding-left: map.get(styles.$spacing, "4");
+	padding-right: map.get(styles.$spacing, "4");
+}
