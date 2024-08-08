@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, fireEvent } from "@solidjs/testing-library";
 import { Link } from "./Link";
 
-describe("Link Component", () => {
+describe("Link component", () => {
 	beforeEach(() => {
 		vi.stubGlobal("window", {
 			...window,
