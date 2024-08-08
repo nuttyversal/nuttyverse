@@ -3,7 +3,7 @@
 	"description": "Nuttyverse Web UI",
 	"type": "module",
 	"scripts": {
-		"test": "vitest run --coverage",
+		"test": "vitest run --coverage --reporter=verbose",
 		"test-format": "prettier --check \"**/*.{js,jsx,ts,tsx}\"",
 		"start": "vite",
 		"build": "vite build",
