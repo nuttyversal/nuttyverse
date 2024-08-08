@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render } from "@solidjs/testing-library";
+import { MockServiceProvider } from "~/services/context";
 import { Header } from "./Header";
 
 /**
@@ -22,7 +23,11 @@ describe("Header component", () => {
 	it("renders without crashing", () => {
 		// Arrange.
 		mockMatchMedia(false);
-		const { container } = render(() => <Header />);
+		const { container } = render(() => (
+			<MockServiceProvider>
+				<Header />
+			</MockServiceProvider>
+		));
 
 		// Assert.
 		expect(container.querySelector("header")).toBeTruthy();

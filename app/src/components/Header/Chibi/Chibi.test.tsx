@@ -1,13 +1,16 @@
 import { describe, it, expect } from "vitest";
 import { render, fireEvent } from "@solidjs/testing-library";
-import { Chibi } from "./Chibi";
+import { MockServiceProvider } from "~/services/context";
 import { Theme, mockThemeService } from "~/services/theme";
+import { Chibi } from "./Chibi";
 
 describe("Chibi component", () => {
 	it("renders without crashing", () => {
 		// Arrange.
 		const { container } = render(() => (
-			<Chibi themeService={mockThemeService} />
+			<MockServiceProvider>
+				<Chibi />
+			</MockServiceProvider>
 		));
 
 		// Assert.
@@ -20,11 +23,9 @@ describe("Chibi component", () => {
 		const customStyle = { color: "rgb(255, 0, 0)" };
 
 		const { container } = render(() => (
-			<Chibi
-				themeService={mockThemeService}
-				class={customClass}
-				style={customStyle}
-			/>
+			<MockServiceProvider>
+				<Chibi class={customClass} style={customStyle} />
+			</MockServiceProvider>
 		));
 
 		// Assert.
@@ -36,7 +37,9 @@ describe("Chibi component", () => {
 	it("toggles theme on mouse down", () => {
 		// Arrange.
 		const { getByRole } = render(() => (
-			<Chibi themeService={mockThemeService} />
+			<MockServiceProvider>
+				<Chibi />
+			</MockServiceProvider>
 		));
 
 		const button = getByRole("button");
@@ -51,7 +54,9 @@ describe("Chibi component", () => {
 	it("toggles theme on click (for accessibility)", () => {
 		// Arrange.
 		const { getByRole } = render(() => (
-			<Chibi themeService={mockThemeService} />
+			<MockServiceProvider>
+				<Chibi />
+			</MockServiceProvider>
 		));
 
 		const button = getByRole("button");
@@ -66,7 +71,9 @@ describe("Chibi component", () => {
 	it("has correct aria-label", () => {
 		// Arrange.
 		const { getByRole } = render(() => (
-			<Chibi themeService={mockThemeService} />
+			<MockServiceProvider>
+				<Chibi />
+			</MockServiceProvider>
 		));
 
 		// Assert.
@@ -77,7 +84,9 @@ describe("Chibi component", () => {
 	it("toggles theme correctly when clicked multiple times", () => {
 		// Arrange.
 		const { getByRole } = render(() => (
-			<Chibi themeService={mockThemeService} />
+			<MockServiceProvider>
+				<Chibi />
+			</MockServiceProvider>
 		));
 
 		const button = getByRole("button");

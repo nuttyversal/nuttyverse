@@ -1,8 +1,8 @@
-import { Context } from "effect";
 import gsap from "gsap";
-import { onMount } from "solid-js";
+import { onMount, useContext } from "solid-js";
 import { useCarmackClick } from "~/components/hooks";
-import { ThemeService, useTheme } from "~/services/theme";
+import { ServiceContext } from "~/services/context";
+import { useTheme } from "~/services/theme";
 import styles from "./Chibi.module.scss";
 
 type Props = {
@@ -15,11 +15,6 @@ type Props = {
 	 * Additional styles to apply to the SVG element.
 	 */
 	style?: Record<string, string>;
-
-	/**
-	 * The theme service used to toggle the theme.
-	 */
-	themeService: Context.Tag.Service<ThemeService>;
 };
 
 const Chibi = (props: Props) => {
@@ -39,7 +34,14 @@ const Chibi = (props: Props) => {
 	});
 
 	// Easter egg: Click the chibi to toggle the theme.
-	const { toggleTheme } = useTheme(props.themeService);
+	const services = useContext(ServiceContext);
+
+	if (!services) {
+		throw new Error("Service context not found.");
+	}
+
+	const { themeService } = services;
+	const { toggleTheme } = useTheme(themeService);
 
 	const {
 		handleMouseDown: toggleThemeImmediately,
