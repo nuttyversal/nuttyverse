@@ -5,9 +5,12 @@ import styles from "./Header.module.scss";
 
 const Header: Component = () => {
 	return (
-		<header class={styles.header}>
-			<Logo />
-			<Chibi />
+		<header>
+			<div class={styles.buttons}>
+				<Logo />
+				<Chibi />
+			</div>
+			<div class={styles.divider} />
 		</header>
 	);
 };

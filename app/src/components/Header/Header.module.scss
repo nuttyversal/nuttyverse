@@ -9,13 +9,18 @@
 	--border-color: #{map.get(styles.$gray, "dark", "12")};
 }
 
-.header {
+.buttons {
 	display: flex;
 	justify-content: space-between;
 	align-items: end;
 	width: 100%;
 
 	padding-left: map.get(styles.$spacing, "3");
-	padding-right: map.get(styles.$spacing, "3");
-	border-bottom: calc(map.get(styles.$spacing, "1") + 1px) solid var(--border-color);
+	padding-right: map.get(styles.$spacing, "2");
+}
+
+.divider {
+	width: 100%;
+	height: calc(map.get(styles.$spacing, "1") + 1px);
+	background: var(--border-color);
 }
