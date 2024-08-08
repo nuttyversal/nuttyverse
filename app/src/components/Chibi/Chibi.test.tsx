@@ -14,7 +14,7 @@ describe("Chibi component", () => {
 		expect(container.querySelector("svg")).toBeTruthy();
 	});
 
-	it("applies custom className and style", () => {
+	it("applies custom class and style", () => {
 		// Arrange.
 		const customClass = "custom-class";
 		const customStyle = { color: "rgb(255, 0, 0)" };
@@ -22,7 +22,7 @@ describe("Chibi component", () => {
 		const { container } = render(() => (
 			<Chibi
 				themeService={mockThemeService}
-				className={customClass}
+				class={customClass}
 				style={customStyle}
 			/>
 		));

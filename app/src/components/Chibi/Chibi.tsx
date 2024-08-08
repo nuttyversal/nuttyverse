@@ -9,7 +9,7 @@ type Props = {
 	/**
 	 * Additional class names to apply to the SVG element.
 	 */
-	className?: string;
+	class?: string;
 
 	/**
 	 * Additional styles to apply to the SVG element.
@@ -57,7 +57,7 @@ const Chibi = (props: Props) => {
 				xmlns="http://www.w3.org/2000/svg"
 				version="1.1"
 				viewBox="0 0 1024 958"
-				class={props.className}
+				class={props.class}
 				style={{
 					"shape-rendering": "geometricPrecision",
 					"text-rendering": "geometricPrecision",
