@@ -37,14 +37,14 @@ $type-scale: (
 	hyphens: auto;
 }
 
-[data-theme='dark'] {
-	--background-color: #{colors.$black};
-	--foreground-color: #{colors.$white};
-}
-
 [data-theme='light'] {
 	--background-color: #{colors.$white};
 	--foreground-color: #{colors.$black};
+}
+
+[data-theme='dark'] {
+	--background-color: #{colors.$black};
+	--foreground-color: #{colors.$white};
 }
 
 a {
@@ -73,8 +73,8 @@ a {
 		font-variant-ligatures: none;
 		font-weight: bold;
 		line-height: 1em;
-		margin-right: map.get(spacing.$tokens, "1");
-		margin-top: map.get(spacing.$tokens, "0");
+		margin-right: map.get(spacing.$spacing, "1");
+		margin-top: map.get(spacing.$spacing, "0");
 		color: var(--foreground-color);
 		background: var(--background-color);
 		background-clip: text;

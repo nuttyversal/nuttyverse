@@ -4,7 +4,7 @@
 
 @use "sass:map";
 
-$tokens: (
+$spacing: (
   "0": 0px,
   "px": 1px,
   "0.5": 0.125rem,
@@ -46,8 +46,8 @@ $tokens: (
 );
 
 p {
-	margin-top: map.get($tokens, "4");
-	margin-bottom: map.get($tokens, "4");
+	margin-top: map.get($spacing, "4");
+	margin-bottom: map.get($spacing, "4");
 }
 
 .marginless {
