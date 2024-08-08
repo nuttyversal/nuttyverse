@@ -1,5 +1,5 @@
 import { Header } from "~/components/Header";
-import { Link } from "~/components/Link";
+import { Footer } from "~/components/Footer";
 import styles from "./Experiment.module.scss";
 
 const Experiment = () => {
@@ -22,6 +22,8 @@ const Experiment = () => {
 						from this singularity will bloom a new digital universe! 😀
 					</p>
 				</div>
+
+				<Footer />
 			</div>
 		</div>
 	);
