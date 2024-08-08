@@ -1,7 +1,7 @@
 import { Context } from "effect";
 import gsap from "gsap";
 import { onMount } from "solid-js";
-import { useCarmackClick } from "~/components/hooks/use-carmack-click";
+import { useCarmackClick } from "~/components/hooks";
 import { ThemeService, useTheme } from "~/services/theme";
 import styles from "./Chibi.module.scss";
 
