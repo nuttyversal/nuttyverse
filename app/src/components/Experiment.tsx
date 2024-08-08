@@ -1,7 +1,7 @@
 import { Context } from "effect";
-import { ThemeService, useTheme } from "~/services/theme";
-import { Link } from "~/components/Link/Link";
-import { useCarmackClick } from "~/components/hooks";
+import { Chibi } from "~/components/Chibi";
+import { Link } from "~/components/Link";
+import { ThemeService } from "~/services/theme";
 import styles from "./Experiment.module.scss";
 
 type Props = {
@@ -9,16 +9,11 @@ type Props = {
 };
 
 const Experiment = (props: Props) => {
-	const { toggleTheme } = useTheme(props.themeService);
-
-	const {
-		handleMouseDown: toggleThemeImmediately,
-		handleClick: toggleThemeSlowly,
-	} = useCarmackClick(toggleTheme);
-
 	return (
 		<div class={styles.container}>
 			<div class={styles.content}>
+				<Chibi themeService={props.themeService} />
+
 				<p class="with-drop-cap">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
 					imperdiet vitae lorem vitae malesuada. Maecenas id nisi risus.
@@ -43,13 +38,6 @@ const Experiment = (props: Props) => {
 					</Link>{" "}
 					website.
 				</p>
-
-				<button
-					onMouseDown={toggleThemeImmediately}
-					onClick={toggleThemeSlowly}
-				>
-					Toggle theme
-				</button>
 			</div>
 		</div>
 	);

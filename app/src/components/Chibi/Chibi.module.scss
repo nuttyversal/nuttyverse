@@ -1,0 +1,43 @@
+@use "sass:map";
+@use "../../styles";
+
+[data-theme='light'] {
+	--background-fill-color: #{styles.$white};
+	--foreground-fill-color: #{styles.$black};
+}
+
+[data-theme='dark'] {
+	--background-fill-color: #{styles.$black};
+	--foreground-fill-color: #{styles.$white};
+}
+
+.background {
+	fill: var(--background-fill-color);
+}
+
+.foreground {
+	fill: var(--foreground-fill-color);
+}
+
+.button {
+	transition: all 0.2s ease-out;
+	cursor: pointer;
+	background: none;
+	border: none;
+	margin: 0;
+	padding: 0;
+
+	&:active {
+		transform: translateY(map-get(styles.$spacing, "2"));
+	}
+
+	@media all {
+		opacity: 0;
+		width: 0px;
+	}
+
+	@media screen and (min-width: map-get(styles.$spacing, "144")) {
+		opacity: 1;
+		width: map-get(styles.$spacing, "32");
+	}
+}

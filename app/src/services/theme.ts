@@ -157,4 +157,4 @@ const useTheme = (implementation: Context.Tag.Service<ThemeService>) => {
 	return { theme, toggleTheme };
 };
 
-export { ThemeService, themeService, mockThemeService, useTheme };
+export { Theme, ThemeService, themeService, mockThemeService, useTheme };
