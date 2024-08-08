@@ -18,7 +18,7 @@ const Link: ParentComponent<Props> = (props) => {
 	const navigateImmediately = (event: MouseEvent) => {
 		if (event.button === 0) {
 			if (props.newTab) {
-				window.open(props.href, "_blank");
+				window.open(props.href, "_blank", "noopener,noreferrer");
 			} else {
 				window.location.href = props.href;
 			}
@@ -28,7 +28,8 @@ const Link: ParentComponent<Props> = (props) => {
 	return (
 		<a
 			href={props.href}
-			target={props.newTab ? "_blank" : ""}
+			target={props.newTab ? "_blank" : undefined}
+			rel={props.newTab ? "noopener noreferrer" : undefined}
 			onMouseDown={navigateImmediately}
 		>
 			{props.children}
