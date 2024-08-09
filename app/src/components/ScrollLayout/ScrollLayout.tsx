@@ -1,57 +1,33 @@
-import gsap from "gsap";
-import { Flip } from "gsap/Flip";
-import { ParentComponent, createSignal, onMount } from "solid-js";
+import { ParentComponent, onMount, useContext } from "solid-js";
 import { Header } from "~/components/Header";
 import { Footer } from "~/components/Footer";
+import { ServiceContext } from "~/services/context";
 import styles from "./ScrollLayout.module.scss";
 
-gsap.registerPlugin(Flip);
-
 const ScrollLayout: ParentComponent = (props) => {
-	const [scrollClasses, setScrollClasses] = createSignal({
-		[styles.scroll]: true,
-		[styles.rolled]: true,
-	});
+	const services = useContext(ServiceContext);
 
-	const [mainClasses, setMainClasses] = createSignal({
-		[styles.main]: true,
-		[styles.rolled]: true,
-	});
+	if (!services) {
+		throw new Error("Service context is not available.");
+	}
 
-	onMount(async () => {
-		const scrollState = Flip.getState("#scroll");
+	const { transitionService } = services;
 
-		setScrollClasses((classes) => ({
-			...classes,
-			[styles.rolled]: false,
-		}));
+	let scrollContainer!: HTMLDivElement;
+	let mainContainer!: HTMLElement;
 
-		await Flip.from(scrollState, {
-			transform: "scaleX(100%)",
-			ease: "power1.out",
-			duration: 0.5,
-		});
-
-		const mainState = Flip.getState("main", {
-			props: "opacity",
-		});
-
-		setMainClasses((classes) => ({
-			...classes,
-			[styles.rolled]: false,
-		}));
-
-		await Flip.from(mainState, {
-			ease: "power1.inOut",
-			duration: 0.8,
-		});
+	onMount(() => {
+		transitionService.registerElement("scrollContainer", scrollContainer);
+		transitionService.registerElement("mainContainer", mainContainer);
 	});
 
 	return (
 		<div class={styles.container}>
-			<div id="scroll" classList={scrollClasses()}>
+			<div ref={scrollContainer} id="scroll" class={styles.scroll}>
 				<Header />
-				<main classList={mainClasses()}>{props.children}</main>
+				<main ref={mainContainer} class={styles.main}>
+					{props.children}
+				</main>
 				<Footer />
 			</div>
 		</div>

@@ -1,43 +1,35 @@
-import gsap from "gsap";
-import { Component, onMount } from "solid-js";
+import { Component, onMount, useContext } from "solid-js";
+import { ServiceContext } from "~/services/context";
 import styles from "./Logo.module.scss";
 
 const Logo: Component = () => {
+	const services = useContext(ServiceContext);
+
+	if (!services) {
+		throw new Error("Service context is not available.");
+	}
+
+	const { transitionService } = services;
+
 	onMount(() => {
-		const nTimeline = gsap.timeline({ delay: 0.55 });
-		const n = document.querySelectorAll(".n");
-
-		nTimeline.from(n, {
-			ease: "sine",
-			duration: 0.4,
-			opacity: 0,
-			y: 8,
-		});
-
-		const lettersTimeline = gsap.timeline({ delay: 0.6 });
-		const letters = document.querySelectorAll(".letter");
-
-		lettersTimeline.from(letters, {
-			ease: "sine",
-			duration: 0.4,
-			opacity: 0,
-			stagger: 0.05,
-			y: 8,
-		});
+		const letters = document.querySelectorAll<HTMLElement>(".letter");
+		transitionService.registerElement("logoButton", Array.from(letters));
 	});
 
 	return (
 		<button class={styles.button} aria-label="What does this do?">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 118 24">
 				<rect width="118" height="24" fill="transparent" />
-				<path
-					d="M13.6168 1.27604L14.9189 4.07552L17.7184 5.3776C17.892 5.46441 18.0222 5.63802 18.0222 5.83333C18.0222 6.05035 17.892 6.22396 17.7184 6.31076L14.9189 7.61285L13.6168 10.4123C13.53 10.5859 13.3564 10.6944 13.1611 10.6944C12.9441 10.6944 12.7705 10.5859 12.6837 10.4123L11.3816 7.61285L8.58211 6.31076C8.40849 6.22396 8.29999 6.05035 8.29999 5.83333C8.29999 5.63802 8.40849 5.46441 8.58211 5.3776L11.3816 4.07552L12.6837 1.27604C12.7705 1.10243 12.9441 0.972223 13.1611 0.972223C13.3564 0.972223 13.53 1.10243 13.6168 1.27604Z"
-					class={styles.foreground + " " + "n"}
-				/>
-				<path
-					d="M2.625 24V8.80469H6.51562L11.4688 15.2969V7H14.8125V20H10.9844L5.96875 13.4219V24H2.625Z"
-					class={styles.foreground + " " + "n"}
-				/>
+				<g class="letter">
+					<path
+						d="M13.6168 1.27604L14.9189 4.07552L17.7184 5.3776C17.892 5.46441 18.0222 5.63802 18.0222 5.83333C18.0222 6.05035 17.892 6.22396 17.7184 6.31076L14.9189 7.61285L13.6168 10.4123C13.53 10.5859 13.3564 10.6944 13.1611 10.6944C12.9441 10.6944 12.7705 10.5859 12.6837 10.4123L11.3816 7.61285L8.58211 6.31076C8.40849 6.22396 8.29999 6.05035 8.29999 5.83333C8.29999 5.63802 8.40849 5.46441 8.58211 5.3776L11.3816 4.07552L12.6837 1.27604C12.7705 1.10243 12.9441 0.972223 13.1611 0.972223C13.3564 0.972223 13.53 1.10243 13.6168 1.27604Z"
+						class={styles.foreground}
+					/>
+					<path
+						d="M2.625 24V8.80469H6.51562L11.4688 15.2969V7H14.8125V20H10.9844L5.96875 13.4219V24H2.625Z"
+						class={styles.foreground}
+					/>
+				</g>
 				<path
 					id="letter-2"
 					d="M21.4716 20.1562C20.7632 20.1562 20.133 20.0833 19.5809 19.9375C19.0341 19.7917 18.5705 19.5729 18.1903 19.2812C17.8153 18.9896 17.5289 18.6224 17.3309 18.1797C17.133 17.7318 17.0341 17.2109 17.0341 16.6172V11.3906H20.4559V16.4375C20.4559 16.6354 20.482 16.8099 20.5341 16.9609C20.5914 17.1068 20.6747 17.2292 20.7841 17.3281C20.8934 17.4271 21.0289 17.5026 21.1903 17.5547C21.3518 17.6016 21.5393 17.625 21.7528 17.625H21.8466C22.0601 17.625 22.245 17.6016 22.4012 17.5547C22.5627 17.5026 22.6955 17.4271 22.7997 17.3281C22.9039 17.2292 22.982 17.1068 23.0341 16.9609C23.0914 16.8099 23.12 16.6328 23.12 16.4297V11.3906H26.4091V16.6094C26.4091 17.2083 26.3127 17.7292 26.12 18.1719C25.9273 18.6146 25.6434 18.9844 25.2684 19.2812C24.8934 19.5729 24.4325 19.7917 23.8856 19.9375C23.3387 20.0833 22.7137 20.1562 22.0106 20.1562H21.4716Z"

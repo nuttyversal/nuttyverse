@@ -1,6 +1,11 @@
 import { Context } from "effect";
 import { ParentComponent, createContext } from "solid-js";
-import { mockThemeService, ThemeService, themeService } from "~/services/theme";
+import { ThemeService, mockThemeService, themeService } from "~/services/theme";
+import {
+	TransitionService,
+	mockTransitionService,
+	transitionService,
+} from "./transition";
 
 /**
  * An exhaustive list of service implementations that can be provided
@@ -8,6 +13,7 @@ import { mockThemeService, ThemeService, themeService } from "~/services/theme";
  */
 type ServiceContextType = {
 	themeService: Context.Tag.Service<ThemeService>;
+	transitionService: Context.Tag.Service<TransitionService>;
 };
 
 /**
@@ -22,6 +28,7 @@ const ServiceContext = createContext<ServiceContextType>();
 const ServiceProvider: ParentComponent = (props) => {
 	const services = {
 		themeService,
+		transitionService,
 	};
 
 	return (
@@ -38,6 +45,7 @@ const ServiceProvider: ParentComponent = (props) => {
 const MockServiceProvider: ParentComponent = (props) => {
 	const services = {
 		themeService: mockThemeService,
+		transitionService: mockTransitionService,
 	};
 
 	return (

@@ -13,7 +13,8 @@
 		"@solidjs/router": "^0.14.1",
 		"effect": "^3.6.1",
 		"gsap": "^3.12.5",
-		"solid-js": "^1.8.19"
+		"solid-js": "^1.8.19",
+		"xstate": "^5.17.1"
 	},
 	"devDependencies": {
 		"@solidjs/testing-library": "^0.8.9",

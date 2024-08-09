@@ -6,6 +6,8 @@ import { useTheme } from "~/services/theme";
 import styles from "./Chibi.module.scss";
 
 const Chibi = () => {
+	let chibi!: HTMLButtonElement;
+
 	const starConfigurations = [
 		{ id: "star1", duration: 2.5, y: 40 },
 		{ id: "star2", duration: 3, y: 40 },
@@ -13,15 +15,6 @@ const Chibi = () => {
 	];
 
 	onMount(() => {
-		const intro = gsap.timeline({ delay: 1.1 });
-		const chibi = document.getElementById("chibi");
-
-		intro.from(chibi, {
-			ease: "sine",
-			duration: 0.3,
-			opacity: 0,
-		});
-
 		for (const { id, duration, y } of starConfigurations) {
 			// Create a floating animation for each star surrounding the chibi.
 			// The stars will float up and down in a sine wave pattern.
@@ -37,8 +30,12 @@ const Chibi = () => {
 		throw new Error("Service context not found.");
 	}
 
-	const { themeService } = services;
+	const { themeService, transitionService } = services;
 	const { toggleTheme } = useTheme(themeService);
+
+	onMount(() => {
+		transitionService.registerElement("chibiButton", chibi);
+	});
 
 	const {
 		handleMouseDown: toggleThemeImmediately,
@@ -47,7 +44,7 @@ const Chibi = () => {
 
 	return (
 		<button
-			id="chibi"
+			ref={chibi}
 			class={styles.button}
 			aria-label="Toggle theme"
 			onMouseDown={toggleThemeImmediately}
