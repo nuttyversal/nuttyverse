@@ -6,16 +6,31 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-
 	width: 100%;
 	min-height: 100vh;
 }
 
-.content {
+.scroll.rolled {
+	transform: scaleX(0%);
+	opacity: 0;
+}
+
+.scroll {
 	max-width: 100%;
 }
 
 .main {
 	padding-left: map.get(styles.$spacing, "4");
 	padding-right: map.get(styles.$spacing, "4");
+	overflow: hidden;
+}
+
+.main.rolled {
+	margin-bottom: calc(-1 * map.get(styles.$spacing, "1"));
+	opacity: 0;
+	height: 0;
+}
+
+.rolled {
+	opacity: 0;
 }

@@ -5,19 +5,7 @@ import { ServiceContext } from "~/services/context";
 import { useTheme } from "~/services/theme";
 import styles from "./Chibi.module.scss";
 
-type Props = {
-	/**
-	 * Additional class names to apply to the SVG element.
-	 */
-	class?: string;
-
-	/**
-	 * Additional styles to apply to the SVG element.
-	 */
-	style?: Record<string, string>;
-};
-
-const Chibi = (props: Props) => {
+const Chibi = () => {
 	const starConfigurations = [
 		{ id: "star1", duration: 2.5, y: 40 },
 		{ id: "star2", duration: 3, y: 40 },
@@ -25,6 +13,15 @@ const Chibi = (props: Props) => {
 	];
 
 	onMount(() => {
+		const intro = gsap.timeline({ delay: 1.1 });
+		const chibi = document.getElementById("chibi");
+
+		intro.from(chibi, {
+			ease: "sine",
+			duration: 0.3,
+			opacity: 0,
+		});
+
 		for (const { id, duration, y } of starConfigurations) {
 			// Create a floating animation for each star surrounding the chibi.
 			// The stars will float up and down in a sine wave pattern.
@@ -50,8 +47,8 @@ const Chibi = (props: Props) => {
 
 	return (
 		<button
+			id="chibi"
 			class={styles.button}
-			style={props.style}
 			aria-label="Toggle theme"
 			onMouseDown={toggleThemeImmediately}
 			onClick={toggleThemeSlowly}
@@ -60,13 +57,11 @@ const Chibi = (props: Props) => {
 				xmlns="http://www.w3.org/2000/svg"
 				version="1.1"
 				viewBox="0 0 1024 958"
-				class={props.class}
 				style={{
 					"shape-rendering": "geometricPrecision",
 					"text-rendering": "geometricPrecision",
 					"fill-rule": "evenodd",
 					"clip-rule": "evenodd",
-					...props.style,
 				}}
 			>
 				<g>

@@ -3,12 +3,17 @@ import { Chibi } from "./Chibi";
 import { Logo } from "./Logo";
 import styles from "./Header.module.scss";
 
-const Header: Component = () => {
+type Props = {
+	chibiClass?: string;
+	logoClass?: string;
+};
+
+const Header: Component<Props> = (props) => {
 	return (
 		<header>
 			<div class={styles.buttons}>
-				<Logo />
-				<Chibi />
+				<Logo class={props.logoClass} />
+				<Chibi class={props.chibiClass} />
 			</div>
 			<div class={styles.divider} />
 		</header>
