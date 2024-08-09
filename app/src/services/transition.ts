@@ -55,8 +55,6 @@ const transitionMachine = createMachine({
 });
 
 const transitionService: Context.Tag.Service<TransitionService> = (() => {
-	const stateMachine = createActor(transitionMachine);
-
 	const [store, setStore] = createStore<TransitionStore>({
 		elements: {
 			scrollContainer: null,
@@ -64,7 +62,7 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 			logoButton: null,
 			chibiButton: null,
 		},
-		stateMachine,
+		stateMachine: createActor(transitionMachine),
 		currentTransition: null,
 	});
 
@@ -102,12 +100,13 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 			element.style.opacity = "0";
 		}
 
+		// Precondition: Check if all elements are registered.
 		const isReady = Object.values(store.elements).every(
 			(element) => element !== null,
 		);
 
 		if (isReady) {
-			stateMachine.send({ type: "MOUNT" });
+			store.stateMachine.send({ type: "MOUNT" });
 			console.log("All elements registered.");
 		}
 	};
@@ -229,8 +228,9 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 				// Tween from initial state to target state.
 				chibiTimeline.from(chibi, {
 					ease: "sine",
-					duration: 0.3,
+					duration: 0.4,
 					opacity: 0,
+					y: 8,
 				});
 
 				return await chibiTimeline;
@@ -250,9 +250,9 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 		return Effect.acquireRelease(acquire, release);
 	};
 
-	stateMachine.start();
+	store.stateMachine.start();
 
-	stateMachine.subscribe((state) => {
+	store.stateMachine.subscribe((state) => {
 		if (store.currentTransition) {
 			// Cancel any running transitions.
 			console.log("Transition cancelled.");
@@ -300,7 +300,7 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 				setStore("currentTransition", null);
 
 				// Send a completion event to the state machine.
-				stateMachine.send({ type: "COMPLETE" });
+				store.stateMachine.send({ type: "COMPLETE" });
 			});
 		}
 	});

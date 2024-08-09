@@ -6,7 +6,7 @@ import { useTheme } from "~/services/theme";
 import styles from "./Chibi.module.scss";
 
 const Chibi = () => {
-	let chibi!: HTMLButtonElement;
+	let chibi!: SVGSVGElement;
 
 	const starConfigurations = [
 		{ id: "star1", duration: 2.5, y: 40 },
@@ -23,7 +23,6 @@ const Chibi = () => {
 		}
 	});
 
-	// Easter egg: Click the chibi to toggle the theme.
 	const services = useContext(ServiceContext);
 
 	if (!services) {
@@ -31,10 +30,13 @@ const Chibi = () => {
 	}
 
 	const { themeService, transitionService } = services;
+
+	// Easter egg: Click the chibi to toggle the theme.
 	const { toggleTheme } = useTheme(themeService);
 
 	onMount(() => {
-		transitionService.registerElement("chibiButton", chibi);
+		const chibiElement = chibi as unknown as HTMLElement;
+		transitionService.registerElement("chibiButton", chibiElement);
 	});
 
 	const {
@@ -44,13 +46,13 @@ const Chibi = () => {
 
 	return (
 		<button
-			ref={chibi}
 			class={styles.button}
 			aria-label="Toggle theme"
 			onMouseDown={toggleThemeImmediately}
 			onClick={toggleThemeSlowly}
 		>
 			<svg
+				ref={chibi}
 				xmlns="http://www.w3.org/2000/svg"
 				version="1.1"
 				viewBox="0 0 1024 958"
