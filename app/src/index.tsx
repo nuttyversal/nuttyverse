@@ -1,6 +1,5 @@
 import { Effect, Option } from "effect";
 import { render } from "solid-js/web";
-import { ScrollLayout } from "~/components/ScrollLayout";
 import { NuttyverseRouter } from "~/pages/router";
 import { ServiceProvider } from "~/services/context";
 import "~/styles/index.scss";
@@ -34,9 +33,7 @@ const renderApplication = (root: HTMLElement) => {
 			return render(
 				() => (
 					<ServiceProvider>
-						<ScrollLayout>
-							<NuttyverseRouter />
-						</ScrollLayout>
+						<NuttyverseRouter />
 					</ServiceProvider>
 				),
 				root,
