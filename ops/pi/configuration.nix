@@ -3,8 +3,12 @@
 {
 	imports = [
 		# System Configuration
+		./system/docker.nix
 		./system/ssh.nix
 		./system/users.nix
+
+		# Container Configuration
+		./containers/pi-hole.nix
 	];
 
 	boot = {
