@@ -2,11 +2,16 @@ import { Context, Effect, Fiber } from "effect";
 import gsap from "gsap";
 import { Flip } from "gsap/Flip";
 import { createStore } from "solid-js/store";
-import { Actor, StateValue, createActor, createMachine } from "xstate";
+import { Actor, StateValue, createActor, setup } from "xstate";
 import scrollLayoutClasses from "~/components/ScrollLayout/ScrollLayout.module.scss";
 
 gsap.registerPlugin(Flip);
 
+/**
+ * A service that manages transitions between views in the application.
+ * This service orchestrates the animations that occur when the application
+ * is mounted or when the user navigates between views.
+ */
 class TransitionService extends Context.Tag("TransitionService")<
 	TransitionService,
 	{
@@ -54,32 +59,57 @@ type TransitionStore = {
 	currentTransition: Fiber.Fiber<void, unknown> | null;
 };
 
-const transitionMachine = createMachine({
+const transitionMachine = setup({
+	types: {
+		context: {} as {},
+		events: {} as
+			| { type: "START_MOUNT" }
+			| { type: "START_ROUTING" }
+			| { type: "COMPLETE_TRANSITION" }
+			| { type: "COMPLETE_ROUTING" },
+	},
+}).createMachine({
+	context: {},
 	id: "transition",
 	initial: "idle",
 	states: {
 		idle: {
 			on: {
-				START_MOUNT: "mountTransition",
-				START_ROUTING: "viewChangeTransition",
+				START_MOUNT: {
+					target: "mountTransition",
+				},
+				START_ROUTING: {
+					target: "viewChangeTransition",
+				},
 			},
 		},
 		mountTransition: {
 			on: {
-				COMPLETE_TRANSITION: "idle",
+				COMPLETE_TRANSITION: {
+					target: "idle",
+				},
 			},
 		},
 		viewChangeTransition: {
 			initial: "beforeRouting",
+			on: {
+				START_ROUTING: {
+					target: "#transition.viewChangeTransition.beforeRouting",
+				},
+			},
 			states: {
 				beforeRouting: {
 					on: {
-						COMPLETE_ROUTING: "afterRouting",
+						COMPLETE_ROUTING: {
+							target: "afterRouting",
+						},
 					},
 				},
 				afterRouting: {
 					on: {
-						COMPLETE_TRANSITION: "#transition.idle",
+						COMPLETE_TRANSITION: {
+							target: "#transition.idle",
+						},
 					},
 				},
 			},
@@ -87,6 +117,11 @@ const transitionMachine = createMachine({
 	},
 });
 
+/**
+ * A service that manages transitions between views in the application.
+ * This service orchestrates the animations that occur when the application
+ * is mounted or when the user navigates between views.
+ */
 const transitionService: Context.Tag.Service<TransitionService> = (() => {
 	const [store, setStore] = createStore<TransitionStore>({
 		elements: {
@@ -413,7 +448,7 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 			});
 		}
 
-		if (state.matches("viewChangeTransition.beforeRouting")) {
+		if (state.matches({ viewChangeTransition: "beforeRouting" })) {
 			// Query elements from the store.
 			const scrollContainer = store.elements.scrollContainer!;
 			const mainContainer = store.elements.mainContainer!;
@@ -428,7 +463,7 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 			gsap.set(mainContainer, { opacity: 0 });
 		}
 
-		if (state.matches("viewChangeTransition.afterRouting")) {
+		if (state.matches({ viewChangeTransition: "afterRouting" })) {
 			// Query elements from the store.
 			const mainContainer = store.elements.mainContainer!;
 
@@ -460,15 +495,19 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 	};
 })();
 
+/**
+ * A mock service that handles transitions between views in the application.
+ * But it doesn't actually do anything. Intended to be used for testing purposes.
+ */
 const mockTransitionService: Context.Tag.Service<TransitionService> = {
 	registerElement: () => {
-		/* Do nothing. */
+		// Do nothing.
 	},
 	signalBeforeRouting: () => {
-		/* Do nothing. */
+		// Do nothing.
 	},
 	signalAfterRouting: () => {
-		/* Do nothing. */
+		// Do nothing.
 	},
 };
 
