@@ -33,6 +33,22 @@ const Link: ParentComponent<Props> = (props) => {
 		}
 	};
 
+	// [HACK] <A> cannot be used in tests, so we need to use <a> instead.
+	// @ts-expect-error import.meta is available.
+	if (import.meta.env.MODE === "test") {
+		return (
+			<a
+				href={props.href}
+				target={props.newTab ? "_blank" : undefined}
+				rel={props.newTab ? "noopener noreferrer" : undefined}
+				onMouseDown={navigateImmediately}
+				class={props.class}
+			>
+				{props.children}
+			</a>
+		);
+	}
+
 	return (
 		<A
 			href={props.href}

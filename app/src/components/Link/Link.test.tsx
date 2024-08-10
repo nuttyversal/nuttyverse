@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, fireEvent } from "@solidjs/testing-library";
 import { Link } from "./Link";
+import { useNavigate } from "@solidjs/router";
 
 describe("Link component", () => {
 	beforeEach(() => {
@@ -11,11 +12,21 @@ describe("Link component", () => {
 				href: "http://localhost/",
 			},
 		});
+
+		vi.mock("@solidjs/router", (importActual) => {
+			const navigate = vi.fn();
+
+			return {
+				...importActual,
+				useNavigate: () => navigate,
+			};
+		});
 	});
 
 	afterEach(() => {
 		vi.unstubAllGlobals();
 		vi.restoreAllMocks();
+		vi.resetAllMocks();
 	});
 
 	it("renders correctly with basic props", () => {
@@ -60,7 +71,7 @@ describe("Link component", () => {
 		fireEvent.mouseDown(linkElement, { button: 0 });
 
 		// Assert.
-		expect(window.location.href).toBe("https://example.com");
+		expect(useNavigate()).toHaveBeenCalledWith("https://example.com");
 	});
 
 	it("does not navigate on mousedown for right click", () => {

@@ -19,6 +19,15 @@ const mockMatchMedia = (matches: boolean) => {
 	});
 };
 
+vi.mock("@solidjs/router", (importActual) => {
+	const navigate = vi.fn();
+
+	return {
+		...importActual,
+		useNavigate: () => navigate,
+	};
+});
+
 describe("Header component", () => {
 	it("renders without crashing", () => {
 		// Arrange.

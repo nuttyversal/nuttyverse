@@ -22,8 +22,10 @@ const setupTestDom = Effect.try({
 
 // Mock the render function from SolidJS.
 vi.mock("solid-js/web", async (importActual) => {
+	const module: object = await importActual();
+
 	return {
-		...((await importActual()) as object),
+		...module,
 		render: vi.fn(),
 	};
 });

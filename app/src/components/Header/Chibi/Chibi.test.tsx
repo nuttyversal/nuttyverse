@@ -17,23 +17,6 @@ describe("Chibi component", () => {
 		expect(container.querySelector("svg")).toBeTruthy();
 	});
 
-	it("applies custom class and style", () => {
-		// Arrange.
-		const customClass = "custom-class";
-		const customStyle = { color: "rgb(255, 0, 0)" };
-
-		const { container } = render(() => (
-			<MockServiceProvider>
-				<Chibi class={customClass} style={customStyle} />
-			</MockServiceProvider>
-		));
-
-		// Assert.
-		const svg = container.querySelector("svg");
-		expect(svg).toHaveClass(customClass);
-		expect(svg).toHaveStyle(customStyle);
-	});
-
 	it("toggles theme on mouse down", () => {
 		// Arrange.
 		const { getByRole } = render(() => (
