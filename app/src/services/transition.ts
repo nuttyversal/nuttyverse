@@ -164,9 +164,7 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 
 		// Side effect: Hide logo letters initially.
 		if (name === "logoButton") {
-			const letters = element.querySelectorAll(".letter");
-
-			letters.forEach((letter) => {
+			element.querySelectorAll(".letter").forEach((letter) => {
 				gsap.set(letter, { opacity: 0 });
 			});
 		}
@@ -417,15 +415,12 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 			const phaseTwo = Effect.all(
 				[
 					unrollMainContainer(mainContainer),
-					Effect.all(
-						[
-							animateLogoButton(logoButtonLetters),
-							animateChibiButton(chibiButton),
-						],
-						{ concurrency: 2 },
-					),
+					animateLogoButton(logoButtonLetters),
+					animateChibiButton(chibiButton),
 				],
-				{ concurrency: 2 },
+				{
+					concurrency: 3,
+				},
 			);
 
 			const timelineEffect = Effect.scoped(
