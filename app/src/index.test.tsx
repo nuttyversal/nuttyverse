@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { Effect } from "effect";
-import { beforeEach, describe, it } from "vitest";
+import { beforeEach, describe, it, vi } from "vitest";
 import { main } from "./index";
 
 /**
@@ -19,12 +19,29 @@ const setupTestDom = Effect.try({
 	},
 });
 
+/**
+ * Mocks the matchMedia function to return the specified matches value.
+ */
+const mockMatchMedia = (matches: boolean) => {
+	window.matchMedia = (query: string) => ({
+		matches,
+		media: query,
+		onchange: null,
+		addListener: vi.fn(),
+		removeListener: vi.fn(),
+		addEventListener: vi.fn(),
+		removeEventListener: vi.fn(),
+		dispatchEvent: vi.fn(),
+	});
+};
+
 describe("Application startup", () => {
 	beforeEach(async () => {
 		await Effect.runPromise(setupTestDom);
 	});
 
 	it("renders without crashing", async () => {
+		mockMatchMedia(false);
 		await Effect.runPromise(main);
 	});
 });
