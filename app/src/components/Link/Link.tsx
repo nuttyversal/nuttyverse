@@ -1,3 +1,4 @@
+import { A, useNavigate } from "@solidjs/router";
 import { ParentComponent } from "solid-js";
 
 type Props = {
@@ -13,6 +14,8 @@ type Props = {
 };
 
 const Link: ParentComponent<Props> = (props) => {
+	const navigate = useNavigate();
+
 	// Carmack's "Act on press" UI design principle.
 	// Experimental. This might make users angry.
 	const navigateImmediately = (event: MouseEvent) => {
@@ -20,20 +23,20 @@ const Link: ParentComponent<Props> = (props) => {
 			if (props.newTab) {
 				window.open(props.href, "_blank", "noopener,noreferrer");
 			} else {
-				window.location.href = props.href;
+				navigate(props.href);
 			}
 		}
 	};
 
 	return (
-		<a
+		<A
 			href={props.href}
 			target={props.newTab ? "_blank" : undefined}
 			rel={props.newTab ? "noopener noreferrer" : undefined}
 			onMouseDown={navigateImmediately}
 		>
 			{props.children}
-		</a>
+		</A>
 	);
 };
 
