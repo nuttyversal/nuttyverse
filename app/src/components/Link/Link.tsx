@@ -11,6 +11,11 @@ type Props = {
 	 * If enabled (`true`), opens the link in a new tab.
 	 */
 	newTab?: boolean;
+
+	/**
+	 * Additional CSS class(es) to apply to the link.
+	 */
+	class?: string;
 };
 
 const Link: ParentComponent<Props> = (props) => {
@@ -34,6 +39,7 @@ const Link: ParentComponent<Props> = (props) => {
 			target={props.newTab ? "_blank" : undefined}
 			rel={props.newTab ? "noopener noreferrer" : undefined}
 			onMouseDown={navigateImmediately}
+			class={props.class}
 		>
 			{props.children}
 		</A>

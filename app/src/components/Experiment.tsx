@@ -1,30 +1,13 @@
-import { Header } from "~/components/Header";
-import { Footer } from "~/components/Footer";
 import styles from "./Experiment.module.scss";
 
 const Experiment = () => {
 	return (
-		<div class={styles.container}>
-			<div class={styles.content}>
-				<Header />
-
-				<div class={styles.main}>
-					<p class="with-drop-cap">
-						Ahoy there, fellow navigator! Welcome to my internet expanse.
-						You might notice a seeming emptiness, but do not fret. You've
-						simply arrived early enough to witness the expansion of this
-						universe.
-					</p>
-
-					<p>
-						Just as the physical universe materialized from the Big Bang,
-						this website will similarly unfold from this point. Emerging
-						from this singularity will bloom a new digital universe! 😀
-					</p>
-				</div>
-
-				<Footer />
-			</div>
+		<div class={styles.main}>
+			<img
+				width="1284"
+				height="722"
+				src="https://wallpapergod.com/images/hd/black-aesthetic-1920X1080-wallpaper-llmli2aeu5lm9ala.webp"
+			/>
 		</div>
 	);
 };

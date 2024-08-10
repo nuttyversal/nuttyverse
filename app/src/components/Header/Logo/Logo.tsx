@@ -1,4 +1,5 @@
 import { Component, onMount, useContext } from "solid-js";
+import { Link } from "~/components/Link";
 import { ServiceContext } from "~/services/context";
 import styles from "./Logo.module.scss";
 
@@ -17,7 +18,7 @@ const Logo: Component = () => {
 	});
 
 	return (
-		<button class={styles.button} aria-label="What does this do?">
+		<Link href="/" class={styles.button} aria-label="What does this do?">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 118 24">
 				<rect width="118" height="24" fill="transparent" />
 				<g class="letter">
@@ -76,7 +77,7 @@ const Logo: Component = () => {
 					class={styles.foreground + " " + "letter"}
 				/>
 			</svg>
-		</button>
+		</Link>
 	);
 };
 
