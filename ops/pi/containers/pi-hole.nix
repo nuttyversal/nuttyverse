@@ -22,8 +22,8 @@
 						TZ = config.time.timeZone;
 						WEB_PORT = "80";
 
-						# Find randomly generated password:
-						# $ docker logs pihole | grep random
+						# Reset the password:
+						# $ docker exec -it pi-hole pihole -a -p
 					};
 				};
 			};
