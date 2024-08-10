@@ -479,6 +479,9 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 				// Clean up the fiber when the effect completes.
 				setStore("currentTransition", null);
 
+				// Clean up the initial flip state.
+				setStore("initialFlipState", null);
+
 				// Send a completion event to the state machine.
 				store.stateMachine.send({ type: "COMPLETE_TRANSITION" });
 			});
