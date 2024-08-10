@@ -12,7 +12,7 @@ class TransitionService extends Context.Tag("TransitionService")<
 	{
 		readonly registerElement: (
 			name: keyof TransitionElements,
-			element: HTMLElement | HTMLElement[],
+			element: HTMLElement,
 		) => void;
 
 		readonly signalBeforeRouting: () => void;
@@ -23,7 +23,7 @@ class TransitionService extends Context.Tag("TransitionService")<
 type TransitionElements = {
 	scrollContainer: HTMLElement | null;
 	mainContainer: HTMLElement | null;
-	logoButton: HTMLElement[] | null;
+	logoButton: HTMLElement | null;
 	chibiButton: HTMLElement | null;
 };
 
@@ -107,7 +107,7 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 	 */
 	const registerElement = (
 		name: keyof TransitionElements,
-		element: HTMLElement | HTMLElement[],
+		element: HTMLElement,
 	) => {
 		setStore({
 			...store,
@@ -118,24 +118,26 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 		});
 
 		// Side effect: Apply rolled class to hide element.
-		if (name === "scrollContainer" && !Array.isArray(element)) {
+		if (name === "scrollContainer") {
 			element.classList.add(scrollLayoutClasses.rolled);
 		}
 
 		// Side effect: Apply rolled class to hide element.
-		if (name === "mainContainer" && !Array.isArray(element)) {
+		if (name === "mainContainer") {
 			element.classList.add(scrollLayoutClasses.rolled);
 		}
 
 		// Side effect: Hide logo letters initially.
-		if (name === "logoButton" && Array.isArray(element)) {
-			element.forEach((letter) => {
+		if (name === "logoButton") {
+			const letters = element.querySelectorAll(".letter");
+
+			letters.forEach((letter) => {
 				gsap.set(letter, { opacity: 0 });
 			});
 		}
 
 		// Side effect: Hide chibi initially.
-		if (name === "chibiButton" && !Array.isArray(element)) {
+		if (name === "chibiButton") {
 			gsap.set(element, { opacity: 0 });
 		}
 
@@ -146,7 +148,6 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 
 		if (isReady) {
 			store.stateMachine.send({ type: "START_MOUNT" });
-			console.log("All elements registered.");
 		}
 	};
 
@@ -187,7 +188,6 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 				return await scrollTimeline;
 			},
 			catch: (error) => {
-				console.error(`Failed to unroll scroll container: ${error}.`);
 				return Effect.fail(error);
 			},
 		});
@@ -224,14 +224,12 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 				return await mainTimeline;
 			},
 			catch: (error) => {
-				console.error(`Failed to unroll main content: ${error}.`);
 				return Effect.fail(error);
 			},
 		});
 
 		const release = (timeline: Omit<gsap.core.Timeline, "then">) => {
 			return Effect.sync(() => {
-				console.log("Killing timelines.");
 				timeline.kill();
 			});
 		};
@@ -264,14 +262,12 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 				return await logoTimeline;
 			},
 			catch: (error) => {
-				console.error(`Failed to animate logo letters: ${error}.`);
 				return Effect.fail(error);
 			},
 		});
 
 		const release = (timeline: Omit<gsap.core.Timeline, "then">) => {
 			return Effect.sync(() => {
-				console.log("Killing timelines.");
 				timeline.kill();
 			});
 		};
@@ -305,14 +301,12 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 				return await chibiTimeline;
 			},
 			catch: (error) => {
-				console.error(`Failed to animate chibi: ${error}.`);
 				return Effect.fail(error);
 			},
 		});
 
 		const release = (timeline: Omit<gsap.core.Timeline, "then">) => {
 			return Effect.sync(() => {
-				console.log("Killing timelines.");
 				timeline.kill();
 			});
 		};
@@ -343,14 +337,12 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 				return await Promise.all([flipTimeline, contentFadeTimeline]);
 			},
 			catch: (error) => {
-				console.error(`Failed to animate view transition: ${error}.`);
 				return Effect.fail(error);
 			},
 		});
 
 		const release = (timelines: Omit<gsap.core.Timeline, "then">[]) => {
 			return Effect.sync(() => {
-				console.log("Killing timelines.");
 				timelines.forEach((timeline) => timeline.kill());
 			});
 		};
@@ -370,7 +362,6 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 
 		if (store.currentTransition) {
 			// Cancel any running transitions.
-			console.log("Transition cancelled.");
 			Effect.runFork(Effect.interruptWith(store.currentTransition.id()));
 			setStore("currentTransition", null);
 		}
@@ -382,6 +373,10 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 			const logoButton = store.elements.logoButton!;
 			const chibiButton = store.elements.chibiButton!;
 
+			const logoButtonLetters = Array.from(
+				logoButton.querySelectorAll(".letter"),
+			) as HTMLElement[];
+
 			// Orchestrate the timelines into a single effect.
 			const phaseOne = unrollScrollContainer(scrollContainer);
 			const phaseTwo = Effect.all(
@@ -389,7 +384,7 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 					unrollMainContainer(mainContainer),
 					Effect.all(
 						[
-							animateLogoButton(logoButton),
+							animateLogoButton(logoButtonLetters),
 							animateChibiButton(chibiButton),
 						],
 						{ concurrency: 2 },
@@ -409,11 +404,7 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 			const fiber = Effect.runFork(timelineEffect);
 			setStore("currentTransition", fiber);
 
-			console.log("Transition started.");
-
 			Effect.runPromise(Effect.fromFiber(fiber)).then(() => {
-				console.log("Transition completed.");
-
 				// Clean up the fiber when the effect completes.
 				setStore("currentTransition", null);
 
@@ -452,11 +443,7 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 			const fiber = Effect.runFork(timelineEffect);
 			setStore("currentTransition", fiber);
 
-			console.log("Transition started.");
-
 			Effect.runPromise(Effect.fromFiber(fiber)).then(() => {
-				console.log("Transition completed.");
-
 				// Clean up the fiber when the effect completes.
 				setStore("currentTransition", null);
 

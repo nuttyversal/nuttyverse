@@ -12,14 +12,18 @@ const Logo: Component = () => {
 
 	const { transitionService } = services;
 
+	let svg!: SVGSVGElement;
+
 	onMount(() => {
-		const letters = document.querySelectorAll<HTMLElement>(".letter");
-		transitionService.registerElement("logoButton", Array.from(letters));
+		transitionService.registerElement(
+			"logoButton",
+			svg as unknown as HTMLElement,
+		);
 	});
 
 	return (
 		<Link href="/" class={styles.button} aria-label="What does this do?">
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 118 24">
+			<svg ref={svg} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 118 24">
 				<rect width="118" height="24" fill="transparent" />
 				<g class="letter">
 					<path
