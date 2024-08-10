@@ -41,6 +41,12 @@
 		};
 	};
 
+	security = {
+		sudo = {
+			wheelNeedsPassword = false;
+		};
+	};
+
 	# This looks like something that should be updated. Don't do it!
 	# https://nixos.wiki/wiki/FAQ/When_do_I_update_stateVersion
 	system.stateVersion = "24.05"; # Did you read the comment?
