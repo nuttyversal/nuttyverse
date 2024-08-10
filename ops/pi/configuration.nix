@@ -4,6 +4,7 @@
 	imports = [
 		# System Configuration
 		./system/docker.nix
+		./system/networking.nix
 		./system/ssh.nix
 		./system/users.nix
 
