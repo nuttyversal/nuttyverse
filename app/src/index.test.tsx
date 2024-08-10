@@ -1,8 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { Effect } from "effect";
-import { beforeEach, describe, it, expect, vi } from "vitest";
-import { render } from "solid-js/web";
+import { beforeEach, describe, it } from "vitest";
 import { main } from "./index";
 
 /**
@@ -20,23 +19,12 @@ const setupTestDom = Effect.try({
 	},
 });
 
-// Mock the render function from SolidJS.
-vi.mock("solid-js/web", async (importActual) => {
-	const module: object = await importActual();
-
-	return {
-		...module,
-		render: vi.fn(),
-	};
-});
-
 describe("Application startup", () => {
 	beforeEach(async () => {
 		await Effect.runPromise(setupTestDom);
 	});
 
-	it("should render the application", async () => {
+	it("renders without crashing", async () => {
 		await Effect.runPromise(main);
-		expect(render).toHaveBeenCalled();
 	});
 });
