@@ -363,7 +363,7 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 
 				const contentFadeTimeline = gsap.to(mainContainer, {
 					delay: 0.2,
-					duration: 0.5,
+					duration: 0.3,
 					opacity: 1,
 				});
 
@@ -376,7 +376,9 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 
 		const release = (timelines: Omit<gsap.core.Timeline, "then">[]) => {
 			return Effect.sync(() => {
-				timelines.forEach((timeline) => timeline.kill());
+				timelines.forEach((timeline) => {
+					timeline.kill();
+				});
 			});
 		};
 
