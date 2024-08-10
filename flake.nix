@@ -91,7 +91,20 @@
 			specialArgs = {
 				inherit inputs;
 			};
-		};	
+		};
+
+		nixosConfigurations.nuttypi = nixpkgs.lib.nixosSystem {
+			system = "aarch64-linux";
+
+			modules = [
+				./ops/pi/configuration.nix
+				./ops/pi/configuration.hardware.nix
+			];
+
+			specialArgs = {
+				inherit inputs;
+			};
+		};
 
 		devShell = {
 			aarch64-darwin = nixpkgs.legacyPackages.aarch64-darwin.mkShell {
