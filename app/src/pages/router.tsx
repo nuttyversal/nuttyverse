@@ -1,13 +1,13 @@
 import { Route, Router } from "@solidjs/router";
-import { Experiment } from "~/components/Experiment";
 import { ScrollLayout } from "~/components/ScrollLayout";
+import { Editor } from "./Editor";
 import { Singularity } from "./Singularity";
 
 const NuttyverseRouter = () => {
 	return (
 		<Router root={ScrollLayout}>
 			<Route path="/" component={Singularity} />
-			<Route path="/experiment" component={Experiment} />
+			<Route path="/editor" component={Editor} />
 		</Router>
 	);
 };

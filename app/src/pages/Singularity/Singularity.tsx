@@ -17,7 +17,7 @@ const Singularity = () => {
 			</p>
 
 			<p>
-				Go to experiment <Link href="/experiment">here</Link>.
+				Go to editor <Link href="/editor">here</Link>.
 			</p>
 		</div>
 	);

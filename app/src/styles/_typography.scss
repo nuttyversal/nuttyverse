@@ -38,6 +38,17 @@ $type-scale: (
 	hyphens: auto;
 }
 
+.katex * {
+	// Unset all font properties to prevent conflicts with KaTeX.
+	// Otherwise, the math will be UGLY! :(
+	font-size: unset;
+	font-family: unset;
+	font-variation-settings: unset;
+	font-feature-settings: unset;
+	text-align: unset;
+	hyphens: unset;
+}
+
 [data-theme='light'] {
 	--background-color: #{map.get(colors.$gray, "light", "01")};
 	--foreground-color: #{map.get(colors.$gray, "light", "12")};
