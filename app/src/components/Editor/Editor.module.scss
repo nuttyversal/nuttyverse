@@ -84,5 +84,5 @@
 
 .content {
 	max-width: 500px;
-	margin: 0 auto;
+	margin: map.get(styles.$spacing, "8") auto;
 }
