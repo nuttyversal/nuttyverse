@@ -6,12 +6,18 @@ import {
 	mockTransitionService,
 	transitionService,
 } from "./transition";
+import {
+	LocalStorageService,
+	localStorageService,
+	mockLocalStorageService,
+} from "./local-storage";
 
 /**
  * An exhaustive list of service implementations that can be provided
  * to components in the application.
  */
 type ServiceContextType = {
+	localStorageService: Context.Tag.Service<LocalStorageService>;
 	themeService: Context.Tag.Service<ThemeService>;
 	transitionService: Context.Tag.Service<TransitionService>;
 };
@@ -27,6 +33,7 @@ const ServiceContext = createContext<ServiceContextType>();
  */
 const ServiceProvider: ParentComponent = (props) => {
 	const services = {
+		localStorageService,
 		themeService,
 		transitionService,
 	};
@@ -44,6 +51,7 @@ const ServiceProvider: ParentComponent = (props) => {
  */
 const MockServiceProvider: ParentComponent = (props) => {
 	const services = {
+		localStorageService: mockLocalStorageService,
 		themeService: mockThemeService,
 		transitionService: mockTransitionService,
 	};
