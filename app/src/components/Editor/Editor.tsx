@@ -18,37 +18,39 @@ import styles from "./Editor.module.scss";
 const Editor: Component = () => {
 	let container!: HTMLDivElement;
 
-	const [documentText, setDocumentText] = createSignal<string>("");
 	const [mdxContent, setMdxContent] = createSignal<Element | null>(null);
 
-	const compileMdx = async (update: ViewUpdate) => {
-		if (update.docChanged) {
-			// Store the document text.
-			setDocumentText(update.state.doc.toString());
+	const compileMdx = async (mdx: string) => {
+		try {
+			const { default: renderContent } = await evaluate(mdx, {
+				...runtime,
+				rehypePlugins: [rehypeKatex],
+				remarkPlugins: [remarkMath],
+			});
 
-			try {
-				const { default: renderContent } = await evaluate(
-					update.state.doc.toString(),
-					{
-						...runtime,
-						rehypePlugins: [rehypeKatex],
-						remarkPlugins: [remarkMath],
-					},
-				);
+			let Content = renderContent({
+				components: {},
+			});
 
-				let Content = renderContent({
-					components: {},
-				});
-
-				setMdxContent(Content);
-			} catch (e) {
-				console.error("Failed to compile MDX:", e);
-			}
+			setMdxContent(Content);
+		} catch (e) {
+			console.error("Failed to compile MDX:", e);
 		}
 	};
 
+	const compileWhenChanged = (update: ViewUpdate) => {
+		if (update.docChanged) {
+			localStorage.setItem("editor", update.state.doc.toString());
+			compileMdx(update.state.doc.toString());
+		}
+	};
+
+	const loadSavedDocument = () => {
+		return localStorage.getItem("editor") ?? "";
+	};
+
 	const initialState = EditorState.create({
-		doc: "",
+		doc: loadSavedDocument(),
 		extensions: [
 			vim(),
 			basicSetup,
@@ -60,7 +62,7 @@ const Editor: Component = () => {
 
 			// Compile MDX.
 			markdownLanguage,
-			EditorView.updateListener.of(compileMdx),
+			EditorView.updateListener.of(compileWhenChanged),
 		],
 	});
 
@@ -69,6 +71,8 @@ const Editor: Component = () => {
 			state: initialState,
 			parent: container,
 		});
+
+		compileMdx(loadSavedDocument());
 	});
 
 	return (
