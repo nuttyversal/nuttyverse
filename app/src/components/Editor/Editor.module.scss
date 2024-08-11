@@ -19,11 +19,6 @@
 	display: flex;
 	width: 100%;
 	height: 100%;
-
-	:global(.cm-editor *) {
-		font-family: "PragmataPro Liga", monospace !important;
-		font-size: map.get(styles.$type-scale, "xs");
-	}
 }
 
 .editor {
@@ -31,6 +26,11 @@
 	min-width: 50%;
 	max-width: 50%;
 	height: 100%;
+
+	:global(.cm-editor *) {
+		font-family: "PragmataPro Liga", monospace !important;
+		font-size: map.get(styles.$type-scale, "xs");
+	}
 
 	:global(.cm-editor) {
 		height: 100%;
