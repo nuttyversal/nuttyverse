@@ -24,6 +24,11 @@
 	}
 }
 
+:global(*) {
+	scrollbar-color: var(--gutter-foreground-color) var(--gutter-background-color);
+	scrollbar-width: thin;
+}
+
 .editor {
 	width: 50%;
 	min-width: 50%;
@@ -58,6 +63,7 @@
 
 	:global(.cm-gutters) {
 		border-right-color: var(--active-line-color);
+		border-right-width: 2px;
 	}
 
 	:global(.cm-line) {
@@ -75,7 +81,7 @@
 	height: 100%;
 	max-height: 100%;
 	padding-left: map.get(styles.$spacing, "4");
-	border-left: 2px solid var(--gutter-foreground-color);
+	border-left: 2px solid var(--active-line-color);
 	overflow-y: auto;
 }
 
