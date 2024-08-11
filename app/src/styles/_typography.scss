@@ -9,17 +9,17 @@
 $minor-third: 1.2;
 
 $type-scale: (
-	3xs: calc(1rem / pow(#{$minor-third}, 3)),
-	2xs: calc(1rem / pow(#{$minor-third}, 2)),
-	xs: calc(1rem / pow(#{$minor-third}, 1)),
-	base: calc(1rem * pow(#{$minor-third}, 0)),
-	xl: calc(1rem * pow(#{$minor-third}, 1)),
-	2xl: calc(1rem * pow(#{$minor-third}, 2)),
-	3xl: calc(1rem * pow(#{$minor-third}, 3)),
-	4xl: calc(1rem * pow(#{$minor-third}, 4)),
-	5xl: calc(1rem * pow(#{$minor-third}, 5)),
-	6xl: calc(1rem * pow(#{$minor-third}, 6)),
-	7xl: calc(1rem * pow(#{$minor-third}, 7)),
+	"3xs": calc(1rem / pow(#{$minor-third}, 3)),
+	"2xs": calc(1rem / pow(#{$minor-third}, 2)),
+	"xs": calc(1rem / pow(#{$minor-third}, 1)),
+	"base": calc(1rem * pow(#{$minor-third}, 0)),
+	"xl": calc(1rem * pow(#{$minor-third}, 1)),
+	"2xl": calc(1rem * pow(#{$minor-third}, 2)),
+	"3xl": calc(1rem * pow(#{$minor-third}, 3)),
+	"4xl": calc(1rem * pow(#{$minor-third}, 4)),
+	"5xl": calc(1rem * pow(#{$minor-third}, 5)),
+	"6xl": calc(1rem * pow(#{$minor-third}, 6)),
+	"7xl": calc(1rem * pow(#{$minor-third}, 7)),
 );
 
 * {
@@ -57,6 +57,28 @@ $type-scale: (
 [data-theme='dark'] {
 	--background-color: #{map.get(colors.$gray, "dark", "01")};
 	--foreground-color: #{map.get(colors.$gray, "dark", "12")};
+}
+
+$heading-sizes: (
+	"h1": "4xl",
+	"h2": "3xl",
+	"h3": "2xl",
+	"h4": "xl",
+	"h5": "base",
+	"h6": "xs"
+);
+
+@each $heading, $size in $heading-sizes {
+	#{$heading} {
+		font-size: map.get($type-scale, $size);
+		font-variation-settings: 'opsz' 18, 'wdth' 75;
+		font-weight: 500;
+		line-height: 1.1;
+		text-transform: uppercase;
+		text-align: unset;
+		border-bottom: 2px solid;
+		letter-spacing: 0.03rem;
+	}
 }
 
 a {
