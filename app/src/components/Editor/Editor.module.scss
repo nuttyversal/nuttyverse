@@ -26,11 +26,6 @@
 	}
 }
 
-:global(*) {
-	scrollbar-color: var(--foreground-color) var(--background-color);
-	scrollbar-width: thin;
-}
-
 .editor {
 	width: 50%;
 	min-width: 50%;
