@@ -1,6 +1,18 @@
 @use "sass:map";
 @use "../../styles";
 
+[data-theme='light'] {
+	--gutter-background-color: #{map.get(styles.$gray, "light", "01")};
+	--gutter-foreground-color: #{map.get(styles.$gray, "light", "12")};
+	--active-line-color: #{map.get(styles.$gray, "light", "03")};
+}
+
+[data-theme='dark'] {
+	--gutter-background-color: #{map.get(styles.$gray, "dark", "01")};
+	--gutter-foreground-color: #{map.get(styles.$gray, "dark", "12")};
+	--active-line-color: #{map.get(styles.$gray, "dark", "03")};
+}
+
 .container {
 	display: flex;
 	width: 100%;
@@ -22,11 +34,34 @@
 		height: 100%;
 	}
 
+	:global(::selection) {
+		background-color: var(--gutter-foreground-color);
+		color: var(--gutter-background-color);
+	}
+
+	:global(&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground) {
+		background-color: var(--gutter-foreground-color);
+	}
+
+	:global(.cm-selectionBackground) {
+		background-color: var(--gutter-foreground-color);
+	}
+
+	:global(.cm-gutter) {
+		background-color: var(--gutter-background-color);
+		color: var(--gutter-foreground-color);
+	}
+
+	:global(.cm-activeLineGutter) {
+		background-color: var(--active-line-color);
+	}
+
 	:global(.cm-gutters) {
-		margin-right: map.get(styles.$spacing, "2");
+		border-right-color: var(--active-line-color);
 	}
 
 	:global(.cm-line) {
+		padding-left: map.get(styles.$spacing, "2");
 		line-height: 1.6;
 	}
 
@@ -40,7 +75,7 @@
 	height: 100%;
 	max-height: 100%;
 	padding-left: map.get(styles.$spacing, "4");
-	border-left: 2px solid map.get(styles.$gray, "light", "12");
+	border-left: 2px solid var(--gutter-foreground-color);
 	overflow-y: auto;
 }
 
