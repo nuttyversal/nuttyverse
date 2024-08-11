@@ -2,14 +2,16 @@
 @use "../../styles";
 
 [data-theme='light'] {
-	--gutter-background-color: #{map.get(styles.$gray, "light", "01")};
-	--gutter-foreground-color: #{map.get(styles.$gray, "light", "12")};
+	--background-color: #{map.get(styles.$gray, "light", "01")};
+	--foreground-color: #{map.get(styles.$gray, "light", "12")};
+	--foreground-light-color: #{map.get(styles.$gray, "light", "11")};
 	--active-line-color: #{map.get(styles.$gray, "light", "03")};
 }
 
 [data-theme='dark'] {
-	--gutter-background-color: #{map.get(styles.$gray, "dark", "01")};
-	--gutter-foreground-color: #{map.get(styles.$gray, "dark", "12")};
+	--background-color: #{map.get(styles.$gray, "dark", "01")};
+	--foreground-color: #{map.get(styles.$gray, "dark", "12")};
+	--foreground-light-color: #{map.get(styles.$gray, "light", "11")};
 	--active-line-color: #{map.get(styles.$gray, "dark", "03")};
 }
 
@@ -25,7 +27,7 @@
 }
 
 :global(*) {
-	scrollbar-color: var(--gutter-foreground-color) var(--gutter-background-color);
+	scrollbar-color: var(--foreground-color) var(--background-color);
 	scrollbar-width: thin;
 }
 
@@ -40,21 +42,21 @@
 	}
 
 	:global(::selection) {
-		background-color: var(--gutter-foreground-color);
-		color: var(--gutter-background-color);
+		background-color: var(--foreground-color);
+		color: var(--background-color);
 	}
 
 	:global(&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground) {
-		background-color: var(--gutter-foreground-color);
+		background-color: var(--foreground-color);
 	}
 
 	:global(.cm-selectionBackground) {
-		background-color: var(--gutter-foreground-color);
+		background-color: var(--foreground-color);
 	}
 
 	:global(.cm-gutter) {
-		background-color: var(--gutter-background-color);
-		color: var(--gutter-foreground-color);
+		background-color: var(--background-color);
+		color: var(--foreground-light-color);
 	}
 
 	:global(.cm-activeLineGutter) {
