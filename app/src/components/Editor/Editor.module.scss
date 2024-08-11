@@ -22,6 +22,10 @@
 		height: 100%;
 	}
 
+	:global(.cm-gutters) {
+		margin-right: map.get(styles.$spacing, "2");
+	}
+
 	:global(.cm-line) {
 		line-height: 1.6;
 	}
