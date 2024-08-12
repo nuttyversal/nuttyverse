@@ -54,13 +54,15 @@ $type-scale: (
 }
 
 [data-theme='light'] {
-	--background-color: #{map.get(colors.$gray, "light", "01")};
-	--foreground-color: #{map.get(colors.$gray, "light", "12")};
+	--gray-01: #{map.get(colors.$gray, "light", "01")};
+	--gray-11: #{map.get(colors.$gray, "light", "11")};
+	--gray-12: #{map.get(colors.$gray, "light", "12")};
 }
 
 [data-theme='dark'] {
-	--background-color: #{map.get(colors.$gray, "dark", "01")};
-	--foreground-color: #{map.get(colors.$gray, "dark", "12")};
+	--gray-01: #{map.get(colors.$gray, "dark", "01")};
+	--gray-11: #{map.get(colors.$gray, "dark", "11")};
+	--gray-12: #{map.get(colors.$gray, "dark", "12")};
 }
 
 $heading-sizes: (
@@ -79,7 +81,7 @@ $heading-sizes: (
 		font-weight: 500;
 		line-height: 1.1;
 		text-transform: uppercase;
-		text-align: unset;
+		text-align: left;
 		border-bottom: 2px solid;
 		letter-spacing: 0.03rem;
 	}
@@ -91,7 +93,7 @@ a {
 	font-variant-caps: all-small-caps;
 	text-underline-offset: 3px;
 	text-decoration: none;
-	color: var(--foreground-color);
+	color: var(--gray-12);
 
 	&:hover {
 		text-decoration: underline;
@@ -113,8 +115,27 @@ a {
 		line-height: 1em;
 		margin-right: map.get(spacing.$spacing, "1");
 		margin-top: map.get(spacing.$spacing, "0");
-		color: var(--foreground-color);
-		background: var(--background-color);
+		color: var(--gray-12);
+		background: var(--gray-01);
 		background-clip: text;
 	}
+}
+
+code {
+	background: var(--gray-11);
+	color: var(--gray-01);
+
+	font-family: PragmataPro Liga;
+	font-size: map.get($type-scale, "xs");
+
+	margin-left: map.get(spacing.$spacing, "0.5");
+	margin-right: map.get(spacing.$spacing, "0.5");
+	padding-top: map.get(spacing.$spacing, "0.5");
+	padding-bottom: map.get(spacing.$spacing, "0.5");
+	padding-left: map.get(spacing.$spacing, "1");
+	padding-right: map.get(spacing.$spacing, "1");
+	border-radius: map.get(spacing.$spacing, "1");
+
+	// Prevent slicing over line breaks.
+	box-decoration-break: clone;
 }
