@@ -6,13 +6,11 @@ import { EditorState } from "@codemirror/state";
 import { EditorView, ViewUpdate, keymap } from "@codemirror/view";
 import { vim } from "@replit/codemirror-vim";
 
-import "katex/dist/katex.css";
-
 import { Effect, Option } from "effect";
 import {
 	Component,
+	createResource,
 	createSignal,
-	JSX,
 	onCleanup,
 	onMount,
 	useContext,
@@ -22,11 +20,10 @@ import { LocalStorageService } from "~/services/local-storage";
 import styles from "./Editor.module.scss";
 import { compileMdx } from "./compiler";
 
+import "katex/dist/katex.css";
+
 const Editor: Component = () => {
 	let container!: HTMLDivElement;
-
-	const [editorView, setEditorView] = createSignal<EditorView | null>(null);
-	const [mdxContent, setMdxContent] = createSignal<JSX.Element | null>(null);
 
 	const services = useContext(ServiceContext);
 
@@ -36,22 +33,27 @@ const Editor: Component = () => {
 
 	const { localStorageService } = services;
 
-	// When the document changes, save the content to local storage.
-	// Then compile the content into JSX and update the output.
-	const compileWhenChanged = (update: ViewUpdate) => {
+	const [editorView, setEditorView] = createSignal<EditorView | null>(null);
+	const [documentContent, setDocumentContent] = createSignal<string>("");
+
+	// When the document content changes, compile the MDX content.
+	const [mdxContent] = createResource(
+		documentContent,
+		async (documentContent) => {
+			const compileEffect = compileMdx(documentContent);
+			return await Effect.runPromise(compileEffect);
+		},
+	);
+
+	// When the document is updated, save the content to local storage.
+	const saveOnChange = (update: ViewUpdate) => {
 		return Effect.runPromise(
 			Effect.gen(function* () {
 				if (update.docChanged) {
-					// Get the document content.
 					const documentContent = update.state.doc.toString();
-
-					// Save the document content to local storage.
 					const localStorage = yield* LocalStorageService;
 					yield* localStorage.setItem("editor", documentContent);
-
-					// Compile the document content into JSX.
-					const content = yield* compileMdx(documentContent);
-					setMdxContent(content);
+					setDocumentContent(documentContent);
 				}
 			}).pipe(
 				Effect.provideService(LocalStorageService, localStorageService),
@@ -66,7 +68,10 @@ const Editor: Component = () => {
 		const maybeDocument = yield* localStorage.getItem("editor");
 
 		// Default to an empty string if the document is not found.
-		return Option.getOrElse(maybeDocument, () => "");
+		const documentContent = Option.getOrElse(maybeDocument, () => "");
+
+		setDocumentContent(documentContent);
+		return documentContent;
 	});
 
 	// An effect that sets up the CodeMirror editor with custom config,
@@ -86,30 +91,24 @@ const Editor: Component = () => {
 
 					// Compile MDX.
 					markdownLanguage,
-					EditorView.updateListener.of(compileWhenChanged),
+					EditorView.updateListener.of(saveOnChange),
 				],
 			});
 
-			return new EditorView({
-				state: initialState,
-				parent: container,
-			});
+			setEditorView(
+				new EditorView({
+					state: initialState,
+					parent: container,
+				}),
+			);
 		});
 	};
 
 	onMount(() => {
 		Effect.runPromise(
 			Effect.gen(function* () {
-				// Load the saved document content from local storage.
 				const document = yield* loadSavedDocument;
-
-				// Set up the CodeMirror editor.
-				const editorView = yield* setupEditor(document);
-				setEditorView(editorView);
-
-				// Compile the document content into JSX.
-				const content = yield* compileMdx(document);
-				setMdxContent(content);
+				yield* setupEditor(document);
 			}).pipe(
 				Effect.provideService(LocalStorageService, localStorageService),
 			),
