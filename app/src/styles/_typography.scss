@@ -49,6 +49,10 @@ $type-scale: (
 	hyphens: unset;
 }
 
+.katex-display {
+	margin-top: -#{map.get(spacing.$spacing, "3")};
+}
+
 [data-theme='light'] {
 	--background-color: #{map.get(colors.$gray, "light", "01")};
 	--foreground-color: #{map.get(colors.$gray, "light", "12")};
