@@ -71,6 +71,10 @@
 	:global(.cm-focused) {
 		outline: none;
 	}
+
+	:global(.ͼc) {
+		color: var(--foreground-color);
+	}
 }
 
 .output {
