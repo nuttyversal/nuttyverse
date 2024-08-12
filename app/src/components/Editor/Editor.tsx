@@ -9,7 +9,14 @@ import { vim } from "@replit/codemirror-vim";
 import "katex/dist/katex.css";
 
 import { Effect, Option } from "effect";
-import { Component, createSignal, JSX, onMount, useContext } from "solid-js";
+import {
+	Component,
+	createSignal,
+	JSX,
+	onCleanup,
+	onMount,
+	useContext,
+} from "solid-js";
 import { ServiceContext } from "~/services/context";
 import { LocalStorageService } from "~/services/local-storage";
 import styles from "./Editor.module.scss";
@@ -18,6 +25,7 @@ import { compileMdx } from "./compiler";
 const Editor: Component = () => {
 	let container!: HTMLDivElement;
 
+	const [editorView, setEditorView] = createSignal<EditorView | null>(null);
 	const [mdxContent, setMdxContent] = createSignal<JSX.Element | null>(null);
 
 	const services = useContext(ServiceContext);
@@ -82,7 +90,7 @@ const Editor: Component = () => {
 				],
 			});
 
-			new EditorView({
+			return new EditorView({
 				state: initialState,
 				parent: container,
 			});
@@ -96,7 +104,8 @@ const Editor: Component = () => {
 				const document = yield* loadSavedDocument;
 
 				// Set up the CodeMirror editor.
-				yield* setupEditor(document);
+				const editorView = yield* setupEditor(document);
+				setEditorView(editorView);
 
 				// Compile the document content into JSX.
 				const content = yield* compileMdx(document);
@@ -105,6 +114,14 @@ const Editor: Component = () => {
 				Effect.provideService(LocalStorageService, localStorageService),
 			),
 		);
+	});
+
+	onCleanup(() => {
+		const view = editorView();
+
+		if (view) {
+			view.destroy();
+		}
 	});
 
 	return (
