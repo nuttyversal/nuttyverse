@@ -86,7 +86,7 @@ $relative-spacing: (
   "256": 64em
 );
 
-h1, h2, h3, h4, h5, h6, p {
+h1, h2, h3, h4, h5, h6, p, pre {
 	margin-top: map.get($relative-spacing, "4");
 	margin-bottom: map.get($relative-spacing, "2");
 

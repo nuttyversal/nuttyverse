@@ -1,0 +1,42 @@
+@use "sass:map";
+@use "../../styles";
+
+[data-theme='light'] {
+	--gray-02: #{map.get(styles.$gray, "light", "02")};
+	--gray-11: #{map.get(styles.$gray, "light", "11")};
+}
+
+[data-theme='dark'] {
+	--gray-02: #{map.get(styles.$gray, "dark", "02")};
+	--gray-11: #{map.get(styles.$gray, "dark", "11")};
+}
+
+.container {
+	width: "100%";
+	background: var(--gray-02);
+	border-radius: map.get(styles.$spacing, "1");
+	padding-left: map.get(styles.$spacing, "4");
+	padding-right: map.get(styles.$spacing, "4");
+
+	code {
+		background: var(--gray-02);
+		overflow-x: auto;
+	}
+}
+
+:global(.hljs-keyword) {
+	font-weight: 600;
+	font-feature-settings: 'ss06' 1;
+}
+
+:global(.hljs-title) {
+	font-weight: 600;
+}
+
+:global(.hljs-attr) {
+	font-weight: 600;
+}
+
+:global(.hljs-comment) {
+	color: var(--gray-11);
+}

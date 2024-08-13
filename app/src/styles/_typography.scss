@@ -139,3 +139,18 @@ code {
 	// Prevent slicing over line breaks.
 	box-decoration-break: clone;
 }
+
+pre > code {
+	color: unset;
+	width: 100%;
+	padding-top: map.get(spacing.$spacing, "2");
+	padding-bottom: map.get(spacing.$spacing, "2");
+	display: block;
+	overflowX: auto;
+}
+
+pre > code, pre > code * {
+	font-family: PragmataPro Liga;
+	font-size: map.get($type-scale, "xs");
+	tab-size: 3;
+}
