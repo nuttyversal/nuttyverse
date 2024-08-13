@@ -6,8 +6,9 @@ import remarkMath from "remark-math";
 import { JSX } from "solid-js";
 import * as runtime from "solid-js/h/jsx-runtime";
 import { Plugin } from "unified";
-import { Node } from "unist";
+import { Node, Parent } from "unist";
 import { visit } from "unist-util-visit";
+import { CodeBlock } from "~/components/CodeBlock";
 import { Link } from "~/components/Link";
 
 /**
@@ -15,6 +16,7 @@ import { Link } from "~/components/Link";
  * Components must be registered here to be used in MDX content.
  */
 const componentRegistry = {
+	CodeBlock,
 	Link,
 };
 
@@ -29,7 +31,7 @@ const compileMdx = (
 			const { default: renderContent } = await evaluate(mdx, {
 				...runtime,
 				rehypePlugins: [rehypeKatex, rewriteLinks],
-				remarkPlugins: [remarkMath],
+				remarkPlugins: [remarkMath, rewriteCodeBlocks],
 			});
 
 			return renderContent({
@@ -42,12 +44,52 @@ const compileMdx = (
 };
 
 /**
+ * Rewrite code block elements into `CodeBlock` component instances.
+ */
+const rewriteCodeBlocks: Plugin = () => {
+	// Inferred from the console output.
+	// Does this type exist somewhere?
+	type RemarkCode = (Node | Parent) & {
+		lang: string;
+		value: string;
+	};
+
+	return (tree) => {
+		visit(tree, "code", (node: RemarkCode, index, parent: RemarkCode) => {
+			if (parent != null && index != null) {
+				const component = {
+					type: "mdxJsxFlowElement",
+					name: "CodeBlock",
+					attributes: [
+						{
+							type: "mdxJsxAttribute",
+							name: "code",
+							value: node.value,
+						},
+						{
+							type: "mdxJsxAttribute",
+							name: "language",
+							value: node.lang ?? "",
+						},
+					],
+					children: [] as Node[],
+				};
+
+				if ("children" in parent) {
+					parent.children[index] = component;
+				}
+			}
+		});
+	};
+};
+
+/**
  * Rewrite `<a>` elements into `Link` component instances.
  */
 const rewriteLinks: Plugin = () => {
 	// Inferred from the console output.
 	// Does this type exist somewhere?
-	type RemarkElement = {
+	type RehypeElement = {
 		tagName: string;
 		properties?: Record<string, unknown>;
 		children: Node[];
@@ -57,7 +99,7 @@ const rewriteLinks: Plugin = () => {
 		visit(
 			tree,
 			"element",
-			(node: RemarkElement, index, parent: RemarkElement) => {
+			(node: RehypeElement, index, parent: RehypeElement) => {
 				if (node.tagName === "a") {
 					const href = node.properties?.href as string;
 
