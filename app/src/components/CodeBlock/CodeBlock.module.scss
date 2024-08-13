@@ -33,6 +33,12 @@
 	font-weight: 600;
 }
 
+:global(.hljs-property) {
+	color: var(--gray-11);
+	font-weight: 600;
+	font-style: italic;
+}
+
 :global(.hljs-attr) {
 	font-weight: 600;
 }
