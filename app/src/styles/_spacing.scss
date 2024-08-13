@@ -106,3 +106,21 @@ h1, h2, h3, h4, h5, h6 {
 .marginless {
 	margin: 0;
 }
+
+// Allows child elements to span full width while maintaining consistent
+// horizontal padding for text content. Headings and paragraphs receive
+// padding, allowing other elements (e.g., images) to bleed to edges.
+
+.with-full-bleed {
+	width: 100%;
+
+	& > p {
+		padding-left: map.get($spacing, "4");
+		padding-right: map.get($spacing, "4");
+	}
+
+	& > h1, & > h2, & > h3, & > h4, & > h5, & > h6 {
+		padding-left: map.get($spacing, "4");
+		padding-right: map.get($spacing, "4");
+	}
+}
