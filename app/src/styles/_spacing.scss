@@ -86,9 +86,10 @@ $relative-spacing: (
   "256": 64em
 );
 
-h1, h2, h3, h4, h5, h6, p, pre {
+h1, h2, h3, h4, h5, h6 {
 	margin-top: map.get($relative-spacing, "4");
 	margin-bottom: map.get($relative-spacing, "2");
+	padding-bottom: map.get($spacing, "0.5");
 
 	&:first-child {
 		margin-top: 0;
@@ -99,8 +100,30 @@ h1, h2, h3, h4, h5, h6, p, pre {
 	}
 }
 
-h1, h2, h3, h4, h5, h6 {
-	padding-bottom: map.get($spacing, "0.5");
+p, img {
+	margin-top: map.get($relative-spacing, "4");
+	margin-bottom: map.get($relative-spacing, "4");
+
+	&:first-child {
+		margin-top: 0;
+	}
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+pre {
+	margin-top: map.get($relative-spacing, "6");
+	margin-bottom: map.get($relative-spacing, "6");
+
+	&:first-child {
+		margin-top: 0;
+	}
+
+	&:last-child {
+		margin-bottom: 0;
+	}
 }
 
 .marginless {
