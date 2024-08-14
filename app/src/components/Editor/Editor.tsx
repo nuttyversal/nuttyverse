@@ -15,6 +15,7 @@ import {
 	onMount,
 	useContext,
 } from "solid-js";
+import { ScrollContainer } from "~/components/ScrollContainer";
 import { ServiceContext } from "~/services/context";
 import { LocalStorageService } from "~/services/local-storage";
 import styles from "./Editor.module.scss";
@@ -125,10 +126,10 @@ const Editor: Component = () => {
 
 	return (
 		<div class={styles.container}>
-			<div class={styles.editor} ref={container}></div>
-			<div class={styles.output}>
+			<div class={styles.editor} ref={container} />
+			<ScrollContainer class={styles.output}>
 				<div class={styles.content}>{mdxContent()}</div>
-			</div>
+			</ScrollContainer>
 		</div>
 	);
 };

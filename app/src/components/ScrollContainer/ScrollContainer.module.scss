@@ -1,0 +1,42 @@
+@use "sass:map";
+@use "../../styles";
+
+[data-theme='light'] {
+	--gray-01: map.get(styles.$gray, "light", "01");
+}
+
+[data-theme='dark'] {
+	--gray-01: map.get(styles.$gray, "dark", "01");
+}
+
+.outer-container {
+	position: relative;
+	overflow-y: hidden;
+	height: 100%;
+}
+
+.inner-container {
+	position: relative;
+	overflow-y: auto;
+	height: 100%;
+}
+
+.gradient-overlay {
+	position: absolute;
+	left: 0;
+	right: 0;
+
+	height: map.get(styles.$spacing, "24");
+	pointer-events: none;
+	z-index: 3000;
+}
+
+.gradient-overlay.top {
+	top: 0;
+	background: linear-gradient(180deg, var(--gray-01) 0%, transparent 100%);
+}
+
+.gradient-overlay.bottom {
+	bottom: 0;
+	background: linear-gradient(0deg, var(--gray-01) 0%, transparent 100%);
+}
