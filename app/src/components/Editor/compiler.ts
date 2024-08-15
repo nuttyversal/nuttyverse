@@ -126,7 +126,7 @@ const rewriteLinks: Plugin = () => {
 };
 
 /**
- * Render KaTeX math expressions in MDX content.
+ * Render KaTeX math expressions.
  */
 const renderKaTeX: Plugin = () => {
 	// Inferred from the console output.
@@ -155,12 +155,8 @@ const renderKaTeX: Plugin = () => {
 				const isMathInline = classes.includes("math-inline");
 
 				if (!isMathDisplay && !isMathInline) {
-					// Skip.
 					return;
 				}
-
-				// Get the parent element.
-				const parent = parents[parents.length - 1];
 
 				try {
 					// Get the KaTeX expression.
@@ -172,23 +168,20 @@ const renderKaTeX: Plugin = () => {
 						throwOnError: true,
 					});
 
-					// Replace the element with the KaTeX result.
-					const index = parent.children.indexOf(element);
-
-					// Determine the tag name.
-					const tagName = isMathDisplay ? "div" : "span";
-
-					// New element.
-					const resultElement = {
+					// Create new element with rendered expression.
+					const render = {
 						type: "element",
-						tagName,
-						value: "",
+						value: "<satisfy-type-decl>",
+						tagName: isMathDisplay ? "div" : "span",
 						properties: {
 							innerHTML: result,
 						},
 					};
 
-					parent.children.splice(index, 1, resultElement);
+					// Replace unrendered element with rendered element.
+					const parent = parents[parents.length - 1];
+					const index = parent.children.indexOf(element);
+					parent.children.splice(index, 1, render);
 				} catch (e) {
 					console.error("Failed to render KaTeX:", e);
 				}
