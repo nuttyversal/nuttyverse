@@ -1,5 +1,12 @@
 import gsap from "gsap";
-import { JSX, onMount, ParentComponent } from "solid-js";
+import {
+	createEffect,
+	JSX,
+	onMount,
+	ParentComponent,
+	useContext,
+} from "solid-js";
+import { ServiceContext } from "~/services/context";
 import styles from "./ScrollContainer.module.scss";
 
 type Props = {
@@ -12,7 +19,15 @@ const ScrollContainer: ParentComponent<Props> = (props) => {
 	let gradientTop!: HTMLDivElement;
 	let gradientBottom!: HTMLDivElement;
 
-	const handleScroll = () => {
+	const services = useContext(ServiceContext);
+
+	if (!services) {
+		throw new Error("Service context is not available.");
+	}
+
+	const { transitionService } = services;
+
+	const updateGradient = () => {
 		const { scrollTop, scrollHeight, clientHeight } = container;
 
 		// Calculate the opacity of the fade gradient overlay.
@@ -40,13 +55,20 @@ const ScrollContainer: ParentComponent<Props> = (props) => {
 
 	onMount(() => {
 		// Initialize.
-		handleScroll();
+		updateGradient();
 
 		// Handle updates.
-		container.addEventListener("scroll", handleScroll);
+		container.addEventListener("scroll", updateGradient);
 
 		// Clean up.
-		return () => container.removeEventListener("scroll", handleScroll);
+		return () => container.removeEventListener("scroll", updateGradient);
+	});
+
+	createEffect(() => {
+		// Wait until transition animations are complete.
+		if (transitionService.state()?.match("idle")) {
+			updateGradient();
+		}
 	});
 
 	const outerContainerClasses = [styles["outer-container"], props.class]

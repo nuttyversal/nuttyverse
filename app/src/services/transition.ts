@@ -1,8 +1,9 @@
 import { Context, Effect, Fiber } from "effect";
 import gsap from "gsap";
 import { Flip } from "gsap/Flip";
+import { Accessor, createMemo, createSignal } from "solid-js";
 import { createStore } from "solid-js/store";
-import { Actor, StateValue, createActor, setup } from "xstate";
+import { Actor, SnapshotFrom, StateValue, createActor, setup } from "xstate";
 import scrollLayoutClasses from "~/components/ScrollLayout/ScrollLayout.module.scss";
 
 gsap.registerPlugin(Flip);
@@ -15,13 +16,32 @@ gsap.registerPlugin(Flip);
 class TransitionService extends Context.Tag("TransitionService")<
 	TransitionService,
 	{
+		/**
+		 * Registers an element with the transition service and applies
+		 * initial styles in preparation for transitions.
+		 */
 		readonly registerElement: (
 			name: keyof TransitionElements,
 			element: HTMLElement,
 		) => void;
 
+		/**
+		 * Signals the transition service that routing is about to begin.
+		 * To be invoked by the layout component before routing occurs.
+		 */
 		readonly signalBeforeRouting: () => void;
+
+		/**
+		 * Signals the transition service that routing has completed.
+		 * To be invoked by the layout component after routing completes.
+		 */
 		readonly signalAfterRouting: () => void;
+
+		/**
+		 * A signal that represents the current state of the transition service.
+		 * Components can subscribe to this signal to react to state changes.
+		 */
+		readonly state: Accessor<SnapshotFrom<any> | null>;
 	}
 >() {}
 
@@ -44,9 +64,9 @@ type TransitionStore = {
 	stateMachine: Actor<typeof transitionMachine>;
 
 	/**
-	 * The previous state of the state machine.
+	 * The current state of the state machine.
 	 */
-	previousState: StateValue | null;
+	currentState: StateValue | null;
 
 	/**
 	 * The initial state of the flip animation for view transitions.
@@ -131,9 +151,16 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 			chibiButton: null,
 		},
 		stateMachine: createActor(transitionMachine),
-		previousState: null,
+		currentState: null,
 		initialFlipState: null,
 		currentTransition: null,
+	});
+
+	/**
+	 * A signal that represents the current state of the transition service.
+	 */
+	const state = createMemo(() => {
+		return store.currentState;
 	});
 
 	/**
@@ -389,10 +416,10 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 
 	store.stateMachine.subscribe((state) => {
 		// Ignore state changes that are not transitions.
-		if (JSON.stringify(state.value) === JSON.stringify(store.previousState)) {
+		if (JSON.stringify(state.value) === JSON.stringify(store.currentState)) {
 			return;
 		} else {
-			setStore("previousState", state.value);
+			setStore("currentState", state.value);
 		}
 
 		if (store.currentTransition) {
@@ -492,6 +519,7 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 		registerElement,
 		signalBeforeRouting,
 		signalAfterRouting,
+		state,
 	};
 })();
 
@@ -509,6 +537,8 @@ const mockTransitionService: Context.Tag.Service<TransitionService> = {
 	signalAfterRouting: () => {
 		// Do nothing.
 	},
+	// Dummy signal.
+	state: createSignal("idle")[0],
 };
 
 export { TransitionService, transitionService, mockTransitionService };
