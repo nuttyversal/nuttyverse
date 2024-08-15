@@ -66,7 +66,7 @@ const ScrollContainer: ParentComponent<Props> = (props) => {
 
 	createEffect(() => {
 		// Wait until transition animations are complete.
-		if (transitionService.state()?.match("idle")) {
+		if (transitionService.state() === "idle") {
 			updateGradient();
 		}
 	});
