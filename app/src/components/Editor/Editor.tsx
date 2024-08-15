@@ -21,8 +21,6 @@ import { LocalStorageService } from "~/services/local-storage";
 import styles from "./Editor.module.scss";
 import { compileMdx } from "./compiler";
 
-import "katex/dist/katex.css";
-
 const Editor: Component = () => {
 	let container!: HTMLDivElement;
 

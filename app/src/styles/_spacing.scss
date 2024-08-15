@@ -114,8 +114,8 @@ p, img {
 }
 
 pre {
-	margin-top: map.get($relative-spacing, "6");
-	margin-bottom: map.get($relative-spacing, "6");
+	margin-top: map.get($relative-spacing, "4");
+	margin-bottom: map.get($relative-spacing, "4");
 
 	&:first-child {
 		margin-top: 0;
@@ -138,12 +138,12 @@ pre {
 	width: 100%;
 
 	& > p {
-		padding-left: map.get($spacing, "4");
-		padding-right: map.get($spacing, "4");
+		padding-left: map.get($spacing, "6");
+		padding-right: map.get($spacing, "6");
 	}
 
 	& > h1, & > h2, & > h3, & > h4, & > h5, & > h6 {
-		padding-left: map.get($spacing, "4");
-		padding-right: map.get($spacing, "4");
+		padding-left: map.get($spacing, "6");
+		padding-right: map.get($spacing, "6");
 	}
 }

@@ -2,6 +2,8 @@ import { Link } from "components/Link";
 import styles from "./Singularity.module.scss";
 
 const Singularity = () => {
+	const link = <Link href="/editor">this point</Link>;
+
 	return (
 		<div class={styles.container}>
 			<p class="with-drop-cap">
@@ -12,12 +14,8 @@ const Singularity = () => {
 
 			<p>
 				Just as the physical universe materialized from the Big Bang, this
-				website will similarly unfold from this point. Emerging from this
+				website will similarly unfold from {link}. Emerging from this
 				singularity will bloom a new digital universe! 😀
-			</p>
-
-			<p>
-				Go to editor <Link href="/editor">here</Link>.
 			</p>
 		</div>
 	);

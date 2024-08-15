@@ -29,7 +29,7 @@
 
 	:global(.cm-editor *) {
 		font-family: "PragmataPro Liga", monospace !important;
-		font-size: map.get(styles.$type-scale, "xs");
+		font-size: calc(#{map.get(styles.$type-scale, "xs")} * 1.04);
 	}
 
 	:global(.cm-editor) {
@@ -87,7 +87,8 @@
 .content {
 	@extend .with-full-bleed;
 
-	max-width: 600px;
+	width: 100%;
+	max-width: 640px;
 	margin: auto;
 	padding: map.get(styles.$spacing, "4") 0;
 

@@ -30,8 +30,8 @@ const compileMdx = (
 		try {
 			const { default: renderContent } = await evaluate(mdx, {
 				...runtime,
-				rehypePlugins: [rehypeKatex, rewriteLinks],
 				remarkPlugins: [remarkMath, rewriteCodeBlocks],
+				rehypePlugins: [rehypeKatex, rewriteLinks],
 			});
 
 			return renderContent({

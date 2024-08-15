@@ -2,6 +2,7 @@
 // This scale brings harmony and rhythm to the visual design, creating
 // a balanced and pleasing typographic hierarchy.
 
+@use "katex/dist/katex.min.css";
 @use "sass:map";
 @use "colors";
 @use "spacing";
@@ -27,10 +28,13 @@ $type-scale: (
 	// 14.4px (0.9rem) and 16px (1rem) when the viewport is in between
 	// 320px (20rem) and 960px (60rem).
 	//
+	// And then we scale the base font size by ≈115%. For some reason,
+	// multiplying by 1.07 results in a multiplication of 1.07² = 1.1449.
+	// However, I am satisfied with the result, so whatever. ¯\_(ツ)_/¯
+	//
 	// This calculator was used to figure out the clamp parameters:
 	// https://royalfig.github.io/fluid-typography-calculator/
-	font-size: clamp(0.9rem, 0.85rem + 0.25vw, 1rem);
-
+	font-size: calc(clamp(0.9rem, 0.85rem + 0.25vw, 1rem) * 1.07);
 	font-family: 'FSD Emoji', Nure, sans-serif;
 	font-variation-settings: 'opsz' 18, 'wdth' 85;
 	font-feature-settings: 'kern' 1;
@@ -49,8 +53,14 @@ $type-scale: (
 	hyphens: unset;
 }
 
-.katex-display {
-	margin-top: -#{map.get(spacing.$spacing, "3")};
+.katex .frac-line {
+	border-width: 1px;
+}
+
+.katex-display > .katex > .katex-html, .katex-display > .katex .base {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 [data-theme='light'] {
@@ -109,7 +119,7 @@ a {
 		font-size: calc(3em - 1px);
 
 		float: left;
-		font-family: PragmataPro Fraktur;
+		font-family: PragmataPro Fraktur, sans-serif;
 		font-variant-ligatures: none;
 		font-weight: bold;
 		line-height: 1em;
@@ -126,7 +136,7 @@ code {
 	color: var(--gray-01);
 
 	font-family: PragmataPro Liga;
-	font-size: map.get($type-scale, "xs");
+	font-size: calc(#{map.get($type-scale, "xs")} * 1.04);
 
 	margin-left: map.get(spacing.$spacing, "0.5");
 	margin-right: map.get(spacing.$spacing, "0.5");
@@ -143,14 +153,14 @@ code {
 pre > code {
 	color: unset;
 	width: 100%;
-	padding-top: map.get(spacing.$spacing, "2");
-	padding-bottom: map.get(spacing.$spacing, "2");
+	padding-top: map.get(spacing.$spacing, "4");
+	padding-bottom: map.get(spacing.$spacing, "4");
 	display: block;
-	overflowX: auto;
+	overflow-x: auto;
 }
 
 pre > code, pre > code * {
 	font-family: PragmataPro Liga;
-	font-size: map.get($type-scale, "xs");
+	font-size: calc(#{map.get($type-scale, "xs")} * 1.04);
 	tab-size: 3;
 }
