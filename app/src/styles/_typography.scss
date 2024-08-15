@@ -42,6 +42,10 @@ $type-scale: (
 	hyphens: auto;
 }
 
+.katex {
+	font-size: 1.1em;
+}
+
 .katex * {
 	// Unset all font properties to prevent conflicts with KaTeX.
 	// Otherwise, the math will be UGLY! :(
@@ -51,16 +55,6 @@ $type-scale: (
 	font-feature-settings: unset;
 	text-align: unset;
 	hyphens: unset;
-}
-
-.katex .frac-line {
-	border-width: 1px;
-}
-
-.katex-display > .katex > .katex-html, .katex-display > .katex .base {
-	display: flex;
-	align-items: center;
-	justify-content: center;
 }
 
 [data-theme='light'] {
