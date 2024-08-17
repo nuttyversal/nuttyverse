@@ -143,11 +143,17 @@ const Editor: Component = () => {
 			}
 
 			// Scroll the container to the target position.
-			gsap.to(container, {
-				scrollTop: scrollTarget,
-				duration: 0.3,
-				ease: "power1.inOut",
-			});
+			if (lineNumber() === 1) {
+				// Ignore.
+			} else if (lineNumber() >= Object.keys(sourceMap()).length) {
+				// Ignore.
+			} else if (scrollTarget !== 0) {
+				gsap.to(container, {
+					scrollTop: scrollTarget,
+					duration: 0.1,
+					ease: "none",
+				});
+			}
 		});
 	});
 
@@ -163,11 +169,25 @@ const Editor: Component = () => {
 		}
 
 		// Scroll the container to the target position.
-		gsap.to(container, {
-			scrollTop: scrollTarget,
-			duration: 0.3,
-			ease: "power1.inOut",
-		});
+		if (lineNumber() === 1) {
+			gsap.to(container, {
+				scrollTop: 0,
+				duration: 0.1,
+				ease: "none",
+			});
+		} else if (lineNumber() >= Object.keys(sourceMap()).length) {
+			gsap.to(container, {
+				scrollTop: 9000,
+				duration: 0.1,
+				ease: "none",
+			});
+		} else if (scrollTarget !== 0) {
+			gsap.to(container, {
+				scrollTop: scrollTarget,
+				duration: 0.1,
+				ease: "none",
+			});
+		}
 	});
 
 	onCleanup(() => {
