@@ -9,6 +9,7 @@ import { vim } from "@replit/codemirror-vim";
 import gsap from "gsap";
 import { Effect, Option } from "effect";
 import {
+	Accessor,
 	Component,
 	createEffect,
 	createResource,
@@ -18,6 +19,7 @@ import {
 	useContext,
 } from "solid-js";
 import { ScrollContainer } from "~/components/ScrollContainer";
+import { useCarmackClick } from "~/components/hooks";
 import { ServiceContext } from "~/services/context";
 import { LocalStorageService } from "~/services/local-storage";
 import styles from "./Editor.module.scss";
@@ -39,6 +41,11 @@ const Editor: Component = () => {
 	const [documentContent, setDocumentContent] = createSignal<string>("");
 	const [sourceMap, setSourceMap] = createSignal<SourceMap>({});
 	const [lineNumber, setLineNumber] = createSignal<number>(1);
+	const [isSyncing, setIsSyncing] = createSignal<boolean>(false);
+
+	const toggleSyncing = () => {
+		setIsSyncing((prev) => !prev);
+	};
 
 	// When the document content changes, compile the MDX content.
 	const [mdxContent] = createResource(
@@ -132,6 +139,10 @@ const Editor: Component = () => {
 		const scroller = document.querySelector(".cm-scroller");
 
 		scroller?.addEventListener("scroll", () => {
+			if (!isSyncing()) {
+				return;
+			}
+
 			// Compute the scroll target based on the source map and line number.
 			const scrollTarget = computeScrollY(sourceMap(), lineNumber());
 
@@ -158,6 +169,10 @@ const Editor: Component = () => {
 	});
 
 	createEffect(() => {
+		if (!isSyncing()) {
+			return;
+		}
+
 		// Compute the scroll target based on the source map and line number.
 		const scrollTarget = computeScrollY(sourceMap(), lineNumber());
 
@@ -202,11 +217,33 @@ const Editor: Component = () => {
 
 	return (
 		<div class={styles.container}>
+			<SyncButton isSyncing={isSyncing} onClick={toggleSyncing} />
 			<div class={styles.editor} ref={container} />
 			<ScrollContainer class={styles.output}>
 				<div class={styles.content}>{mdxContent()}</div>
 			</ScrollContainer>
 		</div>
+	);
+};
+
+type SyncButtonProps = {
+	isSyncing: Accessor<boolean>;
+	onClick: () => void;
+};
+
+const SyncButton: Component<SyncButtonProps> = (props) => {
+	const classes = () => ({
+		[styles["sync-button"]]: true,
+		[styles.syncing]: props.isSyncing(),
+	});
+
+	const { handleMouseDown: onMouseDown, handleClick: onClick } =
+		useCarmackClick(props.onClick);
+
+	return (
+		<button classList={classes()} onMouseDown={onMouseDown} onClick={onClick}>
+			{props.isSyncing() ? "⚡ Sync ⚡" : "Sync"}
+		</button>
 	);
 };
 

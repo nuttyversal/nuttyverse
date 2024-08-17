@@ -6,16 +6,19 @@
 	--foreground-color: #{map.get(styles.$gray, "light", "12")};
 	--foreground-light-color: #{map.get(styles.$gray, "light", "11")};
 	--active-line-color: #{map.get(styles.$gray, "light", "03")};
+	--syncing-color: yellow;
 }
 
 [data-theme='dark'] {
-	--background-color: #{map.get(styles.$gray, "dark", "01")};
+	--background-color: #{white};
 	--foreground-color: #{map.get(styles.$gray, "dark", "12")};
 	--foreground-light-color: #{map.get(styles.$gray, "light", "11")};
 	--active-line-color: #{map.get(styles.$gray, "dark", "03")};
+	--syncing-color: white;
 }
 
 .container {
+	position: relative;
 	display: flex;
 	width: 100%;
 	height: 100%;
@@ -95,4 +98,51 @@
 	& > p:first-of-type {
 		@extend .with-drop-cap;
 	}
+}
+
+.sync-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: map.get(styles.$type-scale, "xs");
+
+	height: map.get(styles.$spacing, "6");
+	width: map.get(styles.$spacing, "16");
+
+	position: absolute;
+	top: 0%;
+	left: calc(50% - #{map.get(styles.$spacing, "8")});
+
+	transition: all 0.2s ease-in-out;
+	font-weight: 900;
+	font-variant: all-small-caps;
+	background: var(--foreground-color);
+	color: var(--background-color);
+	border: map.get(styles.$spacing, "1") solid var(--foreground-color);
+	border-bottom-left-radius: map.get(styles.$spacing, "1");
+	border-bottom-right-radius: map.get(styles.$spacing, "1");
+	cursor: pointer;
+
+	z-index: 4000;
+}
+
+.syncing {
+	animation: 60ms infinite alternate syncing;
+	animation-timing-function: ease-in-out;
+	color: var(--syncing-color);
+
+	width: map.get(styles.$spacing, "16");
+	left: calc(50% - #{map.get(styles.$spacing, "8")});
+}
+
+@keyframes syncing {
+  0%, 100% {
+    text-shadow: 0 0 2em var(--background-color);
+  }
+  20%, 80% {
+    text-shadow: 0 0 0.4em var(--background-color);
+  }
+  50% {
+    text-shadow: none;
+  }
 }
