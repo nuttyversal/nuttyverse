@@ -91,6 +91,11 @@ $heading-sizes: (
 	}
 }
 
+strong {
+	// The words can be strong, but not too strong.
+	font-weight: 600;
+}
+
 a {
 	font-feature-settings: 'smcp' 1, 'c2sc' 1;
 	font-variant: all-small-caps;
