@@ -6,9 +6,11 @@ import { EditorState } from "@codemirror/state";
 import { EditorView, ViewUpdate, keymap } from "@codemirror/view";
 import { vim } from "@replit/codemirror-vim";
 
+import gsap from "gsap";
 import { Effect, Option } from "effect";
 import {
 	Component,
+	createEffect,
 	createResource,
 	createSignal,
 	onCleanup,
@@ -19,6 +21,7 @@ import { ScrollContainer } from "~/components/ScrollContainer";
 import { ServiceContext } from "~/services/context";
 import { LocalStorageService } from "~/services/local-storage";
 import styles from "./Editor.module.scss";
+import { computeScrollY, SourceMap } from "./auto-scroll";
 import { compileMdx } from "./compiler";
 
 const Editor: Component = () => {
@@ -34,12 +37,14 @@ const Editor: Component = () => {
 
 	const [editorView, setEditorView] = createSignal<EditorView | null>(null);
 	const [documentContent, setDocumentContent] = createSignal<string>("");
+	const [sourceMap, setSourceMap] = createSignal<SourceMap>({});
+	const [lineNumber, setLineNumber] = createSignal<number>(1);
 
 	// When the document content changes, compile the MDX content.
 	const [mdxContent] = createResource(
 		documentContent,
 		async (documentContent) => {
-			const compileEffect = compileMdx(documentContent);
+			const compileEffect = compileMdx(documentContent, setSourceMap);
 			return await Effect.runPromise(compileEffect);
 		},
 	);
@@ -58,6 +63,16 @@ const Editor: Component = () => {
 				Effect.provideService(LocalStorageService, localStorageService),
 			),
 		);
+	};
+
+	const updateLineNumber = (update: ViewUpdate) => {
+		// Get the main selection range.
+		const range = update.state.selection.main;
+
+		// Get the line number of the selection's head (cursor position).
+		const lineNumber = update.state.doc.lineAt(range.head).number;
+
+		setLineNumber(lineNumber);
 	};
 
 	// An effect that loads the saved document content from local storage.
@@ -91,6 +106,7 @@ const Editor: Component = () => {
 					// Compile MDX.
 					markdownLanguage,
 					EditorView.updateListener.of(saveOnChange),
+					EditorView.updateListener.of(updateLineNumber),
 				],
 			});
 
@@ -112,6 +128,46 @@ const Editor: Component = () => {
 				Effect.provideService(LocalStorageService, localStorageService),
 			),
 		);
+
+		const scroller = document.querySelector(".cm-scroller");
+
+		scroller?.addEventListener("scroll", () => {
+			// Compute the scroll target based on the source map and line number.
+			const scrollTarget = computeScrollY(sourceMap(), lineNumber());
+
+			// Query the scroll container.
+			const container = document.querySelector(".test-container");
+
+			if (!container) {
+				throw new Error("Scroll container not found.");
+			}
+
+			// Scroll the container to the target position.
+			gsap.to(container, {
+				scrollTop: scrollTarget,
+				duration: 0.3,
+				ease: "power1.inOut",
+			});
+		});
+	});
+
+	createEffect(() => {
+		// Compute the scroll target based on the source map and line number.
+		const scrollTarget = computeScrollY(sourceMap(), lineNumber());
+
+		// Query the scroll container.
+		const container = document.querySelector(".test-container");
+
+		if (!container) {
+			throw new Error("Scroll container not found.");
+		}
+
+		// Scroll the container to the target position.
+		gsap.to(container, {
+			scrollTop: scrollTarget,
+			duration: 0.3,
+			ease: "power1.inOut",
+		});
 	});
 
 	onCleanup(() => {
@@ -120,6 +176,8 @@ const Editor: Component = () => {
 		if (view) {
 			view.destroy();
 		}
+
+		// [TODO] Remove event listener.
 	});
 
 	return (

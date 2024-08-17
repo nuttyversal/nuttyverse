@@ -3,7 +3,7 @@ import { Effect } from "effect";
 import { UnknownException } from "effect/Cause";
 import remarkMath from "remark-math";
 import KaTeX from "katex";
-import { JSX } from "solid-js";
+import { JSX, Setter } from "solid-js";
 import * as runtime from "solid-js/h/jsx-runtime";
 import { Plugin } from "unified";
 import { Node, Parent } from "unist";
@@ -11,6 +11,7 @@ import { visit } from "unist-util-visit";
 import { SKIP, visitParents } from "unist-util-visit-parents";
 import { CodeBlock } from "~/components/CodeBlock";
 import { Link } from "~/components/Link";
+import { ElementBlock, EmptyBlock, SourceMap } from "./auto-scroll";
 
 /**
  * A component registry that maps component names to components.
@@ -26,13 +27,18 @@ const componentRegistry = {
  */
 const compileMdx = (
 	mdx: string,
+	setSourceMap: Setter<SourceMap>,
 ): Effect.Effect<JSX.Element, UnknownException> => {
 	return Effect.tryPromise(async () => {
 		try {
 			const { default: renderContent } = await evaluate(mdx, {
 				...runtime,
 				remarkPlugins: [remarkMath, rewriteCodeBlocks],
-				rehypePlugins: [renderKaTeX, rewriteLinks],
+				rehypePlugins: [
+					renderKaTeX,
+					rewriteLinks,
+					createSourceMap(setSourceMap),
+				],
 			});
 
 			return renderContent({
@@ -50,37 +56,48 @@ const compileMdx = (
 const rewriteCodeBlocks: Plugin = () => {
 	// Inferred from the console output.
 	// Does this type exist somewhere?
-	type RemarkCode = (Node | Parent) & {
+	type RemarkElement = (Node | Parent) & {
 		lang: string;
 		value: string;
 	};
 
 	return (tree) => {
-		visit(tree, "code", (node: RemarkCode, index, parent: RemarkCode) => {
-			if (parent != null && index != null) {
-				const component = {
-					type: "mdxJsxFlowElement",
-					name: "CodeBlock",
-					attributes: [
-						{
-							type: "mdxJsxAttribute",
-							name: "code",
-							value: node.value,
-						},
-						{
-							type: "mdxJsxAttribute",
-							name: "language",
-							value: node.lang ?? "",
-						},
-					],
-					children: [] as Node[],
-				};
+		visit(
+			tree,
+			"code",
+			(node: RemarkElement, index, parent: RemarkElement) => {
+				if (parent != null && index != null) {
+					const component = {
+						type: "mdxJsxFlowElement",
+						name: "CodeBlock",
+						attributes: [
+							{
+								type: "mdxJsxAttribute",
+								name: "code",
+								value: node.value,
+							},
+							{
+								type: "mdxJsxAttribute",
+								name: "language",
+								value: node.lang ?? "",
+							},
+							{
+								type: "mdxJsxAttribute",
+								name: "class",
+								value: "source-map-" + node.position?.start.line,
+							},
+						],
+						sourceMapRef: node.position?.start.line,
+						position: node.position,
+						children: [] as Node[],
+					};
 
-				if ("children" in parent) {
-					parent.children[index] = component;
+					if ("children" in parent) {
+						parent.children[index] = component;
+					}
 				}
-			}
-		});
+			},
+		);
 	};
 };
 
@@ -90,7 +107,7 @@ const rewriteCodeBlocks: Plugin = () => {
 const rewriteLinks: Plugin = () => {
 	// Inferred from the console output.
 	// Does this type exist somewhere?
-	type RehypeElement = {
+	type RehypeElement = Node & {
 		tagName: string;
 		properties?: Record<string, unknown>;
 		children: Node[];
@@ -109,13 +126,14 @@ const rewriteLinks: Plugin = () => {
 							type: "element",
 							tagName: "Link",
 							children: node.children,
+							position: node.position,
 							properties: {
 								href,
 								newTab: !href.startsWith("/"),
 							},
 						};
 
-						if (parent) {
+						if (parent && index) {
 							parent.children[index] = component;
 						}
 					}
@@ -131,7 +149,7 @@ const rewriteLinks: Plugin = () => {
 const renderKaTeX: Plugin = () => {
 	// Inferred from the console output.
 	// Does this type exist somewhere?
-	type RehypeElement = {
+	type RehypeElement = Node & {
 		type: "element";
 		tagName: string;
 		value: string;
@@ -173,6 +191,7 @@ const renderKaTeX: Plugin = () => {
 						type: "element",
 						value: "<satisfy-type-decl>",
 						tagName: isMathDisplay ? "div" : "span",
+						position: element.position,
 						properties: {
 							innerHTML: result,
 						},
@@ -191,5 +210,126 @@ const renderKaTeX: Plugin = () => {
 		);
 	};
 };
+
+const createSourceMap =
+	(setSourceMap: Setter<SourceMap>): Plugin =>
+	() => {
+		type Location = {
+			line: number;
+			column: number;
+			offset: number;
+		};
+
+		type Position = {
+			start: Location;
+			end: Location;
+		};
+
+		type RehypeElement = {
+			type: "element";
+			tagName: string;
+			properties?: Record<string, any>;
+			position?: Position;
+			sourceMapRef?: number;
+			children: Node[];
+		};
+
+		const sourceMap: SourceMap = {};
+
+		return (tree) => {
+			// Visit JSX elements.
+			let cursor: number = 1;
+
+			visit(tree, "mdxJsxFlowElement", (node: RehypeElement) => {
+				const start = node?.position?.start?.line ?? null;
+				const end = node?.position?.end?.line ?? null;
+				const sourceMapRef = node.sourceMapRef;
+
+				if (start != null && end != null && node.sourceMapRef != null) {
+					// [TODO] Handle overlapping elements.
+					if (cursor > start) {
+						return;
+					}
+
+					// Update the source map.
+					const block: ElementBlock = {
+						type: "element",
+						start,
+						end,
+						selector: `.source-map-${sourceMapRef}`,
+					};
+
+					for (let i = start; i <= end; i++) {
+						sourceMap[i] = block;
+					}
+
+					// Update the cursor.
+					cursor = end;
+				}
+
+				console.log({ node });
+			});
+
+			// Visit HTML elements.
+			cursor = 1;
+
+			visit(tree, "element", (node: RehypeElement) => {
+				const start = node?.position?.start?.line ?? null;
+				const end = node?.position?.end?.line ?? null;
+
+				if (start != null && end != null) {
+					// [TODO] Handle overlapping elements.
+					if (cursor > start) {
+						return;
+					}
+
+					// Annotate the element with the source map class.
+					node.properties = node.properties ?? {};
+					node.properties.className = node.properties.className ?? [];
+					node.properties.className.push(`source-map-${start}`);
+
+					// Update the source map.
+					const block: ElementBlock = {
+						type: "element",
+						start,
+						end,
+						selector: `.source-map-${start}`,
+					};
+
+					for (let i = start; i <= end; i++) {
+						sourceMap[i] = block;
+					}
+
+					// Update the cursor.
+					cursor = end;
+				}
+			});
+
+			// Fill in the gaps with empty blocks.
+			const keys = Object.keys(sourceMap).map((key) => parseInt(key));
+
+			for (let i = 1; i < keys.length; i++) {
+				const previous = sourceMap[keys[i - 1]] as ElementBlock;
+				const next = sourceMap[keys[i]] as ElementBlock;
+
+				if (next.start - previous.end > 1) {
+					const block: EmptyBlock = {
+						type: "space",
+						start: previous.end + 1,
+						end: next.start - 1,
+						previous,
+						next,
+					};
+
+					for (let j = previous.end + 1; j < next.start; j++) {
+						sourceMap[j] = block;
+					}
+				}
+			}
+
+			console.log(sourceMap);
+			setSourceMap(sourceMap);
+		};
+	};
 
 export { compileMdx };

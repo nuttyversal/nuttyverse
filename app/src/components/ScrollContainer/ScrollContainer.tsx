@@ -81,7 +81,10 @@ const ScrollContainer: ParentComponent<Props> = (props) => {
 				ref={gradientTop}
 				class={styles["gradient-overlay"] + " " + styles.top}
 			/>
-			<div ref={container} class={styles["inner-container"]}>
+			<div
+				ref={container}
+				class={styles["inner-container"] + " test-container"}
+			>
 				{props.children}
 			</div>
 			<div
