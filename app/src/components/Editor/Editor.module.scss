@@ -14,7 +14,7 @@
 	--foreground-color: #{map.get(styles.$gray, "dark", "12")};
 	--foreground-light-color: #{map.get(styles.$gray, "light", "11")};
 	--active-line-color: #{map.get(styles.$gray, "dark", "03")};
-	--syncing-color: white;
+	--syncing-color: black;
 }
 
 .container {
