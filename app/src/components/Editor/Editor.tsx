@@ -29,6 +29,9 @@ import { compileMdx } from "./compiler";
 const Editor: Component = () => {
 	let container!: HTMLDivElement;
 
+	const [scrollContainer, setScrollContainer] =
+		createSignal<HTMLDivElement | null>(null);
+
 	const services = useContext(ServiceContext);
 
 	if (!services) {
@@ -219,7 +222,7 @@ const Editor: Component = () => {
 		<div class={styles.container}>
 			<SyncButton isSyncing={isSyncing} onClick={toggleSyncing} />
 			<div class={styles.editor} ref={container} />
-			<ScrollContainer class={styles.output}>
+			<ScrollContainer ref={setScrollContainer} class={styles.output}>
 				<div class={styles.content}>{mdxContent()}</div>
 			</ScrollContainer>
 		</div>

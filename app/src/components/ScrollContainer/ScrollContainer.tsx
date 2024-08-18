@@ -1,17 +1,20 @@
 import gsap from "gsap";
 import {
-	createEffect,
 	JSX,
-	onMount,
 	ParentComponent,
+	Ref,
+	createEffect,
+	onMount,
 	useContext,
 } from "solid-js";
 import { ServiceContext } from "~/services/context";
+import { mergeRefs } from "~/utils/solid";
 import styles from "./ScrollContainer.module.scss";
 
 type Props = {
 	class?: string | undefined;
 	style?: JSX.CSSProperties | string;
+	ref?: Ref<HTMLDivElement>;
 };
 
 const ScrollContainer: ParentComponent<Props> = (props) => {
@@ -82,7 +85,7 @@ const ScrollContainer: ParentComponent<Props> = (props) => {
 				class={styles["gradient-overlay"] + " " + styles.top}
 			/>
 			<div
-				ref={container}
+				ref={mergeRefs(props.ref, (e) => (container = e))}
 				class={styles["inner-container"] + " test-container"}
 			>
 				{props.children}
