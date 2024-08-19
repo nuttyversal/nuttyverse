@@ -41,29 +41,38 @@ function useScrollSyncing(
 	sourceMap: Accessor<SourceMap>,
 	lineNumber: Accessor<number>,
 ) {
+	// Whether or not the scroll syncing is enabled.
 	const [isSyncing, setIsSyncing] = createSignal<boolean>(false);
+
+	// Keep track of the current tween so we can kill it if necessary.
 	let currentTween: gsap.core.Tween | null = null;
 
-	const updateScroller = async () => {
-		const scroller = previewScroller();
-
-		if (!scroller) {
-			throw new Error("Preview scroller element not found.");
-		}
-
+	const killTween = Effect.sync(() => {
 		if (currentTween) {
 			currentTween.kill();
 		}
+	});
 
-		if (!isSyncing()) {
-			return;
-		}
-
+	const updateScroller = () => {
 		Effect.runPromise(
 			Effect.gen(function* () {
+				if (!isSyncing()) {
+					return;
+				}
+
+				if (currentTween) {
+					yield* killTween;
+				}
+
+				const scroller = previewScroller();
+
+				if (!scroller) {
+					return;
+				}
+
 				const editorScroller = yield* editorScrollerQuery;
 
-				const scrollY = yield* computePreviewScrollPosition(
+				const scrollY = yield* getPreviewScrollPosition(
 					sourceMap(),
 					lineNumber(),
 					scroller,
@@ -152,16 +161,28 @@ function useScrollSyncing(
 	});
 
 	return {
+		/**
+		 * An effect that sets up the scroll syncing. This should be
+		 * invoked when the component is mounting after the editor setup.
+		 */
 		setupScrollSyncing,
+
+		/**
+		 * Whether or not the scroll syncing is enabled.
+		 */
 		isSyncing,
+
+		/**
+		 * Set the scroll syncing state.
+		 */
 		setIsSyncing,
 	};
 }
 
 /**
- * Computes the preview scroll position associated with the given line number.
+ * Gets the preview scroll position associated with the given line number.
  */
-function computePreviewScrollPosition(
+function getPreviewScrollPosition(
 	sourceMap: SourceMap,
 	lineNumber: number,
 	previewScroller: Element,
@@ -187,7 +208,7 @@ function computePreviewScrollPosition(
 				});
 
 				return Option.map(context, (context) => {
-					return computeElementBlockPosition(block, lineNumber, context);
+					return getElementBlockPosition(block, lineNumber, context);
 				});
 			}
 
@@ -216,7 +237,7 @@ function computePreviewScrollPosition(
 				);
 
 				return Option.map(context, (context) => {
-					return computeEmptyBlockPosition(block, lineNumber, context);
+					return getEmptyBlockPosition(block, lineNumber, context);
 				});
 			}
 
@@ -271,9 +292,9 @@ const editorActiveLineQuery = Effect.sync(() => {
 });
 
 /**
- * Computes the scroll position for an element block.
+ * Gets the scroll position for an element block.
  */
-function computeElementBlockPosition(
+function getElementBlockPosition(
 	block: ElementBlock,
 	lineNumber: number,
 	context: {
@@ -313,9 +334,9 @@ function computeElementBlockPosition(
 }
 
 /**
- *	Computes the scroll position for an empty block.
+ *	Gets the scroll position for an empty block.
  */
-function computeEmptyBlockPosition(
+function getEmptyBlockPosition(
 	block: EmptyBlock,
 	lineNumber: number,
 	context: {
