@@ -11,7 +11,7 @@ import { visit } from "unist-util-visit";
 import { SKIP, visitParents } from "unist-util-visit-parents";
 import { CodeBlock } from "~/components/CodeBlock";
 import { Link } from "~/components/Link";
-import { ElementBlock, EmptyBlock, SourceMap } from "./auto-scroll";
+import { ElementBlock, EmptyBlock, SourceMap } from "./sync/types";
 
 /**
  * A component registry that maps component names to components.

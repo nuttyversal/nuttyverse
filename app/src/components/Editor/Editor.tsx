@@ -21,8 +21,8 @@ import { useCarmackClick } from "~/components/hooks";
 import { ServiceContext } from "~/services/context";
 import { LocalStorageService } from "~/services/local-storage";
 import styles from "./Editor.module.scss";
-import { SourceMap } from "./auto-scroll";
 import { useScrollSyncing } from "./sync/hook";
+import { SourceMap } from "./sync/types";
 import { compileMdx } from "./compiler";
 
 const Editor: Component = () => {
