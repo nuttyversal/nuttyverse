@@ -1,3 +1,7 @@
+import { Effect, Option } from "effect";
+import gsap from "gsap";
+import { Accessor, createEffect, createSignal, onCleanup } from "solid-js";
+
 type Block = ElementBlock | EmptyBlock;
 
 /**
@@ -17,7 +21,7 @@ type ElementBlock = {
  * `[start, end]` is a fully inclusive range.
  */
 type EmptyBlock = {
-	type: "space";
+	type: "empty";
 	start: number;
 	end: number;
 	previous: ElementBlock;
@@ -29,91 +33,331 @@ type EmptyBlock = {
  */
 type SourceMap = Record<number, Block>;
 
-function computeScrollY(sourceMap: SourceMap, lineNumber: number): number {
-	// Query scroll container.
-	const container = document.querySelector(".test-container");
+/**
+ * A hook that synchronizes the preview scroller with the editor cursor.
+ */
+function useScrollSyncing(
+	previewScroller: Accessor<Element | null>,
+	sourceMap: Accessor<SourceMap>,
+	lineNumber: Accessor<number>,
+) {
+	const [isSyncing, setIsSyncing] = createSignal<boolean>(false);
+	let currentTween: gsap.core.Tween | null = null;
 
-	if (!container) {
-		throw new Error("Scroll container not found.");
-	}
+	const updateScroller = async () => {
+		const scroller = previewScroller();
 
-	const containerBoundingBox = container.getBoundingClientRect();
-	const containerHeight = containerBoundingBox.height;
-	const containerScrollTop = container.scrollTop;
-	const containerTop = containerBoundingBox.top;
-
-	const editorScroller =
-		document.querySelector(".cm-scroller")?.getBoundingClientRect().top ?? 0;
-
-	const activeLine =
-		document.querySelector(".cm-activeLine")?.getBoundingClientRect().top ??
-		0;
-
-	const cursorPosition =
-		(activeLine - editorScroller) /
-		(document.querySelector(".cm-scroller")?.getBoundingClientRect().height ??
-			1);
-
-	console.log({ cursorPosition });
-
-	const block = sourceMap[lineNumber];
-
-	if (!block) {
-		return 0;
-	}
-
-	if (block.type === "element") {
-		const element = document.querySelector(block.selector);
-
-		if (!element) {
-			return 0;
+		if (!scroller) {
+			throw new Error("Preview scroller element not found.");
 		}
 
-		const elementBoundingBox = element.getBoundingClientRect();
-		const elementTop =
-			elementBoundingBox.top - containerTop + containerScrollTop;
-		const elementHeight = elementBoundingBox.height;
-
-		// Interpolate the scroll position.
-		const span = block.end - block.start + 1;
-		const progress = (lineNumber - block.start) / span;
-
-		// Position target y-coordinate in the middle of the container.
-		return (
-			elementTop +
-			elementHeight * progress -
-			containerHeight * cursorPosition
-		);
-	} else {
-		const previousElement = document.querySelector(block.previous.selector);
-		const nextElement = document.querySelector(block.next.selector);
-
-		if (!previousElement || !nextElement) {
-			return 0;
+		if (currentTween) {
+			currentTween.kill();
 		}
 
-		const previousRect = previousElement.getBoundingClientRect();
-		const nextRect = nextElement.getBoundingClientRect();
+		if (!isSyncing()) {
+			return;
+		}
 
-		const previousElementBottom =
-			previousRect.top +
-			previousRect.height -
-			containerTop +
-			containerScrollTop;
+		Effect.runPromise(
+			Effect.gen(function* () {
+				const editorScroller = yield* editorScrollerQuery;
 
-		const nextElementTop = nextRect.top - containerTop + containerScrollTop;
+				const scrollY = yield* computePreviewScrollPosition(
+					sourceMap(),
+					lineNumber(),
+					scroller,
+				);
 
-		// Interpolate the scroll position.
-		const span = (block.start + block.end) / 2 + 2;
-		const progress = (lineNumber - block.start + 1) / span;
+				Option.match(Option.all({ scrollY, editorScroller }), {
+					onSome: ({ scrollY, editorScroller }) => {
+						// If the scroll position is not exactly at the top or bottom,
+						// but it's close enough, then we can treat it as such.
+						const scrollTolerance = 20;
 
-		// Position target y-coordinate in the middle of the container.
-		return (
-			previousElementBottom +
-			(nextElementTop - previousElementBottom) * progress -
-			containerHeight * cursorPosition
+						const isEditorScrollerAtTop =
+							editorScroller.scrollTop < scrollTolerance;
+
+						const isEditorScrollerAtBottom =
+							editorScroller.scrollTop + editorScroller.clientHeight >=
+							editorScroller.scrollHeight - scrollTolerance;
+
+						let adjustedScrollY = scrollY;
+
+						if (lineNumber() === 1 && isEditorScrollerAtTop) {
+							// Snap to the top.
+							adjustedScrollY = 0;
+						}
+
+						const sourceMapSize = Object.keys(sourceMap()).length;
+
+						if (
+							lineNumber() >= sourceMapSize &&
+							isEditorScrollerAtBottom
+						) {
+							// Snap to the bottom.
+							adjustedScrollY = 999999;
+						}
+
+						currentTween = gsap.to(scroller, {
+							scrollTop: adjustedScrollY,
+							duration: 0.1,
+							ease: "none",
+						});
+					},
+					onNone: () => {
+						console.log("Skipping scroll update.");
+					},
+				});
+			}),
 		);
-	}
+	};
+
+	const setupScrollSyncing = Effect.gen(function* () {
+		const scroller = yield* editorScrollerQuery;
+
+		Option.match(scroller, {
+			onSome: (scroller) => {
+				scroller.addEventListener("scroll", updateScroller);
+			},
+			onNone: () => {
+				throw new Error("Editor scroller element not found.");
+			},
+		});
+	});
+
+	createEffect(() => {
+		if (!isSyncing()) {
+			return;
+		}
+
+		updateScroller();
+	});
+
+	onCleanup(() => {
+		Effect.runPromise(
+			Effect.gen(function* () {
+				const scroller = yield* editorScrollerQuery;
+
+				Option.match(scroller, {
+					onSome: (scroller) => {
+						scroller.removeEventListener("scroll", updateScroller);
+					},
+					onNone: () => {
+						// No cleanup necessary.
+					},
+				});
+			}),
+		);
+	});
+
+	return {
+		setupScrollSyncing,
+		isSyncing,
+		setIsSyncing,
+	};
 }
 
-export { Block, ElementBlock, EmptyBlock, SourceMap, computeScrollY };
+/**
+ * Computes the preview scroll position associated with the given line number.
+ */
+function computePreviewScrollPosition(
+	sourceMap: SourceMap,
+	lineNumber: number,
+	previewScroller: Element,
+) {
+	return Effect.gen(function* () {
+		const block = sourceMap[lineNumber];
+
+		if (!block) {
+			return Option.none<number>();
+		}
+
+		switch (block.type) {
+			case "element": {
+				const editorScroller = yield* editorScrollerQuery;
+				const editorActiveLine = yield* editorActiveLineQuery;
+				const previewBlock = yield* previewElementBlockQuery(block);
+
+				const context = Option.all({
+					editorScroller,
+					editorActiveLine,
+					previewScroller: Option.some(previewScroller),
+					previewBlock,
+				});
+
+				return Option.map(context, (context) => {
+					return computeElementBlockPosition(block, lineNumber, context);
+				});
+			}
+
+			case "empty": {
+				const previewContext = Option.map(
+					yield* previewEmptyBlockQuery(block),
+					(emptyBlock) => ({
+						previewBlockPrev: emptyBlock.previous,
+						previewBlockNext: emptyBlock.next,
+					}),
+				);
+
+				const editorContext = Option.all({
+					editorScroller: yield* editorScrollerQuery,
+					editorActiveLine: yield* editorActiveLineQuery,
+				});
+
+				const context = Option.zipWith(
+					previewContext,
+					editorContext,
+					(preview, editor) => ({
+						previewScroller,
+						...preview,
+						...editor,
+					}),
+				);
+
+				return Option.map(context, (context) => {
+					return computeEmptyBlockPosition(block, lineNumber, context);
+				});
+			}
+
+			default: {
+				return Option.none<number>();
+			}
+		}
+	});
+}
+
+/**
+ * Queries the DOM for the element block associated with the given line number.
+ */
+function previewElementBlockQuery(block: ElementBlock) {
+	return Effect.sync(() => {
+		const element = document.querySelector(block.selector);
+		return Option.fromNullable(element);
+	});
+}
+
+/**
+ * Queries the DOM for the empty block associated with the given line number.
+ * The empty block implicitly exists between two element blocks.
+ */
+function previewEmptyBlockQuery(block: EmptyBlock) {
+	return Effect.sync(() => {
+		const previous = document.querySelector(block.previous.selector);
+		const next = document.querySelector(block.next.selector);
+
+		if (previous && next) {
+			return Option.some({ previous, next } as const);
+		}
+
+		return Option.none();
+	});
+}
+
+/**
+ * Queries the DOM for the editor scroller.
+ */
+const editorScrollerQuery = Effect.sync(() => {
+	const element = document.querySelector(".cm-scroller");
+	return Option.fromNullable(element);
+});
+
+/**
+ * Queries the DOM for the active line in the editor.
+ */
+const editorActiveLineQuery = Effect.sync(() => {
+	const element = document.querySelector(".cm-activeLine");
+	return Option.fromNullable(element);
+});
+
+/**
+ * Computes the scroll position for an element block.
+ */
+function computeElementBlockPosition(
+	block: ElementBlock,
+	lineNumber: number,
+	context: {
+		editorScroller: Element;
+		editorActiveLine: Element;
+		previewScroller: Element;
+		previewBlock: Element;
+	},
+): number {
+	const { editorScroller, editorActiveLine, previewScroller, previewBlock } =
+		context;
+
+	// Inspect bounding boxes.
+	const editorActiveLineRect = editorActiveLine.getBoundingClientRect();
+	const editorScrollerRect = editorScroller.getBoundingClientRect();
+
+	// Where is the cursor in the editor? Position ∈ [0, 1].
+	const cursorPosition =
+		(editorActiveLineRect.top - editorScrollerRect.top) /
+		editorScrollerRect.height;
+
+	// How many lines does the block span? Position ∈ [0, 1].
+	const lineCount = block.end - block.start + 1;
+	const blockPosition = (lineNumber - block.start) / lineCount;
+
+	// Inspect the bounding boxes.
+	const previewScrollerRect = previewScroller.getBoundingClientRect();
+	const previewBlockRect = previewBlock.getBoundingClientRect();
+
+	return (
+		previewBlockRect.top -
+		previewScrollerRect.top +
+		previewScroller.scrollTop +
+		previewBlockRect.height * blockPosition -
+		previewScrollerRect.height * cursorPosition
+	);
+}
+
+/**
+ *	Computes the scroll position for an empty block.
+ */
+function computeEmptyBlockPosition(
+	block: EmptyBlock,
+	lineNumber: number,
+	context: {
+		editorScroller: Element;
+		editorActiveLine: Element;
+		previewScroller: Element;
+		previewBlockPrev: Element;
+		previewBlockNext: Element;
+	},
+): number {
+	const {
+		editorActiveLine,
+		editorScroller,
+		previewScroller,
+		previewBlockPrev,
+		previewBlockNext,
+	} = context;
+
+	// Inspect bounding boxes.
+	const editorActiveLineRect = editorActiveLine.getBoundingClientRect();
+	const editorScrollerRect = editorScroller.getBoundingClientRect();
+	const previewScrollerRect = previewScroller.getBoundingClientRect();
+	const previewBlockPrevRect = previewBlockPrev.getBoundingClientRect();
+	const previewBlockNextRect = previewBlockNext.getBoundingClientRect();
+
+	// Where is the cursor in the editor? Position ∈ [0, 1].
+	const cursorPosition =
+		(editorActiveLineRect.top - editorScrollerRect.top) /
+		editorScrollerRect.height;
+
+	// How many lines does the block span? Position ∈ [0, 1].
+	const lineCount = block.end - block.start + 1;
+	const blockHeight = previewBlockNextRect.top - previewBlockPrevRect.bottom;
+	const blockPosition = (lineNumber - block.start) / lineCount;
+
+	return (
+		previewBlockPrevRect.bottom -
+		previewScrollerRect.top +
+		previewScroller.scrollTop +
+		blockHeight * blockPosition -
+		previewScrollerRect.height * cursorPosition
+	);
+}
+
+export { Block, ElementBlock, EmptyBlock, SourceMap, useScrollSyncing };

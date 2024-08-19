@@ -6,12 +6,10 @@ import { EditorState } from "@codemirror/state";
 import { EditorView, ViewUpdate, keymap } from "@codemirror/view";
 import { vim } from "@replit/codemirror-vim";
 
-import gsap from "gsap";
 import { Effect, Option } from "effect";
 import {
 	Accessor,
 	Component,
-	createEffect,
 	createResource,
 	createSignal,
 	onCleanup,
@@ -23,11 +21,12 @@ import { useCarmackClick } from "~/components/hooks";
 import { ServiceContext } from "~/services/context";
 import { LocalStorageService } from "~/services/local-storage";
 import styles from "./Editor.module.scss";
-import { computeScrollY, SourceMap } from "./auto-scroll";
+import { SourceMap, useScrollSyncing } from "./auto-scroll";
 import { compileMdx } from "./compiler";
 
 const Editor: Component = () => {
-	let container!: HTMLDivElement;
+	const [editorContainer, setEditorContainer] =
+		createSignal<HTMLDivElement | null>(null);
 
 	const [scrollContainer, setScrollContainer] =
 		createSignal<HTMLDivElement | null>(null);
@@ -44,7 +43,12 @@ const Editor: Component = () => {
 	const [documentContent, setDocumentContent] = createSignal<string>("");
 	const [sourceMap, setSourceMap] = createSignal<SourceMap>({});
 	const [lineNumber, setLineNumber] = createSignal<number>(1);
-	const [isSyncing, setIsSyncing] = createSignal<boolean>(false);
+
+	const { setupScrollSyncing, isSyncing, setIsSyncing } = useScrollSyncing(
+		scrollContainer,
+		sourceMap,
+		lineNumber,
+	);
 
 	const toggleSyncing = () => {
 		setIsSyncing((prev) => !prev);
@@ -120,6 +124,12 @@ const Editor: Component = () => {
 				],
 			});
 
+			const container = editorContainer();
+
+			if (!container) {
+				throw new Error("Editor container is not available.");
+			}
+
 			setEditorView(
 				new EditorView({
 					state: initialState,
@@ -134,78 +144,11 @@ const Editor: Component = () => {
 			Effect.gen(function* () {
 				const document = yield* loadSavedDocument;
 				yield* setupEditor(document);
+				yield* setupScrollSyncing;
 			}).pipe(
 				Effect.provideService(LocalStorageService, localStorageService),
 			),
 		);
-
-		const scroller = document.querySelector(".cm-scroller");
-
-		scroller?.addEventListener("scroll", () => {
-			if (!isSyncing()) {
-				return;
-			}
-
-			// Compute the scroll target based on the source map and line number.
-			const scrollTarget = computeScrollY(sourceMap(), lineNumber());
-
-			// Query the scroll container.
-			const container = document.querySelector(".test-container");
-
-			if (!container) {
-				throw new Error("Scroll container not found.");
-			}
-
-			// Scroll the container to the target position.
-			if (lineNumber() === 1) {
-				// Ignore.
-			} else if (lineNumber() >= Object.keys(sourceMap()).length) {
-				// Ignore.
-			} else if (scrollTarget !== 0) {
-				gsap.to(container, {
-					scrollTop: scrollTarget,
-					duration: 0.1,
-					ease: "none",
-				});
-			}
-		});
-	});
-
-	createEffect(() => {
-		if (!isSyncing()) {
-			return;
-		}
-
-		// Compute the scroll target based on the source map and line number.
-		const scrollTarget = computeScrollY(sourceMap(), lineNumber());
-
-		// Query the scroll container.
-		const container = document.querySelector(".test-container");
-
-		if (!container) {
-			throw new Error("Scroll container not found.");
-		}
-
-		// Scroll the container to the target position.
-		if (lineNumber() === 1) {
-			gsap.to(container, {
-				scrollTop: 0,
-				duration: 0.1,
-				ease: "none",
-			});
-		} else if (lineNumber() >= Object.keys(sourceMap()).length) {
-			gsap.to(container, {
-				scrollTop: 9000,
-				duration: 0.1,
-				ease: "none",
-			});
-		} else if (scrollTarget !== 0) {
-			gsap.to(container, {
-				scrollTop: scrollTarget,
-				duration: 0.1,
-				ease: "none",
-			});
-		}
 	});
 
 	onCleanup(() => {
@@ -214,14 +157,12 @@ const Editor: Component = () => {
 		if (view) {
 			view.destroy();
 		}
-
-		// [TODO] Remove event listener.
 	});
 
 	return (
 		<div class={styles.container}>
 			<SyncButton isSyncing={isSyncing} onClick={toggleSyncing} />
-			<div class={styles.editor} ref={container} />
+			<div class={styles.editor} ref={setEditorContainer} />
 			<ScrollContainer ref={setScrollContainer} class={styles.output}>
 				<div class={styles.content}>{mdxContent()}</div>
 			</ScrollContainer>

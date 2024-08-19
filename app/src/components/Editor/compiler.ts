@@ -314,7 +314,7 @@ const createSourceMap =
 
 				if (next.start - previous.end > 1) {
 					const block: EmptyBlock = {
-						type: "space",
+						type: "empty",
 						start: previous.end + 1,
 						end: next.start - 1,
 						previous,
