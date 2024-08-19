@@ -266,8 +266,6 @@ const createSourceMap =
 					// Update the cursor.
 					cursor = end;
 				}
-
-				console.log({ node });
 			});
 
 			// Visit HTML elements.
@@ -327,7 +325,6 @@ const createSourceMap =
 				}
 			}
 
-			console.log(sourceMap);
 			setSourceMap(sourceMap);
 		};
 	};
