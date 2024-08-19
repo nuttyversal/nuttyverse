@@ -2,8 +2,8 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { Context, Effect, Option } from "effect";
 import {
 	LocalStorageService,
-	localStorageService,
-	mockLocalStorageService,
+	createLocalStorageService,
+	createMockLocalStorageService,
 } from "./local-storage";
 
 /**
@@ -54,10 +54,10 @@ describe("LocalStorageService", () => {
 			localStorage.clear();
 		});
 
-		testLocalStorage(localStorageService);
+		testLocalStorage(createLocalStorageService());
 	});
 
 	describe("mockLocalStorageService", () => {
-		testLocalStorage(mockLocalStorageService);
+		testLocalStorage(createMockLocalStorageService());
 	});
 });

@@ -1,15 +1,19 @@
 import { Context } from "effect";
 import { ParentComponent, createContext } from "solid-js";
-import { ThemeService, mockThemeService, themeService } from "~/services/theme";
+import {
+	ThemeService,
+	createThemeService,
+	createMockThemeService,
+} from "~/services/theme";
 import {
 	TransitionService,
-	mockTransitionService,
-	transitionService,
+	createMockTransitionService,
+	createTransitionService,
 } from "./transition";
 import {
 	LocalStorageService,
-	localStorageService,
-	mockLocalStorageService,
+	createLocalStorageService,
+	createMockLocalStorageService,
 } from "./local-storage";
 
 /**
@@ -27,15 +31,20 @@ type ServiceContextType = {
  */
 const ServiceContext = createContext<ServiceContextType>();
 
+type Props = {
+	serviceOverrides?: Partial<ServiceContextType>;
+};
+
 /**
  * A provider component that wraps the application and provides
  * production-level service implementations to components.
  */
-const ServiceProvider: ParentComponent = (props) => {
+const ServiceProvider: ParentComponent<Props> = (props) => {
 	const services = {
-		localStorageService,
-		themeService,
-		transitionService,
+		localStorageService: createLocalStorageService(),
+		themeService: createThemeService(),
+		transitionService: createTransitionService(),
+		...props.serviceOverrides,
 	};
 
 	return (
@@ -49,11 +58,12 @@ const ServiceProvider: ParentComponent = (props) => {
  * A provider component that wraps the application and provides mock
  * service implementations to components. Intended for use in tests.
  */
-const MockServiceProvider: ParentComponent = (props) => {
+const MockServiceProvider: ParentComponent<Props> = (props) => {
 	const services = {
-		localStorageService: mockLocalStorageService,
-		themeService: mockThemeService,
-		transitionService: mockTransitionService,
+		localStorageService: createMockLocalStorageService(),
+		themeService: createMockThemeService(),
+		transitionService: createMockTransitionService(),
+		...props.serviceOverrides,
 	};
 
 	return (

@@ -34,7 +34,7 @@ class LocalStorageService extends Context.Tag("LocalStorageService")<
 /**
  * A service that provides access to the local storage API.
  */
-const localStorageService: Context.Tag.Service<LocalStorageService> = (() => {
+function createLocalStorageService(): Context.Tag.Service<LocalStorageService> {
 	const getItem = (key: string) => {
 		return Effect.try(() => {
 			return Option.fromNullable(localStorage.getItem(key));
@@ -58,43 +58,46 @@ const localStorageService: Context.Tag.Service<LocalStorageService> = (() => {
 		setItem,
 		removeItem,
 	};
-})();
+}
 
 /**
  * A mock service that represents the local storage API.
  * Intended to be used for testing purposes.
  */
-const mockLocalStorageService: Context.Tag.Service<LocalStorageService> =
-	(() => {
-		const mockStorage: Record<string, string> = {};
+function createMockLocalStorageService(): Context.Tag.Service<LocalStorageService> {
+	const mockStorage: Record<string, string> = {};
 
-		const getItem = (key: string) => {
-			return Effect.try(() => {
-				if (!mockStorage.hasOwnProperty(key)) {
-					return Option.none();
-				} else {
-					return Option.some(mockStorage[key]);
-				}
-			});
-		};
+	const getItem = (key: string) => {
+		return Effect.try(() => {
+			if (!mockStorage.hasOwnProperty(key)) {
+				return Option.none();
+			} else {
+				return Option.some(mockStorage[key]);
+			}
+		});
+	};
 
-		const setItem = (key: string, value: string) => {
-			return Effect.try(() => {
-				mockStorage[key] = value;
-			});
-		};
+	const setItem = (key: string, value: string) => {
+		return Effect.try(() => {
+			mockStorage[key] = value;
+		});
+	};
 
-		const removeItem = (key: string) => {
-			return Effect.try(() => {
-				delete mockStorage[key];
-			});
-		};
+	const removeItem = (key: string) => {
+		return Effect.try(() => {
+			delete mockStorage[key];
+		});
+	};
 
-		return {
-			getItem,
-			setItem,
-			removeItem,
-		};
-	})();
+	return {
+		getItem,
+		setItem,
+		removeItem,
+	};
+}
 
-export { LocalStorageService, localStorageService, mockLocalStorageService };
+export {
+	LocalStorageService,
+	createLocalStorageService,
+	createMockLocalStorageService,
+};

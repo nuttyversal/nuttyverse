@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, fireEvent } from "@solidjs/testing-library";
 import { MockServiceProvider } from "~/services/context";
-import { Theme, mockThemeService } from "~/services/theme";
+import { Theme, createMockThemeService } from "~/services/theme";
 import { Chibi } from "./Chibi";
 
 describe("Chibi component", () => {
@@ -19,8 +19,11 @@ describe("Chibi component", () => {
 
 	it("toggles theme on mouse down", () => {
 		// Arrange.
+		const mockThemeService = createMockThemeService();
+		const serviceOverrides = { themeService: mockThemeService };
+
 		const { getByRole } = render(() => (
-			<MockServiceProvider>
+			<MockServiceProvider serviceOverrides={serviceOverrides}>
 				<Chibi />
 			</MockServiceProvider>
 		));
@@ -36,8 +39,11 @@ describe("Chibi component", () => {
 
 	it("toggles theme on click (for accessibility)", () => {
 		// Arrange.
+		const mockThemeService = createMockThemeService();
+		const serviceOverrides = { themeService: mockThemeService };
+
 		const { getByRole } = render(() => (
-			<MockServiceProvider>
+			<MockServiceProvider serviceOverrides={serviceOverrides}>
 				<Chibi />
 			</MockServiceProvider>
 		));
@@ -66,8 +72,11 @@ describe("Chibi component", () => {
 
 	it("toggles theme correctly when clicked multiple times", () => {
 		// Arrange.
+		const mockThemeService = createMockThemeService();
+		const serviceOverrides = { themeService: mockThemeService };
+
 		const { getByRole } = render(() => (
-			<MockServiceProvider>
+			<MockServiceProvider serviceOverrides={serviceOverrides}>
 				<Chibi />
 			</MockServiceProvider>
 		));

@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { Effect } from "effect";
 import { beforeEach, describe, it, expect, vi } from "vitest";
-import { themeService } from "./theme";
+import { createThemeService } from "./theme";
 
 /**
  * An effect that sets up the test DOM by reading the index.html file
@@ -42,27 +42,27 @@ describe("Theme service", () => {
 
 	it("should hydrate with light theme when user prefers light", async () => {
 		mockMatchMedia(false);
-		await Effect.runPromise(themeService.hydrateTheme);
+		await Effect.runPromise(createThemeService().hydrateTheme);
 		expect(document.documentElement.getAttribute("data-theme")).toBe("light");
 	});
 
 	it("should hydrate with dark theme when user prefers dark", async () => {
 		mockMatchMedia(true);
-		await Effect.runPromise(themeService.hydrateTheme);
+		await Effect.runPromise(createThemeService().hydrateTheme);
 		expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
 	});
 
 	it("should toggle the theme", async () => {
 		// Hydrate with light theme.
 		mockMatchMedia(false);
-		await Effect.runPromise(themeService.hydrateTheme);
+		await Effect.runPromise(createThemeService().hydrateTheme);
 
 		// Toggle to dark theme.
-		await Effect.runPromise(themeService.toggleTheme);
+		await Effect.runPromise(createThemeService().toggleTheme);
 		expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
 
 		// Toggle to light theme.
-		await Effect.runPromise(themeService.toggleTheme);
+		await Effect.runPromise(createThemeService().toggleTheme);
 		expect(document.documentElement.getAttribute("data-theme")).toBe("light");
 	});
 });

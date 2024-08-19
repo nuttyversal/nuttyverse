@@ -37,7 +37,7 @@ const [hydrated, setHydrated] = createSignal<boolean>(false);
  * It is responsible for hydrating the theme based on the user's
  * operating system setting and toggling the theme.
  */
-const themeService: Context.Tag.Service<ThemeService> = (() => {
+function createThemeService(): Context.Tag.Service<ThemeService> {
 	const updateTheme = (newTheme: Theme) => {
 		return Effect.sync(() => {
 			// Set the theme on the root element.
@@ -90,13 +90,13 @@ const themeService: Context.Tag.Service<ThemeService> = (() => {
 		hydrateTheme,
 		toggleTheme,
 	};
-})();
+}
 
 /**
  * A mock service that represents the currently applied color theme.
  * Intended to be used for testing purposes.
  */
-const mockThemeService: Context.Tag.Service<ThemeService> = (() => {
+function createMockThemeService(): Context.Tag.Service<ThemeService> {
 	const [theme, setTheme] = createSignal<Theme>(Theme.Light);
 
 	const hydrateTheme = Effect.sync(() => {
@@ -121,7 +121,7 @@ const mockThemeService: Context.Tag.Service<ThemeService> = (() => {
 		hydrateTheme,
 		toggleTheme,
 	};
-})();
+}
 
 /**
  * A hook that provides access to the color theme and theme toggling
@@ -157,4 +157,10 @@ const useTheme = (implementation: Context.Tag.Service<ThemeService>) => {
 	return { theme, toggleTheme };
 };
 
-export { Theme, ThemeService, themeService, mockThemeService, useTheme };
+export {
+	Theme,
+	ThemeService,
+	createThemeService,
+	createMockThemeService,
+	useTheme,
+};

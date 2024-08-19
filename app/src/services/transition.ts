@@ -142,7 +142,7 @@ const transitionMachine = setup({
  * This service orchestrates the animations that occur when the application
  * is mounted or when the user navigates between views.
  */
-const transitionService: Context.Tag.Service<TransitionService> = (() => {
+function createTransitionService(): Context.Tag.Service<TransitionService> {
 	const [store, setStore] = createStore<TransitionStore>({
 		elements: {
 			scrollContainer: null,
@@ -521,24 +521,30 @@ const transitionService: Context.Tag.Service<TransitionService> = (() => {
 		signalAfterRouting,
 		state,
 	};
-})();
+}
 
 /**
  * A mock service that handles transitions between views in the application.
  * But it doesn't actually do anything. Intended to be used for testing purposes.
  */
-const mockTransitionService: Context.Tag.Service<TransitionService> = {
-	registerElement: () => {
-		// Do nothing.
-	},
-	signalBeforeRouting: () => {
-		// Do nothing.
-	},
-	signalAfterRouting: () => {
-		// Do nothing.
-	},
-	// Dummy signal.
-	state: createSignal("idle")[0],
-};
+function createMockTransitionService(): Context.Tag.Service<TransitionService> {
+	return {
+		registerElement: () => {
+			// Do nothing.
+		},
+		signalBeforeRouting: () => {
+			// Do nothing.
+		},
+		signalAfterRouting: () => {
+			// Do nothing.
+		},
+		// Dummy signal.
+		state: createSignal("idle")[0],
+	};
+}
 
-export { TransitionService, transitionService, mockTransitionService };
+export {
+	TransitionService,
+	createTransitionService,
+	createMockTransitionService,
+};
