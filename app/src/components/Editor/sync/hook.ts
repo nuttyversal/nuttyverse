@@ -1,8 +1,8 @@
 import { Effect } from "effect";
 import gsap from "gsap";
 import { Accessor, createEffect, createSignal, onCleanup } from "solid-js";
-import { adjustScrollY, blockScrollY } from "./calc";
-import { codeMirrorScroller, previewScroller } from "./query";
+import { snapScrollToEdges, getBlockScrollY } from "./calc";
+import { queryCodeMirrorScroller, queryPreviewScroller } from "./query";
 import { SourceMap } from "./types";
 
 function useScrollSyncing(
@@ -32,10 +32,10 @@ function useScrollSyncing(
 		const block = sourceMap()[lineNumber()];
 		const lastLineNumber = Object.keys(sourceMap()).length;
 
-		const scroller = yield* previewScroller;
-		const scrollY = yield* blockScrollY(block, lineNumber());
+		const scroller = yield* queryPreviewScroller;
+		const scrollY = yield* getBlockScrollY(block, lineNumber());
 
-		const adjustedScrollY = yield* adjustScrollY(
+		const adjustedScrollY = yield* snapScrollToEdges(
 			scrollY,
 			lineNumber(),
 			lastLineNumber,
@@ -53,12 +53,12 @@ function useScrollSyncing(
 	};
 
 	const setupScrollSyncing = Effect.gen(function* () {
-		const scroller = yield* codeMirrorScroller;
+		const scroller = yield* queryCodeMirrorScroller;
 		scroller.addEventListener("scroll", syncScrollerCallback);
 	});
 
 	const cleanupScrollSyncing = Effect.gen(function* () {
-		const scroller = yield* codeMirrorScroller;
+		const scroller = yield* queryCodeMirrorScroller;
 		scroller.removeEventListener("scroll", syncScrollerCallback);
 	});
 

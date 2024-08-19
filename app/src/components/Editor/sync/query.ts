@@ -23,7 +23,7 @@ const querySelector = (selector: string) => {
 /**
  * An effect that queries the DOM for the element block.
  */
-const elementBlock = (block: ElementBlock) => {
+const queryElementBlock = (block: ElementBlock) => {
 	return querySelector(block.selector);
 };
 
@@ -31,7 +31,7 @@ const elementBlock = (block: ElementBlock) => {
  * An effect that queries the DOM for an empty block.
  * An empty block implicitly exists between two element blocks.
  */
-const emptyBlock = (block: EmptyBlock) => {
+const queryEmptyBlock = (block: EmptyBlock) => {
 	return Effect.gen(function* () {
 		const previous = yield* querySelector(block.previous.selector);
 		const next = yield* querySelector(block.next.selector);
@@ -46,23 +46,23 @@ const emptyBlock = (block: EmptyBlock) => {
 /**
  * An effect that queries the DOM for the preview scroller.
  */
-const previewScroller = querySelector(".nv-scroller");
+const queryPreviewScroller = querySelector(".nv-scroller");
 
 /**
  * An effect that queries the DOM for the CodeMirror scroller.
  */
-const codeMirrorScroller = querySelector(".cm-scroller");
+const queryCodeMirrorScroller = querySelector(".cm-scroller");
 
 /**
  * An effect that queries the DOM for the active line in the CodeMirror editor.
  */
-const codeMirrorActiveLine = querySelector(".cm-activeLine");
+const queryCodeMirrorActiveLine = querySelector(".cm-activeLine");
 
 export {
 	querySelector,
-	elementBlock,
-	emptyBlock,
-	previewScroller,
-	codeMirrorScroller,
-	codeMirrorActiveLine,
+	queryElementBlock,
+	queryEmptyBlock,
+	queryPreviewScroller,
+	queryCodeMirrorScroller,
+	queryCodeMirrorActiveLine,
 };

@@ -1,138 +1,253 @@
 import { Effect } from "effect";
 import { Block, ElementBlock, EmptyBlock } from "./types";
 import {
-	codeMirrorActiveLine,
-	codeMirrorScroller,
-	elementBlock,
-	emptyBlock,
-	previewScroller,
+	queryCodeMirrorActiveLine,
+	queryCodeMirrorScroller,
+	queryElementBlock,
+	queryEmptyBlock,
+	queryPreviewScroller,
 } from "./query";
 
+type HasBoundingBox = {
+	getBoundingClientRect(): DOMRect;
+};
+
 /**
- * An effect that calculates the cursor position in the editor.
- * The cursor position is a value between `0` and `1`, where `0`
- * is the top of the editor and `1` is the bottom of the editor.
+ * Calculates the cursor position relative to the scroller.
+ * The cursor position is a value ∈ [0, 1].
  */
-const cursorPosition = Effect.gen(function* () {
-	const scroller = yield* codeMirrorScroller;
-	const activeLine = yield* codeMirrorActiveLine;
-
-	const scrollerBox = scroller.getBoundingClientRect();
+const calculateCursorPosition = (context: {
+	scroller: HasBoundingBox;
+	activeLine: HasBoundingBox;
+}) => {
+	const { scroller, activeLine } = context;
 	const activeLineBox = activeLine.getBoundingClientRect();
+	const scrollerBox = scroller.getBoundingClientRect();
+	const relativeTop = activeLineBox.top - scrollerBox.top;
+	return relativeTop / scrollerBox.height;
+};
 
-	return (activeLineBox.top - scrollerBox.top) / scrollerBox.height;
-});
+/**
+ * Calculates the offset of the cursor within the scroller.
+ * The cursor offset is a value ∈ [0, scroller height].
+ */
+const calculateCursorOffset = (context: {
+	cursorPosition: number;
+	previewScroller: HasBoundingBox;
+}) => {
+	const { cursorPosition, previewScroller } = context;
+	const scrollerBox = previewScroller.getBoundingClientRect();
+	return cursorPosition * scrollerBox.height;
+};
 
 /**
  * Calculates the position of a line within a block by linearly
  * interpolating the line number between the block's start and
  * end positions.
  */
-const blockPosition = (block: Block, lineNumber: number) => {
+const calculateBlockPosition = (context: {
+	block: Block;
+	lineNumber: number;
+}) => {
+	const { block, lineNumber } = context;
 	const lineCount = block.end - block.start + 1;
 	return (lineNumber - block.start) / lineCount;
 };
 
 /**
- * An effect that calculates the scroll position for an element block.
+ * Calculates the scroll position for an element block based on the
+ * cursor position and the block's position within the scroller.
  */
-const elementBlockScrollY = (block: ElementBlock, lineNumber: number) => {
-	return Effect.gen(function* () {
-		const scroller = yield* previewScroller;
-		const previewBlock = yield* elementBlock(block);
+const calculateElementBlockScrollY = (context: {
+	block: ElementBlock;
+	lineNumber: number;
+	previewScroller: HasBoundingBox & { scrollTop: number };
+	elementBlock: HasBoundingBox;
+}) => {
+	const { block, lineNumber, previewScroller, elementBlock } = context;
 
-		const scrollerBox = scroller.getBoundingClientRect();
-		const blockBox = previewBlock.getBoundingClientRect();
+	const scrollerBox = previewScroller.getBoundingClientRect();
+	const blockBox = elementBlock.getBoundingClientRect();
 
-		return (
-			// Calculate relative position of block within scroller.
-			blockBox.top -
-			scrollerBox.top +
-			scroller.scrollTop +
-			// Calculate relative position of line within block.
-			blockBox.height * blockPosition(block, lineNumber) -
-			// Calculate offset to align block with cursor.
-			scrollerBox.height * (yield* cursorPosition)
-		);
-	});
+	const relativeScrollTop =
+		blockBox.top - scrollerBox.top + previewScroller.scrollTop;
+
+	const relativeBlockPosition =
+		blockBox.height * calculateBlockPosition({ block, lineNumber });
+
+	return relativeScrollTop + relativeBlockPosition;
 };
 
 /**
- * An effect that calculates the scroll position for an empty block.
+ * Calculates the scroll position for an empty block based on the
+ * cursor position and the block's position within the scroller.
  */
-const emptyBlockScrollY = (block: EmptyBlock, lineNumber: number) => {
-	return Effect.gen(function* () {
-		const scroller = yield* previewScroller;
-		const { previous, next } = yield* emptyBlock(block);
+const calculateEmptyBlockScrollY = (context: {
+	block: EmptyBlock;
+	lineNumber: number;
+	previewScroller: HasBoundingBox & { scrollTop: number };
+	prevBlock: HasBoundingBox;
+	nextBlock: HasBoundingBox;
+}) => {
+	const { block, lineNumber, previewScroller, prevBlock, nextBlock } = context;
 
-		const scrollerBox = scroller.getBoundingClientRect();
-		const prevBlockBox = previous.getBoundingClientRect();
-		const nextBlockBox = next.getBoundingClientRect();
+	const scrollerBox = previewScroller.getBoundingClientRect();
+	const prevBlockBox = prevBlock.getBoundingClientRect();
+	const nextBlockBox = nextBlock.getBoundingClientRect();
 
-		const blockHeight = nextBlockBox.top - prevBlockBox.bottom;
+	const blockHeight = nextBlockBox.top - prevBlockBox.bottom;
 
-		return (
-			// Calculate relative position of block within scroller.
-			prevBlockBox.bottom -
-			scrollerBox.top +
-			scroller.scrollTop +
-			// Calculate relative position of line within block.
-			blockHeight * blockPosition(block, lineNumber) -
-			// Calculate offset to align block with cursor.
-			scrollerBox.height * (yield* cursorPosition)
-		);
-	});
-};
+	const relativeScrollTop =
+		prevBlockBox.bottom - scrollerBox.top + previewScroller.scrollTop;
 
-/**
- * An effect that calculates the scroll position for a block.
- */
-const blockScrollY = (block: Block, lineNumber: number) => {
-	switch (block.type) {
-		case "element": {
-			return elementBlockScrollY(block, lineNumber);
-		}
-		case "empty": {
-			return emptyBlockScrollY(block, lineNumber);
-		}
-	}
+	const relativeBlockPosition =
+		blockHeight * calculateBlockPosition({ block, lineNumber });
+
+	return relativeScrollTop + relativeBlockPosition;
 };
 
 /**
  * Snaps the scroll position to the top or bottom of the scroller
  * if the cursor is within a certain threshold of the top or bottom.
  */
-const adjustScrollY = (
+const calculateScrollAdjustment = (context: {
+	lineNumber: number;
+	lastLineNumber: number;
+	scrollY: number;
+	editorScroller: {
+		scrollTop: number;
+		clientHeight: number;
+		scrollHeight: number;
+	};
+}) => {
+	const { scrollY, editorScroller, lineNumber, lastLineNumber } = context;
+
+	const scrollTolerance = 20;
+	const basicallyInfinity = 999999;
+
+	const isNearTop = editorScroller.scrollTop < scrollTolerance;
+
+	const isNearBottom =
+		editorScroller.scrollTop + editorScroller.clientHeight >
+		editorScroller.scrollHeight - scrollTolerance;
+
+	if (lineNumber === 1 && isNearTop) {
+		return 0;
+	}
+
+	if (lineNumber >= lastLineNumber && isNearBottom) {
+		return basicallyInfinity;
+	}
+
+	return scrollY;
+};
+
+/**
+ * An effect that queries the cursor position in the editor.
+ * The cursor position is a value ∈ [0, 1].
+ */
+const getCursorPosition = Effect.gen(function* () {
+	const scroller = yield* queryCodeMirrorScroller;
+	const activeLine = yield* queryCodeMirrorActiveLine;
+	return calculateCursorPosition({ scroller, activeLine });
+});
+
+/**
+ * An effect that queries the scroll position for an element block.
+ */
+const getElementBlockScrollY = (block: ElementBlock, lineNumber: number) => {
+	return Effect.gen(function* () {
+		const previewScroller = yield* queryPreviewScroller;
+		const elementBlock = yield* queryElementBlock(block);
+		const cursorPosition = yield* getCursorPosition;
+
+		const scrollY = calculateElementBlockScrollY({
+			block,
+			lineNumber,
+			previewScroller,
+			elementBlock,
+		});
+
+		const cursorOffset = calculateCursorOffset({
+			cursorPosition,
+			previewScroller,
+		});
+
+		return scrollY - cursorOffset;
+	});
+};
+
+/**
+ * An effect that queries the scroll position for an empty block.
+ */
+const getEmptyBlockScrollY = (block: EmptyBlock, lineNumber: number) => {
+	return Effect.gen(function* () {
+		const previewScroller = yield* queryPreviewScroller;
+		const { previous, next } = yield* queryEmptyBlock(block);
+		const cursorPosition = yield* getCursorPosition;
+
+		const scrollY = calculateEmptyBlockScrollY({
+			block,
+			lineNumber,
+			previewScroller,
+			prevBlock: previous,
+			nextBlock: next,
+		});
+
+		const cursorOffset = calculateCursorOffset({
+			cursorPosition,
+			previewScroller,
+		});
+
+		return scrollY - cursorOffset;
+	});
+};
+
+/**
+ * An effect that queries the scroll position for a block.
+ */
+const getBlockScrollY = (block: Block, lineNumber: number) => {
+	switch (block.type) {
+		case "element": {
+			return getElementBlockScrollY(block, lineNumber);
+		}
+		case "empty": {
+			return getEmptyBlockScrollY(block, lineNumber);
+		}
+	}
+};
+
+/**
+ * An effect that snaps the scroll position to the top or bottom of the
+ * scroller if the cursor is within a certain threshold of the top or bottom.
+ */
+const snapScrollToEdges = (
 	scrollY: number,
 	lineNumber: number,
 	lastLineNumber: number,
 ) => {
 	return Effect.gen(function* () {
-		const scrollTolerance = 20;
-		const scroller = yield* codeMirrorScroller;
+		const editorScroller = yield* queryCodeMirrorScroller;
 
-		const isNearTop = scroller.scrollTop < scrollTolerance;
-		const isNearBottom =
-			scroller.scrollTop + scroller.clientHeight >
-			scroller.scrollHeight - scrollTolerance;
-
-		if (lineNumber === 1 && isNearTop) {
-			return 0;
-		}
-
-		if (lineNumber >= lastLineNumber && isNearBottom) {
-			return 999999;
-		}
-
-		return scrollY;
+		return calculateScrollAdjustment({
+			scrollY,
+			editorScroller,
+			lineNumber,
+			lastLineNumber,
+		});
 	});
 };
 
 export {
-	cursorPosition,
-	blockPosition,
-	elementBlockScrollY,
-	emptyBlockScrollY,
-	blockScrollY,
-	adjustScrollY,
+	calculateCursorPosition,
+	calculateCursorOffset,
+	calculateBlockPosition,
+	calculateElementBlockScrollY,
+	calculateEmptyBlockScrollY,
+	calculateScrollAdjustment,
+	getCursorPosition,
+	getElementBlockScrollY,
+	getEmptyBlockScrollY,
+	getBlockScrollY,
+	snapScrollToEdges,
 };

@@ -2,7 +2,7 @@ import { Effect } from "effect";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ElementNotFoundError } from "./errors";
 import { ElementBlock, EmptyBlock } from "./types";
-import { elementBlock, emptyBlock, querySelector } from "./query";
+import { queryElementBlock, queryEmptyBlock, querySelector } from "./query";
 
 describe("Editor DOM queries", () => {
 	beforeEach(() => {
@@ -42,7 +42,7 @@ describe("Editor DOM queries", () => {
 		});
 	});
 
-	describe("elementBlock", () => {
+	describe("queryElementBlock", () => {
 		it("queries and returns element", () => {
 			// Arrange
 			const block: ElementBlock = {
@@ -56,7 +56,7 @@ describe("Editor DOM queries", () => {
 			vi.spyOn(document, "querySelector").mockReturnValue(mockElement);
 
 			// Act
-			const result = Effect.runSync(elementBlock(block));
+			const result = Effect.runSync(queryElementBlock(block));
 
 			// Assert
 			expect(result).toBe(mockElement);
@@ -64,7 +64,7 @@ describe("Editor DOM queries", () => {
 		});
 	});
 
-	describe("emptyBlock", () => {
+	describe("queryEmptyBlock", () => {
 		it("queries and returns empty block", () => {
 			// Arrange
 			const block: EmptyBlock = {
@@ -99,7 +99,7 @@ describe("Editor DOM queries", () => {
 			});
 
 			// Act
-			const result = Effect.runSync(emptyBlock(block));
+			const result = Effect.runSync(queryEmptyBlock(block));
 
 			// Assert
 			expect(result.previous).toBe(mockPreviousElement);
