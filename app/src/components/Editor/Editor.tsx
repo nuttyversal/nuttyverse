@@ -21,14 +21,12 @@ import { useCarmackClick } from "~/components/hooks";
 import { ServiceContext } from "~/services/context";
 import { LocalStorageService } from "~/services/local-storage";
 import styles from "./Editor.module.scss";
-import { SourceMap, useScrollSyncing } from "./auto-scroll";
+import { SourceMap } from "./auto-scroll";
+import { useScrollSyncing } from "./sync/hook";
 import { compileMdx } from "./compiler";
 
 const Editor: Component = () => {
 	const [editorContainer, setEditorContainer] =
-		createSignal<HTMLDivElement | null>(null);
-
-	const [scrollContainer, setScrollContainer] =
 		createSignal<HTMLDivElement | null>(null);
 
 	const services = useContext(ServiceContext);
@@ -44,15 +42,10 @@ const Editor: Component = () => {
 	const [sourceMap, setSourceMap] = createSignal<SourceMap>({});
 	const [lineNumber, setLineNumber] = createSignal<number>(1);
 
-	const { setupScrollSyncing, isSyncing, setIsSyncing } = useScrollSyncing(
-		scrollContainer,
+	const { setupScrollSyncing, isSyncing, toggleSyncing } = useScrollSyncing(
 		sourceMap,
 		lineNumber,
 	);
-
-	const toggleSyncing = () => {
-		setIsSyncing((prev) => !prev);
-	};
 
 	// When the document content changes, compile the MDX content.
 	const [mdxContent] = createResource(
@@ -163,7 +156,7 @@ const Editor: Component = () => {
 		<div class={styles.container}>
 			<SyncButton isSyncing={isSyncing} onClick={toggleSyncing} />
 			<div class={styles.editor} ref={setEditorContainer} />
-			<ScrollContainer ref={setScrollContainer} class={styles.output}>
+			<ScrollContainer class={styles.output}>
 				<div class={styles.content}>{mdxContent()}</div>
 			</ScrollContainer>
 		</div>

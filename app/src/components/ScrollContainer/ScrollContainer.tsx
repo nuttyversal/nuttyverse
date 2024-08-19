@@ -86,7 +86,7 @@ const ScrollContainer: ParentComponent<Props> = (props) => {
 			/>
 			<div
 				ref={mergeRefs(props.ref, (e) => (container = e))}
-				class={styles["inner-container"] + " test-container"}
+				class={styles["inner-container"] + " " + "nv-scroller"}
 			>
 				{props.children}
 			</div>
