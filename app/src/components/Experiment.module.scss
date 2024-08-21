@@ -1,9 +1,0 @@
-@use "sass:map";
-@use "../styles";
-
-.main {
-	padding-left: map.get(styles.$spacing, "4");
-	padding-right: map.get(styles.$spacing, "4");
-	max-width: 1200px;
-	height: 50vh;
-}
