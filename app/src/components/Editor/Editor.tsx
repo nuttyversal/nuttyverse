@@ -178,7 +178,12 @@ const SyncButton: Component<SyncButtonProps> = (props) => {
 		useCarmackClick(props.onClick);
 
 	return (
-		<button classList={classes()} onMouseDown={onMouseDown} onClick={onClick}>
+		<button
+			classList={classes()}
+			onMouseDown={onMouseDown}
+			onClick={onClick}
+			aria-label="Toggle syncing"
+		>
 			{props.isSyncing() ? "⚡ Sync ⚡" : "Sync"}
 		</button>
 	);

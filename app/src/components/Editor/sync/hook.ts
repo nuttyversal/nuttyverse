@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 import gsap from "gsap";
-import { Accessor, createEffect, createSignal, onCleanup } from "solid-js";
+import { Accessor, createEffect, createSignal } from "solid-js";
 import { snapScrollToEdges, getBlockScrollY } from "./calc";
 import { queryCodeMirrorScroller, queryPreviewScroller } from "./query";
 import { SourceMap } from "./types";
@@ -30,6 +30,11 @@ function useScrollSyncing(
 		}
 
 		const block = sourceMap()[lineNumber()];
+
+		if (!block) {
+			return;
+		}
+
 		const lastLineNumber = Object.keys(sourceMap()).length;
 
 		const scroller = yield* queryPreviewScroller;
@@ -57,24 +62,8 @@ function useScrollSyncing(
 		scroller.addEventListener("scroll", syncScrollerCallback);
 	});
 
-	const cleanupScrollSyncing = Effect.gen(function* () {
-		const scroller = yield* queryCodeMirrorScroller;
-		scroller.removeEventListener("scroll", syncScrollerCallback);
-	});
-
 	createEffect(() => {
 		syncScrollerCallback();
-	});
-
-	onCleanup(() => {
-		Effect.runSync(
-			cleanupScrollSyncing.pipe(
-				Effect.catchAll(() => {
-					const reason = "Element removed, no cleanup needed.";
-					return Effect.succeed(reason);
-				}),
-			),
-		);
 	});
 
 	return {
