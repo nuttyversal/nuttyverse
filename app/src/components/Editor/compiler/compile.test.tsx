@@ -4,10 +4,13 @@ import { render } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 import { compileMarkdownJsx } from "./compile";
 import { CompileError } from "./errors";
+import { createSignal } from "solid-js";
 
 describe("MDX compiler", () => {
 	it("compiles MDX content into JSX", async () => {
 		// Arrange.
+		const [setSourceMap] = createSignal({});
+
 		const content = `
 			# Header
 
@@ -15,8 +18,13 @@ describe("MDX compiler", () => {
 		`;
 
 		// Act.
-		const element = await Effect.runPromise(compileMarkdownJsx(content));
-		const { container } = render(() => element);
+		const element = await Effect.runPromise(
+			compileMarkdownJsx(content, setSourceMap),
+		);
+
+		const { container } = render(() => {
+			return element;
+		});
 
 		// Assert.
 		expect(container.querySelector("h1")).toBeInTheDocument();
@@ -25,6 +33,8 @@ describe("MDX compiler", () => {
 
 	it("compiles code blocks into `CodeBlock` components", async () => {
 		// Arrange.
+		const [setSourceMap] = createSignal({});
+
 		const content = `
 			\`\`\`js
 			console.log("Hello, world!");
@@ -36,8 +46,13 @@ describe("MDX compiler", () => {
 		`;
 
 		// Act.
-		const element = await Effect.runPromise(compileMarkdownJsx(content));
-		const { container } = render(() => element);
+		const element = await Effect.runPromise(
+			compileMarkdownJsx(content, setSourceMap),
+		);
+
+		const { container } = render(() => {
+			return element;
+		});
 
 		// Assert.
 		expect(container.querySelector("code")).toBeInTheDocument();
@@ -45,6 +60,8 @@ describe("MDX compiler", () => {
 
 	it("compiles math expressions with KaTeX", async () => {
 		// Arrange.
+		const [setSourceMap] = createSignal({});
+
 		const content = `
 			An inline example: $1 + 1 = 2$.
 
@@ -55,8 +72,13 @@ describe("MDX compiler", () => {
 		`;
 
 		// Act.
-		const element = await Effect.runPromise(compileMarkdownJsx(content));
-		const { container } = render(() => element);
+		const element = await Effect.runPromise(
+			compileMarkdownJsx(content, setSourceMap),
+		);
+
+		const { container } = render(() => {
+			return element;
+		});
 
 		// Assert.
 		expect(container.querySelector(".katex")).toBeInTheDocument();
@@ -64,13 +86,17 @@ describe("MDX compiler", () => {
 
 	it("compiles links into `Link` components", async () => {
 		// Arrange.
+		const [setSourceMap] = createSignal({});
+
 		const content = `
 			[Absolute link](https://nuttyver.se)
 			[Relative link](/about)
 		`;
 
 		// Act.
-		const element = await Effect.runPromise(compileMarkdownJsx(content));
+		const element = await Effect.runPromise(
+			compileMarkdownJsx(content, setSourceMap),
+		);
 
 		const { findByText } = render(
 			() => <Route path="/" component={() => element} />,
@@ -89,6 +115,8 @@ describe("MDX compiler", () => {
 
 	it("throws an error when compilation fails", async () => {
 		// Arrange.
+		const [setSourceMap] = createSignal({});
+
 		const content = `
 			This component is not defined in the registry:
 
@@ -97,7 +125,7 @@ describe("MDX compiler", () => {
 
 		// Act.
 		const result = await Effect.runPromise(
-			compileMarkdownJsx(content).pipe(
+			compileMarkdownJsx(content, setSourceMap).pipe(
 				Effect.catchTag("CompileError", (error) => {
 					return Effect.succeed(error);
 				}),
