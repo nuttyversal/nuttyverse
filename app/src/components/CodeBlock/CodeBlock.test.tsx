@@ -3,9 +3,9 @@ import { render } from "@solidjs/testing-library";
 import { CodeBlock } from "./CodeBlock";
 
 describe("CodeBlock component", () => {
-	it("renders without crashing", () => {
+	it("renders without crashing", async () => {
 		// Arrange.
-		const { container } = render(() => (
+		const { findByText } = render(() => (
 			<CodeBlock
 				code={"console.log('test');"}
 				language="typescript"
@@ -14,6 +14,7 @@ describe("CodeBlock component", () => {
 		));
 
 		// Assert.
-		expect(container.querySelector(".code-block")).toBeTruthy();
+		const codeBlock = await findByText("console");
+		expect(codeBlock).toBeInTheDocument();
 	});
 });

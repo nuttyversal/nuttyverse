@@ -87,12 +87,18 @@ importers:
       '@types/unist':
         specifier: ^3.0.2
         version: 3.0.2
-      '@vitest/coverage-v8':
+      '@vitest/browser':
         specifier: ^2.0.5
-        version: 2.0.5(vitest@2.0.5(@types/node@20.14.10)(jsdom@24.1.1)(sass@1.72.0))
+        version: 2.0.5(playwright@1.46.1)(typescript@5.5.3)(vitest@2.0.5)
+      '@vitest/coverage-istanbul':
+        specifier: ^2.0.5
+        version: 2.0.5(vitest@2.0.5(@types/node@20.14.10)(@vitest/browser@2.0.5)(jsdom@24.1.1)(sass@1.72.0))
       jsdom:
         specifier: ^24.1.1
         version: 24.1.1
+      playwright:
+        specifier: ^1.46.1
+        version: 1.46.1
       prettier:
         specifier: ^3.3.2
         version: 3.3.2
@@ -107,13 +113,13 @@ importers:
         version: 5.3.5(@types/node@20.14.10)(sass@1.72.0)
       vite-plugin-solid:
         specifier: ^2.10.2
-        version: 2.10.2(@testing-library/jest-dom@6.4.6(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(vitest@2.0.5(@types/node@20.14.10)(jsdom@24.1.1)(sass@1.72.0)))(solid-js@1.8.19)(vite@5.3.5(@types/node@20.14.10)(sass@1.72.0))
+        version: 2.10.2(@testing-library/jest-dom@6.4.6(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(vitest@2.0.5(@types/node@20.14.10)(@vitest/browser@2.0.5)(jsdom@24.1.1)(sass@1.72.0)))(solid-js@1.8.19)(vite@5.3.5(@types/node@20.14.10)(sass@1.72.0))
       vite-tsconfig-paths:
         specifier: ^4.3.2
         version: 4.3.2(typescript@5.5.3)(vite@5.3.5(@types/node@20.14.10)(sass@1.72.0))
       vitest:
         specifier: ^2.0.5
-        version: 2.0.5(@types/node@20.14.10)(jsdom@24.1.1)(sass@1.72.0)
+        version: 2.0.5(@types/node@20.14.10)(@vitest/browser@2.0.5)(jsdom@24.1.1)(sass@1.72.0)
 
   blocks:
     dependencies:
@@ -1100,6 +1106,9 @@ packages:
   '@bundled-es-modules/statuses@1.0.1':
     resolution: {integrity: sha512-yn7BklA5acgcBr+7w064fGV+SGIFySjCKpqjcWgBAIfrAkY+4GQTJJHQMeT3V/sgz23VTEVV8TtOmkvJAhFVfg==}
 
+  '@bundled-es-modules/tough-cookie@0.1.6':
+    resolution: {integrity: sha512-dvMHbL464C0zI+Yqxbz6kZ5TOEp7GLW+pry/RWndAR8MJQAXZ2rPmIs8tziTZjeIyhSNZgZbCePtfSbdWqStJw==}
+
   '@codemirror/autocomplete@6.17.0':
     resolution: {integrity: sha512-fdfj6e6ZxZf8yrkMHUSJJir7OJkHkZKaOZGzLWIYp2PZ3jd+d+UjG8zVPqJF6d3bKxkhvXTPan/UZ1t7Bqm0gA==}
     peerDependencies:
@@ -2073,6 +2082,9 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
+  '@polka/url@1.0.0-next.25':
+    resolution: {integrity: sha512-j7P6Rgr3mmtdkeDGTe0E/aYyWEWVtc5yFXtHCRHs28/jptDEWfaVOc5T7cblqy1XKPPfCxJc/8DwQ5YgLOZOVQ==}
+
   '@radix-ui/colors@3.0.0':
     resolution: {integrity: sha512-FUOsGBkHrYJwCSEtWRCIfQbZG7q1e6DgxCIOe1SUQzDe/7rXXeA47s8yCn6fuTNQAj1Zq4oTFi9Yjp3wzElcxg==}
 
@@ -2880,8 +2892,23 @@ packages:
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0
 
-  '@vitest/coverage-v8@2.0.5':
-    resolution: {integrity: sha512-qeFcySCg5FLO2bHHSa0tAZAOnAUbp4L6/A5JDuj9+bt53JREl8hpLjLHEWF0e/gWc8INVpJaqA7+Ene2rclpZg==}
+  '@vitest/browser@2.0.5':
+    resolution: {integrity: sha512-VbOYtu/6R3d7ASZREcrJmRY/sQuRFO9wMVsEDqfYbWiJRh2fDNi8CL1Csn7Ux31pOcPmmM5QvzFCMpiojvVh8g==}
+    peerDependencies:
+      playwright: '*'
+      safaridriver: '*'
+      vitest: 2.0.5
+      webdriverio: '*'
+    peerDependenciesMeta:
+      playwright:
+        optional: true
+      safaridriver:
+        optional: true
+      webdriverio:
+        optional: true
+
+  '@vitest/coverage-istanbul@2.0.5':
+    resolution: {integrity: sha512-BvjWKtp7fiMAeYUD0mO5cuADzn1gmjTm54jm5qUEnh/O08riczun8rI4EtQlg3bWoRo2lT3FO8DmjPDX9ZthPw==}
     peerDependencies:
       vitest: 2.0.5
 
@@ -3974,6 +4001,11 @@ packages:
 
   fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
+
+  fsevents@2.3.2:
+    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
+    os: [darwin]
 
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -5109,6 +5141,16 @@ packages:
       typescript:
         optional: true
 
+  msw@2.3.5:
+    resolution: {integrity: sha512-+GUI4gX5YC5Bv33epBrD+BGdmDvBg2XGruiWnI3GbIbRmMMBeZ5gs3mJ51OWSGHgJKztZ8AtZeYMMNMVrje2/Q==}
+    engines: {node: '>=18'}
+    hasBin: true
+    peerDependencies:
+      typescript: '>= 4.7.x'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
   muggle-string@0.4.1:
     resolution: {integrity: sha512-VNTrAak/KhO2i8dqqnqnAHOa3cYBwXEZe9h+D5h/1ZqFSTEFHdM65lR7RoIqq3tBBYavsOXV84NoHXZ0AkPyqQ==}
 
@@ -5393,6 +5435,16 @@ packages:
 
   pkg-types@1.1.3:
     resolution: {integrity: sha512-+JrgthZG6m3ckicaOB74TwQ+tBWsFl3qVQg7mN8ulwSOElJ7gBhKzj2VkCPnZ4NlF6kEquYU+RIYNVAvzd54UA==}
+
+  playwright-core@1.46.1:
+    resolution: {integrity: sha512-h9LqIQaAv+CYvWzsZ+h3RsrqCStkBHlgo6/TJlFst3cOTlLghBQlJwPOZKQJTKNaD3QIB7aAVQ+gfWbN3NXB7A==}
+    engines: {node: '>=18'}
+    hasBin: true
+
+  playwright@1.46.1:
+    resolution: {integrity: sha512-oPcr1yqoXLCkgKtD5eNUPLiN40rYEM39odNpIb6VE6S7/15gJmA1NzVv6zJYusV0e7tzvkU/utBFNa/Kpxmwng==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   polished@4.3.1:
     resolution: {integrity: sha512-OBatVyC/N7SCW/FaDHrSd+vn0o5cS855TOmYi4OkdWUMSJCET/xip//ch8xGUvtr3i44X9LVyWwQlRMTN3pwSA==}
@@ -5871,6 +5923,10 @@ packages:
   simple-swizzle@0.2.2:
     resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}
 
+  sirv@2.0.4:
+    resolution: {integrity: sha512-94Bdh3cC2PKrbgSOUqTiGPWVZeSiXfKOVZNJniWoqrWrRkB1CJzBU3NEbiTsPcYy1lDsANA/THzS+9WBiy5nfQ==}
+    engines: {node: '>= 10'}
+
   sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
 
@@ -6133,6 +6189,10 @@ packages:
   toidentifier@1.0.1:
     resolution: {integrity: sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==}
     engines: {node: '>=0.6'}
+
+  totalist@3.0.1:
+    resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
+    engines: {node: '>=6'}
 
   tough-cookie@4.1.4:
     resolution: {integrity: sha512-Loo5UUvLD9ScZ6jh8beX1T6sO1w2/MpCRpEP7V280GKMVUQ0Jzar2U3UJPsrdbziLEMMhu3Ujnq//rhiFuIeag==}
@@ -6583,34 +6643,34 @@ packages:
       jsdom:
         optional: true
 
-  volar-service-css@0.0.59:
-    resolution: {integrity: sha512-gLNjJnECbalPvQB7qeJjhkDN8sR5M3ItbVYjnyio61aHaWptIiXm/HfDahcQ2ApwmvWidkMWWegjGq5L0BENDA==}
+  volar-service-css@0.0.61:
+    resolution: {integrity: sha512-Ct9L/w+IB1JU8F4jofcNCGoHy6TF83aiapfZq9A0qYYpq+Kk5dH+ONS+rVZSsuhsunq8UvAuF8Gk6B8IFLfniw==}
     peerDependencies:
-      '@volar/language-service': ~2.4.0-alpha.12
+      '@volar/language-service': ~2.4.0
     peerDependenciesMeta:
       '@volar/language-service':
         optional: true
 
-  volar-service-emmet@0.0.59:
-    resolution: {integrity: sha512-6EynHcuMwMBETpK29TbZvIMmvzdVG+Tkokk9VWfZeI+SwDptk2tgdhEqiXXvIkqYNgbuu73Itp66lpH76cAU+Q==}
+  volar-service-emmet@0.0.61:
+    resolution: {integrity: sha512-iiYqBxjjcekqrRruw4COQHZME6EZYWVbkHjHDbULpml3g8HGJHzpAMkj9tXNCPxf36A+f1oUYjsvZt36qPg4cg==}
     peerDependencies:
-      '@volar/language-service': ~2.4.0-alpha.12
+      '@volar/language-service': ~2.4.0
     peerDependenciesMeta:
       '@volar/language-service':
         optional: true
 
-  volar-service-html@0.0.59:
-    resolution: {integrity: sha512-hEXOsYpILDlITZxnqRLV9OepVWD63GZBsyjMxszwdzlxvGZjzbGcBBinJGGJRwFIV8djdJwnt91bkdg1V5tj6Q==}
+  volar-service-html@0.0.61:
+    resolution: {integrity: sha512-yFE+YmmgqIL5HI4ORqP++IYb1QaGcv+xBboI0WkCxJJ/M35HZj7f5rbT3eQ24ECLXFbFCFanckwyWJVz5KmN3Q==}
     peerDependencies:
-      '@volar/language-service': ~2.4.0-alpha.12
+      '@volar/language-service': ~2.4.0
     peerDependenciesMeta:
       '@volar/language-service':
         optional: true
 
-  volar-service-prettier@0.0.59:
-    resolution: {integrity: sha512-FmBR4lsgFRGR3V0LnxZZal0WqdOJjuLL6mQSj4p57M15APtQwuocG/FiF+ONGFnwRXMOIBDBTCARdth+TKgL3A==}
+  volar-service-prettier@0.0.61:
+    resolution: {integrity: sha512-F612nql5I0IS8HxXemCGvOR2Uxd4XooIwqYVUvk7WSBxP/+xu1jYvE3QJ7EVpl8Ty3S4SxPXYiYTsG3bi+gzIQ==}
     peerDependencies:
-      '@volar/language-service': ~2.4.0-alpha.12
+      '@volar/language-service': ~2.4.0
       prettier: ^2.2 || ^3.0
     peerDependenciesMeta:
       '@volar/language-service':
@@ -6618,18 +6678,18 @@ packages:
       prettier:
         optional: true
 
-  volar-service-typescript-twoslash-queries@0.0.59:
-    resolution: {integrity: sha512-skm8e6yhCIkqLwJB6S9MqT5lO9LNFuMD3dYxKpmOZs1CKbXmCZZTmLfEaD5VkJae1xdleEDZFFTHl2O5HLjOGQ==}
+  volar-service-typescript-twoslash-queries@0.0.61:
+    resolution: {integrity: sha512-99FICGrEF0r1E2tV+SvprHPw9Knyg7BdW2fUch0tf59kG+KG+Tj4tL6tUg+cy8f23O/VXlmsWFMIE+bx1dXPnQ==}
     peerDependencies:
-      '@volar/language-service': ~2.4.0-alpha.12
+      '@volar/language-service': ~2.4.0
     peerDependenciesMeta:
       '@volar/language-service':
         optional: true
 
-  volar-service-typescript@0.0.59:
-    resolution: {integrity: sha512-VCOpfiu+lUo5lapWLB5L5vmQGtwzmNWn5MueV915eku7blpphmE+Z7hCNcL1NApn7AetXWhiblv8ZhmUx/dGIA==}
+  volar-service-typescript@0.0.61:
+    resolution: {integrity: sha512-4kRHxVbW7wFBHZWRU6yWxTgiKETBDIJNwmJUAWeP0mHaKpnDGj/astdRFKqGFRYVeEYl45lcUPhdJyrzanjsdQ==}
     peerDependencies:
-      '@volar/language-service': ~2.4.0-alpha.12
+      '@volar/language-service': ~2.4.0
     peerDependenciesMeta:
       '@volar/language-service':
         optional: true
@@ -6900,12 +6960,12 @@ snapshots:
       '@volar/typescript': 2.4.0-alpha.15
       fast-glob: 3.3.2
       muggle-string: 0.4.1
-      volar-service-css: 0.0.59(@volar/language-service@2.4.0-alpha.15)
-      volar-service-emmet: 0.0.59(@volar/language-service@2.4.0-alpha.15)
-      volar-service-html: 0.0.59(@volar/language-service@2.4.0-alpha.15)
-      volar-service-prettier: 0.0.59(@volar/language-service@2.4.0-alpha.15)(prettier@3.3.2)
-      volar-service-typescript: 0.0.59(@volar/language-service@2.4.0-alpha.15)
-      volar-service-typescript-twoslash-queries: 0.0.59(@volar/language-service@2.4.0-alpha.15)
+      volar-service-css: 0.0.61(@volar/language-service@2.4.0-alpha.15)
+      volar-service-emmet: 0.0.61(@volar/language-service@2.4.0-alpha.15)
+      volar-service-html: 0.0.61(@volar/language-service@2.4.0-alpha.15)
+      volar-service-prettier: 0.0.61(@volar/language-service@2.4.0-alpha.15)(prettier@3.3.2)
+      volar-service-typescript: 0.0.61(@volar/language-service@2.4.0-alpha.15)
+      volar-service-typescript-twoslash-queries: 0.0.61(@volar/language-service@2.4.0-alpha.15)
       vscode-html-languageservice: 5.3.0
       vscode-uri: 3.0.8
     optionalDependencies:
@@ -7841,6 +7901,11 @@ snapshots:
     dependencies:
       statuses: 2.0.1
 
+  '@bundled-es-modules/tough-cookie@0.1.6':
+    dependencies:
+      '@types/tough-cookie': 4.0.5
+      tough-cookie: 4.1.4
+
   '@codemirror/autocomplete@6.17.0(@codemirror/language@6.10.2)(@codemirror/state@6.4.1)(@codemirror/view@6.28.4)(@lezer/common@1.2.1)':
     dependencies:
       '@codemirror/language': 6.10.2
@@ -8703,6 +8768,8 @@ snapshots:
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
+
+  '@polka/url@1.0.0-next.25': {}
 
   '@radix-ui/colors@3.0.0': {}
 
@@ -9611,7 +9678,7 @@ snapshots:
       '@jest/globals': 29.7.0
       '@types/jest': 29.5.12
       jest: 29.7.0(@types/node@20.14.10)
-      vitest: 2.0.5(@types/node@20.14.10)(jsdom@24.1.1)(sass@1.72.0)
+      vitest: 2.0.5(@types/node@20.14.10)(@vitest/browser@2.0.5)(jsdom@24.1.1)(sass@1.72.0)
 
   '@testing-library/jest-dom@6.4.6(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(vitest@2.0.5(@types/node@20.14.10)(sass@1.72.0))':
     dependencies:
@@ -9627,7 +9694,7 @@ snapshots:
       '@jest/globals': 29.7.0
       '@types/jest': 29.5.12
       jest: 29.7.0(@types/node@20.14.10)
-      vitest: 2.0.5(@types/node@20.14.10)(jsdom@24.1.1)(sass@1.72.0)
+      vitest: 2.0.5(@types/node@20.14.10)(@vitest/browser@2.0.5)(jsdom@24.1.1)(sass@1.72.0)
 
   '@testing-library/react@16.0.0(@testing-library/dom@10.3.1)(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -10019,21 +10086,36 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/coverage-v8@2.0.5(vitest@2.0.5(@types/node@20.14.10)(jsdom@24.1.1)(sass@1.72.0))':
+  '@vitest/browser@2.0.5(playwright@1.46.1)(typescript@5.5.3)(vitest@2.0.5)':
     dependencies:
-      '@ampproject/remapping': 2.3.0
-      '@bcoe/v8-coverage': 0.2.3
+      '@testing-library/dom': 10.4.0
+      '@testing-library/user-event': 14.5.2(@testing-library/dom@10.4.0)
+      '@vitest/utils': 2.0.5
+      magic-string: 0.30.10
+      msw: 2.3.5(typescript@5.5.3)
+      sirv: 2.0.4
+      vitest: 2.0.5(@types/node@20.14.10)(@vitest/browser@2.0.5)(jsdom@24.1.1)(sass@1.72.0)
+      ws: 8.18.0
+    optionalDependencies:
+      playwright: 1.46.1
+    transitivePeerDependencies:
+      - bufferutil
+      - typescript
+      - utf-8-validate
+
+  '@vitest/coverage-istanbul@2.0.5(vitest@2.0.5(@types/node@20.14.10)(@vitest/browser@2.0.5)(jsdom@24.1.1)(sass@1.72.0))':
+    dependencies:
+      '@istanbuljs/schema': 0.1.3
       debug: 4.3.5
       istanbul-lib-coverage: 3.2.2
+      istanbul-lib-instrument: 6.0.3
       istanbul-lib-report: 3.0.1
       istanbul-lib-source-maps: 5.0.6
       istanbul-reports: 3.1.7
-      magic-string: 0.30.10
       magicast: 0.3.4
-      std-env: 3.7.0
       test-exclude: 7.0.1
       tinyrainbow: 1.2.0
-      vitest: 2.0.5(@types/node@20.14.10)(jsdom@24.1.1)(sass@1.72.0)
+      vitest: 2.0.5(@types/node@20.14.10)(@vitest/browser@2.0.5)(jsdom@24.1.1)(sass@1.72.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -11383,6 +11465,9 @@ snapshots:
       minipass: 3.3.6
 
   fs.realpath@1.0.0: {}
+
+  fsevents@2.3.2:
+    optional: true
 
   fsevents@2.3.3:
     optional: true
@@ -13095,6 +13180,28 @@ snapshots:
     optionalDependencies:
       typescript: 5.5.3
 
+  msw@2.3.5(typescript@5.5.3):
+    dependencies:
+      '@bundled-es-modules/cookie': 2.0.0
+      '@bundled-es-modules/statuses': 1.0.1
+      '@bundled-es-modules/tough-cookie': 0.1.6
+      '@inquirer/confirm': 3.1.14
+      '@mswjs/interceptors': 0.29.1
+      '@open-draft/until': 2.1.0
+      '@types/cookie': 0.6.0
+      '@types/statuses': 2.0.5
+      chalk: 4.1.2
+      graphql: 16.9.0
+      headers-polyfill: 4.0.3
+      is-node-process: 1.2.0
+      outvariant: 1.4.3
+      path-to-regexp: 6.2.2
+      strict-event-emitter: 0.5.1
+      type-fest: 4.21.0
+      yargs: 17.7.2
+    optionalDependencies:
+      typescript: 5.5.3
+
   muggle-string@0.4.1: {}
 
   mute-stream@1.0.0: {}
@@ -13369,6 +13476,14 @@ snapshots:
       confbox: 0.1.7
       mlly: 1.7.1
       pathe: 1.1.2
+
+  playwright-core@1.46.1: {}
+
+  playwright@1.46.1:
+    dependencies:
+      playwright-core: 1.46.1
+    optionalDependencies:
+      fsevents: 2.3.2
 
   polished@4.3.1:
     dependencies:
@@ -13996,6 +14111,12 @@ snapshots:
       is-arrayish: 0.3.2
     optional: true
 
+  sirv@2.0.4:
+    dependencies:
+      '@polka/url': 1.0.0-next.25
+      mrmime: 2.0.0
+      totalist: 3.0.1
+
   sisteransi@1.0.5: {}
 
   slash@3.0.0: {}
@@ -14258,6 +14379,8 @@ snapshots:
   tocbot@4.28.2: {}
 
   toidentifier@1.0.1: {}
+
+  totalist@3.0.1: {}
 
   tough-cookie@4.1.4:
     dependencies:
@@ -14548,7 +14671,7 @@ snapshots:
       - supports-color
       - terser
 
-  vite-plugin-solid@2.10.2(@testing-library/jest-dom@6.4.6(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(vitest@2.0.5(@types/node@20.14.10)(jsdom@24.1.1)(sass@1.72.0)))(solid-js@1.8.19)(vite@5.3.5(@types/node@20.14.10)(sass@1.72.0)):
+  vite-plugin-solid@2.10.2(@testing-library/jest-dom@6.4.6(@jest/globals@29.7.0)(@types/jest@29.5.12)(jest@29.7.0(@types/node@20.14.10))(vitest@2.0.5(@types/node@20.14.10)(@vitest/browser@2.0.5)(jsdom@24.1.1)(sass@1.72.0)))(solid-js@1.8.19)(vite@5.3.5(@types/node@20.14.10)(sass@1.72.0)):
     dependencies:
       '@babel/core': 7.24.7
       '@types/babel__core': 7.20.5
@@ -14644,7 +14767,7 @@ snapshots:
     optionalDependencies:
       vite: 5.3.5(@types/node@20.14.10)(sass@1.72.0)
 
-  vitest@2.0.5(@types/node@20.14.10)(jsdom@24.1.1)(sass@1.72.0):
+  vitest@2.0.5(@types/node@20.14.10)(@vitest/browser@2.0.5)(jsdom@24.1.1)(sass@1.72.0):
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@vitest/expect': 2.0.5
@@ -14667,6 +14790,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.14.10
+      '@vitest/browser': 2.0.5(playwright@1.46.1)(typescript@5.5.3)(vitest@2.0.5)
       jsdom: 24.1.1
     transitivePeerDependencies:
       - less
@@ -14677,7 +14801,7 @@ snapshots:
       - supports-color
       - terser
 
-  volar-service-css@0.0.59(@volar/language-service@2.4.0-alpha.15):
+  volar-service-css@0.0.61(@volar/language-service@2.4.0-alpha.15):
     dependencies:
       vscode-css-languageservice: 6.3.0
       vscode-languageserver-textdocument: 1.0.11
@@ -14685,7 +14809,7 @@ snapshots:
     optionalDependencies:
       '@volar/language-service': 2.4.0-alpha.15
 
-  volar-service-emmet@0.0.59(@volar/language-service@2.4.0-alpha.15):
+  volar-service-emmet@0.0.61(@volar/language-service@2.4.0-alpha.15):
     dependencies:
       '@emmetio/css-parser': 0.4.0
       '@emmetio/html-matcher': 1.3.0
@@ -14694,7 +14818,7 @@ snapshots:
     optionalDependencies:
       '@volar/language-service': 2.4.0-alpha.15
 
-  volar-service-html@0.0.59(@volar/language-service@2.4.0-alpha.15):
+  volar-service-html@0.0.61(@volar/language-service@2.4.0-alpha.15):
     dependencies:
       vscode-html-languageservice: 5.3.0
       vscode-languageserver-textdocument: 1.0.11
@@ -14702,20 +14826,20 @@ snapshots:
     optionalDependencies:
       '@volar/language-service': 2.4.0-alpha.15
 
-  volar-service-prettier@0.0.59(@volar/language-service@2.4.0-alpha.15)(prettier@3.3.2):
+  volar-service-prettier@0.0.61(@volar/language-service@2.4.0-alpha.15)(prettier@3.3.2):
     dependencies:
       vscode-uri: 3.0.8
     optionalDependencies:
       '@volar/language-service': 2.4.0-alpha.15
       prettier: 3.3.2
 
-  volar-service-typescript-twoslash-queries@0.0.59(@volar/language-service@2.4.0-alpha.15):
+  volar-service-typescript-twoslash-queries@0.0.61(@volar/language-service@2.4.0-alpha.15):
     dependencies:
       vscode-uri: 3.0.8
     optionalDependencies:
       '@volar/language-service': 2.4.0-alpha.15
 
-  volar-service-typescript@0.0.59(@volar/language-service@2.4.0-alpha.15):
+  volar-service-typescript@0.0.61(@volar/language-service@2.4.0-alpha.15):
     dependencies:
       path-browserify: 1.0.1
       semver: 7.6.2

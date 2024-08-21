@@ -5,7 +5,11 @@
 		"baseUrl": "src",
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
-		"types": ["vite/client", "@testing-library/jest-dom"],
+		"types": [
+			"vite/client",
+			"@vitest/browser/providers/playwright",
+			"@testing-library/jest-dom"
+		],
 		"paths": {
 			"~/*": ["*"]
 		}

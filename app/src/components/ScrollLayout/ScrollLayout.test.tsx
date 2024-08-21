@@ -1,28 +1,24 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
+import { Route } from "@solidjs/router";
 import { render } from "@solidjs/testing-library";
 import { MockServiceProvider } from "~/services/context";
 import { ScrollLayout } from "./ScrollLayout";
 
-vi.mock("@solidjs/router", (importActual) => {
-	return {
-		...importActual,
-		useNavigate: () => vi.fn(),
-		useIsRouting: () => vi.fn(),
-		useBeforeLeave: () => vi.fn(),
-	};
-});
-
 describe("ScrollLayout component", () => {
-	it("renders without crashing", () => {
+	it("renders without crashing", async () => {
 		// Arrange.
-		const { container } = render(() => (
+		const App = () => (
 			<MockServiceProvider>
 				<ScrollLayout>Page content goes here.</ScrollLayout>
 			</MockServiceProvider>
-		));
+		);
+
+		const { findByText } = render(() => <Route path="/" component={App} />, {
+			location: "/",
+		});
 
 		// Assert.
-		const main = container.querySelector("main");
-		expect(main && main.textContent).toBe("Page content goes here.");
+		const content = await findByText("Page content goes here.");
+		expect(content).toBeInTheDocument();
 	});
 });

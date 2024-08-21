@@ -7,7 +7,7 @@ install:
 
 test:
 	pnpm run test
-	pnpm run test-format
+	pnpm run test:format
 
 build:
 	pnpm run build

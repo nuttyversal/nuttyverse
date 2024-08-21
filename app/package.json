@@ -4,7 +4,7 @@
 	"type": "module",
 	"scripts": {
 		"test": "vitest run --coverage --reporter=verbose",
-		"test-format": "prettier --check \"**/*.{js,jsx,ts,tsx}\"",
+		"test:format": "prettier --check \"**/*.{js,jsx,ts,tsx}\"",
 		"start": "vite",
 		"build": "vite build",
 		"preview": "vite preview"
@@ -38,8 +38,10 @@
 		"@types/katex": "^0.16.7",
 		"@types/mdx": "^2.0.13",
 		"@types/unist": "^3.0.2",
-		"@vitest/coverage-v8": "^2.0.5",
+		"@vitest/browser": "^2.0.5",
+		"@vitest/coverage-istanbul": "^2.0.5",
 		"jsdom": "^24.1.1",
+		"playwright": "^1.46.1",
 		"prettier": "^3.3.2",
 		"sass": "^1.66.1",
 		"typescript": "^5.5.3",
