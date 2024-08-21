@@ -5,6 +5,11 @@ import { MockServiceProvider } from "~/services/context";
 import { ScrollLayout } from "./ScrollLayout";
 
 describe("ScrollLayout component", () => {
+	it("throws an error when rendered outside of a service provider", () => {
+		// Arrange & Assert.
+		expect(() => render(() => <ScrollLayout />)).toThrowError();
+	});
+
 	it("renders without crashing", async () => {
 		// Arrange.
 		const App = () => (

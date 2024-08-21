@@ -153,7 +153,7 @@ const Editor: Component = () => {
 	});
 
 	return (
-		<div class={styles.container}>
+		<div class={styles.container} data-testid="editor">
 			<SyncButton isSyncing={isSyncing} onClick={toggleSyncing} />
 			<div class={styles.editor} ref={setEditorContainer} />
 			<ScrollContainer class={styles.output}>

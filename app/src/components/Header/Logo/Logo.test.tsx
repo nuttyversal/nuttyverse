@@ -5,6 +5,11 @@ import { Logo } from "./Logo";
 import { Route } from "@solidjs/router";
 
 describe("Logo component", () => {
+	it("throws an error when rendered outside of a service provider", () => {
+		// Arrange & Assert.
+		expect(() => render(() => <Logo />)).toThrowError();
+	});
+
 	it("renders without crashing", async () => {
 		// Arrange.
 		const App = () => (

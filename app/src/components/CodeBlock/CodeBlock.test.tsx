@@ -17,4 +17,15 @@ describe("CodeBlock component", () => {
 		const codeBlock = await findByText("console");
 		expect(codeBlock).toBeInTheDocument();
 	});
+
+	it("handles unsupported languages gracefully", async () => {
+		// Arrange.
+		const { findByText } = render(() => (
+			<CodeBlock code={"[->+<]"} language={"brainfuck" as any} />
+		));
+
+		// Assert.
+		const codeBlock = await findByText("[->+<]");
+		expect(codeBlock).toBeInTheDocument();
+	});
 });

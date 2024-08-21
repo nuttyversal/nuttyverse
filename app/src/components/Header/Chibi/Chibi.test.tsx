@@ -5,6 +5,11 @@ import { Theme, createMockThemeService } from "~/services/theme";
 import { Chibi } from "./Chibi";
 
 describe("Chibi component", () => {
+	it("throws an error when rendered outside of a service provider", () => {
+		// Arrange & Assert.
+		expect(() => render(() => <Chibi />)).toThrowError();
+	});
+
 	it("renders without crashing", () => {
 		// Arrange.
 		const { container } = render(() => (

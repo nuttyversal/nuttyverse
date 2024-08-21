@@ -8,21 +8,6 @@ import styles from "./Chibi.module.scss";
 const Chibi = () => {
 	let chibi!: SVGSVGElement;
 
-	const starConfigurations = [
-		{ id: "star1", duration: 2.5, y: 40 },
-		{ id: "star2", duration: 3, y: 40 },
-		{ id: "star3", duration: 2, y: 40 },
-	];
-
-	onMount(() => {
-		for (const { id, duration, y } of starConfigurations) {
-			// Create a floating animation for each star surrounding the chibi.
-			// The stars will float up and down in a sine wave pattern.
-			const floating = gsap.timeline({ repeat: -1, yoyo: true });
-			floating.to(`#${id}`, { duration, y, ease: "sine.inOut" });
-		}
-	});
-
 	const services = useContext(ServiceContext);
 
 	if (!services) {
@@ -31,13 +16,25 @@ const Chibi = () => {
 
 	const { themeService, transitionService } = services;
 
-	// Easter egg: Click the chibi to toggle the theme.
-	const { toggleTheme } = useTheme(themeService);
+	const starConfigurations = [
+		{ id: "star1", duration: 2.5, y: 40 },
+		{ id: "star2", duration: 3, y: 40 },
+		{ id: "star3", duration: 2, y: 40 },
+	];
 
 	onMount(() => {
 		const chibiElement = chibi as unknown as HTMLElement;
 		transitionService.registerElement("chibiButton", chibiElement);
+
+		for (const { id, duration, y } of starConfigurations) {
+			// Create a floating animation for each star surrounding the chibi.
+			// The stars will float up and down in a sine wave pattern.
+			const floating = gsap.timeline({ repeat: -1, yoyo: true });
+			floating.to(`#${id}`, { duration, y, ease: "sine.inOut" });
+		}
 	});
+
+	const { toggleTheme } = useTheme(themeService);
 
 	const {
 		handleMouseDown: toggleThemeImmediately,

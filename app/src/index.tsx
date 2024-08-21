@@ -10,11 +10,9 @@ import "~/styles/index.scss";
  *
  * @returns The root element of the application.
  */
-const getRootElement = Effect.try({
-	try: () => document.getElementById("root"),
-	catch: () => new Error("Failed to query root element."),
-}).pipe(
-	Effect.map(Option.fromNullable),
+const getRootElement = Effect.sync(() =>
+	Option.fromNullable(document.getElementById("root")),
+).pipe(
 	Effect.flatMap((maybeRoot) =>
 		Option.match(maybeRoot, {
 			onNone: () => Effect.fail(new Error("Root element not found.")),
