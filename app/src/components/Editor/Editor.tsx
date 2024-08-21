@@ -21,9 +21,9 @@ import { useCarmackClick } from "~/components/hooks";
 import { ServiceContext } from "~/services/context";
 import { LocalStorageService } from "~/services/local-storage";
 import styles from "./Editor.module.scss";
+import { compileMarkdownJsx } from "./compiler/compile";
 import { useScrollSyncing } from "./sync/hook";
 import { SourceMap } from "./sync/types";
-import { compileMdx } from "./compiler";
 
 const Editor: Component = () => {
 	const [editorContainer, setEditorContainer] =
@@ -51,7 +51,11 @@ const Editor: Component = () => {
 	const [mdxContent] = createResource(
 		documentContent,
 		async (documentContent) => {
-			const compileEffect = compileMdx(documentContent, setSourceMap);
+			const compileEffect = compileMarkdownJsx(
+				documentContent,
+				setSourceMap,
+			);
+
 			return await Effect.runPromise(compileEffect);
 		},
 	);

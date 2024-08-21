@@ -43,7 +43,7 @@ const CodeBlock: Component<Props> = (props) => {
 	}).value;
 
 	return (
-		<pre class={classes}>
+		<pre class={classes} data-testid="code">
 			<code innerHTML={highlightedCode} />
 		</pre>
 	);
