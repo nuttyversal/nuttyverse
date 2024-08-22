@@ -49,6 +49,10 @@ class TransitionService extends Context.Tag("TransitionService")<
 >() {}
 
 function registerElement(name: keyof TransitionElements, element: HTMLElement) {
+	if (transitionStore.elements[name] === null) {
+		initialize[name](element);
+	}
+
 	setTransitionStore({
 		...transitionStore,
 		elements: {
@@ -56,8 +60,6 @@ function registerElement(name: keyof TransitionElements, element: HTMLElement) {
 			[name]: element,
 		},
 	});
-
-	initialize[name](element);
 
 	const isInitialized = Object.values(transitionStore.elements).every(
 		(element) => element !== null,
