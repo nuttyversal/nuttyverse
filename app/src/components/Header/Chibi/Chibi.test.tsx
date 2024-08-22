@@ -1,8 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { render, fireEvent } from "@solidjs/testing-library";
+import { render, fireEvent, waitFor } from "@solidjs/testing-library";
 import { MockServiceProvider } from "~/services/context";
 import { Theme, createMockThemeService } from "~/services/theme";
 import { Chibi } from "./Chibi";
+import { Route } from "@solidjs/router";
 
 describe("Chibi component", () => {
 	it("throws an error when rendered outside of a service provider", () => {
@@ -10,30 +11,40 @@ describe("Chibi component", () => {
 		expect(() => render(() => <Chibi />)).toThrowError();
 	});
 
-	it("renders without crashing", () => {
+	it("renders without crashing", async () => {
 		// Arrange.
-		const { container } = render(() => (
+		const App = () => (
 			<MockServiceProvider>
 				<Chibi />
 			</MockServiceProvider>
-		));
+		);
+
+		const { container } = render(() => <Route path="/" component={App} />, {
+			location: "/",
+		});
 
 		// Assert.
-		expect(container.querySelector("svg")).toBeTruthy();
+		await waitFor(() => {
+			expect(container.querySelector("svg")).toBeTruthy();
+		});
 	});
 
-	it("toggles theme on mouse down", () => {
+	it("toggles theme on mouse down", async () => {
 		// Arrange.
 		const mockThemeService = createMockThemeService();
 		const serviceOverrides = { themeService: mockThemeService };
 
-		const { getByRole } = render(() => (
+		const App = () => (
 			<MockServiceProvider serviceOverrides={serviceOverrides}>
 				<Chibi />
 			</MockServiceProvider>
-		));
+		);
 
-		const button = getByRole("button");
+		const { findByRole } = render(() => <Route path="/" component={App} />, {
+			location: "/",
+		});
+
+		const button = await findByRole("button");
 
 		// Act.
 		fireEvent.mouseDown(button);
@@ -42,18 +53,22 @@ describe("Chibi component", () => {
 		expect(mockThemeService.theme()).toBe(Theme.Dark);
 	});
 
-	it("toggles theme on click (for accessibility)", () => {
+	it("toggles theme on click (for accessibility)", async () => {
 		// Arrange.
 		const mockThemeService = createMockThemeService();
 		const serviceOverrides = { themeService: mockThemeService };
 
-		const { getByRole } = render(() => (
+		const App = () => (
 			<MockServiceProvider serviceOverrides={serviceOverrides}>
 				<Chibi />
 			</MockServiceProvider>
-		));
+		);
 
-		const button = getByRole("button");
+		const { findByRole } = render(() => <Route path="/" component={App} />, {
+			location: "/",
+		});
+
+		const button = await findByRole("button");
 
 		// Act.
 		fireEvent.click(button);
@@ -62,31 +77,39 @@ describe("Chibi component", () => {
 		expect(mockThemeService.theme()).toBe(Theme.Dark);
 	});
 
-	it("has correct aria-label", () => {
+	it("has correct aria-label", async () => {
 		// Arrange.
-		const { getByRole } = render(() => (
+		const App = () => (
 			<MockServiceProvider>
 				<Chibi />
 			</MockServiceProvider>
-		));
+		);
+
+		const { findByRole } = render(() => <Route path="/" component={App} />, {
+			location: "/",
+		});
 
 		// Assert.
-		const button = getByRole("button");
+		const button = await findByRole("button");
 		expect(button).toHaveAttribute("aria-label", "Toggle theme");
 	});
 
-	it("toggles theme correctly when clicked multiple times", () => {
+	it("toggles theme correctly when clicked multiple times", async () => {
 		// Arrange.
 		const mockThemeService = createMockThemeService();
 		const serviceOverrides = { themeService: mockThemeService };
 
-		const { getByRole } = render(() => (
+		const App = () => (
 			<MockServiceProvider serviceOverrides={serviceOverrides}>
 				<Chibi />
 			</MockServiceProvider>
-		));
+		);
 
-		const button = getByRole("button");
+		const { findByRole } = render(() => <Route path="/" component={App} />, {
+			location: "/",
+		});
+
+		const button = await findByRole("button");
 
 		// Act & Assert.
 		expect(mockThemeService.theme()).toBe(Theme.Light);

@@ -1,23 +1,24 @@
 import { describe, it, expect } from "vitest";
+import { Route } from "@solidjs/router";
 import { render } from "@solidjs/testing-library";
-import { ServiceProvider } from "~/services/context";
-import { ScrollContainer } from "./ScrollContainer";
+import { MockServiceProvider } from "~/services/context";
+import { ScrollLayout } from "../ScrollLayout";
 
 describe("ScrollContainer component", () => {
-	it("throws an error when rendered outside of a service provider", () => {
-		// Arrange & Assert.
-		expect(() => render(() => <ScrollContainer />)).toThrowError();
-	});
-
-	it("renders without crashing", () => {
+	it("renders without crashing", async () => {
 		// Arrange.
-		const { container } = render(() => (
-			<ServiceProvider>
-				<ScrollContainer />
-			</ServiceProvider>
-		));
+		const App = () => (
+			<MockServiceProvider>
+				<ScrollLayout>Page content goes here.</ScrollLayout>
+			</MockServiceProvider>
+		);
+
+		const { findByText } = render(() => <Route path="/" component={App} />, {
+			location: "/",
+		});
 
 		// Assert.
-		expect(container.querySelector(".nv-scroller")).toBeTruthy();
+		const content = await findByText("Page content goes here.");
+		expect(content).toBeInTheDocument();
 	});
 });

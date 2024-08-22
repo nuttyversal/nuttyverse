@@ -1,13 +1,6 @@
 import gsap from "gsap";
-import {
-	JSX,
-	ParentComponent,
-	Ref,
-	createEffect,
-	onMount,
-	useContext,
-} from "solid-js";
-import { ServiceContext } from "~/services/context";
+import { JSX, ParentComponent, Ref, createEffect, onMount } from "solid-js";
+import { useTransition } from "~/services/transition/hook";
 import { mergeRefs } from "~/utils/solid";
 import styles from "./ScrollContainer.module.scss";
 
@@ -22,13 +15,7 @@ const ScrollContainer: ParentComponent<Props> = (props) => {
 	let gradientTop!: HTMLDivElement;
 	let gradientBottom!: HTMLDivElement;
 
-	const services = useContext(ServiceContext);
-
-	if (!services) {
-		throw new Error("Service context is not available.");
-	}
-
-	const { transitionService } = services;
+	const { transitionState } = useTransition();
 
 	const updateGradient = () => {
 		const { scrollTop, scrollHeight, clientHeight } = container;
@@ -69,7 +56,7 @@ const ScrollContainer: ParentComponent<Props> = (props) => {
 
 	createEffect(() => {
 		// Wait until transition animations are complete.
-		if (transitionService.state() === "idle") {
+		if (transitionState()?.value === "idle") {
 			updateGradient();
 		}
 	});

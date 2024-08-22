@@ -1,24 +1,15 @@
-import { Component, onMount, useContext } from "solid-js";
+import { Component, onMount } from "solid-js";
 import { Link } from "~/components/Link";
-import { ServiceContext } from "~/services/context";
 import styles from "./Logo.module.scss";
+import { useTransition } from "~/services/transition/hook";
 
 const Logo: Component = () => {
-	const services = useContext(ServiceContext);
-
-	if (!services) {
-		throw new Error("Service context is not available.");
-	}
-
-	const { transitionService } = services;
-
 	let svg!: SVGSVGElement;
 
+	const { registerElement } = useTransition();
+
 	onMount(() => {
-		transitionService.registerElement(
-			"logoButton",
-			svg as unknown as HTMLElement,
-		);
+		registerElement("logoButton", svg as unknown as HTMLElement);
 	});
 
 	return (

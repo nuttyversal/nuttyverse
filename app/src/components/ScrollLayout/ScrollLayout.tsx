@@ -1,37 +1,18 @@
-import { ParentComponent, createEffect, onMount, useContext } from "solid-js";
-import { useBeforeLeave, useIsRouting } from "@solidjs/router";
+import { ParentComponent, onMount } from "solid-js";
 import { Header } from "~/components/Header";
 import { Footer } from "~/components/Footer";
-import { ServiceContext } from "~/services/context";
 import styles from "./ScrollLayout.module.scss";
+import { useTransition } from "~/services/transition/hook";
 
 const ScrollLayout: ParentComponent = (props) => {
-	const services = useContext(ServiceContext);
-
-	if (!services) {
-		throw new Error("Service context is not available.");
-	}
-
-	const { transitionService } = services;
-
 	let scrollContainer!: HTMLDivElement;
 	let mainContainer!: HTMLElement;
 
+	const { registerElement } = useTransition();
+
 	onMount(() => {
-		transitionService.registerElement("scrollContainer", scrollContainer);
-		transitionService.registerElement("mainContainer", mainContainer);
-	});
-
-	const isRouting = useIsRouting();
-
-	useBeforeLeave(() => {
-		transitionService.signalBeforeRouting();
-	});
-
-	createEffect(() => {
-		if (!isRouting()) {
-			transitionService.signalAfterRouting();
-		}
+		registerElement("scrollContainer", scrollContainer);
+		registerElement("mainContainer", mainContainer);
 	});
 
 	return (

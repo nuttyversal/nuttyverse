@@ -3,6 +3,7 @@ import { onMount, useContext } from "solid-js";
 import { useCarmackClick } from "~/components/hooks";
 import { ServiceContext } from "~/services/context";
 import { useTheme } from "~/services/theme";
+import { useTransition } from "~/services/transition/hook";
 import styles from "./Chibi.module.scss";
 
 const Chibi = () => {
@@ -14,7 +15,9 @@ const Chibi = () => {
 		throw new Error("Service context not found.");
 	}
 
-	const { themeService, transitionService } = services;
+	const { themeService } = services;
+
+	const { registerElement } = useTransition();
 
 	const starConfigurations = [
 		{ id: "star1", duration: 2.5, y: 40 },
@@ -24,7 +27,7 @@ const Chibi = () => {
 
 	onMount(() => {
 		const chibiElement = chibi as unknown as HTMLElement;
-		transitionService.registerElement("chibiButton", chibiElement);
+		registerElement("chibiButton", chibiElement);
 
 		for (const { id, duration, y } of starConfigurations) {
 			// Create a floating animation for each star surrounding the chibi.

@@ -4,12 +4,12 @@ import {
 	ThemeService,
 	createThemeService,
 	createMockThemeService,
-} from "~/services/theme";
+} from "./theme";
 import {
 	TransitionService,
-	createMockTransitionService,
 	createTransitionService,
-} from "./transition";
+	createMockTransitionService,
+} from "./transition/service";
 import {
 	LocalStorageService,
 	createLocalStorageService,
