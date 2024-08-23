@@ -1,21 +1,12 @@
 import gsap from "gsap";
-import { onMount, useContext } from "solid-js";
+import { onMount } from "solid-js";
 import { useCarmackClick } from "~/components/hooks";
-import { ServiceContext } from "~/services/context";
 import { useTheme } from "~/services/theme";
-import { useTransition } from "~/services/transition/hook";
+import { useTransition } from "~/services/transition";
 import styles from "./Chibi.module.scss";
 
 const Chibi = () => {
 	let chibi!: SVGSVGElement;
-
-	const services = useContext(ServiceContext);
-
-	if (!services) {
-		throw new Error("Service context not found.");
-	}
-
-	const { themeService } = services;
 
 	const { registerElement } = useTransition();
 
@@ -37,7 +28,7 @@ const Chibi = () => {
 		}
 	});
 
-	const { toggleTheme } = useTheme(themeService);
+	const { toggleTheme } = useTheme();
 
 	const {
 		handleMouseDown: toggleThemeImmediately,

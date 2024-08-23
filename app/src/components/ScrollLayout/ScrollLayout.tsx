@@ -2,7 +2,7 @@ import { ParentComponent, onMount } from "solid-js";
 import { Header } from "~/components/Header";
 import { Footer } from "~/components/Footer";
 import styles from "./ScrollLayout.module.scss";
-import { useTransition } from "~/services/transition/hook";
+import { useTransition } from "~/services/transition";
 
 const ScrollLayout: ParentComponent = (props) => {
 	let scrollContainer!: HTMLDivElement;

@@ -4,7 +4,7 @@ import {
 	LocalStorageService,
 	createLocalStorageService,
 	createMockLocalStorageService,
-} from "./local-storage";
+} from "./service";
 
 /**
  * Runs an effect with the specified service implementation.

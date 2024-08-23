@@ -1,13 +1,6 @@
 import { Effect, Context } from "effect";
-import { Accessor, createSignal } from "solid-js";
-
-/**
- * A color theme that can be applied to the application.
- */
-const enum Theme {
-	Light = "light",
-	Dark = "dark",
-}
+import { Accessor, createMemo, createSignal } from "solid-js";
+import { Theme, setThemeStore, themeStore } from "./store";
 
 /**
  * A service that manages the color theme of the application.
@@ -16,21 +9,11 @@ class ThemeService extends Context.Tag("ThemeService")<
 	ThemeService,
 	{
 		readonly theme: Accessor<Theme>;
+		readonly hasHydrated: Accessor<boolean>;
 		readonly hydrateTheme: Effect.Effect<Theme>;
 		readonly toggleTheme: Effect.Effect<Theme>;
 	}
 >() {}
-
-/**
- * A singleton signal that represents the currently applied color theme.
- */
-const [theme, setTheme] = createSignal<Theme>(Theme.Light);
-
-/**
- * Indicates whether the color theme has been hydrated.
- * We only want to hydrate the theme once when the application starts.
- */
-const [hydrated, setHydrated] = createSignal<boolean>(false);
 
 /**
  * A service that manages the color theme of the application.
@@ -44,8 +27,10 @@ function createThemeService(): Context.Tag.Service<ThemeService> {
 			document.documentElement.setAttribute("data-theme", newTheme);
 		}).pipe(
 			Effect.map(() => {
-				// Update the theme signal.
-				return setTheme(newTheme);
+				return setThemeStore({
+					...themeStore,
+					theme: newTheme,
+				});
 			}),
 		);
 	};
@@ -66,7 +51,13 @@ function createThemeService(): Context.Tag.Service<ThemeService> {
 
 		// Update the theme.
 		yield* updateTheme(newTheme);
-		yield* Effect.sync(() => setHydrated(true));
+
+		yield* Effect.sync(() => {
+			setThemeStore({
+				...themeStore,
+				hasHydrated: true,
+			});
+		});
 
 		return newTheme;
 	});
@@ -74,7 +65,7 @@ function createThemeService(): Context.Tag.Service<ThemeService> {
 	const toggleTheme = Effect.gen(function* () {
 		let newTheme: Theme;
 
-		if (theme() === Theme.Light) {
+		if (themeStore.theme === Theme.Light) {
 			newTheme = Theme.Dark;
 		} else {
 			newTheme = Theme.Light;
@@ -86,7 +77,8 @@ function createThemeService(): Context.Tag.Service<ThemeService> {
 	});
 
 	return {
-		theme,
+		theme: createMemo(() => themeStore.theme),
+		hasHydrated: createMemo(() => themeStore.hasHydrated),
 		hydrateTheme,
 		toggleTheme,
 	};
@@ -98,9 +90,11 @@ function createThemeService(): Context.Tag.Service<ThemeService> {
  */
 function createMockThemeService(): Context.Tag.Service<ThemeService> {
 	const [theme, setTheme] = createSignal<Theme>(Theme.Light);
+	const [hasHydrated, setHasHydrated] = createSignal<boolean>(false);
 
 	const hydrateTheme = Effect.sync(() => {
 		setTheme(Theme.Light);
+		setHasHydrated(true);
 		return Theme.Light;
 	});
 
@@ -118,49 +112,10 @@ function createMockThemeService(): Context.Tag.Service<ThemeService> {
 
 	return {
 		theme,
+		hasHydrated,
 		hydrateTheme,
 		toggleTheme,
 	};
 }
 
-/**
- * A hook that provides access to the color theme and theme toggling
- * functionality. It hydrates the theme when the hook is first called.
- */
-const useTheme = (implementation: Context.Tag.Service<ThemeService>) => {
-	const theme = implementation.theme;
-
-	const hydrateTheme = () => {
-		Effect.runPromise(implementation.hydrateTheme)
-			.then((theme) => {
-				console.log(`Hydrated theme (${theme}) from user settings.`);
-			})
-			.catch((error) => {
-				console.error(`Failed to hydrate theme: ${error}.`);
-			});
-	};
-
-	const toggleTheme = () => {
-		Effect.runPromise(implementation.toggleTheme)
-			.then((newTheme) => {
-				console.log(`Toggled theme to ${newTheme}.`);
-			})
-			.catch((error) => {
-				console.error(`Failed to toggle theme: ${error}.`);
-			});
-	};
-
-	if (!hydrated()) {
-		hydrateTheme();
-	}
-
-	return { theme, toggleTheme };
-};
-
-export {
-	Theme,
-	ThemeService,
-	createThemeService,
-	createMockThemeService,
-	useTheme,
-};
+export { Theme, ThemeService, createThemeService, createMockThemeService };

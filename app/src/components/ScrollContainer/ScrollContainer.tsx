@@ -1,6 +1,6 @@
 import gsap from "gsap";
 import { JSX, ParentComponent, Ref, createEffect, onMount } from "solid-js";
-import { useTransition } from "~/services/transition/hook";
+import { useTransition } from "~/services/transition";
 import { mergeRefs } from "~/utils/solid";
 import styles from "./ScrollContainer.module.scss";
 

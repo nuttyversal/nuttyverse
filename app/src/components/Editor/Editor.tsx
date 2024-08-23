@@ -14,12 +14,10 @@ import {
 	createSignal,
 	onCleanup,
 	onMount,
-	useContext,
 } from "solid-js";
 import { ScrollContainer } from "~/components/ScrollContainer";
 import { useCarmackClick } from "~/components/hooks";
-import { ServiceContext } from "~/services/context";
-import { LocalStorageService } from "~/services/local-storage";
+import { LocalStorageService, useLocalStorage } from "~/services/local-storage";
 import styles from "./Editor.module.scss";
 import { compileMarkdownJsx } from "./compiler/compile";
 import { useScrollSyncing } from "./sync/hook";
@@ -29,18 +27,12 @@ const Editor: Component = () => {
 	const [editorContainer, setEditorContainer] =
 		createSignal<HTMLDivElement | null>(null);
 
-	const services = useContext(ServiceContext);
-
-	if (!services) {
-		throw new Error("Service context is not available.");
-	}
-
-	const { localStorageService } = services;
-
 	const [editorView, setEditorView] = createSignal<EditorView | null>(null);
 	const [documentContent, setDocumentContent] = createSignal<string>("");
 	const [sourceMap, setSourceMap] = createSignal<SourceMap>({});
 	const [lineNumber, setLineNumber] = createSignal<number>(1);
+
+	const localStorageService = useLocalStorage();
 
 	const { setupScrollSyncing, isSyncing, toggleSyncing } = useScrollSyncing(
 		sourceMap,

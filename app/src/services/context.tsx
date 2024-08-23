@@ -9,7 +9,7 @@ import {
 	TransitionService,
 	createTransitionService,
 	createMockTransitionService,
-} from "./transition/service";
+} from "./transition";
 import {
 	LocalStorageService,
 	createLocalStorageService,

@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 import { describe, it, expect, vi } from "vitest";
-import { createThemeService } from "./theme";
+import { createThemeService } from "./service";
 
 /**
  * Mocks the matchMedia function to return the specified matches value.
