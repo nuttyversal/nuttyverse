@@ -1,132 +1,79 @@
-import { basicSetup } from "codemirror";
-import { indentWithTab } from "@codemirror/commands";
-import { indentUnit } from "@codemirror/language";
-import { markdownLanguage } from "@codemirror/lang-markdown";
-import { EditorState } from "@codemirror/state";
-import { EditorView, ViewUpdate, keymap } from "@codemirror/view";
-import { vim } from "@replit/codemirror-vim";
-
 import { Effect, Option } from "effect";
 import {
 	Accessor,
 	Component,
+	createEffect,
 	createResource,
 	createSignal,
-	onCleanup,
 	onMount,
+	on,
 } from "solid-js";
 import { ScrollContainer } from "~/components/ScrollContainer";
 import { useCarmackClick } from "~/components/hooks";
 import { LocalStorageService, useLocalStorage } from "~/services/local-storage";
 import styles from "./Editor.module.scss";
 import { compileMarkdownJsx } from "./compiler/compile";
+import { useEditor } from "./editor/hook";
 import { useScrollSyncing } from "./sync/hook";
 import { SourceMap } from "./sync/types";
 
 const Editor: Component = () => {
-	const [editorContainer, setEditorContainer] =
-		createSignal<HTMLDivElement | null>(null);
-
-	const [editorView, setEditorView] = createSignal<EditorView | null>(null);
-	const [documentContent, setDocumentContent] = createSignal<string>("");
 	const [sourceMap, setSourceMap] = createSignal<SourceMap>({});
-	const [lineNumber, setLineNumber] = createSignal<number>(1);
 
 	const localStorageService = useLocalStorage();
 
+	const {
+		setEditorContainer,
+		setupEditor,
+		documentContent,
+		currentLineNumber,
+	} = useEditor();
+
 	const { setupScrollSyncing, isSyncing, toggleSyncing } = useScrollSyncing(
 		sourceMap,
-		lineNumber,
+		currentLineNumber,
 	);
 
 	// When the document content changes, compile the MDX content.
 	const [mdxContent] = createResource(
 		documentContent,
 		async (documentContent) => {
-			const compileEffect = compileMarkdownJsx(
-				documentContent,
-				setSourceMap,
+			return await Effect.runPromise(
+				compileMarkdownJsx(documentContent, setSourceMap),
 			);
-
-			return await Effect.runPromise(compileEffect);
 		},
 	);
 
 	// When the document is updated, save the content to local storage.
-	const saveOnChange = (update: ViewUpdate) => {
-		return Effect.runPromise(
-			Effect.gen(function* () {
-				if (update.docChanged) {
-					const documentContent = update.state.doc.toString();
-					const localStorage = yield* LocalStorageService;
-					yield* localStorage.setItem("editor", documentContent);
-					setDocumentContent(documentContent);
-				}
-			}).pipe(
-				Effect.provideService(LocalStorageService, localStorageService),
-			),
-		);
-	};
-
-	const updateLineNumber = (update: ViewUpdate) => {
-		// Get the main selection range.
-		const range = update.state.selection.main;
-
-		// Get the line number of the selection's head (cursor position).
-		const lineNumber = update.state.doc.lineAt(range.head).number;
-
-		setLineNumber(lineNumber);
-	};
+	// This effect is deferred to prevent it from running on mount,
+	// which would overwrite the saved content in local storage before
+	// it can be loaded.
+	createEffect(
+		on(
+			documentContent,
+			(documentContent) => {
+				Effect.runPromise(
+					Effect.gen(function* () {
+						const localStorage = yield* LocalStorageService;
+						yield* localStorage.setItem("editor", documentContent);
+					}).pipe(
+						Effect.provideService(
+							LocalStorageService,
+							localStorageService,
+						),
+					),
+				);
+			},
+			{ defer: true },
+		),
+	);
 
 	// An effect that loads the saved document content from local storage.
 	const loadSavedDocument = Effect.gen(function* () {
-		// Retrieve the document content from local storage.
 		const localStorage = yield* LocalStorageService;
 		const maybeDocument = yield* localStorage.getItem("editor");
-
-		// Default to an empty string if the document is not found.
-		const documentContent = Option.getOrElse(maybeDocument, () => "");
-
-		setDocumentContent(documentContent);
-		return documentContent;
+		return Option.getOrElse(maybeDocument, () => "");
 	});
-
-	// An effect that sets up the CodeMirror editor with custom config,
-	// extensions, and initial document content.
-	const setupEditor = (initialDocument: string) => {
-		return Effect.sync(() => {
-			const initialState = EditorState.create({
-				doc: initialDocument,
-				extensions: [
-					vim(),
-					basicSetup,
-
-					// Use tab indentation.
-					indentUnit.of("\t"),
-					EditorState.tabSize.of(3),
-					keymap.of([indentWithTab]),
-
-					// Compile MDX.
-					markdownLanguage,
-					EditorView.updateListener.of(saveOnChange),
-					EditorView.updateListener.of(updateLineNumber),
-				],
-			});
-
-			const container = editorContainer();
-
-			if (!container) {
-				throw new Error("Editor container is not available.");
-			}
-
-			setEditorView(
-				new EditorView({
-					state: initialState,
-					parent: container,
-				}),
-			);
-		});
-	};
 
 	onMount(() => {
 		Effect.runPromise(
@@ -138,14 +85,6 @@ const Editor: Component = () => {
 				Effect.provideService(LocalStorageService, localStorageService),
 			),
 		);
-	});
-
-	onCleanup(() => {
-		const view = editorView();
-
-		if (view) {
-			view.destroy();
-		}
 	});
 
 	return (
