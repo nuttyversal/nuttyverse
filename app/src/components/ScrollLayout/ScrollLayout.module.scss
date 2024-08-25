@@ -1,6 +1,14 @@
 @use "sass:map";
 @use "../../styles";
 
+[data-theme='light'] {
+	--backdrop-color: #{styles.$white};
+}
+
+[data-theme='dark'] {
+	--backdrop-color: #{styles.$black};
+}
+
 .container {
 	display: flex;
 	flex-direction: column;
@@ -20,6 +28,7 @@
 }
 
 .main {
+	background: var(--backdrop-color);
 	padding-left: map.get(styles.$spacing, "4");
 	padding-right: map.get(styles.$spacing, "4");
 	overflow: hidden;
