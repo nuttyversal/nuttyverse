@@ -94,12 +94,14 @@ const useEditor = () => {
 
 		if (view) {
 			view.destroy();
+			setEditorView(null);
 		}
 	});
 
 	return {
 		setEditorContainer,
 		setupEditor,
+		editorView,
 		documentContent,
 		currentLineNumber,
 	};
