@@ -32,7 +32,7 @@
 
 	:global(.cm-editor *) {
 		font-family: "PragmataPro Liga", monospace !important;
-		font-size: calc(#{map.get(styles.$type-scale, "xs")} * 1.04);
+		font-size: calc(#{map.get(styles.$type-scale, "xs")} * 1.05);
 	}
 
 	:global(.cm-editor) {
@@ -68,7 +68,7 @@
 
 	:global(.cm-line) {
 		padding-left: map.get(styles.$spacing, "2");
-		line-height: 1.6;
+		line-height: 1.7;
 	}
 
 	:global(.cm-focused) {

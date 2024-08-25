@@ -28,13 +28,13 @@ $type-scale: (
 	// 14.4px (0.9rem) and 16px (1rem) when the viewport is in between
 	// 320px (20rem) and 960px (60rem).
 	//
-	// And then we scale the base font size by ≈108%. For some reason,
-	// multiplying by 1.04 results in a multiplication of 1.04² ≈ 1.08.
+	// And then we scale the base font size by ≈110%. For some reason,
+	// multiplying by 1.05 results in a multiplication of 1.05² ≈ 1.10.
 	// However, I am satisfied with the result, so whatever. ¯\_(ツ)_/¯
 	//
 	// This calculator was used to figure out the clamp parameters:
 	// https://royalfig.github.io/fluid-typography-calculator/
-	font-size: calc(clamp(0.9rem, 0.85rem + 0.25vw, 1rem) * 1.04);
+	font-size: calc(clamp(0.9rem, 0.85rem + 0.25vw, 1rem) * 1.05);
 	font-family: 'FSD Emoji', Nure, sans-serif;
 	font-variation-settings: 'opsz' 18, 'wdth' 85;
 	font-feature-settings: 'kern' 1;
@@ -87,7 +87,7 @@ $heading-sizes: (
 		text-transform: uppercase;
 		text-align: left;
 		border-bottom: 2px solid;
-		letter-spacing: 0.03rem;
+		/* letter-spacing: 0.03rem; */
 	}
 }
 
@@ -135,7 +135,7 @@ code {
 	color: var(--gray-01);
 
 	font-family: PragmataPro Liga;
-	font-size: calc(#{map.get($type-scale, "xs")} * 1.04);
+	font-size: calc(#{map.get($type-scale, "xs")} * 1.05);
 
 	margin-left: map.get(spacing.$spacing, "0.5");
 	margin-right: map.get(spacing.$spacing, "0.5");
@@ -160,6 +160,6 @@ pre > code {
 
 pre > code, pre > code * {
 	font-family: PragmataPro Liga;
-	font-size: calc(#{map.get($type-scale, "xs")} * 1.04);
+	font-size: calc(#{map.get($type-scale, "xs")} * 1.05);
 	tab-size: 3;
 }
