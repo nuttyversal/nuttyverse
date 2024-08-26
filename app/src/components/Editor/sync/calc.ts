@@ -1,5 +1,5 @@
 import { Effect } from "effect";
-import { Block, ElementBlock, EmptyBlock } from "./types";
+import { Block, ElementBlock, EmptyBlock, SourceMap } from "./types";
 import {
 	queryCodeMirrorActiveLine,
 	queryCodeMirrorScroller,
@@ -113,8 +113,8 @@ const calculateEmptyBlockScrollY = (context: {
  * if the cursor is within a certain threshold of the top or bottom.
  */
 const calculateScrollAdjustment = (context: {
+	sourceMap: SourceMap;
 	lineNumber: number;
-	lastLineNumber: number;
 	scrollY: number;
 	editorScroller: {
 		scrollTop: number;
@@ -122,7 +122,7 @@ const calculateScrollAdjustment = (context: {
 		scrollHeight: number;
 	};
 }) => {
-	const { scrollY, editorScroller, lineNumber, lastLineNumber } = context;
+	const { scrollY, editorScroller, lineNumber } = context;
 
 	const scrollTolerance = 20;
 	const basicallyInfinity = 999999;
@@ -133,11 +133,18 @@ const calculateScrollAdjustment = (context: {
 		editorScroller.scrollTop + editorScroller.clientHeight >
 		editorScroller.scrollHeight - scrollTolerance;
 
-	if (lineNumber === 1 && isNearTop) {
+	const sourceMapLines = Object.keys(context.sourceMap).map((l) =>
+		parseInt(l, 10),
+	);
+
+	const sourceMapStart = Math.min(...sourceMapLines);
+	const sourceMapEnd = Math.max(...sourceMapLines);
+
+	if (lineNumber <= sourceMapStart && isNearTop) {
 		return 0;
 	}
 
-	if (lineNumber >= lastLineNumber && isNearBottom) {
+	if (lineNumber >= sourceMapEnd && isNearBottom) {
 		return basicallyInfinity;
 	}
 
@@ -227,19 +234,17 @@ const getBlockScrollY = (block: Block, lineNumber: number) => {
  * An effect that snaps the scroll position to the top or bottom of the
  * scroller if the cursor is within a certain threshold of the top or bottom.
  */
-const snapScrollToEdges = (
-	scrollY: number,
-	lineNumber: number,
-	lastLineNumber: number,
-) => {
+const snapScrollToEdges = (context: {
+	scrollY: number;
+	lineNumber: number;
+	sourceMap: SourceMap;
+}) => {
 	return Effect.gen(function* () {
 		const editorScroller = yield* queryCodeMirrorScroller;
 
 		return calculateScrollAdjustment({
-			scrollY,
+			...context,
 			editorScroller,
-			lineNumber,
-			lastLineNumber,
 		});
 	});
 };

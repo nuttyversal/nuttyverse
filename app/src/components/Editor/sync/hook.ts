@@ -31,20 +31,14 @@ function useScrollSyncing(
 
 		const block = sourceMap()[lineNumber()];
 
-		if (!block) {
-			return;
-		}
-
-		const lastLineNumber = Object.keys(sourceMap()).length;
-
 		const scroller = yield* queryPreviewScroller;
-		const scrollY = yield* getBlockScrollY(block, lineNumber());
+		const scrollY = block ? yield* getBlockScrollY(block, lineNumber()) : 0;
 
-		const adjustedScrollY = yield* snapScrollToEdges(
+		const adjustedScrollY = yield* snapScrollToEdges({
 			scrollY,
-			lineNumber(),
-			lastLineNumber,
-		);
+			lineNumber: lineNumber(),
+			sourceMap: sourceMap(),
+		});
 
 		currentTween = gsap.to(scroller, {
 			scrollTop: adjustedScrollY,

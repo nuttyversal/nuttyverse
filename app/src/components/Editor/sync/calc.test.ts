@@ -253,8 +253,8 @@ describe("Editor scroll syncing calculations", () => {
 
 		// Act.
 		const adjustedScrollY = calculateScrollAdjustment({
+			sourceMap: {},
 			lineNumber: 1,
-			lastLineNumber: 100,
 			editorScroller,
 			scrollY: 10,
 		});
@@ -273,8 +273,8 @@ describe("Editor scroll syncing calculations", () => {
 
 		// Act.
 		const adjustedScrollY = calculateScrollAdjustment({
+			sourceMap: {},
 			lineNumber: 100,
-			lastLineNumber: 100,
 			editorScroller,
 			scrollY: 9500,
 		});
@@ -293,8 +293,8 @@ describe("Editor scroll syncing calculations", () => {
 
 		// Act.
 		const adjustedScrollY = calculateScrollAdjustment({
+			sourceMap: {},
 			lineNumber: 50,
-			lastLineNumber: 100,
 			editorScroller,
 			scrollY: 500,
 		});
