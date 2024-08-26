@@ -54,14 +54,26 @@ describe("Editor scroll syncing calculations", () => {
 			},
 		};
 
+		const editorLine = {
+			getBoundingClientRect: () => {
+				return DOMRect.fromRect({
+					x: 0,
+					y: 0,
+					width: 100,
+					height: 20,
+				});
+			},
+		};
+
 		// Act.
 		const result = calculateCursorOffset({
 			cursorPosition: 0.5,
+			editorLine,
 			previewScroller,
 		});
 
 		// Assert.
-		expect(result).toBe(50);
+		expect(result).toBe(60);
 	});
 
 	it("should calculate the block position correctly", () => {
@@ -81,9 +93,9 @@ describe("Editor scroll syncing calculations", () => {
 		};
 
 		// Assert.
-		expect(results.start).toBe(0);
-		expect(results.middle).toBe(0.4);
-		expect(results.end).toBe(0.8);
+		expect(results.start).toBeCloseTo(1 / 6, 2);
+		expect(results.middle).toBe(0.5);
+		expect(results.end).toBeCloseTo(5 / 6, 2);
 	});
 
 	it("should calculate the element block scroll position correctly", () => {
@@ -141,9 +153,9 @@ describe("Editor scroll syncing calculations", () => {
 		};
 
 		// Assert.
-		expect(results.start).toBe(20);
-		expect(results.middle).toBe(28);
-		expect(results.end).toBe(36);
+		expect(results.start).toBeCloseTo(23 + 1 / 3, 2);
+		expect(results.middle).toBe(30);
+		expect(results.end).toBeCloseTo(36 + 2 / 3, 2);
 	});
 
 	it("should calculate the empty block scroll position correctly", () => {
@@ -226,9 +238,9 @@ describe("Editor scroll syncing calculations", () => {
 		};
 
 		// Assert.
-		expect(results.start).toBe(20);
-		expect(results.middle).toBe(40);
-		expect(results.end).toBe(80);
+		expect(results.start).toBe(36);
+		expect(results.middle).toBe(52);
+		expect(results.end).toBe(84);
 	});
 
 	it("should adjust the scroll if near the top", () => {

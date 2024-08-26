@@ -34,10 +34,12 @@ const calculateCursorPosition = (context: {
 const calculateCursorOffset = (context: {
 	cursorPosition: number;
 	previewScroller: HasBoundingBox;
+	editorLine: HasBoundingBox;
 }) => {
 	const { cursorPosition, previewScroller } = context;
 	const scrollerBox = previewScroller.getBoundingClientRect();
-	return cursorPosition * scrollerBox.height;
+	const lineBox = context.editorLine.getBoundingClientRect();
+	return cursorPosition * scrollerBox.height + lineBox.height / 2;
 };
 
 /**
@@ -50,8 +52,8 @@ const calculateBlockPosition = (context: {
 	lineNumber: number;
 }) => {
 	const { block, lineNumber } = context;
-	const lineCount = block.end - block.start + 1;
-	return (lineNumber - block.start) / lineCount;
+	const lineCount = block.end - block.start;
+	return (lineNumber - block.start + 1) / (lineCount + 2);
 };
 
 /**
@@ -159,6 +161,7 @@ const getElementBlockScrollY = (block: ElementBlock, lineNumber: number) => {
 	return Effect.gen(function* () {
 		const previewScroller = yield* queryPreviewScroller;
 		const elementBlock = yield* queryElementBlock(block);
+		const editorLine = yield* queryCodeMirrorActiveLine;
 		const cursorPosition = yield* getCursorPosition;
 
 		const scrollY = calculateElementBlockScrollY({
@@ -170,6 +173,7 @@ const getElementBlockScrollY = (block: ElementBlock, lineNumber: number) => {
 
 		const cursorOffset = calculateCursorOffset({
 			cursorPosition,
+			editorLine,
 			previewScroller,
 		});
 
@@ -184,6 +188,7 @@ const getEmptyBlockScrollY = (block: EmptyBlock, lineNumber: number) => {
 	return Effect.gen(function* () {
 		const previewScroller = yield* queryPreviewScroller;
 		const { previous, next } = yield* queryEmptyBlock(block);
+		const editorLine = yield* queryCodeMirrorActiveLine;
 		const cursorPosition = yield* getCursorPosition;
 
 		const scrollY = calculateEmptyBlockScrollY({
@@ -196,6 +201,7 @@ const getEmptyBlockScrollY = (block: EmptyBlock, lineNumber: number) => {
 
 		const cursorOffset = calculateCursorOffset({
 			cursorPosition,
+			editorLine,
 			previewScroller,
 		});
 
