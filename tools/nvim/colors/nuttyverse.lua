@@ -122,7 +122,7 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "Ignore", { fg = colors.gray12 })
 
 	-- any erroneous construct
-	vim.api.nvim_set_hl(0, "Error", { fg = "#ff0000" })
+	vim.api.nvim_set_hl(0, "Error", { fg = colors.red11 })
 
 	-- anything that needs extra attention (e.g., TODO FIXME XXX)
 	vim.api.nvim_set_hl(0, "Todo", { fg = colors.gray12 })
@@ -360,6 +360,19 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "WinBarNC", { fg = colors.gray12 })
 end
 
+local function set_highlights_for_diagnostics()
+	vim.api.nvim_set_hl(0, "DiagnosticError", { fg = colors.red11 })
+	vim.api.nvim_set_hl(0, "DiagnosticWarn", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "DiagnosticInfo", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "DiagnosticHint", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "DiagnosticOk", { fg = colors.green11 })
+	vim.api.nvim_set_hl(0, "DiagnosticUnderlineError", { fg = colors.red11, underline = true })
+	vim.api.nvim_set_hl(0, "DiagnosticUnderlineWarn", { fg = colors.gray12, underline = true })
+	vim.api.nvim_set_hl(0, "DiagnosticUnderlineInfo", { fg = colors.gray12, underline = true })
+	vim.api.nvim_set_hl(0, "DiagnosticUnderlineHint", { fg = colors.gray12, underline = true })
+	vim.api.nvim_set_hl(0, "DiagnosticUnderlineOk", { fg = colors.green11, underline = true })
+end
+
 local function set_highlights_for_neogit()
 	vim.api.nvim_set_hl(0, "NeogitCursorLine", {
 		fg = colors.gray12,
@@ -451,6 +464,7 @@ local function set_highlights_for_telescope()
 end
 
 set_highlights()
+set_highlights_for_diagnostics()
 set_highlights_for_neogit()
 set_highlights_for_nvim_tree()
 set_highlights_for_telescope()
