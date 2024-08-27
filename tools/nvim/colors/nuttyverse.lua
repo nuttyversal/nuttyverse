@@ -12,6 +12,10 @@ local colors = {
 	gray10 = "#7a7a7a",
 	gray11 = "#b3b3b3",
 	gray12 = "#eeeeee",
+	green01 = "#0e1512",
+	green11 = "#3dd68c",
+	red01 = "#191111",
+	red11 = "#ff9592",
 }
 
 local function set_highlights()
@@ -356,6 +360,87 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "WinBarNC", { fg = colors.gray12 })
 end
 
+local function set_highlights_for_neogit()
+	vim.api.nvim_set_hl(0, "NeogitCursorLine", {
+		fg = colors.gray12,
+		bg = colors.gray04,
+	})
+
+	vim.api.nvim_set_hl(0, "NeogitSectionHeader", {
+		fg = colors.gray12,
+	})
+
+	vim.api.nvim_set_hl(0, "NeogitHunkHeader", {
+		fg = colors.gray01,
+		bg = colors.gray11,
+	})
+
+	vim.api.nvim_set_hl(0, "NeogitHunkHeaderHighlight", {
+		fg = colors.gray01,
+		bg = colors.gray12,
+	})
+
+	vim.api.nvim_set_hl(0, "NeogitDiffContext", {
+		fg = colors.gray12,
+		bg = colors.gray02,
+	})
+
+	vim.api.nvim_set_hl(0, "NeogitDiffContextHighlight", {
+		fg = colors.gray12,
+		bg = colors.gray03,
+	})
+
+	vim.api.nvim_set_hl(0, "NeogitDiffAdd", {
+		fg = colors.green11,
+		bg = colors.green01,
+	})
+
+	vim.api.nvim_set_hl(0, "NeogitDiffAddHighlight", {
+		fg = colors.green11,
+		bg = colors.green01,
+	})
+
+	vim.api.nvim_set_hl(0, "NeogitDiffDelete", {
+		fg = colors.red11,
+		bg = colors.red01,
+	})
+
+	vim.api.nvim_set_hl(0, "NeogitDiffDeleteHighlight", {
+		fg = colors.red11,
+		bg = colors.red01,
+	})
+
+	vim.api.nvim_set_hl(0, "NeogitChangeUpdated", {
+		fg = colors.gray10,
+		bold = true,
+		italic = true,
+	})
+
+	vim.api.nvim_set_hl(0, "NeogitChangeRenamed", {
+		fg = colors.gray10,
+		bold = true,
+		italic = true,
+	})
+
+	vim.api.nvim_set_hl(0, "NeogitChangeDeleted", {
+		fg = colors.gray10,
+		bold = true,
+		italic = true,
+	})
+
+	vim.api.nvim_set_hl(0, "NeogitChangeAdded", {
+		fg = colors.gray10,
+		bold = true,
+		italic = true,
+	})
+
+	vim.api.nvim_set_hl(0, "NeogitChangeModified", {
+		fg = colors.gray10,
+		bold = true,
+		italic = true,
+	})
+end
+
 local function set_highlights_for_nvim_tree()
 	vim.api.nvim_set_hl(0, "NvimTreeFolderIcon", { fg = colors.gray12 })
 	vim.api.nvim_set_hl(0, "NvimTreeIndentMarker", { fg = colors.gray09 })
@@ -366,5 +451,6 @@ local function set_highlights_for_telescope()
 end
 
 set_highlights()
+set_highlights_for_neogit()
 set_highlights_for_nvim_tree()
 set_highlights_for_telescope()
