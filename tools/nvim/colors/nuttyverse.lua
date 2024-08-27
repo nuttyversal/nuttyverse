@@ -1,5 +1,5 @@
 local colors = {
-	background = "#000000",
+	background = "#070707",
 	gray01 = "#070707",
 	gray02 = "#171717",
 	gray03 = "#212121",
@@ -19,31 +19,31 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "Normal", { fg = colors.gray12, bg = colors.background })
 
 	-- any comment
-	vim.api.nvim_set_hl(0, "Comment", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "Comment", { fg = colors.gray10 })
 
 	-- any constant
-	vim.api.nvim_set_hl(0, "Constant", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "Constant", { fg = colors.gray11 })
 
 	-- a string constant: "this is a string"
-	vim.api.nvim_set_hl(0, "String", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "String", { fg = colors.gray11 })
 
 	-- a character constant: 'c', '\n'
-	vim.api.nvim_set_hl(0, "Character", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "Character", { fg = colors.gray11 })
 
 	-- a number constant: 234, 0xff
-	vim.api.nvim_set_hl(0, "Number", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "Number", { fg = colors.gray11 })
 
 	-- a boolean constant: TRUE, false
-	vim.api.nvim_set_hl(0, "Boolean", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "Boolean", { fg = colors.gray11 })
 
 	-- a floating point constant: 2.3e10
-	vim.api.nvim_set_hl(0, "Float", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "Float", { fg = colors.gray11 })
 
 	-- any variable name
 	vim.api.nvim_set_hl(0, "Identifier", { fg = colors.gray12 })
 
 	-- function name (also: methods for classes)
-	vim.api.nvim_set_hl(0, "Function", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "Function", { fg = colors.gray12, bold = true })
 
 	-- any statement
 	vim.api.nvim_set_hl(0, "Statement", { fg = colors.gray12 })
@@ -61,7 +61,7 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "Operator", { fg = colors.gray12 })
 
 	-- any other keyword
-	vim.api.nvim_set_hl(0, "Keyword", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "Keyword", { fg = colors.gray11, bold = true, italic = true })
 
 	-- try, catch, throw
 	vim.api.nvim_set_hl(0, "Exception", { fg = colors.gray12 })
@@ -82,7 +82,7 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "PreCondit", { fg = colors.gray12 })
 
 	-- int, long, char, etc.
-	vim.api.nvim_set_hl(0, "Type", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "Type", { fg = colors.gray11, italic = true })
 
 	-- static, register, volatile, etc.
 	vim.api.nvim_set_hl(0, "StorageClass", { fg = colors.gray12 })
@@ -118,7 +118,7 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "Ignore", { fg = colors.gray12 })
 
 	-- any erroneous construct
-	vim.api.nvim_set_hl(0, "Error", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "Error", { fg = "#ff0000" })
 
 	-- anything that needs extra attention (e.g., TODO FIXME XXX)
 	vim.api.nvim_set_hl(0, "Todo", { fg = colors.gray12 })
@@ -139,7 +139,7 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "Conceal", { fg = colors.gray12 })
 
 	-- Current match for the last search pattern (see 'hlsearch').
-	vim.api.nvim_set_hl(0, "CurSearch", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "CurSearch", { fg = colors.gray01, bg = colors.gray11 })
 
 	-- Character under the cursor.
 	vim.api.nvim_set_hl(0, "Cursor", { fg = colors.gray12 })
@@ -154,7 +154,7 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "CursorColumn", { fg = colors.gray12 })
 
 	-- Screen-line at the cursor, when 'cursorline' is set.
-	vim.api.nvim_set_hl(0, "CursorLine", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "CursorLine", { fg = colors.gray12, bg = colors.gray04 })
 
 	-- Directory names (and other special names in listings).
 	vim.api.nvim_set_hl(0, "Directory", { fg = colors.gray12 })
@@ -184,7 +184,7 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "ErrorMsg", { fg = colors.gray12 })
 
 	-- Separators between window splits.
-	vim.api.nvim_set_hl(0, "WinSeparator", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "WinSeparator", { fg = colors.gray06 })
 
 	-- Line used for closed folds.
 	vim.api.nvim_set_hl(0, "Folded", { fg = colors.gray12 })
@@ -196,13 +196,13 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "SignColumn", { fg = colors.gray12 })
 
 	-- 'incsearch' highlighting; also used for the text replaced with
-	vim.api.nvim_set_hl(0, "IncSearch", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "IncSearch", { fg = colors.gray01, bg = colors.gray11 })
 
 	-- :substitute replacement text highlighting.
-	vim.api.nvim_set_hl(0, "Substitute", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "Substitute", { fg = "#00ff00" })
 
 	-- Line number for ":number" and ":#" commands, and when 'number'
-	vim.api.nvim_set_hl(0, "LineNr", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "LineNr", { fg = colors.gray09 })
 
 	-- Line number for when the 'relativenumber'
 	vim.api.nvim_set_hl(0, "LineNrAbove", { fg = colors.gray12 })
@@ -220,7 +220,7 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "CursorLineSign", { fg = colors.gray12 })
 
 	-- Character under the cursor or just before it, if it
-	vim.api.nvim_set_hl(0, "MatchParen", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "MatchParen", { fg = colors.gray12, bg = colors.gray10 })
 
 	-- 'showmode' message (e.g., "-- INSERT --").
 	vim.api.nvim_set_hl(0, "ModeMsg", { fg = colors.gray12 })
@@ -244,7 +244,7 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "NormalFloat", { fg = colors.gray12 })
 
 	-- Border of floating windows.
-	vim.api.nvim_set_hl(0, "FloatBorder", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "FloatBorder", { fg = colors.gray06 })
 
 	-- Title of floating windows.
 	vim.api.nvim_set_hl(0, "FloatTitle", { fg = colors.gray12 })
@@ -288,11 +288,11 @@ local function set_highlights()
 	-- hit-enter prompt and yes/no questions.
 	vim.api.nvim_set_hl(0, "Question", { fg = colors.gray12 })
 
-	-- Current quickfix item in the quickfix window. Combined with
+	-- Current quickfix item in the quickfix window.
 	vim.api.nvim_set_hl(0, "QuickFixLine", { fg = colors.gray12 })
 
 	-- Last search pattern highlighting (see 'hlsearch').
-	vim.api.nvim_set_hl(0, "Search", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "Search", { fg = colors.gray01, bg = colors.gray11 })
 
 	-- Tabstops in snippets. vim.snippet
 	vim.api.nvim_set_hl(0, "SnippetTabstop", { fg = colors.gray12 })
@@ -335,7 +335,7 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "Title", { fg = colors.gray12 })
 
 	-- Visual mode selection.
-	vim.api.nvim_set_hl(0, "Visual", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "Visual", { fg = colors.gray01, bg = colors.gray11 })
 
 	-- Visual mode selection when vim is "Not Owning the Selection".
 	vim.api.nvim_set_hl(0, "VisualNOS", { fg = colors.gray12 })
@@ -344,7 +344,7 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "WarningMsg", { fg = colors.gray12 })
 
 	-- "nbsp", "space", "tab", "multispace", "lead" and "trail"
-	vim.api.nvim_set_hl(0, "Whitespace", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "Whitespace", { fg = colors.gray06 })
 
 	-- Current match in 'wildmenu' completion.
 	vim.api.nvim_set_hl(0, "WildMenu", { fg = colors.gray12 })
@@ -356,4 +356,15 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "WinBarNC", { fg = colors.gray12 })
 end
 
+local function set_highlights_for_nvim_tree()
+	vim.api.nvim_set_hl(0, "NvimTreeFolderIcon", { fg = colors.gray12 })
+	vim.api.nvim_set_hl(0, "NvimTreeIndentMarker", { fg = colors.gray09 })
+end
+
+local function set_highlights_for_telescope()
+	vim.api.nvim_set_hl(0, "TelescopeBorder", { fg = colors.gray06 })
+end
+
 set_highlights()
+set_highlights_for_nvim_tree()
+set_highlights_for_telescope()
