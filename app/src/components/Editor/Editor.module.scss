@@ -32,7 +32,7 @@
 
 	:global(.cm-editor *) {
 		font-family: "PragmataPro Liga", monospace !important;
-		font-size: calc(#{map.get(styles.$type-scale, "xs")} * 1.07);
+		font-size: calc(#{map.get(styles.$type-scale, "xs")} * 1.1);
 	}
 
 	:global(.cm-editor) {
