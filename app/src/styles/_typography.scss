@@ -129,6 +129,28 @@ a {
 	}
 }
 
+ul {
+	display: flex;
+	flex-direction: column;
+	list-style-type: none;
+	padding-left: 0;
+
+	& li {
+		padding-left: map.get(spacing.$spacing, "8");
+	}
+
+	& li::before {
+		content: "✦";
+		position: absolute;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: map.get(spacing.$spacing, "4");
+		margin-left: -#{map.get(spacing.$spacing, "6")};
+		float: left;
+	}
+}
+
 code {
 	background: var(--gray-11);
 	color: var(--gray-01);

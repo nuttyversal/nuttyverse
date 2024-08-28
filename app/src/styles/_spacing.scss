@@ -113,6 +113,27 @@ p, img {
 	}
 }
 
+ol, ul {
+	margin-top: map.get($relative-spacing, "2");
+	margin-bottom: map.get($relative-spacing, "2");
+
+	ol, ul {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+}
+
+li {
+	p {
+		margin-top: map.get($relative-spacing, "2");
+		margin-bottom: map.get($relative-spacing, "2");
+	}
+}
+
+li + li {
+	margin-top: map.get($relative-spacing, "2");
+}
+
 pre {
 	margin-top: map.get($relative-spacing, "4");
 	margin-bottom: map.get($relative-spacing, "4");
@@ -137,7 +158,7 @@ pre {
 .with-full-bleed {
 	width: 100%;
 
-	& > p {
+	& > p, & > ul, & > ol {
 		padding-left: map.get($spacing, "4");
 		padding-right: map.get($spacing, "4");
 	}
