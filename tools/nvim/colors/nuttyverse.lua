@@ -203,7 +203,7 @@ local function set_highlights()
 	vim.api.nvim_set_hl(0, "IncSearch", { fg = colors.gray01, bg = colors.gray11 })
 
 	-- :substitute replacement text highlighting.
-	vim.api.nvim_set_hl(0, "Substitute", { fg = "#00ff00" })
+	vim.api.nvim_set_hl(0, "Substitute", { fg = colors.green11 })
 
 	-- Line number for ":number" and ":#" commands, and when 'number'
 	vim.api.nvim_set_hl(0, "LineNr", { fg = colors.gray09 })
@@ -436,13 +436,13 @@ local function set_highlights_for_neogit()
 	})
 
 	vim.api.nvim_set_hl(0, "NeogitChangeDeleted", {
-		fg = colors.gray10,
+		fg = colors.red11,
 		bold = true,
 		italic = true,
 	})
 
 	vim.api.nvim_set_hl(0, "NeogitChangeAdded", {
-		fg = colors.gray10,
+		fg = colors.green11,
 		bold = true,
 		italic = true,
 	})
