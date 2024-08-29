@@ -82,6 +82,7 @@ vim.opt.whichwrap:append("<>[]hl")
 -- Appearance
 --
 
+vim.cmd("colorscheme nuttyverse")
 vim.wo.cursorline = true
 vim.wo.number = true
 vim.wo.foldcolumn = "1"
@@ -188,7 +189,6 @@ require("lazy").setup("plugins")
 
 require("config.autocomplete")
 require("config.bufferline")
-require("config.catppuccin")
 require("config.conform")
 require("config.diffview")
 require("config.lspconfig")
