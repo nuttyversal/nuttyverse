@@ -110,6 +110,21 @@ if vim.g.neovide then
 	vim.o.guifont = "PragmataPro Mono Liga:h16"
 	vim.o.linespace = 4
 
+	-- Bind hotkeys to change scale factor.
+	vim.api.nvim_set_keymap(
+		"n",
+		"<C-=>",
+		":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1<CR>",
+		{ noremap = true, silent = true }
+	)
+
+	vim.api.nvim_set_keymap(
+		"n",
+		"<C-->",
+		":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1<CR>",
+		{ noremap = true, silent = true }
+	)
+
 	-- Allow clipboard copy-pasta.
 	vim.g.neovide_input_use_logo = 1
 	vim.api.nvim_set_keymap("", "<D-v>", "+p<CR>", { noremap = true, silent = true })
