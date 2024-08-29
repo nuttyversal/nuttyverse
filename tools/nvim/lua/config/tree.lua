@@ -11,6 +11,10 @@ require("nvim-tree").setup({
 	hijack_unnamed_buffer_when_opening = false,
 	sync_root_with_cwd = true,
 
+	sort = {
+		sorter = "case_sensitive",
+	},
+
 	update_focused_file = {
 		enable = true,
 		update_root = false,
