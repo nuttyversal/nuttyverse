@@ -1,0 +1,1 @@
+export { VimSpell } from "./VimSpell";
