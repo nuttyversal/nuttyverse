@@ -21,7 +21,7 @@ function useScrollSyncing(
 
 	// An effect that syncs the scroller with the cursor.
 	const syncScroller = Effect.gen(function* () {
-		if (!isSyncing() || !(lineNumber() in sourceMap())) {
+		if (!isSyncing()) {
 			return;
 		}
 
@@ -29,7 +29,8 @@ function useScrollSyncing(
 			currentTween.kill();
 		}
 
-		const block = sourceMap()[lineNumber()];
+		const block =
+			lineNumber() in sourceMap() ? sourceMap()[lineNumber()] : null;
 
 		const scroller = yield* queryPreviewScroller;
 		const scrollY = block ? yield* getBlockScrollY(block, lineNumber()) : 0;
