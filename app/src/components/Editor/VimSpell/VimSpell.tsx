@@ -24,8 +24,7 @@ const VimSpell: Component<Props> = (props) => {
 
 	return (
 		<span ref={container} classList={classList()}>
-			{spell}
-			{hasCasted() && <span> ✨</span>}
+			{spell} {hasCasted() && <span>✨</span>}
 		</span>
 	);
 };
