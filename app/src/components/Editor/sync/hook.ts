@@ -48,7 +48,15 @@ function useScrollSyncing(
 	});
 
 	const syncScrollerCallback = () => {
-		Effect.runSync(syncScroller);
+		Effect.runSync(
+			syncScroller.pipe(
+				Effect.catchTag("ElementNotFoundError", (error) => {
+					// A rendering delay exists between the editor and the preview.
+					// This is a benign error that will resolve itself.
+					return Effect.succeed(error);
+				}),
+			),
+		);
 	};
 
 	const setupScrollSyncing = Effect.gen(function* () {

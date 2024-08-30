@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 import { Route } from "@solidjs/router";
-import { render } from "@solidjs/testing-library";
+import { render, waitFor } from "@solidjs/testing-library";
 import { describe, expect, it } from "vitest";
 import { MockServiceProvider } from "~/services/context";
 import { createMockLocalStorageService } from "~/services/local-storage";
@@ -46,7 +46,7 @@ describe("Editor component", () => {
 		expect(content).toBeInTheDocument();
 	});
 
-	it("syncs the editor and preview scroll positions", async () => {
+	it("enables syncing by default", async () => {
 		const documentContent = "Hello, world!\n\nAn empty block exists!";
 		const localStorageService = createMockLocalStorageService();
 
@@ -58,17 +58,9 @@ describe("Editor component", () => {
 			</MockServiceProvider>
 		);
 
-		const { container, findByText } = render(
-			() => <Route path="/" component={App} />,
-			{ location: "/" },
-		);
-
-		// Act.
-		const syncButton = await findByText("Sync");
-		syncButton.click();
-
-		const editorScroller = container.querySelector(".cm-scroller");
-		editorScroller!.scrollTop = 100;
+		const { findByText } = render(() => <Route path="/" component={App} />, {
+			location: "/",
+		});
 
 		// Assert.
 		expect(await findByText("⚡ Sync ⚡")).toBeInTheDocument();

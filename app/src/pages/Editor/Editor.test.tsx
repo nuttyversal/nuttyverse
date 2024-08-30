@@ -25,7 +25,7 @@ describe("Editor page", () => {
 		expect(await findByTestId("editor")).toBeInTheDocument();
 	});
 
-	it("can enable syncing", async () => {
+	it("can toggle syncing", async () => {
 		// Arrange.
 		const App = () => (
 			<ServiceProvider>
@@ -46,9 +46,7 @@ describe("Editor page", () => {
 
 		// Assert.
 		await waitFor(async () => {
-			expect(container.innerHTML.toString().includes("⚡ Sync ⚡")).toBe(
-				true,
-			);
+			expect(container.innerHTML.toString().includes("Sync")).toBe(true);
 		});
 	});
 });

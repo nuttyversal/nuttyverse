@@ -2,7 +2,7 @@ import { Effect } from "effect";
 import { describe, expect, it } from "vitest";
 import { useEditor } from "./hook";
 import { EditorRefNotBoundError } from "./errors";
-import { render, waitFor } from "@solidjs/testing-library";
+import { render } from "@solidjs/testing-library";
 import { Route } from "@solidjs/router";
 
 describe("useEditor hook", () => {
