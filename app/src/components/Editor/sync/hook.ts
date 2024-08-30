@@ -10,7 +10,7 @@ function useScrollSyncing(
 	lineNumber: Accessor<number>,
 ) {
 	// Tracks whether or not the scroll syncing is enabled.
-	const [isSyncing, setIsSyncing] = createSignal<boolean>(false);
+	const [isSyncing, setIsSyncing] = createSignal<boolean>(true);
 
 	const toggleSyncing = () => {
 		setIsSyncing((prev) => !prev);
@@ -21,7 +21,7 @@ function useScrollSyncing(
 
 	// An effect that syncs the scroller with the cursor.
 	const syncScroller = Effect.gen(function* () {
-		if (!isSyncing()) {
+		if (!isSyncing() || !(lineNumber() in sourceMap())) {
 			return;
 		}
 
