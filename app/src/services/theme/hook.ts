@@ -18,23 +18,15 @@ const useTheme = () => {
 	const theme = themeService.theme;
 
 	const hydrateTheme = () => {
-		Effect.runPromise(themeService.hydrateTheme)
-			.then((theme) => {
-				console.log(`Hydrated theme (${theme}) from user settings.`);
-			})
-			.catch((error) => {
-				console.error(`Failed to hydrate theme: ${error}.`);
-			});
+		Effect.runPromise(themeService.hydrateTheme).catch((error) => {
+			console.error(`Failed to hydrate theme: ${error}.`);
+		});
 	};
 
 	const toggleTheme = () => {
-		Effect.runPromise(themeService.toggleTheme)
-			.then((newTheme) => {
-				console.log(`Toggled theme to ${newTheme}.`);
-			})
-			.catch((error) => {
-				console.error(`Failed to toggle theme: ${error}.`);
-			});
+		Effect.runPromise(themeService.toggleTheme).catch((error) => {
+			console.error(`Failed to toggle theme: ${error}.`);
+		});
 	};
 
 	if (!themeService.hasHydrated()) {
