@@ -16,6 +16,7 @@ with lib;
 		./services/keycloak.nix
 		./services/mastodon.nix
 		./services/minio.nix
+		./services/murmur.nix
 		./services/plex.nix
 		./services/postgresql.nix
 		./services/redis.nix
