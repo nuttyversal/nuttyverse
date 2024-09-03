@@ -32,7 +32,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 /// Middleware for hotlink protection.
 ///
 /// Prevents requests from being served if they do not originate from within the
-/// Nuttyverse as a protection against casual copying of licensed assets.
+/// Nuttyverse as a protection against casual copying of licensed assets. This
+/// is only enforced in production builds (i.e., building with `--release`).
 async fn hotlink_protection(req: Request<Body>, next: Next) -> Result<Response<Body>, Infallible> {
 	if check_host(&req) || cfg!(debug_assertions) {
 		Ok(next.run(req).await)
