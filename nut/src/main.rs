@@ -1,3 +1,4 @@
+use anyhow::Result;
 use axum::{
 	body::Body,
 	http::header,
@@ -10,20 +11,21 @@ use tokio::net::TcpListener;
 use tower_http::services::{ServeDir, ServeFile};
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> Result<()> {
 	let fallback = ServeFile::new("frontend/index.html");
 	let frontend = ServeDir::new("frontend").not_found_service(fallback.clone());
 	let fonts = ServeDir::new("fonts").not_found_service(fallback);
 
-	let fonts_router = Router::new()
+	let fonts_service = Router::new()
 		.nest_service("/", routing::get_service(fonts))
 		.layer(middleware::from_fn(hotlink_protection));
 
 	let app = Router::new()
-		.nest_service("/fonts", fonts_router)
+		.nest_service("/fonts", fonts_service)
 		.nest_service("/", routing::get_service(frontend));
 
 	let listener = TcpListener::bind("0.0.0.0:4000").await?;
+
 	axum::serve(listener, app).await?;
 
 	Ok(())
