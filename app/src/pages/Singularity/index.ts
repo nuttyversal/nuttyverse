@@ -1,1 +1,4 @@
-export { Singularity } from "./Singularity";
+import { Singularity } from "./Singularity";
+
+export { Singularity };
+export default Singularity;
