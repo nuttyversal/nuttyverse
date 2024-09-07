@@ -1,34 +1,87 @@
+mod api;
+mod auth;
+mod config;
+
+use auth::{auth_token_handler, require_roles};
+use config::Config;
+
 use anyhow::Result;
 use axum::{
 	body::Body,
-	http::header,
-	http::{Request, Response, StatusCode},
+	http::{header, Request, Response, StatusCode},
 	middleware::{self, Next},
-	routing, Router,
+	routing, Extension, Router,
 };
-use std::convert::Infallible;
+use axum_keycloak_auth::{
+	decode::KeycloakToken,
+	expect_role,
+	instance::{KeycloakAuthInstance, KeycloakConfig},
+	Url,
+};
+use std::{convert::Infallible, sync::Arc};
 use tokio::net::TcpListener;
 use tower_http::services::{ServeDir, ServeFile};
 
 #[tokio::main]
 async fn main() -> Result<()> {
+	let config = Config::load();
+
+	let keycloak_state = Arc::new(
+		auth::KeycloakState::builder()
+			.keycloak_url(config.keycloak_url.clone())
+			.keycloak_realm(config.keycloak_realm.clone())
+			.keycloak_client_id(config.keycloak_client_id)
+			.keycloak_client_secret(config.keycloak_client_secret)
+			.build(),
+	);
+
+	let keycloak_auth_instance = Arc::new(KeycloakAuthInstance::new(
+		KeycloakConfig::builder()
+			.server(Url::parse(&config.keycloak_url)?)
+			.realm(config.keycloak_realm)
+			.build(),
+	));
+
 	let fallback = ServeFile::new("frontend/index.html");
 	let frontend = ServeDir::new("frontend").not_found_service(fallback.clone());
 	let fonts = ServeDir::new("fonts").not_found_service(fallback);
 
+	let auth_service = Router::new()
+		.route("/api/auth/token", routing::post(auth_token_handler))
+		.with_state(keycloak_state);
+
 	let fonts_service = Router::new()
-		.nest_service("/", routing::get_service(fonts))
+		.nest_service("/fonts", routing::get_service(fonts))
 		.layer(middleware::from_fn(hotlink_protection));
 
-	let app = Router::new()
-		.nest_service("/fonts", fonts_service)
-		.nest_service("/", routing::get_service(frontend));
+	let protected_service = require_roles(
+		vec![String::from("admin")],
+		Router::new().route("/protected", routing::get(protected)),
+		keycloak_auth_instance,
+	);
+
+	let frontend_service = Router::new().nest_service("/", routing::get_service(frontend));
+
+	let app = auth_service
+		.merge(fonts_service)
+		.merge(protected_service)
+		.merge(frontend_service);
 
 	let listener = TcpListener::bind("0.0.0.0:4000").await?;
 
 	axum::serve(listener, app).await?;
 
 	Ok(())
+}
+
+/// A protected handler that requires the user to have the `admin` role.
+async fn protected(Extension(token): Extension<KeycloakToken<String>>) -> Response<Body> {
+	expect_role!(&token, "admin");
+
+	Response::builder()
+		.status(StatusCode::OK)
+		.body(Body::empty())
+		.unwrap()
 }
 
 /// Middleware for hotlink protection.
