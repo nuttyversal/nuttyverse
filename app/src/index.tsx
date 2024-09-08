@@ -22,23 +22,37 @@ const getRootElement = Effect.sync(() =>
 );
 
 /**
+ * An effect that queries the loading element of the application.
+ * This is the element that appears when fetching the application
+ * bundle.
+ *
+ * @returns The loading element of the application.
+ */
+const getLoadingElement = Effect.sync(() =>
+	Option.fromNullable(document.getElementById("loading")),
+).pipe(
+	Effect.flatMap((maybeLoading) =>
+		Option.match(maybeLoading, {
+			onNone: () => Effect.fail(new Error("Loading element not found.")),
+			onSome: Effect.succeed,
+		}),
+	),
+);
+
+/**
  * An effect that hides the loading state that appears when fetching
  * the application bundle.
  */
-const hideLoadingState = (root: HTMLElement) =>
+const hideLoadingState = (loading: HTMLElement) =>
 	Effect.sync(() => {
-		const loading = document.getElementById("loading");
+		// Trigger fade-out animation.
+		loading.style.opacity = "0";
 
-		if (loading) {
-			// Trigger fade-out animation.
-			loading.style.opacity = "0";
-
-			// Wait for animation to finish before …
-			loading.addEventListener("transitionend", () => {
-				// … removing the element.
-				root.removeChild(loading);
-			});
-		}
+		// Wait for animation to finish before …
+		loading.addEventListener("transitionend", () => {
+			// … removing the element.
+			loading.remove();
+		});
 	});
 
 /**
@@ -69,8 +83,10 @@ const renderApplication = (root: HTMLElement) => {
  */
 const main = Effect.gen(function* () {
 	const root = yield* getRootElement;
+	const loading = yield* getLoadingElement;
+
 	yield* renderApplication(root);
-	yield* hideLoadingState(root);
+	yield* hideLoadingState(loading);
 });
 
 // Run the main effect and log any errors to the console.
