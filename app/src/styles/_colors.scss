@@ -88,6 +88,10 @@ $gray: (
   )
 );
 
+:root {
+	transition: background-color 0.3s ease;
+}
+
 // Light and dark mode is implemented by toggling the 'data-theme'
 // attribute on the root HTML element.
 

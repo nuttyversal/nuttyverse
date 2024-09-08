@@ -22,6 +22,26 @@ const getRootElement = Effect.sync(() =>
 );
 
 /**
+ * An effect that hides the loading state that appears when fetching
+ * the application bundle.
+ */
+const hideLoadingState = (root: HTMLElement) =>
+	Effect.sync(() => {
+		const loading = document.getElementById("loading");
+
+		if (loading) {
+			// Trigger fade-out animation.
+			loading.style.opacity = "0";
+
+			// Wait for animation to finish before …
+			loading.addEventListener("transitionend", () => {
+				// … removing the element.
+				root.removeChild(loading);
+			});
+		}
+	});
+
+/**
  * An effect that renders the application to the root element.
  * This effect is dependent on the root element being available.
  */
@@ -47,7 +67,11 @@ const renderApplication = (root: HTMLElement) => {
  * The main effect that serves as the entry point for the application.
  * This effect queries the root element and mounts the application to it.
  */
-const main = Effect.flatMap(getRootElement, renderApplication);
+const main = Effect.gen(function* () {
+	const root = yield* getRootElement;
+	yield* renderApplication(root);
+	yield* hideLoadingState(root);
+});
 
 // Run the main effect and log any errors to the console.
 // @ts-expect-error import.meta is available.
