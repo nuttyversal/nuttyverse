@@ -5,7 +5,12 @@ import { getRootElement, main } from "./index";
 
 describe("Application startup", () => {
 	it("renders without crashing", async () => {
-		render(() => <div id="root"></div>);
+		render(() => (
+			<div id="root">
+				<div id="loading" />
+			</div>
+		));
+
 		await Effect.runPromise(main);
 	});
 
