@@ -25,12 +25,14 @@
 }
 
 :global(.hljs-name) {
-	font-weight: 600;
+	font-weight: 700;
+	font-style: italic;
 	font-feature-settings: 'ss06' 1;
 }
 
 :global(.hljs-keyword) {
-	font-weight: 600;
+	font-weight: 700;
+	font-style: italic;
 	font-feature-settings: 'ss06' 1;
 }
 

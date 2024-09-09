@@ -59,7 +59,7 @@ pyftsubset \
 	--output-file="$fonts_dir_path/pragmatapro-liga-bold-italic.woff2" \
 	--flavor=woff2 \
 	--with-zopfli \
-	--layout-features="calt" \
+	--layout-features="calt,ss06" \
 	--unicodes="$basic_latin"
 
 echo "Creating fragment: pragmatapro-fraktur-regular.woff2"

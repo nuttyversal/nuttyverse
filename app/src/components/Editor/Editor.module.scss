@@ -78,6 +78,16 @@
 	:global(.ͼc) {
 		color: var(--foreground-color);
 	}
+
+	:global(.ͼ5) {
+		color: var(--gray-11);
+	}
+
+	:global(.ͼ7) {
+		font-weight: 600;
+		font-style: italic;
+		font-feature-settings: 'ss06' 1;
+	}
 }
 
 .output {
