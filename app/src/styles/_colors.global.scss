@@ -8,7 +8,7 @@
 
 * {
 	&:focus {
-		outline: #{map.get($spacing, "0.5")} double var(--gray-12);
+		outline: #{map.get($spacing, "0.5")} solid var(--gray-12);
 	}
 }
 

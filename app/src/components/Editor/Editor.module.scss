@@ -21,6 +21,8 @@
 
 	:global(.cm-editor) {
 		height: 100%;
+		border-left: #{map.get(styles.$spacing, "0.5")} solid transparent;
+		border-right: #{map.get(styles.$spacing, "0.5")} solid transparent;
 	}
 
 	:global(::selection) {
@@ -52,6 +54,8 @@
 
 	:global(.cm-focused) {
 		outline: none;
+		border-left: #{map.get(styles.$spacing, "0.5")} solid var(--gray-12);
+		border-right: #{map.get(styles.$spacing, "0.5")} solid var(--gray-12);
 	}
 
 	:global(.ͼc) {
