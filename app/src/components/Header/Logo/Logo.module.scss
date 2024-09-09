@@ -13,6 +13,8 @@
 	cursor: pointer;
 	background: none;
 	border: none;
+	border-top-left-radius: map.get(styles.$spacing, "1");
+	border-top-right-radius: map.get(styles.$spacing, "1");
 	margin: 0;
 	padding: 0;
 	transition: transform 0.2s ease-out;

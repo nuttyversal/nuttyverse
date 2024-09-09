@@ -110,7 +110,7 @@
 
 strong, b {
 	// The words can be strong, but not too strong.
-	font-weight: 600;
+	font-weight: 550;
 }
 
 s {
@@ -124,15 +124,27 @@ s {
 }
 
 a {
+	color: var(--gray-12);
+	font-weight: 500;
 	font-feature-settings: 'smcp' 1, 'c2sc' 1;
 	font-variant: all-small-caps;
 	font-variant-caps: all-small-caps;
-	text-underline-offset: 3px;
-	text-decoration: none;
-	color: var(--gray-12);
+	text-underline-offset: 4px;
 
-	&:hover {
-		text-decoration: underline;
+	&.with-hover-styles {
+		display: inline-block;
+		margin-left: -#{map.get($spacing, "0.5")};
+		margin-right: -#{map.get($spacing, "0.5")};
+		padding-left: map.get($spacing, "0.5");
+		padding-right: map.get($spacing, "0.5");
+		border-radius: map.get($spacing, "1");
+
+		&:hover, &:focus {
+			background: var(--inverted-gray-01);
+			color: var(--inverted-gray-12);
+			text-decoration: none;
+			outline: none;
+		}
 	}
 }
 

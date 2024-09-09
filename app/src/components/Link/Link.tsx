@@ -13,6 +13,11 @@ type Props = {
 	newTab?: boolean;
 
 	/**
+	 * If enabled (`true`), applies hover styles to the link.
+	 */
+	hover?: boolean;
+
+	/**
 	 * Additional CSS class(es) to apply to the link.
 	 */
 	class?: string;
@@ -33,13 +38,18 @@ const Link: ParentComponent<Props> = (props) => {
 		}
 	};
 
+	const classes = {
+		[props.class ?? ""]: true,
+		["with-hover-styles"]: props.hover ?? true,
+	};
+
 	return (
 		<A
 			href={props.href}
 			target={props.newTab ? "_blank" : undefined}
 			rel={props.newTab ? "noopener noreferrer" : undefined}
 			onMouseDown={navigateImmediately}
-			class={props.class}
+			classList={classes}
 		>
 			{props.children}
 		</A>

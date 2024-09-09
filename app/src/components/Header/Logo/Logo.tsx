@@ -13,7 +13,7 @@ const Logo: Component = () => {
 	});
 
 	return (
-		<Link href="/" class={styles.button}>
+		<Link href="/" class={styles.button} hover={false}>
 			<svg
 				ref={svg}
 				xmlns="http://www.w3.org/2000/svg"

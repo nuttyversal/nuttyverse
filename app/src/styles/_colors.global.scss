@@ -1,8 +1,15 @@
 @use "sass:map";
 @use "colors.variables" as *;
+@use "spacing.variables" as *;
 
 :root {
 	transition: background-color 0.3s ease;
+}
+
+* {
+	&:focus {
+		outline: #{map.get($spacing, "0.5")} double var(--gray-12);
+	}
 }
 
 // Light and dark mode is implemented by toggling the 'data-theme'
