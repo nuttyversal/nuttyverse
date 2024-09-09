@@ -14,7 +14,7 @@ RUN fish scripts/subset-fonts.fish
 FROM rust:alpine AS build-backend
 COPY . .
 WORKDIR /nut
-RUN apk add --no-cache musl-dev
+RUN apk add --no-cache musl-dev openssl-dev pkgconfig
 RUN cargo build --release
 
 FROM alpine
