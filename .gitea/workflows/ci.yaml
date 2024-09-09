@@ -138,3 +138,39 @@ jobs:
           api_token: ${{ secrets.NEOCITIES_TOKEN }}
           dist_dir: city/dist
           cleanup: false
+  nut-µ-service:
+    runs-on: [self-hosted, nix]
+    container:
+      image: ubuntu:mantic
+    env:
+      RUNNER_TOOL_CACHE: /toolcache
+    steps:
+      - name: Install dependencies
+        run: apt update && apt install --yes git nodejs
+      - name: Setup SSH private key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.UNOBSERVABLE_DEPLOY_KEY }}
+      - name: Setup SSH known hosts
+        run: ssh-keyscan -t ed25519 code.nuttyver.se >> ~/.ssh/known_hosts
+      - name: Checkout observable repository
+        uses: actions/checkout@v4
+      - name: Checkout unobservable submodule
+        run: git submodule update --init --recursive
+      - name: Prepare environment
+        uses: ./.gitea/actions/prepare
+        with:
+          docker-password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Test and build
+        run: |
+          cd fonts
+          nix develop -c bash -c "just test"
+          nix develop -c bash -c "just build"
+      - name: Deploy
+        if: github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: nut/Dockerfile
+          push: true
+          tags: code.nuttyver.se/observable/nut:latest
