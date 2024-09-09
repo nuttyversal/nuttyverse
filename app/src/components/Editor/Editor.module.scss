@@ -33,6 +33,7 @@
 	:global(.cm-editor *) {
 		font-family: "Nutty PragmataPro Liga", monospace !important;
 		font-size: calc(#{map.get(styles.$type-scale, "xs")} * 1.1);
+		color: var(--gray-12);
 	}
 
 	:global(.cm-editor) {
@@ -40,21 +41,13 @@
 	}
 
 	:global(::selection) {
-		background-color: var(--foreground-color);
-		color: var(--background-color);
-	}
-
-	:global(&.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground) {
-		background-color: var(--foreground-color);
-	}
-
-	:global(.cm-selectionBackground) {
-		background-color: var(--foreground-color);
+		color: var(--background-color) !important;
+		background-color: var(--foreground-color) !important;
 	}
 
 	:global(.cm-gutter) {
+		color: var(--gray-09);
 		background-color: var(--background-color);
-		color: var(--foreground-light-color);
 	}
 
 	:global(.cm-activeLineGutter) {
