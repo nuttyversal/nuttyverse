@@ -2,6 +2,6 @@
 @use "../../styles";
 
 .container {
-	max-width: 600px;
+	max-width: 550px;
 	padding: map.get(styles.$spacing, "4") 0;
 }
