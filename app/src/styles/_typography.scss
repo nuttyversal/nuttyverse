@@ -78,7 +78,7 @@ $heading-sizes: (
 	}
 }
 
-strong {
+strong, b {
 	// The words can be strong, but not too strong.
 	font-weight: 600;
 }
