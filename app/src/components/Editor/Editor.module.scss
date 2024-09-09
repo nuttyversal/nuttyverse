@@ -1,13 +1,5 @@
 @use "sass:map";
 
-[data-theme='light'] {
-	--syncing-color: yellow;
-}
-
-[data-theme='dark'] {
-	--syncing-color: black;
-}
-
 .container {
 	position: relative;
 	display: flex;
@@ -135,7 +127,7 @@
 .syncing {
 	animation: 60ms infinite alternate syncing;
 	animation-timing-function: ease-in-out;
-	color: var(--syncing-color);
+	color: var(--inverted-gray-12);
 
 	width: map.get(styles.$spacing, "16");
 	left: calc(50% - #{map.get(styles.$spacing, "8")});

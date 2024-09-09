@@ -24,6 +24,19 @@
 	--gray-10: #{map.get($gray, "light", "10")};
 	--gray-11: #{map.get($gray, "light", "11")};
 	--gray-12: #{map.get($gray, "light", "12")};
+
+	--inverted-gray-01: #{map.get($gray, "dark", "01")};
+	--inverted-gray-02: #{map.get($gray, "dark", "02")};
+	--inverted-gray-03: #{map.get($gray, "dark", "03")};
+	--inverted-gray-04: #{map.get($gray, "dark", "04")};
+	--inverted-gray-05: #{map.get($gray, "dark", "05")};
+	--inverted-gray-06: #{map.get($gray, "dark", "06")};
+	--inverted-gray-07: #{map.get($gray, "dark", "07")};
+	--inverted-gray-08: #{map.get($gray, "dark", "08")};
+	--inverted-gray-09: #{map.get($gray, "dark", "09")};
+	--inverted-gray-10: #{map.get($gray, "dark", "10")};
+	--inverted-gray-11: #{map.get($gray, "dark", "11")};
+	--inverted-gray-12: #{map.get($gray, "dark", "12")};
 }
 
 [data-theme="dark"] {
@@ -42,4 +55,17 @@
 	--gray-10: #{map.get($gray, "dark", "10")};
 	--gray-11: #{map.get($gray, "dark", "11")};
 	--gray-12: #{map.get($gray, "dark", "12")};
+
+	--inverted-gray-01: #{map.get($gray, "light", "01")};
+	--inverted-gray-02: #{map.get($gray, "light", "02")};
+	--inverted-gray-03: #{map.get($gray, "light", "03")};
+	--inverted-gray-04: #{map.get($gray, "light", "04")};
+	--inverted-gray-05: #{map.get($gray, "light", "05")};
+	--inverted-gray-06: #{map.get($gray, "light", "06")};
+	--inverted-gray-07: #{map.get($gray, "light", "07")};
+	--inverted-gray-08: #{map.get($gray, "light", "08")};
+	--inverted-gray-09: #{map.get($gray, "light", "09")};
+	--inverted-gray-10: #{map.get($gray, "light", "10")};
+	--inverted-gray-11: #{map.get($gray, "light", "11")};
+	--inverted-gray-12: #{map.get($gray, "light", "12")};
 }
