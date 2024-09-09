@@ -11,13 +11,12 @@ RUN apk add --no-cache fish git
 RUN pip install fonttools brotli
 RUN fish scripts/subset-fonts.fish
 
-FROM rust:alpine AS build-backend
+FROM rust:bookworm AS build-backend
 COPY . .
 WORKDIR /nut
-RUN apk add --no-cache musl-dev openssl-dev pkgconfig
 RUN cargo build --release
 
-FROM alpine
+FROM debian:bookworm-slim
 WORKDIR /nuttyverse
 COPY --from=build-frontend /app/dist /nuttyverse/frontend
 COPY --from=build-fonts /app/public/fonts /nuttyverse/fonts/
