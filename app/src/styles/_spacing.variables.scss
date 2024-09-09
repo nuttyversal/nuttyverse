@@ -86,76 +86,11 @@ $relative-spacing: (
   "256": 64em
 );
 
-h1, h2, h3, h4, h5, h6 {
-	margin-top: map.get($relative-spacing, "4");
-	margin-bottom: map.get($relative-spacing, "2");
-	padding-bottom: map.get($spacing, "0.5");
-
-	&:first-child {
-		margin-top: 0;
-	}
-
-	&:last-child {
-		margin-bottom: 0;
-	}
-}
-
-p, img {
-	margin-top: map.get($relative-spacing, "4");
-	margin-bottom: map.get($relative-spacing, "4");
-
-	&:first-child {
-		margin-top: 0;
-	}
-
-	&:last-child {
-		margin-bottom: 0;
-	}
-}
-
-ol, ul {
-	margin-top: map.get($relative-spacing, "2");
-	margin-bottom: map.get($relative-spacing, "2");
-
-	ol, ul {
-		margin-top: 0;
-		margin-bottom: 0;
-	}
-}
-
-li {
-	p {
-		margin-top: map.get($relative-spacing, "2");
-		margin-bottom: map.get($relative-spacing, "2");
-	}
-}
-
-li + li {
-	margin-top: map.get($relative-spacing, "2");
-}
-
-pre {
-	margin-top: map.get($relative-spacing, "4");
-	margin-bottom: map.get($relative-spacing, "4");
-
-	&:first-child {
-		margin-top: 0;
-	}
-
-	&:last-child {
-		margin-bottom: 0;
-	}
-}
-
-.marginless {
-	margin: 0;
-}
-
 // Allows child elements to span full width while maintaining consistent
 // horizontal padding for text content. Headings and paragraphs receive
 // padding, allowing other elements (e.g., images) to bleed to edges.
 
-.with-full-bleed {
+@mixin with-full-bleed {
 	width: 100%;
 
 	& > p, & > ul, & > ol {

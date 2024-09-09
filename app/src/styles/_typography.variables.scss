@@ -1,0 +1,52 @@
+// Typographic scale based on the pitch ratio (6:5) -- a minor third.
+// This scale brings harmony and rhythm to the visual design, creating
+// a balanced and pleasing typographic hierarchy.
+
+@use "sass:map";
+@use "spacing.variables" as *;
+
+$minor-third: 1.2;
+
+$type-scale: (
+	"3xs": calc(1rem / pow(#{$minor-third}, 3)),
+	"2xs": calc(1rem / pow(#{$minor-third}, 2)),
+	"xs": calc(1rem / pow(#{$minor-third}, 1)),
+	"base": calc(1rem * pow(#{$minor-third}, 0)),
+	"xl": calc(1rem * pow(#{$minor-third}, 1)),
+	"2xl": calc(1rem * pow(#{$minor-third}, 2)),
+	"3xl": calc(1rem * pow(#{$minor-third}, 3)),
+	"4xl": calc(1rem * pow(#{$minor-third}, 4)),
+	"5xl": calc(1rem * pow(#{$minor-third}, 5)),
+	"6xl": calc(1rem * pow(#{$minor-third}, 6)),
+	"7xl": calc(1rem * pow(#{$minor-third}, 7)),
+);
+
+$heading-sizes: (
+	"h1": "4xl",
+	"h2": "3xl",
+	"h3": "2xl",
+	"h4": "xl",
+	"h5": "base",
+	"h6": "xs"
+);
+
+@mixin with-drop-cap {
+	&::first-letter {
+		// [HACK] Initially, 3 em was set to span two lines (2 * 1.5 em height),
+		// but this caused three-line spans in some viewports. Tests revealed a
+		// subtle -1 px adjustment consistently achieves the desired two-line
+		// effect, preserving visual harmony across all observed screen sizes.
+		font-size: calc(3em - 1px);
+
+		float: left;
+		font-family: "Nutty PragmataPro Fraktur", sans-serif;
+		font-variant-ligatures: none;
+		font-weight: bold;
+		line-height: 1em;
+		margin-right: map.get($spacing, "1");
+		margin-top: map.get($spacing, "0");
+		color: var(--gray-12);
+		background: var(--gray-01);
+		background-clip: text;
+	}
+}

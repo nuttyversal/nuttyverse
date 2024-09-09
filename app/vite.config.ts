@@ -12,6 +12,15 @@ export default defineConfig({
 			providerImportSource: "solid-mdx",
 		}),
 	],
+	css: {
+		preprocessorOptions: {
+			scss: {
+				additionalData: `
+					@use "./src/styles";
+				`,
+			},
+		},
+	},
 	server: {
 		port: 3000,
 	},

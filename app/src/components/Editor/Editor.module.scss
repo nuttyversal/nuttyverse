@@ -1,5 +1,4 @@
 @use "sass:map";
-@use "../../styles";
 
 [data-theme='light'] {
 	--syncing-color: yellow;
@@ -86,7 +85,7 @@
 }
 
 .content {
-	@extend .with-full-bleed;
+	@include styles.with-full-bleed;
 
 	width: 100%;
 	max-width: 640px;
@@ -94,7 +93,7 @@
 	padding: map.get(styles.$spacing, "4") 0;
 
 	& > p:first-of-type {
-		@extend .with-drop-cap;
+		@include styles.with-drop-cap;
 	}
 }
 

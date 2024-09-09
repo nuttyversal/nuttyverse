@@ -1,0 +1,45 @@
+@use "sass:map";
+@use "colors.variables" as *;
+
+:root {
+	transition: background-color 0.3s ease;
+}
+
+// Light and dark mode is implemented by toggling the 'data-theme'
+// attribute on the root HTML element.
+
+[data-theme="light"] {
+	background: $white;
+	color: $black;
+
+	--gray-01: #{map.get($gray, "light", "01")};
+	--gray-02: #{map.get($gray, "light", "02")};
+	--gray-03: #{map.get($gray, "light", "03")};
+	--gray-04: #{map.get($gray, "light", "04")};
+	--gray-05: #{map.get($gray, "light", "05")};
+	--gray-06: #{map.get($gray, "light", "06")};
+	--gray-07: #{map.get($gray, "light", "07")};
+	--gray-08: #{map.get($gray, "light", "08")};
+	--gray-09: #{map.get($gray, "light", "09")};
+	--gray-10: #{map.get($gray, "light", "10")};
+	--gray-11: #{map.get($gray, "light", "11")};
+	--gray-12: #{map.get($gray, "light", "12")};
+}
+
+[data-theme="dark"] {
+	background: $black;
+	color: $white-text;
+
+	--gray-01: #{map.get($gray, "dark", "01")};
+	--gray-02: #{map.get($gray, "dark", "02")};
+	--gray-03: #{map.get($gray, "dark", "03")};
+	--gray-04: #{map.get($gray, "dark", "04")};
+	--gray-05: #{map.get($gray, "dark", "05")};
+	--gray-06: #{map.get($gray, "dark", "06")};
+	--gray-07: #{map.get($gray, "dark", "07")};
+	--gray-08: #{map.get($gray, "dark", "08")};
+	--gray-09: #{map.get($gray, "dark", "09")};
+	--gray-10: #{map.get($gray, "dark", "10")};
+	--gray-11: #{map.get($gray, "dark", "11")};
+	--gray-12: #{map.get($gray, "dark", "12")};
+}

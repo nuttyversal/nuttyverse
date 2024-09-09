@@ -2,7 +2,7 @@ import { Effect, Option } from "effect";
 import { render } from "solid-js/web";
 import { NuttyverseRouter } from "~/pages/router";
 import { ServiceProvider } from "~/services/context";
-import "~/styles/index.scss";
+import "~/styles/global.scss";
 
 /**
  * An effect that queries the root element of the application.

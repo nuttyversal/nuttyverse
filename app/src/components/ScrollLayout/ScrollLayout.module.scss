@@ -1,5 +1,4 @@
 @use "sass:map";
-@use "../../styles";
 
 [data-theme='light'] {
 	--backdrop-color: #{styles.$white};

@@ -1,5 +1,5 @@
 @use "sass:map";
-@use "colors";
+@use "colors.variables";
 
 * {
 	scrollbar-color: var(--gray-12) var(--gray-01);
