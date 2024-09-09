@@ -83,6 +83,16 @@ strong, b {
 	font-weight: 600;
 }
 
+s {
+	color: var(--gray-11);
+
+	// Extend the strikethrough line length.
+	&::before, &::after {
+		// &nbsp;
+		content: "\00a0";
+	}
+}
+
 a {
 	font-feature-settings: 'smcp' 1, 'c2sc' 1;
 	font-variant: all-small-caps;
