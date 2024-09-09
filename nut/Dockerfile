@@ -18,6 +18,7 @@ RUN cargo build --release
 
 FROM debian:bookworm-slim
 WORKDIR /nuttyverse
+RUN apt-get update && apt-get install -y openssl
 COPY --from=build-frontend /app/dist /nuttyverse/frontend
 COPY --from=build-fonts /app/public/fonts /nuttyverse/fonts/
 COPY --from=build-backend /nut/target/release/nut /nuttyverse/backend
