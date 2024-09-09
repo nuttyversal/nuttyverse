@@ -171,9 +171,6 @@ ul {
 }
 
 code {
-	background: var(--gray-11);
-	color: var(--gray-01);
-
 	font-family: "Nutty PragmataPro Liga", monospace;
 	font-size: calc(#{map.get($type-scale, "xs")} * 1.05);
 
@@ -184,17 +181,20 @@ code {
 	padding-left: map.get($spacing, "1");
 	padding-right: map.get($spacing, "1");
 	border-radius: map.get($spacing, "1");
+	border: 1px solid var(--gray-12);
 
 	// Prevent slicing over line breaks.
 	box-decoration-break: clone;
 }
 
 pre > code {
-	color: unset;
+	display: block;
 	width: 100%;
+	color: unset;
+	font-weight: unset;
 	padding-top: map.get($spacing, "4");
 	padding-bottom: map.get($spacing, "4");
-	display: block;
+	border: none;
 	overflow-x: auto;
 }
 
