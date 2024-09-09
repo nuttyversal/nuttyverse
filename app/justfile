@@ -14,3 +14,6 @@ build:
 
 start:
 	pnpm start
+
+subset:
+	fish ./scripts/subset-fonts.fish

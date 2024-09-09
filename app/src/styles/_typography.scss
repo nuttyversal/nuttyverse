@@ -35,7 +35,7 @@ $type-scale: (
 	// This calculator was used to figure out the clamp parameters:
 	// https://royalfig.github.io/fluid-typography-calculator/
 	font-size: calc(clamp(0.9rem, 0.85rem + 0.25vw, 1rem) * 1.05);
-	font-family: 'FSD Emoji', Nure, sans-serif;
+	font-family: 'Nutty FSD Emoji', 'Nutty Nure', sans-serif;
 	font-variation-settings: 'opsz' 18, 'wdth' 85;
 	font-feature-settings: 'kern' 1;
 	text-align: justify;
@@ -117,7 +117,7 @@ a {
 		font-size: calc(3em - 1px);
 
 		float: left;
-		font-family: PragmataPro Fraktur, sans-serif;
+		font-family: "Nutty PragmataPro Fraktur", sans-serif;
 		font-variant-ligatures: none;
 		font-weight: bold;
 		line-height: 1em;
@@ -155,7 +155,7 @@ code {
 	background: var(--gray-11);
 	color: var(--gray-01);
 
-	font-family: PragmataPro Liga;
+	font-family: "Nutty PragmataPro Liga", monospace;
 	font-size: calc(#{map.get($type-scale, "xs")} * 1.05);
 
 	margin-left: map.get(spacing.$spacing, "0.5");
@@ -180,7 +180,7 @@ pre > code {
 }
 
 pre > code, pre > code * {
-	font-family: PragmataPro Liga;
+	font-family: "Nutty PragmataPro Liga", monospace;
 	font-size: calc(#{map.get($type-scale, "xs")} * 1.05);
 	tab-size: 3;
 }
