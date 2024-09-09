@@ -64,16 +64,25 @@
 
 	:global(.ͼc) {
 		color: var(--gray-12);
+		font-weight: bold;
+		font-style: italic;
+		font-feature-settings: 'ss06' 1;
 	}
 
 	:global(.ͼ5) {
 		color: var(--gray-11);
+		font-weight: bold;
+		font-style: italic;
+		font-feature-settings: 'ss06' 1;
+	}
+
+	:global(.ͼ6) {
+		color: var(--gray-12);
+		font-style: italic;
 	}
 
 	:global(.ͼ7) {
-		font-weight: 600;
-		font-style: italic;
-		font-feature-settings: 'ss06' 1;
+		font-weight: bold;
 	}
 }
 
