@@ -10,6 +10,7 @@ set pragmata_fraktur_dir_path "$git_root/unobservable/fonts/PragmataProFraktur1.
 set fsd_emoji_dir_path "$git_root/unobservable/fonts/FSD Emoji1.0W"
 
 set basic_latin "U+0020-007E"
+set latin_supplement "U+00A0-00FF"
 set block_elements "U+2580-259F"
 set astrological_signs "U+2648-2653"
 set emoticons "U+1F600-1F64F"
@@ -25,7 +26,7 @@ pyftsubset \
 	--flavor=woff2 \
 	--with-zopfli \
 	--layout-features="calt,kern,smcp,c2sc" \
-	--unicodes="$basic_latin"
+	--unicodes="$basic_latin, $latin_supplement"
 
 echo "Creating fragment: pragmatapro-liga-regular.woff2"
 pyftsubset \
