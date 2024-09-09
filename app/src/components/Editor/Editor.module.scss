@@ -31,7 +31,7 @@
 	height: 100%;
 
 	:global(.cm-editor *) {
-		font-family: "PragmataPro Liga", monospace !important;
+		font-family: "Nutty PragmataPro Liga", monospace !important;
 		font-size: calc(#{map.get(styles.$type-scale, "xs")} * 1.1);
 	}
 
