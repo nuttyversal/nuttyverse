@@ -1,14 +1,6 @@
 @use "sass:map";
 @use "../../styles";
 
-[data-theme='light'] {
-	--gray-01: map.get(styles.$gray, "light", "01");
-}
-
-[data-theme='dark'] {
-	--gray-01: map.get(styles.$gray, "dark", "01");
-}
-
 .outer-container {
 	position: relative;
 	overflow-y: hidden;

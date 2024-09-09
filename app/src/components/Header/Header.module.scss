@@ -1,14 +1,6 @@
 @use "sass:map";
 @use "../../styles";
 
-[data-theme='light'] {
-	--border-color: #{map.get(styles.$gray, "light", "12")};
-}
-
-[data-theme='dark'] {
-	--border-color: #{map.get(styles.$gray, "dark", "12")};
-}
-
 .buttons {
 	display: flex;
 	justify-content: space-between;
@@ -22,5 +14,5 @@
 .divider {
 	width: 100%;
 	height: calc(map.get(styles.$spacing, "1") + 1px);
-	background: var(--border-color);
+	background: var(--gray-12);
 }

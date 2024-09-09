@@ -1,16 +1,6 @@
 @use "sass:map";
 @use "../../styles";
 
-[data-theme='light'] {
-	--gray-02: #{map.get(styles.$gray, "light", "02")};
-	--gray-11: #{map.get(styles.$gray, "light", "11")};
-}
-
-[data-theme='dark'] {
-	--gray-02: #{map.get(styles.$gray, "dark", "02")};
-	--gray-11: #{map.get(styles.$gray, "dark", "11")};
-}
-
 .container {
 	width: "100%";
 	background: var(--gray-02);

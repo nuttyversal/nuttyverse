@@ -57,18 +57,6 @@ $type-scale: (
 	hyphens: unset;
 }
 
-[data-theme='light'] {
-	--gray-01: #{map.get(colors.$gray, "light", "01")};
-	--gray-11: #{map.get(colors.$gray, "light", "11")};
-	--gray-12: #{map.get(colors.$gray, "light", "12")};
-}
-
-[data-theme='dark'] {
-	--gray-01: #{map.get(colors.$gray, "dark", "01")};
-	--gray-11: #{map.get(colors.$gray, "dark", "11")};
-	--gray-12: #{map.get(colors.$gray, "dark", "12")};
-}
-
 $heading-sizes: (
 	"h1": "4xl",
 	"h2": "3xl",

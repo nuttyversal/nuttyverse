@@ -1,7 +1,7 @@
 import { Component, onMount } from "solid-js";
 import { Link } from "~/components/Link";
-import styles from "./Logo.module.scss";
 import { useTransition } from "~/services/transition";
+import styles from "./Logo.module.scss";
 
 const Logo: Component = () => {
 	let svg!: SVGSVGElement;

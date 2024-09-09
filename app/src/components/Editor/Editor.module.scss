@@ -2,18 +2,10 @@
 @use "../../styles";
 
 [data-theme='light'] {
-	--background-color: #{map.get(styles.$gray, "light", "01")};
-	--foreground-color: #{map.get(styles.$gray, "light", "12")};
-	--foreground-light-color: #{map.get(styles.$gray, "light", "11")};
-	--active-line-color: #{map.get(styles.$gray, "light", "03")};
 	--syncing-color: yellow;
 }
 
 [data-theme='dark'] {
-	--background-color: #{white};
-	--foreground-color: #{map.get(styles.$gray, "dark", "12")};
-	--foreground-light-color: #{map.get(styles.$gray, "light", "11")};
-	--active-line-color: #{map.get(styles.$gray, "dark", "03")};
 	--syncing-color: black;
 }
 
@@ -41,21 +33,21 @@
 	}
 
 	:global(::selection) {
-		color: var(--background-color) !important;
-		background-color: var(--foreground-color) !important;
+		color: var(--gray-01) !important;
+		background-color: var(--gray-12) !important;
 	}
 
 	:global(.cm-gutter) {
 		color: var(--gray-09);
-		background-color: var(--background-color);
+		background-color: var(--gray-01);
 	}
 
 	:global(.cm-activeLineGutter) {
-		background-color: var(--active-line-color);
+		background-color: var(--gray-03);
 	}
 
 	:global(.cm-gutters) {
-		border-right-color: var(--active-line-color);
+		border-right-color: var(--gray-03);
 		border-right-width: 2px;
 	}
 
@@ -69,7 +61,7 @@
 	}
 
 	:global(.ͼc) {
-		color: var(--foreground-color);
+		color: var(--gray-12);
 	}
 
 	:global(.ͼ5) {
@@ -87,7 +79,7 @@
 	width: 50%;
 	padding-left: map.get(styles.$spacing, "4");
 	padding-right: map.get(styles.$spacing, "2");
-	border-left: 2px solid var(--active-line-color);
+	border-left: 2px solid var(--gray-03);
 }
 
 .content {
@@ -119,9 +111,9 @@
 	transition: all 0.2s ease-in-out;
 	font-weight: 900;
 	font-variant: all-small-caps;
-	background: var(--foreground-color);
-	color: var(--background-color);
-	border: map.get(styles.$spacing, "1") solid var(--foreground-color);
+	background: var(--gray-12);
+	color: var(--gray-01);
+	border: map.get(styles.$spacing, "1") solid var(--gray-12);
 	border-bottom-left-radius: map.get(styles.$spacing, "1");
 	border-bottom-right-radius: map.get(styles.$spacing, "1");
 	cursor: pointer;
@@ -140,10 +132,10 @@
 
 @keyframes syncing {
   0%, 100% {
-    text-shadow: 0 0 2em var(--background-color);
+    text-shadow: 0 0 2em var(--gray-01);
   }
   20%, 80% {
-    text-shadow: 0 0 0.4em var(--background-color);
+    text-shadow: 0 0 0.4em var(--gray-01);
   }
   50% {
     text-shadow: none;

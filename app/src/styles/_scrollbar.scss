@@ -1,17 +1,7 @@
 @use "sass:map";
 @use "colors";
 
-[data-theme='light'] {
-	--background-color: #{map.get(colors.$gray, "light", "01")};
-	--foreground-color: #{map.get(colors.$gray, "light", "12")};
-}
-
-[data-theme='dark'] {
-	--background-color: #{map.get(colors.$gray, "dark", "01")};
-	--foreground-color: #{map.get(colors.$gray, "dark", "12")};
-}
-
 * {
-	scrollbar-color: var(--foreground-color) var(--background-color);
+	scrollbar-color: var(--gray-12) var(--gray-01);
 	scrollbar-width: thin;
 }
