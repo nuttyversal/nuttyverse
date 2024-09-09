@@ -118,7 +118,7 @@ s {
 
 	// Extend the strikethrough line length.
 	&::before, &::after {
-		// &nbsp;
+		// no-break space (&nbsp;)
 		content: "\00a0";
 	}
 }
@@ -138,6 +138,12 @@ a {
 		padding-left: map.get($spacing, "0.5");
 		padding-right: map.get($spacing, "0.5");
 		border-radius: map.get($spacing, "1");
+
+		// Extend the underline length.
+		&::before, &::after {
+			// narrow no-break space (&#8239;)
+			content: "\202f";
+		}
 
 		&:hover, &:focus {
 			background: var(--inverted-gray-01);
