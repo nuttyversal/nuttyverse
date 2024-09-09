@@ -38,8 +38,11 @@
 	}
 
 	:global(.cm-gutter) {
-		color: var(--gray-09);
 		background-color: var(--gray-01);
+
+		& > * {
+			color: var(--gray-09);
+		}
 	}
 
 	:global(.cm-activeLineGutter) {
