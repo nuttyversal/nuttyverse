@@ -1,0 +1,12 @@
+#!/usr/bin/env -S just --justfile
+
+set dotenv-load
+
+start:
+	cargo run
+
+test:
+	cargo test
+
+build:
+	cargo build --release
