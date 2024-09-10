@@ -5,6 +5,7 @@ import {
 	findIconDefinition,
 	icon,
 } from "@fortawesome/fontawesome-svg-core";
+import styles from "./Icon.module.scss";
 import "./library";
 
 type Props = {
@@ -26,6 +27,11 @@ const Icon: Component<Props> = (props) => {
 	const prefix = props.prefix ?? "fas";
 	const name = props.name;
 
+	const classes = {
+		[styles.icon]: true,
+		[props.class ?? ""]: true,
+	};
+
 	// Query the library for the icon definition.
 	const definition = findIconDefinition({ prefix, iconName: name });
 
@@ -33,12 +39,12 @@ const Icon: Component<Props> = (props) => {
 	if (!definition) {
 		const bug = findIconDefinition({ prefix: "fas", iconName: "bug" });
 		const html = icon(bug).html.join("\n");
-		return <i class={props.class} style={props.style} innerHTML={html} />;
+		return <i classList={classes} style={props.style} innerHTML={html} />;
 	}
 
 	// Render the icon.
 	const html = icon(definition).html.join("\n");
-	return <i class={props.class} style={props.style} innerHTML={html} />;
+	return <i classList={classes} style={props.style} innerHTML={html} />;
 };
 
 export { Icon };

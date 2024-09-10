@@ -1,9 +1,9 @@
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
+	faArrowUpRightFromSquare,
 	faBug,
-	faFaceAngryHorns,
 	faHeart,
 	faSparkle,
 } from "@fortawesome/pro-solid-svg-icons";
 
-library.add(faBug, faFaceAngryHorns, faHeart, faSparkle);
+library.add(faArrowUpRightFromSquare, faBug, faHeart, faSparkle);

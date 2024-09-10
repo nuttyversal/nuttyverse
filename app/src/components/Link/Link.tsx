@@ -1,5 +1,7 @@
 import { A, useNavigate } from "@solidjs/router";
 import { ParentComponent } from "solid-js";
+import { Icon } from "~/components/Icon";
+import styles from "./Link.module.scss";
 
 type Props = {
 	/**
@@ -52,6 +54,9 @@ const Link: ParentComponent<Props> = (props) => {
 			classList={classes}
 		>
 			{props.children}
+			{props.newTab && (
+				<Icon class={styles.icon} name="arrow-up-right-from-square" />
+			)}
 		</A>
 	);
 };

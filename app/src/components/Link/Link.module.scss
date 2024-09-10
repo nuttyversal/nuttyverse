@@ -1,0 +1,9 @@
+@use "sass:map";
+
+.icon {
+	display: inline-block;
+	width: 0.8em;
+	transform: translateY(0.07em);
+	margin-left: map.get(styles.$spacing, "1");
+	margin-right: map.get(styles.$spacing, "px");
+}
