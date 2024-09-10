@@ -1,7 +1,6 @@
 use crate::api::{self, Document, ResourceObject};
 use std::sync::Arc;
 
-use anyhow::Result;
 use axum::extract::State;
 use axum::{Json, Router};
 use axum_keycloak_auth::instance::KeycloakAuthInstance;
