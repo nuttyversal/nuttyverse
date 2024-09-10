@@ -1,4 +1,5 @@
 import { Component } from "solid-js";
+import { Icon } from "~/components/Icon";
 import { spells } from "./spell-book";
 import { useTracker } from "./spell-tracker";
 import styles from "./VimSpell.module.scss";
@@ -23,9 +24,17 @@ const VimSpell: Component<Props> = (props) => {
 	});
 
 	return (
-		<span ref={container} classList={classList()}>
-			{spell} {hasCasted() && <span>✨</span>}
-		</span>
+		<>
+			<span ref={container} classList={classList()}>
+				{spell}
+			</span>
+
+			{hasCasted() && (
+				<span>
+					<Icon class={styles.icon} name="star" />
+				</span>
+			)}
+		</>
 	);
 };
 

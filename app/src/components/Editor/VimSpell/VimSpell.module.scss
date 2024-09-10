@@ -1,8 +1,9 @@
-.container {
-	transition: color 0.2s ease-out;
-}
+@use "sass:map";
 
 .casted {
-	color: green;
 	text-decoration: line-through;
+}
+
+.icon {
+	margin-left: map.get(styles.$spacing, "1");
 }

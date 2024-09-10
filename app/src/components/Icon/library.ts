@@ -4,6 +4,7 @@ import {
 	faBug,
 	faHeart,
 	faSparkle,
+	faStar,
 } from "@fortawesome/pro-solid-svg-icons";
 
-library.add(faArrowUpRightFromSquare, faBug, faHeart, faSparkle);
+library.add(faArrowUpRightFromSquare, faBug, faHeart, faSparkle, faStar);

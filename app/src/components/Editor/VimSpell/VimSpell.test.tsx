@@ -24,49 +24,53 @@ describe("VimSpell component", () => {
 		).toBeInTheDocument();
 	});
 
-	it("tracks spell casting progress", async () => {
+	it("tracks spell casting progress", () => {
 		// Arrange.
-		const { findByText } = render(() => <VimSpell spell="w" />);
+		const { container } = render(() => <VimSpell spell="w" />);
 
 		// Act.
 		fireEvent.keyDown(document, { key: "w" });
 
 		// Assert.
-		expect(await findByText("✨")).toBeInTheDocument();
+		expect(container.innerHTML).toContain("svg");
+		expect(container.innerHTML.includes("star")).toBe(true);
 	});
 
-	it("tracks multi-key spell casting progress", async () => {
+	it("tracks multi-key spell casting progress", () => {
 		// Arrange.
-		const { findByText } = render(() => <VimSpell spell="gg" />);
+		const { container } = render(() => <VimSpell spell="gg" />);
 
 		// Act.
 		fireEvent.keyDown(document, { key: "g" });
 		fireEvent.keyDown(document, { key: "g" });
 
 		// Assert.
-		expect(await findByText("✨")).toBeInTheDocument();
+		expect(container.innerHTML).toContain("svg");
+		expect(container.innerHTML.includes("star")).toBe(true);
 	});
 
-	it("tracks modifier-key spell casting progress", async () => {
+	it("tracks modifier-key spell casting progress", () => {
 		// Arrange.
-		const { findByText } = render(() => <VimSpell spell="Ctrl+d" />);
+		const { container } = render(() => <VimSpell spell="Ctrl+d" />);
 
 		// Act.
 		const event = new KeyboardEvent("keydown", { key: "d", ctrlKey: true });
 		document.dispatchEvent(event);
 
 		// Assert.
-		expect(await findByText("✨")).toBeInTheDocument();
+		expect(container.innerHTML).toContain("svg");
+		expect(container.innerHTML.includes("star")).toBe(true);
 	});
 
-	it("tracks <Esc> spell casting progress", async () => {
+	it("tracks <Esc> spell casting progress", () => {
 		// Arrange.
-		const { findByText } = render(() => <VimSpell spell="Esc" />);
+		const { container } = render(() => <VimSpell spell="Esc" />);
 
 		// Act.
 		fireEvent.keyDown(document, { key: "Escape" });
 
 		// Assert.
-		expect(await findByText("✨")).toBeInTheDocument();
+		expect(container.innerHTML).toContain("svg");
+		expect(container.innerHTML.includes("star")).toBe(true);
 	});
 });
