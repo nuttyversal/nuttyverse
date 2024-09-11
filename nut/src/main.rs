@@ -2,7 +2,7 @@ mod api;
 mod auth;
 mod config;
 
-use auth::{auth_token_handler, require_roles};
+use auth::{auth_token_handler, refresh_auth_token_handler, require_roles};
 use config::Config;
 
 use anyhow::Result;
@@ -56,6 +56,7 @@ async fn main() -> Result<()> {
 
 	let auth_service = Router::new()
 		.route("/api/auth/token", routing::post(auth_token_handler))
+		.route("/api/auth/token/refresh", routing::post(refresh_auth_token_handler))
 		.with_state(keycloak_state);
 
 	let fonts_service = Router::new()
