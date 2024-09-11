@@ -21,6 +21,7 @@ use axum_keycloak_auth::{
 use std::{convert::Infallible, sync::Arc};
 use tokio::net::TcpListener;
 use tower_http::services::{ServeDir, ServeFile};
+use tokio::signal::unix::{signal, SignalKind};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -78,7 +79,24 @@ async fn main() -> Result<()> {
 
 	let listener = TcpListener::bind("0.0.0.0:4000").await?;
 
-	axum::serve(listener, app).await?;
+	// Docker watchtower will attempt to terminate this server with a SIGTERM,
+	// so we need to catch it and "gracefully" shut down.
+	let mut sigterm = signal(SignalKind::terminate())?;
+
+	let server = axum::serve(listener, app);
+
+	tokio::select! {
+		result = server => {
+			if let Err(e) = result {
+				eprintln!("Server error: {}", e);
+			}
+		}
+		_ = sigterm.recv() => {
+			println!("SIGTERM received, shutting down gracefully...");
+			println!("Committing sudoku... 🗡️");
+			println!("Server shutdown complete.");
+		}
+	}
 
 	Ok(())
 }
