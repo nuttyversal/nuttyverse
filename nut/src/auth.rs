@@ -434,24 +434,26 @@ async fn decode_access_token(
 	validate_expiration: bool,
 ) -> Result<AccessTokenClaims, AuthError> {
 	// Read cached decoding keys.
-	let mut decoding_keys = state
+	let decoding_keys = state
 		.keycloak_decoding_keys_cache
 		.read()
 		.await
 		.clone();
 
 	if decoding_keys.is_empty() {
+		println!("fetching decoding keys");
+
 		// If the cache is empty, then fetch the decoding keys.
-		decoding_keys = fetch_decoding_keys(state.clone())
+		let decoding_keys = fetch_decoding_keys(state.clone())
 			.await
 			.map_err(|_| AuthError::KeycloakRequestFailure)?;
 
 		// Update the cache.
-		let _ = state
+		state
 			.keycloak_decoding_keys_cache
 			.write()
 			.await
-			.clone();
+			.clone_from(&decoding_keys);
 	}
 
 	// Validate the access token.
