@@ -15,6 +15,29 @@ pub enum Document<T> {
 	Error { errors: Vec<Error> },
 }
 
+impl<T> Document<T> {
+	/// Extracts the resource object from the document.
+	///
+	/// Returns `None` if the document is not a single resource object.
+	pub fn extract_resource_object(&self) -> Option<&ResourceObject<T>> {
+		match self {
+			Document::Single { data } => data.as_ref(),
+			_ => None,
+		}
+	}
+
+	/// Extracts the resource objects from the document.
+	///
+	/// Returns an empty vector if the document does not have any resource objects.
+	pub fn extract_resource_objects(&self) -> Vec<&ResourceObject<T>> {
+		match self {
+			Document::Single { data } => data.as_ref().into_iter().collect(),
+			Document::Multiple { data } => data.into_iter().collect(),
+			_ => vec![],
+		}
+	}
+}
+
 /// A resource object.
 #[derive(Serialize, Deserialize, TypedBuilder)]
 pub struct ResourceObject<T> {

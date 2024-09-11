@@ -14,6 +14,15 @@ pub struct Config {
 
 	/// The client secret of the Keycloak client.
 	pub keycloak_client_secret: String,
+
+	/// The host of the Redis server.
+	pub redis_host: String,
+
+	/// The port of the Redis server.
+	pub redis_port: String,
+
+	/// The password of the Redis server.
+	pub redis_password: String,
 }
 
 impl Config {
@@ -24,6 +33,9 @@ impl Config {
 			keycloak_realm: read_environment_variable("KEYCLOAK_REALM"),
 			keycloak_client_id: read_environment_variable("KEYCLOAK_CLIENT_ID"),
 			keycloak_client_secret: read_environment_variable("KEYCLOAK_CLIENT_SECRET"),
+			redis_host: read_environment_variable("REDIS_HOST"),
+			redis_port: read_environment_variable("REDIS_PORT"),
+			redis_password: read_environment_variable("REDIS_PASSWORD"),
 		}
 	}
 }

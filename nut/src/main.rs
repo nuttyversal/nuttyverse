@@ -26,12 +26,20 @@ use tower_http::services::{ServeDir, ServeFile};
 async fn main() -> Result<()> {
 	let config = Config::load();
 
+	let redis_client = redis::Client::open(format!(
+		"redis://:{}@{}:{}",
+		urlencoding::encode(&config.redis_password),
+		config.redis_host,
+		config.redis_port
+	))?;
+
 	let keycloak_state = Arc::new(
 		auth::KeycloakState::builder()
 			.keycloak_url(config.keycloak_url.clone())
 			.keycloak_realm(config.keycloak_realm.clone())
 			.keycloak_client_id(config.keycloak_client_id)
 			.keycloak_client_secret(config.keycloak_client_secret)
+			.redis_client(redis_client)
 			.build(),
 	);
 
