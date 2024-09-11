@@ -349,11 +349,13 @@ async fn refresh_auth_token(
 	state: Arc<KeycloakState>,
 	expired_access_token: &str,
 ) -> Result<KeycloakTokenResponse, AuthError> {
-	let access_token_claims = decode_access_token(state.clone(), expired_access_token, false).await?;
+	let access_token_claims =
+		decode_access_token(state.clone(), expired_access_token, false).await?;
+
 	let username = access_token_claims.preferred_username;
 
 	let refresh_token = fetch_refresh_token_from_redis_cache(state.clone(), &username)
-		.await // Err … is that … ok_or … 🥺👉🏽👈🏽
+		.await // Err … is that … ok_or … 🥺👉👈
 		.map_err(|_| AuthError::RefreshTokenExpired)?
 		.ok_or(AuthError::RefreshTokenExpired)?;
 
@@ -385,6 +387,11 @@ async fn refresh_auth_token(
 async fn fetch_decoding_keys(
 	state: Arc<KeycloakState>,
 ) -> Result<Vec<jsonwebtoken::DecodingKey>, AuthError> {
+	// Check if decoding keys are already cached.
+	if !state.keycloak_decoding_keys_cache.read().await.is_empty() {
+		return Ok(state.keycloak_decoding_keys_cache.read().await.clone());
+	}
+
 	let client = reqwest::Client::new();
 
 	let keycloak_jwks_url = format!(
@@ -419,6 +426,8 @@ async fn fetch_decoding_keys(
 	if decoding_keys.is_empty() {
 		Err(AuthError::KeycloakResponseParseFailure)
 	} else {
+		// Cache the decoding keys.
+		*state.keycloak_decoding_keys_cache.write().await = decoding_keys.clone();
 		Ok(decoding_keys)
 	}
 }
@@ -433,28 +442,7 @@ async fn decode_access_token(
 	access_token: &str,
 	validate_expiration: bool,
 ) -> Result<AccessTokenClaims, AuthError> {
-	// Read cached decoding keys.
-	let decoding_keys = state
-		.keycloak_decoding_keys_cache
-		.read()
-		.await
-		.clone();
-
-	if decoding_keys.is_empty() {
-		println!("fetching decoding keys");
-
-		// If the cache is empty, then fetch the decoding keys.
-		let decoding_keys = fetch_decoding_keys(state.clone())
-			.await
-			.map_err(|_| AuthError::KeycloakRequestFailure)?;
-
-		// Update the cache.
-		state
-			.keycloak_decoding_keys_cache
-			.write()
-			.await
-			.clone_from(&decoding_keys);
-	}
+	let decoding_keys = fetch_decoding_keys(state.clone()).await?;
 
 	// Validate the access token.
 	let mut validation = jsonwebtoken::Validation::new(Algorithm::RS256);
@@ -523,7 +511,7 @@ async fn store_tokens_in_redis_cache(
 	let refresh_token_expiration = refresh_token_claims.exp.to_string();
 
 	connection
-		.hset_multiple(
+		.hset_multiple::<_, _, _, ()>(
 			format!("navigator:{}", username),
 			&[
 				("access_token", access_token),
@@ -533,7 +521,9 @@ async fn store_tokens_in_redis_cache(
 			],
 		)
 		.await
-		.map_err(|_| AuthError::RedisCacheAddFailure)
+		.map_err(|_| AuthError::RedisCacheAddFailure)?;
+
+	Ok(())
 }
 
 /// The handler for the authentication token endpoint.
