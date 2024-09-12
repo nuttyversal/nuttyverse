@@ -100,7 +100,7 @@ struct AccessTokenClaims {
 
 /// The errors that can occur during authentication operations.
 #[derive(Error, Debug)]
-enum AuthError {
+pub enum AuthError {
 	#[error("The request body is invalid.")]
 	MalformedRequestBody,
 
@@ -749,4 +749,27 @@ pub fn require_roles(
 	router
 		.layer(check_token_blocklist)
 		.layer(check_required_roles)
+}
+
+/// Cleans up the expired access tokens in the blocklist.
+///
+/// This function removes the expired blocklisted tokens from the Redis cache.
+/// This is necessary because Redis does not automatically delete expired keys.
+pub async fn clean_up_blocklisted_tokens(state: Arc<KeycloakState>) -> Result<(), AuthError> {
+	let mut connection = state
+		.redis_client
+		.get_multiplexed_tokio_connection()
+		.await
+		.map_err(|_| AuthError::RedisConnectionFailure)?;
+
+	connection
+		.zrembyscore::<_, _, _, ()>(
+			"navigator:blocklisted_tokens",
+			"-inf",
+			chrono::Utc::now().timestamp(),
+		)
+		.await
+		.map_err(|_| AuthError::RedisCacheUpdateFailure)?;
+
+	Ok(())
 }

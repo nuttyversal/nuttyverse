@@ -25,6 +25,7 @@ use tokio::signal::unix::{signal, SignalKind};
 
 #[tokio::main]
 async fn main() -> Result<()> {
+	// Load configuration.
 	let config = Config::load();
 
 	let redis_client = redis::Client::open(format!(
@@ -51,6 +52,7 @@ async fn main() -> Result<()> {
 			.build(),
 	));
 
+	// Setup application routing.
 	let fallback = ServeFile::new("frontend/index.html");
 	let frontend = ServeDir::new("frontend").not_found_service(fallback.clone());
 	let fonts = ServeDir::new("fonts").not_found_service(fallback);
@@ -69,7 +71,7 @@ async fn main() -> Result<()> {
 		vec![String::from("admin")],
 		Router::new().route("/protected", routing::get(protected)),
 		keycloak_auth_instance,
-		keycloak_state,
+		keycloak_state.clone(),
 	);
 
 	let frontend_service = Router::new().nest_service("/", routing::get_service(frontend));
@@ -79,13 +81,26 @@ async fn main() -> Result<()> {
 		.merge(protected_service)
 		.merge(frontend_service);
 
+	// Spawn background tasks.
+	tokio::spawn(async move {
+		loop {
+			// Clean up blocklisted tokens.
+			if let Err(e) = auth::clean_up_blocklisted_tokens(keycloak_state.clone()).await {
+				eprintln!("Error cleaning up blocklisted tokens: {}", e);
+			}
+
+			// Run every 60 seconds.
+			tokio::time::sleep(std::time::Duration::from_secs(60)).await;
+		}
+	});
+
+	// Start the server.
 	let listener = TcpListener::bind("0.0.0.0:4000").await?;
+	let server = axum::serve(listener, app);
 
 	// Docker watchtower will attempt to terminate this server with a SIGTERM,
 	// so we need to catch it and "gracefully" shut down.
 	let mut sigterm = signal(SignalKind::terminate())?;
-
-	let server = axum::serve(listener, app);
 
 	tokio::select! {
 		result = server => {
