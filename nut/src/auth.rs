@@ -41,20 +41,28 @@ pub struct KeycloakState {
 /// The request data for the token creation endpoint.
 #[derive(Deserialize)]
 pub struct TokenCreationRequestAttributes {
+	/// The username of the user.
 	username: String,
+
+	/// The password of the user.
 	password: String,
 }
 
 /// The request data for the token refresh endpoint.
 #[derive(Deserialize)]
 pub struct TokenRefreshRequestAttributes {
-	jwt: String,
+	/// The refresh token.
+	refresh_token: String,
 }
 
 /// The response data for the token endpoint.
 #[derive(Serialize)]
 pub struct TokenResponseAttributes {
-	jwt: String,
+	/// The access token.
+	access_token: String,
+
+	/// The refresh token.
+	refresh_token: String,
 }
 
 /// The response data from the Keycloak token endpoint (success).
@@ -70,6 +78,7 @@ struct KeycloakTokenResponse {
 /// The response data from the Keycloak token endpoint (error).
 #[derive(Deserialize)]
 struct KeycloakErrorResponse {
+	/// The error message.
 	error_description: String,
 }
 
@@ -81,13 +90,6 @@ struct AccessTokenClaims {
 
 	/// The username of the user.
 	preferred_username: String,
-}
-
-/// The JWT claims in a refresh token.
-#[derive(Debug, Serialize, Deserialize)]
-struct RefreshTokenClaims {
-	/// The expiration time of the token.
-	exp: u64,
 }
 
 /// The errors that can occur during authentication operations.
@@ -107,12 +109,6 @@ enum AuthError {
 
 	#[error("Failed to parse access token.")]
 	AccessTokenParseFailure,
-
-	#[error("Failed to parse refresh token.")]
-	RefreshTokenParseFailure,
-
-	#[error("The refresh token has expired.")]
-	RefreshTokenExpired,
 
 	#[error("Failed to connect to Redis cache.")]
 	RedisConnectionFailure,
@@ -162,18 +158,6 @@ fn handle_auth_error(error: AuthError) -> (StatusCode, Json<Document<TokenRespon
 			"AccessTokenParseFailure",
 			error.to_string(),
 			StatusCode::INTERNAL_SERVER_ERROR,
-		),
-
-		AuthError::RefreshTokenParseFailure => (
-			"RefreshTokenParseFailure",
-			error.to_string(),
-			StatusCode::INTERNAL_SERVER_ERROR,
-		),
-
-		AuthError::RefreshTokenExpired => (
-			"RefreshTokenExpired",
-			error.to_string(),
-			StatusCode::UNAUTHORIZED,
 		),
 
 		AuthError::RedisConnectionFailure => (
@@ -318,28 +302,6 @@ async fn request_new_auth_token(
 	}
 }
 
-/// Fetches the refresh token from the Redis cache.
-///
-/// The refresh token is fetched from the Redis cache under the navigator's
-/// username. If the refresh token is not found, then `None` is returned.
-async fn fetch_refresh_token_from_redis_cache(
-	state: Arc<KeycloakState>,
-	username: &str,
-) -> Result<Option<String>, AuthError> {
-	let mut connection = state
-		.redis_client
-		.get_multiplexed_tokio_connection()
-		.await
-		.map_err(|_| AuthError::RedisConnectionFailure)?;
-
-	let refresh_token = connection
-		.hget(format!("navigator:{}", username), "refresh_token")
-		.await
-		.map_err(|_| AuthError::RedisCacheCheckFailure)?;
-
-	Ok(refresh_token)
-}
-
 /// Refreshes the authentication token for the user.
 ///
 /// The access token is refreshed using the refresh token. The refresh token is
@@ -347,33 +309,13 @@ async fn fetch_refresh_token_from_redis_cache(
 /// token is then stored in the Redis cache.
 async fn refresh_auth_token(
 	state: Arc<KeycloakState>,
-	expired_access_token: &str,
+	refresh_token: &str,
 ) -> Result<KeycloakTokenResponse, AuthError> {
-	let access_token_claims =
-		decode_access_token(state.clone(), expired_access_token, false).await?;
-
-	let username = access_token_claims.preferred_username;
-
-	let refresh_token = fetch_refresh_token_from_redis_cache(state.clone(), &username)
-		.await // Err … is that … ok_or … 🥺👉👈
-		.map_err(|_| AuthError::RefreshTokenExpired)?
-		.ok_or(AuthError::RefreshTokenExpired)?;
-
+	// Request a new access & refresh token pair from the Keycloak server.
 	let token_response = request_new_auth_token(state.clone(), &refresh_token).await?;
 
-	// Store the new access token in Redis.
-	let mut connection = state
-		.redis_client
-		.get_multiplexed_tokio_connection()
-		.await
-		.map_err(|_| AuthError::RedisConnectionFailure)?;
-
-	connection
-		.hset::<_, _, _, ()>(
-			format!("navigator:{}", username),
-			"access_token",
-			&token_response.access_token,
-		)
+	// Store the new access token in Redis cache.
+	store_access_token_in_redis_cache(state, &token_response.access_token)
 		.await
 		.map_err(|_| AuthError::RedisCacheUpdateFailure)?;
 
@@ -440,13 +382,11 @@ async fn fetch_decoding_keys(
 async fn decode_access_token(
 	state: Arc<KeycloakState>,
 	access_token: &str,
-	validate_expiration: bool,
 ) -> Result<AccessTokenClaims, AuthError> {
 	let decoding_keys = fetch_decoding_keys(state.clone()).await?;
 
 	// Validate the access token.
 	let mut validation = jsonwebtoken::Validation::new(Algorithm::RS256);
-	validation.validate_exp = validate_expiration;
 	validation.validate_aud = false;
 
 	// Try to decode the access token using the decoding keys.
@@ -462,36 +402,14 @@ async fn decode_access_token(
 	Err(AuthError::AccessTokenParseFailure)
 }
 
-/// Decodes the refresh token using the HS512 algorithm.
+/// Stores the access tokens in the Redis cache.
 ///
-/// The refresh token is decoded and the `RefreshTokenClaims` are returned. The
-/// signature of the refresh token is not validated because it is just an opaque
-/// string for the application. If the refresh token is not valid, then an
-/// `AuthError::RefreshTokenParseFailure` is returned.
-async fn decode_refresh_token(refresh_token: &str) -> Result<RefreshTokenClaims, AuthError> {
-	let mut validation = jsonwebtoken::Validation::new(Algorithm::HS512);
-	validation.validate_aud = false;
-	validation.insecure_disable_signature_validation();
-
-	jsonwebtoken::decode::<RefreshTokenClaims>(
-		refresh_token,
-		&DecodingKey::from_secret(&[]),
-		&validation,
-	)
-	.map(|token_data| token_data.claims)
-	.map_err(|_| AuthError::RefreshTokenParseFailure)
-}
-
-/// Stores the access and refresh tokens in Redis.
-///
-/// The tokens are stored in Redis under the user's username. This makes it easy
-/// to retrieve the tokens when the user wants to refresh their access token or
-/// when the tokens need to be invalidated.
-async fn store_tokens_in_redis_cache(
+/// The access tokens are stored in Redis under the user's username. This makes
+/// it easy to retrieve the tokens when the user wants to refresh their access
+/// token or when the tokens need to be invalidated.
+async fn store_access_token_in_redis_cache(
 	state: Arc<KeycloakState>,
-	username: &str,
 	access_token: &str,
-	refresh_token: &str,
 ) -> Result<(), AuthError> {
 	let mut connection = state
 		.redis_client
@@ -499,29 +417,24 @@ async fn store_tokens_in_redis_cache(
 		.await
 		.map_err(|_| AuthError::RedisConnectionFailure)?;
 
-	let access_token_claims = decode_access_token(state, access_token, true)
+	let access_token_claims = decode_access_token(state, access_token)
 		.await
 		.map_err(|_| AuthError::AccessTokenParseFailure)?;
 
-	let refresh_token_claims = decode_refresh_token(refresh_token)
-		.await
-		.map_err(|_| AuthError::RefreshTokenParseFailure)?;
-
+	let username = access_token_claims.preferred_username;
 	let access_token_expiration = access_token_claims.exp.to_string();
-	let refresh_token_expiration = refresh_token_claims.exp.to_string();
 
 	connection
-		.hset_multiple::<_, _, _, ()>(
-			format!("navigator:{}", username),
-			&[
-				("access_token", access_token),
-				("access_token_expiration", &access_token_expiration),
-				("refresh_token", refresh_token),
-				("refresh_token_expiration", &refresh_token_expiration),
-			],
+		.zadd::<_, _, _, ()>(
+			format!("navigator:{}:tokens", username),
+			access_token,
+			access_token_expiration.parse::<f64>().unwrap(),
 		)
 		.await
-		.map_err(|_| AuthError::RedisCacheAddFailure)?;
+		.map_err(|err| {
+			eprintln!("Redis cache add error: {:?}", err);
+			AuthError::RedisCacheAddFailure
+		})?;
 
 	Ok(())
 }
@@ -541,23 +454,16 @@ pub async fn auth_token_handler(
 		.await
 		.map_err(handle_auth_error)?;
 
-	let username = payload
-		.extract_resource_object()
-		.map(|resource| resource.attributes.username.clone())
-		.ok_or(AuthError::MalformedRequestBody)
-		.map_err(handle_auth_error)?;
-
-	store_tokens_in_redis_cache(
+	store_access_token_in_redis_cache(
 		state.clone(),
-		&username,
 		&token_response.access_token,
-		&token_response.refresh_token,
 	)
 	.await
 	.map_err(handle_auth_error)?;
 
 	let attributes = TokenResponseAttributes {
-		jwt: token_response.access_token,
+		access_token: token_response.access_token,
+		refresh_token: token_response.refresh_token,
 	};
 
 	let resource = ResourceObject::builder()
@@ -581,34 +487,26 @@ pub async fn refresh_auth_token_handler(
 	Json<Document<TokenResponseAttributes>>,
 	(StatusCode, Json<Document<TokenResponseAttributes>>),
 > {
-	let expired_access_token = payload
+	let refresh_token = payload
 		.extract_resource_object()
-		.map(|resource| resource.attributes.jwt.clone())
+		.map(|resource| resource.attributes.refresh_token.clone())
 		.ok_or(AuthError::MalformedRequestBody)
 		.map_err(handle_auth_error)?;
 
-	let token_response = refresh_auth_token(state.clone(), &expired_access_token)
+	let token_response = refresh_auth_token(state.clone(), &refresh_token)
 		.await
 		.map_err(handle_auth_error)?;
 
-	let access_token_claims = decode_access_token(state.clone(), &token_response.access_token, true)
-		.await
-		.map_err(|_| AuthError::AccessTokenParseFailure)
-		.map_err(handle_auth_error)?;
-
-	let username = access_token_claims.preferred_username;
-
-	store_tokens_in_redis_cache(
+	store_access_token_in_redis_cache(
 		state.clone(),
-		&username,
 		&token_response.access_token,
-		&token_response.refresh_token,
 	)
 	.await
 	.map_err(handle_auth_error)?;
 
 	let attributes = TokenResponseAttributes {
-		jwt: token_response.access_token,
+		access_token: token_response.access_token,
+		refresh_token: token_response.refresh_token,
 	};
 
 	let resource = ResourceObject::builder()
