@@ -2,7 +2,7 @@ mod api;
 mod auth;
 mod config;
 
-use auth::{auth_token_handler, refresh_auth_token_handler, require_roles};
+use auth::{create_jwt_handler, logout_jwt_handler, refresh_jwt_handler, require_roles};
 use config::Config;
 
 use anyhow::Result;
@@ -56,8 +56,9 @@ async fn main() -> Result<()> {
 	let fonts = ServeDir::new("fonts").not_found_service(fallback);
 
 	let auth_service = Router::new()
-		.route("/api/auth/token", routing::post(auth_token_handler))
-		.route("/api/auth/token/refresh", routing::post(refresh_auth_token_handler))
+		.route("/api/navigator/token", routing::post(create_jwt_handler))
+		.route("/api/navigator/token/refresh", routing::post(refresh_jwt_handler))
+		.route("/api/navigator/logout", routing::post(logout_jwt_handler))
 		.with_state(keycloak_state);
 
 	let fonts_service = Router::new()
