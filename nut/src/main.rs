@@ -59,7 +59,7 @@ async fn main() -> Result<()> {
 		.route("/api/navigator/token", routing::post(create_jwt_handler))
 		.route("/api/navigator/token/refresh", routing::post(refresh_jwt_handler))
 		.route("/api/navigator/logout", routing::post(logout_jwt_handler))
-		.with_state(keycloak_state);
+		.with_state(keycloak_state.clone());
 
 	let fonts_service = Router::new()
 		.nest_service("/fonts", routing::get_service(fonts))
@@ -69,6 +69,7 @@ async fn main() -> Result<()> {
 		vec![String::from("admin")],
 		Router::new().route("/protected", routing::get(protected)),
 		keycloak_auth_instance,
+		keycloak_state,
 	);
 
 	let frontend_service = Router::new().nest_service("/", routing::get_service(frontend));

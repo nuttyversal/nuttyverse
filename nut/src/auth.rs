@@ -1,12 +1,14 @@
 use crate::api::{self, Document, ResourceObject};
 use std::sync::Arc;
 
+use axum::body::Body;
 use axum::extract::State;
+use axum::middleware::{self, Next};
 use axum::{Json, Router};
 use axum_keycloak_auth::instance::KeycloakAuthInstance;
 use axum_keycloak_auth::layer::KeycloakAuthLayer;
 use axum_keycloak_auth::PassthroughMode;
-use http::StatusCode;
+use http::{Request, Response, StatusCode};
 use jsonwebtoken::jwk::{AlgorithmParameters, JwkSet};
 use jsonwebtoken::{Algorithm, DecodingKey};
 use redis::AsyncCommands;
@@ -518,16 +520,9 @@ async fn invalidate_jwt_in_redis_cache(
 
 		if let Some(expiration) = expiration {
 			connection
-				.zadd::<_, _, _, ()>(
-					"navigator:blocklisted_tokens",
-					token,
-					expiration,
-				)
+				.zadd::<_, _, _, ()>("navigator:blocklisted_tokens", token, expiration)
 				.await
-				.map_err(|e| {
-					eprintln!("Redis cache add error: {:?}", e);
-					AuthError::RedisCacheAddFailure
-				})?;
+				.map_err(|_| AuthError::RedisCacheAddFailure)?;
 		}
 	}
 
@@ -689,12 +684,46 @@ pub async fn logout_jwt_handler(
 		.await
 		.map_err(handle_auth_error)?;
 
-	Ok(Json(Document::Single {
-		data: None,
-	}))
+	Ok(Json(Document::Single { data: None }))
 }
 
-/// Middleware that wraps a router with Keycloak authentication.
+/// Middleware for checking if the access token is blocklisted.
+///
+/// When a user logs out, the access token is added to the blocklist in Redis.
+/// This middleware checks if the access token is in the blocklist and returns
+/// an error if it is.
+async fn check_token_blocklist(
+	State(state): State<Arc<KeycloakState>>,
+	request: Request<Body>,
+	next: Next,
+) -> Result<Response<Body>, StatusCode> {
+	let token = request
+		.headers()
+		.get("Authorization")
+		.and_then(|header| header.to_str().ok())
+		.and_then(|auth_header| auth_header.strip_prefix("Bearer "))
+		.ok_or(StatusCode::UNAUTHORIZED)?;
+
+	let mut connection = state
+		.redis_client
+		.get_multiplexed_tokio_connection()
+		.await
+		.map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+	let is_blocklisted: Option<f64> = connection
+		.zscore("navigator:blocklisted_tokens", token)
+		.await
+		.map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+	if is_blocklisted.is_some() {
+		Err(StatusCode::UNAUTHORIZED)
+	} else {
+		Ok(next.run(request).await)
+	}
+}
+
+/// Middleware that wraps a router with Keycloak authentication and token
+/// blocklist checking.
 ///
 /// This middleware requires the user to have the specified roles to access the
 /// protected routes. If a route requires fine-grained role-based access, then
@@ -703,14 +732,21 @@ pub fn require_roles(
 	required_roles: Vec<String>,
 	router: Router,
 	instance: Arc<KeycloakAuthInstance>,
+	state: Arc<KeycloakState>,
 ) -> Router {
-	router.layer(
-		KeycloakAuthLayer::<String>::builder()
-			.instance(instance)
-			.passthrough_mode(PassthroughMode::Block)
-			.persist_raw_claims(false)
-			.expected_audiences(vec![String::from("account")])
-			.required_roles(required_roles)
-			.build(),
-	)
+	// Check if the access token is blocklisted.
+	let check_token_blocklist = middleware::from_fn_with_state(state.clone(), check_token_blocklist);
+
+	// Check if the access token has the required roles.
+	let check_required_roles = KeycloakAuthLayer::<String>::builder()
+		.instance(instance)
+		.passthrough_mode(PassthroughMode::Block)
+		.persist_raw_claims(false)
+		.expected_audiences(vec![String::from("account")])
+		.required_roles(required_roles)
+		.build();
+
+	router
+		.layer(check_token_blocklist)
+		.layer(check_required_roles)
 }
