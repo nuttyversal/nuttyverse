@@ -7,10 +7,11 @@ edition = "2021"
 anyhow = "1.0"
 axum = "0.7"
 axum-keycloak-auth = "0.5.0"
+chrono = "0.4"
 futures = "0.3"
 http = "1.1"
 jsonwebtoken = "9"
-redis = { version = "0.26", features = ["tokio-comp"] }
+redis = { version = "0.27", features = ["tokio-comp"] }
 reqwest = { version = "0.12", features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
 thiserror = "1.0"

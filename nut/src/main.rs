@@ -2,7 +2,10 @@ mod api;
 mod auth;
 mod config;
 
-use auth::{create_jwt_handler, logout_jwt_handler, refresh_jwt_handler, require_roles};
+use auth::{
+	check_token_blocklist, create_jwt_handler, logout_jwt_handler, refresh_jwt_handler,
+	require_roles,
+};
 use config::Config;
 
 use anyhow::Result;
@@ -20,8 +23,8 @@ use axum_keycloak_auth::{
 };
 use std::{convert::Infallible, sync::Arc};
 use tokio::net::TcpListener;
-use tower_http::services::{ServeDir, ServeFile};
 use tokio::signal::unix::{signal, SignalKind};
+use tower_http::services::{ServeDir, ServeFile};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -59,8 +62,17 @@ async fn main() -> Result<()> {
 
 	let auth_service = Router::new()
 		.route("/api/navigator/token", routing::post(create_jwt_handler))
-		.route("/api/navigator/token/refresh", routing::post(refresh_jwt_handler))
-		.route("/api/navigator/logout", routing::post(logout_jwt_handler))
+		.route(
+			"/api/navigator/token/refresh",
+			routing::post(refresh_jwt_handler),
+		)
+		.route(
+			"/api/navigator/logout",
+			routing::post(logout_jwt_handler).layer(middleware::from_fn_with_state(
+				keycloak_state.clone(),
+				check_token_blocklist,
+			)),
+		)
 		.with_state(keycloak_state.clone());
 
 	let fonts_service = Router::new()
@@ -84,9 +96,9 @@ async fn main() -> Result<()> {
 	// Spawn background tasks.
 	tokio::spawn(async move {
 		loop {
-			// Clean up blocklisted tokens.
-			if let Err(e) = auth::clean_up_blocklisted_tokens(keycloak_state.clone()).await {
-				eprintln!("Error cleaning up blocklisted tokens: {}", e);
+			// Clean up expired tokens in the Redis cache.
+			if let Err(e) = auth::clean_up_expired_tokens(keycloak_state.clone()).await {
+				eprintln!("Error cleaning up expired tokens: {}", e);
 			}
 
 			// Run every 60 seconds.

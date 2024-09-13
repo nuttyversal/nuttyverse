@@ -134,6 +134,9 @@ pub enum AuthError {
 
 	#[error("Failed to check token in Redis cache.")]
 	RedisCacheCheckFailure,
+
+	#[error("The login session has expired.")]
+	LoginSessionExpired,
 }
 
 /// Handles an authentication error by returning an appropriate HTTP response.
@@ -195,6 +198,12 @@ fn handle_auth_error(error: AuthError) -> (StatusCode, Json<Document<TokenRespon
 			"RedisCacheCheckFailure",
 			error.to_string(),
 			StatusCode::INTERNAL_SERVER_ERROR,
+		),
+
+		AuthError::LoginSessionExpired => (
+			"LoginSessionExpired",
+			error.to_string(),
+			StatusCode::UNAUTHORIZED,
 		),
 	};
 
@@ -438,9 +447,7 @@ async fn decode_jwt_access_token(
 /// The refresh token is decoded and the `RefreshTokenClaims` are returned. If
 /// the refresh token is not valid, then an `AuthError::AccessTokenParseFailure`
 /// is returned.
-async fn decode_jwt_refresh_token(
-	token: &str,
-) -> Result<RefreshTokenClaims, AuthError> {
+async fn decode_jwt_refresh_token(token: &str) -> Result<RefreshTokenClaims, AuthError> {
 	let mut validation = jsonwebtoken::Validation::new(Algorithm::HS512);
 	validation.validate_aud = false;
 	validation.validate_exp = false;
@@ -502,21 +509,23 @@ async fn store_jwt_in_redis_cache(
 	Ok(())
 }
 
-/// Retrieves the access token and refresh token from the Redis cache.
+/// Retrieves the refresh token from the Redis cache.
 ///
-/// The access token is retrieved using the refresh token. The refresh token is
+/// The refresh token is retrieved using the username. The refresh token is
 /// used to generate a new access token when the current access token expires.
+/// The refresh token is optional because it may not exist if the user is not
+/// logged in.
 async fn get_jwt_from_redis_cache(
 	state: Arc<KeycloakState>,
 	username: &str,
-) -> Result<String, AuthError> {
+) -> Result<Option<String>, AuthError> {
 	let mut connection = state
 		.redis_client
 		.get_multiplexed_tokio_connection()
 		.await
 		.map_err(|_| AuthError::RedisConnectionFailure)?;
 
-	let refresh_token: String = connection
+	let refresh_token: Option<String> = connection
 		.get(format!("navigator:{}:refresh_token", username))
 		.await
 		.map_err(|_| AuthError::RedisCacheCheckFailure)?;
@@ -545,19 +554,18 @@ async fn invalidate_jwt_in_redis_cache(
 		.await
 		.map_err(|_| AuthError::RedisCacheCheckFailure)?;
 
-	// Add the access tokens to a blocklist in Redis with its expiration.
+	// Add the access tokens to a blocklist in Redis with a week-long expiration.
 	for token in access_tokens {
-		let expiration: Option<f64> = connection
-			.zscore(format!("navigator:{}:access_tokens", username), &token)
+		let access_token_claims = decode_jwt_access_token(state.clone(), &token)
 			.await
-			.map_err(|_| AuthError::RedisCacheCheckFailure)?;
+			.map_err(|_| AuthError::AccessTokenParseFailure)?;
 
-		if let Some(expiration) = expiration {
-			connection
-				.zadd::<_, _, _, ()>("navigator:blocklisted_tokens", token, expiration)
-				.await
-				.map_err(|_| AuthError::RedisCacheAddFailure)?;
-		}
+		let expiration = access_token_claims.exp + 7 * 24 * 60 * 60;
+
+		connection
+			.zadd::<_, _, _, ()>("navigator:blocklisted_tokens", token, expiration)
+			.await
+			.map_err(|_| AuthError::RedisCacheAddFailure)?;
 	}
 
 	// Remove the user's access tokens from the cache.
@@ -647,15 +655,40 @@ pub async fn refresh_jwt_handler(
 		.map_err(handle_auth_error)?;
 
 	let username = access_token_claims.preferred_username;
+	let expiration = access_token_claims.exp;
 
-	let refresh_token = get_jwt_from_redis_cache(state.clone(), &username)
-		.await
-		.map_err(handle_auth_error)?;
+	// The access token must be within a week of expiration to be refreshed.
+	let time_past_expiration = chrono::Utc::now().timestamp() - expiration as i64;
+	let grace_period = 7 * 24 * 60 * 60;
 
+	if time_past_expiration > grace_period {
+		return Err(handle_auth_error(AuthError::AccessTokenParseFailure));
+	}
+
+	// Get the refresh token from the Redis cache.
+	let refresh_token = match get_jwt_from_redis_cache(state.clone(), &username).await {
+		// If the token is in the cache, then return it.
+		Ok(Some(token)) => token,
+
+		// If the token is not in the cache, then the session has expired.
+		Ok(None) => {
+			// Invalidate all issued access tokens.
+			invalidate_jwt_in_redis_cache(state.clone(), &username)
+				.await
+				.map_err(handle_auth_error)?;
+			return Err(handle_auth_error(AuthError::LoginSessionExpired));
+		}
+
+		// If there is an error, then return it.
+		Err(e) => return Err(handle_auth_error(e)),
+	};
+
+	// Generate a new access token with the refresh token.
 	let token_response = generate_jwt_with_refresh_token(state.clone(), &refresh_token)
 		.await
 		.map_err(handle_auth_error)?;
 
+	// Store the new access token and refresh token in the Redis cache.
 	store_jwt_in_redis_cache(
 		state.clone(),
 		&token_response.access_token,
@@ -709,9 +742,11 @@ pub async fn logout_jwt_handler(
 		.map_err(handle_auth_error)?;
 
 	// Invalidate the refresh token at the Keycloak server.
-	invalidate_jwt_in_keycloak(state.clone(), &refresh_token)
-		.await
-		.map_err(handle_auth_error)?;
+	if let Some(refresh_token) = refresh_token {
+		invalidate_jwt_in_keycloak(state.clone(), &refresh_token)
+			.await
+			.map_err(handle_auth_error)?;
+	}
 
 	// Invalidate the access tokens in the Redis cache.
 	invalidate_jwt_in_redis_cache(state.clone(), &username)
@@ -726,7 +761,7 @@ pub async fn logout_jwt_handler(
 /// When a user logs out, the access token is added to the blocklist in Redis.
 /// This middleware checks if the access token is in the blocklist and returns
 /// an error if it is.
-async fn check_token_blocklist(
+pub async fn check_token_blocklist(
 	State(state): State<Arc<KeycloakState>>,
 	request: Request<Body>,
 	next: Next,
@@ -789,30 +824,12 @@ pub fn require_roles(
 ///
 /// This function removes the expired blocklisted tokens from the Redis cache.
 /// This is necessary because Redis does not automatically delete expired keys.
-pub async fn clean_up_blocklisted_tokens(state: Arc<KeycloakState>) -> Result<(), AuthError> {
+pub async fn clean_up_expired_tokens(state: Arc<KeycloakState>) -> Result<(), AuthError> {
 	let mut connection = state
 		.redis_client
 		.get_multiplexed_tokio_connection()
 		.await
 		.map_err(|_| AuthError::RedisConnectionFailure)?;
-
-	// Query the keys for the access tokens for all users.
-	let keys: Vec<String> = connection
-		.keys("navigator:*:access_tokens")
-		.await
-		.map_err(|_| AuthError::RedisConnectionFailure)?;
-
-	// Iterate over each user and remove their expired access tokens.
-	for key in keys {
-		connection
-			.zrembyscore::<_, _, _, ()>(
-				&key,
-				"-inf",
-				chrono::Utc::now().timestamp(),
-			)
-			.await
-			.map_err(|_| AuthError::RedisConnectionFailure)?;
-	}
 
 	// Query the keys for refresh tokens for all users.
 	let refresh_token_keys: Vec<String> = connection
