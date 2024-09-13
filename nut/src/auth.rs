@@ -17,6 +17,12 @@ use thiserror::Error;
 use tokio::sync::RwLock;
 use typed_builder::TypedBuilder;
 
+/// The duration of time that an access token will remain in the blocklist.
+/// This is used to prevent access tokens issued prior to a logout from being
+/// used to refresh the user's session. This value should be longer than the
+/// refresh token's expiration time.
+const BLOCKLIST_DURATION: u64 = 7 * 24 * 60 * 60;
+
 /// The state required to authenticate against a Keycloak server.
 #[derive(TypedBuilder)]
 pub struct KeycloakState {
@@ -554,13 +560,13 @@ async fn invalidate_jwt_in_redis_cache(
 		.await
 		.map_err(|_| AuthError::RedisCacheCheckFailure)?;
 
-	// Add the access tokens to a blocklist in Redis with a week-long expiration.
+	// Add the access tokens to a blocklist in Redis.
 	for token in access_tokens {
 		let access_token_claims = decode_jwt_access_token(state.clone(), &token)
 			.await
 			.map_err(|_| AuthError::AccessTokenParseFailure)?;
 
-		let expiration = access_token_claims.exp + 7 * 24 * 60 * 60;
+		let expiration = access_token_claims.exp + BLOCKLIST_DURATION;
 
 		connection
 			.zadd::<_, _, _, ()>("navigator:blocklisted_tokens", token, expiration)
@@ -657,11 +663,10 @@ pub async fn refresh_jwt_handler(
 	let username = access_token_claims.preferred_username;
 	let expiration = access_token_claims.exp;
 
-	// The access token must be within a week of expiration to be refreshed.
+	// The access token must be younger than the blocklist duration to be refreshed.
 	let time_past_expiration = chrono::Utc::now().timestamp() - expiration as i64;
-	let grace_period = 7 * 24 * 60 * 60;
 
-	if time_past_expiration > grace_period {
+	if time_past_expiration > BLOCKLIST_DURATION as i64 {
 		return Err(handle_auth_error(AuthError::AccessTokenParseFailure));
 	}
 
