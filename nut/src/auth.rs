@@ -98,6 +98,13 @@ struct AccessTokenClaims {
 	preferred_username: String,
 }
 
+/// The JWT claims in a refresh token.
+#[derive(Debug, Serialize, Deserialize)]
+struct RefreshTokenClaims {
+	/// The expiration time of the token.
+	exp: u64,
+}
+
 /// The errors that can occur during authentication operations.
 #[derive(Error, Debug)]
 pub enum AuthError {
@@ -414,6 +421,7 @@ async fn decode_jwt_access_token(
 	let decoding_keys = fetch_jwt_decoding_keys(state.clone()).await?;
 
 	let mut validation = jsonwebtoken::Validation::new(Algorithm::RS256);
+	validation.validate_exp = false;
 	validation.validate_aud = false;
 
 	for key in decoding_keys {
@@ -423,6 +431,32 @@ async fn decode_jwt_access_token(
 	}
 
 	Err(AuthError::AccessTokenParseFailure)
+}
+
+/// Decodes the refresh token.
+///
+/// The refresh token is decoded and the `RefreshTokenClaims` are returned. If
+/// the refresh token is not valid, then an `AuthError::AccessTokenParseFailure`
+/// is returned.
+async fn decode_jwt_refresh_token(
+	token: &str,
+) -> Result<RefreshTokenClaims, AuthError> {
+	let mut validation = jsonwebtoken::Validation::new(Algorithm::HS512);
+	validation.validate_aud = false;
+	validation.validate_exp = false;
+
+	// The refresh token is just an opaque string for the application, so its
+	// signature does not need to be validated.
+	validation.insecure_disable_signature_validation();
+
+	let token_data = jsonwebtoken::decode::<RefreshTokenClaims>(
+		token,
+		&DecodingKey::from_secret(&[]),
+		&validation,
+	)
+	.map_err(|_| AuthError::AccessTokenParseFailure)?;
+
+	Ok(token_data.claims)
 }
 
 /// Stores the access token and refresh token in the Redis cache.
@@ -762,6 +796,56 @@ pub async fn clean_up_blocklisted_tokens(state: Arc<KeycloakState>) -> Result<()
 		.await
 		.map_err(|_| AuthError::RedisConnectionFailure)?;
 
+	// Query the keys for the access tokens for all users.
+	let keys: Vec<String> = connection
+		.keys("navigator:*:access_tokens")
+		.await
+		.map_err(|_| AuthError::RedisConnectionFailure)?;
+
+	// Iterate over each user and remove their expired access tokens.
+	for key in keys {
+		connection
+			.zrembyscore::<_, _, _, ()>(
+				&key,
+				"-inf",
+				chrono::Utc::now().timestamp(),
+			)
+			.await
+			.map_err(|_| AuthError::RedisConnectionFailure)?;
+	}
+
+	// Query the keys for refresh tokens for all users.
+	let refresh_token_keys: Vec<String> = connection
+		.keys("navigator:*:refresh_token")
+		.await
+		.map_err(|_| AuthError::RedisConnectionFailure)?;
+
+	// Iterate over each user and remove their expired refresh tokens.
+	for key in refresh_token_keys {
+		// Get the refresh token from the Redis cache.
+		let refresh_token: String = connection
+			.get(&key)
+			.await
+			.map_err(|_| AuthError::RedisConnectionFailure)?;
+
+		// Decode the refresh token.
+		let refresh_token_claims = decode_jwt_refresh_token(&refresh_token)
+			.await
+			.map_err(|_| AuthError::AccessTokenParseFailure)?;
+
+		// Get the expiration of the refresh token.
+		let expiration = refresh_token_claims.exp;
+
+		// Remove the refresh token from the Redis cache if it is expired.
+		if chrono::Utc::now().timestamp() > expiration as i64 {
+			connection
+				.del::<_, ()>(&key)
+				.await
+				.map_err(|_| AuthError::RedisConnectionFailure)?;
+		}
+	}
+
+	// Remove the expired access tokens from the blocklist.
 	connection
 		.zrembyscore::<_, _, _, ()>(
 			"navigator:blocklisted_tokens",
