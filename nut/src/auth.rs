@@ -1,14 +1,17 @@
 use crate::api::{self, Document, ResourceObject};
+use std::borrow::Cow;
 use std::sync::Arc;
 
 use axum::body::Body;
 use axum::extract::State;
 use axum::middleware::{self, Next};
 use axum::{Json, Router};
+use axum_keycloak_auth::extract::{ExtractedToken, TokenExtractor};
 use axum_keycloak_auth::instance::KeycloakAuthInstance;
 use axum_keycloak_auth::layer::KeycloakAuthLayer;
-use axum_keycloak_auth::PassthroughMode;
-use http::{Request, Response, StatusCode};
+use axum_keycloak_auth::{NonEmpty, PassthroughMode};
+use http::header::SET_COOKIE;
+use http::{HeaderMap, HeaderValue, Request, Response, StatusCode};
 use jsonwebtoken::jwk::{AlgorithmParameters, JwkSet};
 use jsonwebtoken::{Algorithm, DecodingKey};
 use redis::AsyncCommands;
@@ -54,27 +57,6 @@ pub struct TokenCreationRequestAttributes {
 
 	/// The password of the user.
 	password: String,
-}
-
-/// The request data for the token refresh endpoint.
-#[derive(Deserialize)]
-pub struct TokenRefreshRequestAttributes {
-	/// The access token
-	access_token: String,
-}
-
-/// The response data for the token endpoint.
-#[derive(Serialize)]
-pub struct TokenResponseAttributes {
-	/// The access token.
-	access_token: String,
-}
-
-/// The request data for the logout endpoint.
-#[derive(Deserialize)]
-pub struct LogoutRequestAttributes {
-	/// The access token.
-	access_token: String,
 }
 
 /// The response data from the Keycloak token endpoint (success).
@@ -150,7 +132,7 @@ pub enum AuthError {
 /// The error is converted to a JSON:API error document and the appropriate HTTP
 /// status code is returned. The response is returned as a tuple containing the
 /// status code and the JSON:API error document.
-fn handle_auth_error(error: AuthError) -> (StatusCode, Json<Document<TokenResponseAttributes>>) {
+fn handle_auth_error(error: AuthError) -> (StatusCode, Json<Document<()>>) {
 	let (title, detail, status) = match error {
 		AuthError::MalformedRequestBody => (
 			"MalformedRequestBody",
@@ -225,6 +207,39 @@ fn handle_auth_error(error: AuthError) -> (StatusCode, Json<Document<TokenRespon
 			errors: vec![error],
 		}),
 	)
+}
+
+/// Creates an authentication cookie for the user.
+///
+/// The cookie is used to authenticate the user in subsequent requests. The
+/// cookie is stored in the user's browser and sent with every request.
+async fn create_authentication_cookie(
+	state: Arc<KeycloakState>,
+	access_token: &str,
+) -> Result<HeaderValue, AuthError> {
+	let access_token_claims = decode_jwt_access_token(state, access_token)
+		.await
+		.map_err(|_| AuthError::AccessTokenParseFailure)?;
+
+	let expiration = access_token_claims.exp.to_string();
+
+	let cookie = format!(
+		"auth={access_token}; HttpOnly; Secure; SameSite=Strict; Expires={expiration}",
+		access_token = access_token,
+		expiration = expiration,
+	);
+
+	Ok(HeaderValue::from_str(&cookie).unwrap())
+}
+
+/// Creates an expired authentication cookie.
+///
+/// This is used to clear the authentication cookie when the user logs out.
+fn create_expired_authentication_cookie() -> HeaderValue {
+	HeaderValue::from_str(
+		"auth=; HttpOnly; Secure; SameSite=Strict; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+	)
+	.unwrap()
 }
 
 /// Sends a request to the Keycloak server to generate a JWT for authenticating
@@ -597,10 +612,7 @@ async fn invalidate_jwt_in_redis_cache(
 pub async fn create_jwt_handler(
 	State(state): State<Arc<KeycloakState>>,
 	Json(payload): Json<Document<TokenCreationRequestAttributes>>,
-) -> Result<
-	Json<Document<TokenResponseAttributes>>,
-	(StatusCode, Json<Document<TokenResponseAttributes>>),
-> {
+) -> Result<(HeaderMap, Json<Document<()>>), (StatusCode, Json<Document<()>>)> {
 	let username = payload
 		.extract_resource_object()
 		.map(|resource| &resource.attributes.username)
@@ -625,18 +637,24 @@ pub async fn create_jwt_handler(
 	.await
 	.map_err(handle_auth_error)?;
 
-	let attributes = TokenResponseAttributes {
-		access_token: token_response.access_token,
-	};
+	let cookie = create_authentication_cookie(state, &token_response.access_token)
+		.await
+		.map_err(handle_auth_error)?;
+
+	let mut headers = HeaderMap::new();
+	headers.insert(SET_COOKIE, cookie);
 
 	let resource = ResourceObject::builder()
 		.r#type("auth_token".to_string())
-		.attributes(attributes)
+		.attributes(())
 		.build();
 
-	Ok(Json(Document::Single {
-		data: Some(resource),
-	}))
+	Ok((
+		headers,
+		Json(Document::Single {
+			data: Some(resource),
+		}),
+	))
 }
 
 /// The handler for the JWT refresh endpoint.
@@ -645,16 +663,21 @@ pub async fn create_jwt_handler(
 /// the new access token if the refresh was successful.
 pub async fn refresh_jwt_handler(
 	State(state): State<Arc<KeycloakState>>,
-	Json(payload): Json<Document<TokenRefreshRequestAttributes>>,
-) -> Result<
-	Json<Document<TokenResponseAttributes>>,
-	(StatusCode, Json<Document<TokenResponseAttributes>>),
-> {
-	let access_token = payload
-		.extract_resource_object()
-		.map(|resource| resource.attributes.access_token.clone())
-		.ok_or(AuthError::MalformedRequestBody)
-		.map_err(handle_auth_error)?;
+	headers: HeaderMap,
+) -> Result<(HeaderMap, Json<Document<()>>), (StatusCode, Json<Document<()>>)> {
+	let access_token = headers
+		.get("Cookie")
+		.and_then(|cookie| cookie.to_str().ok())
+		.and_then(|cookie_str| {
+			cookie_str
+				.split(';')
+				.find(|s| s.trim().starts_with("auth="))
+		})
+		.and_then(|auth_cookie| auth_cookie.trim().strip_prefix("auth="))
+		.ok_or((
+			StatusCode::UNAUTHORIZED,
+			Json(Document::Single { data: None }),
+		))?;
 
 	let access_token_claims = decode_jwt_access_token(state.clone(), &access_token)
 		.await
@@ -702,18 +725,24 @@ pub async fn refresh_jwt_handler(
 	.await
 	.map_err(handle_auth_error)?;
 
-	let attributes = TokenResponseAttributes {
-		access_token: token_response.access_token,
-	};
+	let cookie = create_authentication_cookie(state, &token_response.access_token)
+		.await
+		.map_err(handle_auth_error)?;
+
+	let mut headers = HeaderMap::new();
+	headers.insert(SET_COOKIE, cookie);
 
 	let resource = ResourceObject::builder()
 		.r#type("auth_token".to_string())
-		.attributes(attributes)
+		.attributes(())
 		.build();
 
-	Ok(Json(Document::Single {
-		data: Some(resource),
-	}))
+	Ok((
+		headers,
+		Json(Document::Single {
+			data: Some(resource),
+		}),
+	))
 }
 
 /// The handler for the JWT logout endpoint.
@@ -723,19 +752,24 @@ pub async fn refresh_jwt_handler(
 /// Redis cache.
 pub async fn logout_jwt_handler(
 	State(state): State<Arc<KeycloakState>>,
-	Json(payload): Json<Document<LogoutRequestAttributes>>,
-) -> Result<
-	Json<Document<TokenResponseAttributes>>,
-	(StatusCode, Json<Document<TokenResponseAttributes>>),
-> {
-	let access_token = payload
-		.extract_resource_object()
-		.map(|resource| resource.attributes.access_token.clone())
-		.ok_or(AuthError::MalformedRequestBody)
-		.map_err(handle_auth_error)?;
+	headers: HeaderMap,
+) -> Result<(HeaderMap, Json<Document<()>>), (StatusCode, Json<Document<()>>)> {
+	let access_token = headers
+		.get("Cookie")
+		.and_then(|cookie| cookie.to_str().ok())
+		.and_then(|cookie_str| {
+			cookie_str
+				.split(';')
+				.find(|s| s.trim().starts_with("auth="))
+		})
+		.and_then(|auth_cookie| auth_cookie.trim().strip_prefix("auth="))
+		.ok_or((
+			StatusCode::UNAUTHORIZED,
+			Json(Document::Single { data: None }),
+		))?;
 
 	// Decode the access token to get the username.
-	let access_token_claims = decode_jwt_access_token(state.clone(), &access_token)
+	let access_token_claims = decode_jwt_access_token(state.clone(), access_token)
 		.await
 		.map_err(handle_auth_error)?;
 
@@ -758,7 +792,10 @@ pub async fn logout_jwt_handler(
 		.await
 		.map_err(handle_auth_error)?;
 
-	Ok(Json(Document::Single { data: None }))
+	let mut headers = HeaderMap::new();
+	headers.insert(SET_COOKIE, create_expired_authentication_cookie());
+
+	Ok((headers, Json(Document::Single { data: None })))
 }
 
 /// Middleware for checking if the access token is blocklisted.
@@ -768,14 +805,19 @@ pub async fn logout_jwt_handler(
 /// an error if it is.
 pub async fn check_token_blocklist(
 	State(state): State<Arc<KeycloakState>>,
+	headers: HeaderMap,
 	request: Request<Body>,
 	next: Next,
 ) -> Result<Response<Body>, StatusCode> {
-	let token = request
-		.headers()
-		.get("Authorization")
-		.and_then(|header| header.to_str().ok())
-		.and_then(|auth_header| auth_header.strip_prefix("Bearer "))
+	let access_token = headers
+		.get("Cookie")
+		.and_then(|cookie| cookie.to_str().ok())
+		.and_then(|cookie_str| {
+			cookie_str
+				.split(';')
+				.find(|s| s.trim().starts_with("auth="))
+		})
+		.and_then(|auth_cookie| auth_cookie.trim().strip_prefix("auth="))
 		.ok_or(StatusCode::UNAUTHORIZED)?;
 
 	let mut connection = state
@@ -785,7 +827,7 @@ pub async fn check_token_blocklist(
 		.map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
 	let is_blocklisted: Option<f64> = connection
-		.zscore("navigator:blocklisted_tokens", token)
+		.zscore("navigator:blocklisted_tokens", access_token)
 		.await
 		.map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
@@ -811,6 +853,35 @@ pub fn require_roles(
 	// Check if the access token is blocklisted.
 	let check_token_blocklist = middleware::from_fn_with_state(state.clone(), check_token_blocklist);
 
+	/// Extracts the access token from the cookie.
+	#[derive(Debug, Clone, Default)]
+	pub struct AccessTokenExtractor {}
+
+	impl TokenExtractor for AccessTokenExtractor {
+		fn extract<'a>(
+			&self,
+			request: &'a axum::extract::Request,
+		) -> Result<ExtractedToken<'a>, axum_keycloak_auth::error::AuthError> {
+			request
+				.headers()
+				.get("Cookie")
+				.and_then(|cookie| cookie.to_str().ok())
+				.and_then(|cookie_str| {
+					cookie_str
+						.split(';')
+						.find(|s| s.trim().starts_with("auth="))
+				})
+				.and_then(|auth_cookie| auth_cookie.trim().strip_prefix("auth="))
+				.ok_or(axum_keycloak_auth::error::AuthError::MissingAuthorizationHeader)
+				.map(Cow::Borrowed)
+		}
+	}
+
+	let token_extractors = NonEmpty::<Arc<dyn TokenExtractor>> {
+		head: Arc::new(AccessTokenExtractor::default()),
+		tail: vec![],
+	};
+
 	// Check if the access token has the required roles.
 	let check_required_roles = KeycloakAuthLayer::<String>::builder()
 		.instance(instance)
@@ -818,6 +889,7 @@ pub fn require_roles(
 		.persist_raw_claims(false)
 		.expected_audiences(vec![String::from("account")])
 		.required_roles(required_roles)
+		.token_extractors(token_extractors)
 		.build();
 
 	router
