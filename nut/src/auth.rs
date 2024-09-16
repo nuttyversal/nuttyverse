@@ -861,18 +861,9 @@ pub fn require_roles(
 			&self,
 			request: &'a axum::extract::Request,
 		) -> Result<ExtractedToken<'a>, axum_keycloak_auth::error::AuthError> {
-			request
-				.headers()
-				.get("Cookie")
-				.and_then(|cookie| cookie.to_str().ok())
-				.and_then(|cookie_str| {
-					cookie_str
-						.split(';')
-						.find(|s| s.trim().starts_with("auth="))
-				})
-				.and_then(|auth_cookie| auth_cookie.trim().strip_prefix("auth="))
-				.ok_or(axum_keycloak_auth::error::AuthError::MissingAuthorizationHeader)
-				.map(Cow::Borrowed)
+			extract_authentication_cookie(request.headers())
+				.map_err(|_| axum_keycloak_auth::error::AuthError::MissingAuthorizationHeader)
+				.map(|token| Cow::Owned(token.to_string()))
 		}
 	}
 
