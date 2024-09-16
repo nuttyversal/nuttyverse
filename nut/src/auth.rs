@@ -10,7 +10,7 @@ use axum_keycloak_auth::extract::{ExtractedToken, TokenExtractor};
 use axum_keycloak_auth::instance::KeycloakAuthInstance;
 use axum_keycloak_auth::layer::KeycloakAuthLayer;
 use axum_keycloak_auth::{NonEmpty, PassthroughMode};
-use http::header::SET_COOKIE;
+use http::header;
 use http::{HeaderMap, HeaderValue, Request, Response, StatusCode};
 use jsonwebtoken::jwk::{AlgorithmParameters, JwkSet};
 use jsonwebtoken::{Algorithm, DecodingKey};
@@ -108,6 +108,9 @@ pub enum AuthError {
 	#[error("Received an error response from Keycloak server (reason: {message}).")]
 	KeycloakRequestError { message: String },
 
+	#[error("Missing authentication cookie.")]
+	MissingAuthenticationCookie,
+
 	#[error("Failed to parse access token.")]
 	AccessTokenParseFailure,
 
@@ -154,6 +157,12 @@ fn handle_auth_error(error: AuthError) -> (StatusCode, Json<Document<()>>) {
 
 		AuthError::KeycloakRequestError { .. } => (
 			"KeycloakRequestError",
+			error.to_string(),
+			StatusCode::UNAUTHORIZED,
+		),
+
+		AuthError::MissingAuthenticationCookie => (
+			"MissingAuthenticationCookie",
 			error.to_string(),
 			StatusCode::UNAUTHORIZED,
 		),
@@ -217,29 +226,49 @@ async fn create_authentication_cookie(
 	state: Arc<KeycloakState>,
 	access_token: &str,
 ) -> Result<HeaderValue, AuthError> {
-	let access_token_claims = decode_jwt_access_token(state, access_token)
+	// Parse the expiration time of the access token.
+	let expiration = decode_jwt_access_token(state, access_token)
 		.await
-		.map_err(|_| AuthError::AccessTokenParseFailure)?;
+		.map_err(|_| AuthError::AccessTokenParseFailure)?
+		.exp
+		.to_string();
 
-	let expiration = access_token_claims.exp.to_string();
-
+	// Create the authentication cookie.
 	let cookie = format!(
 		"auth={access_token}; HttpOnly; Secure; SameSite=Strict; Expires={expiration}",
 		access_token = access_token,
 		expiration = expiration,
 	);
 
-	Ok(HeaderValue::from_str(&cookie).unwrap())
+	Ok(HeaderValue::from_str(&cookie).map_err(|_| AuthError::AccessTokenParseFailure)?)
 }
 
 /// Creates an expired authentication cookie.
 ///
 /// This is used to clear the authentication cookie when the user logs out.
+/// It expires at the Unix epoch, which is the beginning of time.
 fn create_expired_authentication_cookie() -> HeaderValue {
-	HeaderValue::from_str(
-		"auth=; HttpOnly; Secure; SameSite=Strict; Expires=Thu, 01 Jan 1970 00:00:00 GMT",
-	)
-	.unwrap()
+	let cookie = "auth=; HttpOnly; Secure; SameSite=Strict; Expires=Thu, 01 Jan 1970 00:00:00 GMT";
+	HeaderValue::from_str(cookie).unwrap()
+}
+
+/// Extracts the authentication cookie from the request headers.
+///
+/// The authentication cookie is used to authenticate the user in subsequent
+/// requests. The cookie is stored in the user's browser and sent with every
+/// request.
+fn extract_authentication_cookie(headers: &HeaderMap) -> Result<String, AuthError> {
+	headers
+		.get(header::COOKIE)
+		.and_then(|cookie| cookie.to_str().ok())
+		.and_then(|cookie_str| {
+			cookie_str
+				.split(';')
+				.find(|s| s.trim().starts_with("auth="))
+		})
+		.and_then(|auth_cookie| auth_cookie.trim().strip_prefix("auth="))
+		.map(|token| token.to_string())
+		.ok_or(AuthError::MissingAuthenticationCookie)
 }
 
 /// Sends a request to the Keycloak server to generate a JWT for authenticating
@@ -642,7 +671,7 @@ pub async fn create_jwt_handler(
 		.map_err(handle_auth_error)?;
 
 	let mut headers = HeaderMap::new();
-	headers.insert(SET_COOKIE, cookie);
+	headers.insert(header::SET_COOKIE, cookie);
 
 	let resource = ResourceObject::builder()
 		.r#type("auth_token".to_string())
@@ -665,19 +694,8 @@ pub async fn refresh_jwt_handler(
 	State(state): State<Arc<KeycloakState>>,
 	headers: HeaderMap,
 ) -> Result<(HeaderMap, Json<Document<()>>), (StatusCode, Json<Document<()>>)> {
-	let access_token = headers
-		.get("Cookie")
-		.and_then(|cookie| cookie.to_str().ok())
-		.and_then(|cookie_str| {
-			cookie_str
-				.split(';')
-				.find(|s| s.trim().starts_with("auth="))
-		})
-		.and_then(|auth_cookie| auth_cookie.trim().strip_prefix("auth="))
-		.ok_or((
-			StatusCode::UNAUTHORIZED,
-			Json(Document::Single { data: None }),
-		))?;
+	let access_token = extract_authentication_cookie(&headers)
+		.map_err(handle_auth_error)?;
 
 	let access_token_claims = decode_jwt_access_token(state.clone(), &access_token)
 		.await
@@ -730,7 +748,7 @@ pub async fn refresh_jwt_handler(
 		.map_err(handle_auth_error)?;
 
 	let mut headers = HeaderMap::new();
-	headers.insert(SET_COOKIE, cookie);
+	headers.insert(header::SET_COOKIE, cookie);
 
 	let resource = ResourceObject::builder()
 		.r#type("auth_token".to_string())
@@ -754,26 +772,15 @@ pub async fn logout_jwt_handler(
 	State(state): State<Arc<KeycloakState>>,
 	headers: HeaderMap,
 ) -> Result<(HeaderMap, Json<Document<()>>), (StatusCode, Json<Document<()>>)> {
-	let access_token = headers
-		.get("Cookie")
-		.and_then(|cookie| cookie.to_str().ok())
-		.and_then(|cookie_str| {
-			cookie_str
-				.split(';')
-				.find(|s| s.trim().starts_with("auth="))
-		})
-		.and_then(|auth_cookie| auth_cookie.trim().strip_prefix("auth="))
-		.ok_or((
-			StatusCode::UNAUTHORIZED,
-			Json(Document::Single { data: None }),
-		))?;
-
-	// Decode the access token to get the username.
-	let access_token_claims = decode_jwt_access_token(state.clone(), access_token)
-		.await
+	// Extract the access token from the cookie.
+	let access_token = extract_authentication_cookie(&headers)
 		.map_err(handle_auth_error)?;
 
-	let username = access_token_claims.preferred_username;
+	// Decode the access token and get the username.
+	let username = decode_jwt_access_token(state.clone(), &access_token)
+		.await
+		.map_err(handle_auth_error)?
+		.preferred_username;
 
 	// Get the refresh token from the Redis cache.
 	let refresh_token = get_jwt_from_redis_cache(state.clone(), &username)
@@ -793,7 +800,7 @@ pub async fn logout_jwt_handler(
 		.map_err(handle_auth_error)?;
 
 	let mut headers = HeaderMap::new();
-	headers.insert(SET_COOKIE, create_expired_authentication_cookie());
+	headers.insert(header::SET_COOKIE, create_expired_authentication_cookie());
 
 	Ok((headers, Json(Document::Single { data: None })))
 }
@@ -809,16 +816,8 @@ pub async fn check_token_blocklist(
 	request: Request<Body>,
 	next: Next,
 ) -> Result<Response<Body>, StatusCode> {
-	let access_token = headers
-		.get("Cookie")
-		.and_then(|cookie| cookie.to_str().ok())
-		.and_then(|cookie_str| {
-			cookie_str
-				.split(';')
-				.find(|s| s.trim().starts_with("auth="))
-		})
-		.and_then(|auth_cookie| auth_cookie.trim().strip_prefix("auth="))
-		.ok_or(StatusCode::UNAUTHORIZED)?;
+	let access_token = extract_authentication_cookie(&headers)
+		.map_err(|_| StatusCode::UNAUTHORIZED)?;
 
 	let mut connection = state
 		.redis_client
