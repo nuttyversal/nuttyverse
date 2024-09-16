@@ -59,6 +59,16 @@ pub struct TokenCreationRequestAttributes {
 	password: String,
 }
 
+/// The response data from the token status endpoint.
+#[derive(Serialize)]
+pub struct TokenStatusResponseAttributes {
+	/// Whether the access token is valid.
+	is_valid: bool,
+
+	/// The username of the user.
+	username: Option<String>,
+}
+
 /// The response data from the Keycloak token endpoint (success).
 #[derive(Deserialize)]
 struct KeycloakTokenResponse {
@@ -227,7 +237,7 @@ async fn create_authentication_cookie(
 	access_token: &str,
 ) -> Result<HeaderValue, AuthError> {
 	// Parse the expiration time of the access token.
-	let expiration = decode_jwt_access_token(state, access_token)
+	let expiration = decode_jwt_access_token(state.clone(), access_token, false)
 		.await
 		.map_err(|_| AuthError::AccessTokenParseFailure)?
 		.exp
@@ -257,7 +267,7 @@ fn create_expired_authentication_cookie() -> HeaderValue {
 /// The authentication cookie is used to authenticate the user in subsequent
 /// requests. The cookie is stored in the user's browser and sent with every
 /// request.
-fn extract_authentication_cookie(headers: &HeaderMap) -> Result<String, AuthError> {
+fn extract_access_token_from_cookie(headers: &HeaderMap) -> Result<String, AuthError> {
 	headers
 		.get(header::COOKIE)
 		.and_then(|cookie| cookie.to_str().ok())
@@ -476,11 +486,12 @@ async fn fetch_jwt_decoding_keys(state: Arc<KeycloakState>) -> Result<Vec<Decodi
 async fn decode_jwt_access_token(
 	state: Arc<KeycloakState>,
 	token: &str,
+	validate_exp: bool,
 ) -> Result<AccessTokenClaims, AuthError> {
 	let decoding_keys = fetch_jwt_decoding_keys(state.clone()).await?;
 
 	let mut validation = jsonwebtoken::Validation::new(Algorithm::RS256);
-	validation.validate_exp = false;
+	validation.validate_exp = validate_exp;
 	validation.validate_aud = false;
 
 	for key in decoding_keys {
@@ -532,7 +543,7 @@ async fn store_jwt_in_redis_cache(
 		.await
 		.map_err(|_| AuthError::RedisConnectionFailure)?;
 
-	let access_token_claims = decode_jwt_access_token(state, access_token)
+	let access_token_claims = decode_jwt_access_token(state.clone(), access_token, false)
 		.await
 		.map_err(|_| AuthError::AccessTokenParseFailure)?;
 
@@ -606,7 +617,7 @@ async fn invalidate_jwt_in_redis_cache(
 
 	// Add the access tokens to a blocklist in Redis.
 	for token in access_tokens {
-		let access_token_claims = decode_jwt_access_token(state.clone(), &token)
+		let access_token_claims = decode_jwt_access_token(state.clone(), &token, false)
 			.await
 			.map_err(|_| AuthError::AccessTokenParseFailure)?;
 
@@ -631,6 +642,88 @@ async fn invalidate_jwt_in_redis_cache(
 		.map_err(|_| AuthError::RedisCacheUpdateFailure)?;
 
 	Ok(())
+}
+
+/// Checks if the access token is blocklisted.
+///
+/// When a user logs out, the access token is added to the blocklist in Redis.
+/// This function checks if the access token is in the blocklist.
+pub async fn is_blocklisted(
+	state: Arc<KeycloakState>,
+	access_token: &str,
+) -> Result<bool, AuthError> {
+	let mut connection = state
+		.redis_client
+		.get_multiplexed_tokio_connection()
+		.await
+		.map_err(|_| AuthError::RedisConnectionFailure)?;
+
+	let is_blocklisted: Option<f64> = connection
+		.zscore("navigator:blocklisted_tokens", access_token)
+		.await
+		.map_err(|_| AuthError::RedisConnectionFailure)?;
+
+	Ok(is_blocklisted.is_some())
+}
+
+/// The handler for the authentication status endpoint.
+///
+/// The request must contain the access token. The handler will return the
+/// authentication status of the user.
+pub async fn check_token_status_handler(
+	State(state): State<Arc<KeycloakState>>,
+	headers: HeaderMap,
+) -> Result<Json<Document<TokenStatusResponseAttributes>>, (StatusCode, Json<Document<()>>)> {
+	let unauthenticated_response = ResourceObject::builder()
+		.r#type("auth_token".to_string())
+		.attributes(TokenStatusResponseAttributes {
+			is_valid: false,
+			username: None,
+		})
+		.build();
+
+	match extract_access_token_from_cookie(&headers) {
+		Ok(access_token) => match decode_jwt_access_token(state.clone(), &access_token, true).await {
+			Ok(access_token_claims) => {
+				if is_blocklisted(state.clone(), &access_token)
+					.await
+					.map_err(handle_auth_error)?
+				{
+					// Access token is blocklisted. ❌
+					return Ok(Json(Document::Single {
+						data: Some(unauthenticated_response),
+					}));
+				}
+
+				// Access token is valid. ✅
+				return Ok(Json(Document::Single {
+					data: Some(
+						ResourceObject::builder()
+							.r#type("auth_token".to_string())
+							.attributes(TokenStatusResponseAttributes {
+								is_valid: true,
+								username: Some(access_token_claims.preferred_username),
+							})
+							.build(),
+					),
+				}));
+			}
+
+			Err(_) => {
+				// Access token is invalid. ❌
+				return Ok(Json(Document::Single {
+					data: Some(unauthenticated_response),
+				}));
+			}
+		},
+
+		Err(_) => {
+			// Access token is not in the cookie. ❌
+			return Ok(Json(Document::Single {
+				data: Some(unauthenticated_response),
+			}));
+		}
+	}
 }
 
 /// The handler for the JWT creation endpoint.
@@ -694,10 +787,9 @@ pub async fn refresh_jwt_handler(
 	State(state): State<Arc<KeycloakState>>,
 	headers: HeaderMap,
 ) -> Result<(HeaderMap, Json<Document<()>>), (StatusCode, Json<Document<()>>)> {
-	let access_token = extract_authentication_cookie(&headers)
-		.map_err(handle_auth_error)?;
+	let access_token = extract_access_token_from_cookie(&headers).map_err(handle_auth_error)?;
 
-	let access_token_claims = decode_jwt_access_token(state.clone(), &access_token)
+	let access_token_claims = decode_jwt_access_token(state.clone(), &access_token, false)
 		.await
 		.map_err(handle_auth_error)?;
 
@@ -773,11 +865,10 @@ pub async fn logout_jwt_handler(
 	headers: HeaderMap,
 ) -> Result<(HeaderMap, Json<Document<()>>), (StatusCode, Json<Document<()>>)> {
 	// Extract the access token from the cookie.
-	let access_token = extract_authentication_cookie(&headers)
-		.map_err(handle_auth_error)?;
+	let access_token = extract_access_token_from_cookie(&headers).map_err(handle_auth_error)?;
 
 	// Decode the access token and get the username.
-	let username = decode_jwt_access_token(state.clone(), &access_token)
+	let username = decode_jwt_access_token(state.clone(), &access_token, false)
 		.await
 		.map_err(handle_auth_error)?
 		.preferred_username;
@@ -816,21 +907,13 @@ pub async fn check_token_blocklist(
 	request: Request<Body>,
 	next: Next,
 ) -> Result<Response<Body>, StatusCode> {
-	let access_token = extract_authentication_cookie(&headers)
-		.map_err(|_| StatusCode::UNAUTHORIZED)?;
+	let access_token =
+		extract_access_token_from_cookie(&headers).map_err(|_| StatusCode::UNAUTHORIZED)?;
 
-	let mut connection = state
-		.redis_client
-		.get_multiplexed_tokio_connection()
+	if is_blocklisted(state.clone(), &access_token)
 		.await
-		.map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
-
-	let is_blocklisted: Option<f64> = connection
-		.zscore("navigator:blocklisted_tokens", access_token)
-		.await
-		.map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
-
-	if is_blocklisted.is_some() {
+		.map_err(|_| StatusCode::UNAUTHORIZED)?
+	{
 		Err(StatusCode::UNAUTHORIZED)
 	} else {
 		Ok(next.run(request).await)
@@ -861,7 +944,7 @@ pub fn require_roles(
 			&self,
 			request: &'a axum::extract::Request,
 		) -> Result<ExtractedToken<'a>, axum_keycloak_auth::error::AuthError> {
-			extract_authentication_cookie(request.headers())
+			extract_access_token_from_cookie(request.headers())
 				.map_err(|_| axum_keycloak_auth::error::AuthError::MissingAuthorizationHeader)
 				.map(|token| Cow::Owned(token.to_string()))
 		}

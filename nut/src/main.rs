@@ -3,8 +3,8 @@ mod auth;
 mod config;
 
 use auth::{
-	check_token_blocklist, create_jwt_handler, logout_jwt_handler, refresh_jwt_handler,
-	require_roles,
+	check_token_blocklist, check_token_status_handler, create_jwt_handler, logout_jwt_handler,
+	refresh_jwt_handler, require_roles,
 };
 use config::Config;
 
@@ -62,6 +62,10 @@ async fn main() -> Result<()> {
 
 	let auth_service = Router::new()
 		.route("/api/navigator/token", routing::post(create_jwt_handler))
+		.route(
+			"/api/navigator/token/status",
+			routing::get(check_token_status_handler),
+		)
 		.route(
 			"/api/navigator/token/refresh",
 			routing::post(refresh_jwt_handler),
