@@ -1,0 +1,16 @@
+@use "sass:map";
+
+.container {
+	width: 550px;
+	padding: map.get(styles.$spacing, "4");
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: map.get(styles.$spacing, "2");
+
+	input {
+		width: 100%;
+	}
+}

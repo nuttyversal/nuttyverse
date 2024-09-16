@@ -1,0 +1,52 @@
+@use "sass:map";
+@use "spacing.variables" as *;
+@use "typography.variables" as *;
+
+label {
+	color: var(--gray-11);
+	font-feature-settings: 'smcp' 1, 'c2sc' 1 !important;
+	font-variant: all-small-caps !important;
+	font-variant-caps: all-small-caps !important;
+	letter-spacing: 0.5px;
+	padding-left: map.get($spacing, "2");
+}
+
+input {
+	color: var(--gray-12);
+	background: var(--gray-01);
+	padding-top: map.get($spacing, "0.5");
+	padding-bottom: map.get($spacing, "0.5");
+	padding-left: map.get($spacing, "2");
+	padding-right: map.get($spacing, "2");
+
+	border: 2px solid var(--gray-06);
+	border-radius: map.get($spacing, "1");
+
+	font-family: "Nutty Nure", sans-serif;
+	font-weight: 500 !important;
+	font-feature-settings: 'smcp' 1, 'c2sc' 1 !important;
+	font-variant: all-small-caps !important;
+	font-variant-caps: all-small-caps !important;
+	letter-spacing: 0.5px;
+
+	&::placeholder {
+		color: var(--gray-11);
+	}
+
+	&:hover {
+		border-color: var(--gray-08);
+	}
+
+	&:focus {
+		border-color: var(--gray-12);
+	}
+
+	&[type="password"] {
+		font-family: "Nutty PragmataPro Liga", monospace;
+		letter-spacing: 0.5px !important;
+	}
+
+	&[type="password"]::placeholder {
+		font-family: "Nutty Nure", sans-serif;
+	}
+}
