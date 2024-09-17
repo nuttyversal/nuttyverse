@@ -11,8 +11,8 @@
 .button {
 	transition: transform 0.2s ease-out;
 	cursor: pointer;
-	background: none;
-	border: none;
+	background: unset;
+	border: unset;
 	border-top-left-radius: map.get(styles.$spacing, "1");
 	border-top-right-radius: map.get(styles.$spacing, "1");
 	margin: 0;
@@ -21,6 +21,11 @@
 	// Tuck the button underneath the header by a
 	// tiny bit to ensure there is no gap.
 	transform: translateY(map-get(styles.$spacing, "px"));
+
+	&:hover {
+		background: unset;
+		border: unset;
+	}
 
 	&:active {
 		transform: translateY(map-get(styles.$spacing, "1"));

@@ -12,6 +12,8 @@ const Login = () => {
 				<label for="password">Password</label>
 				<input type="password" />
 			</div>
+
+			<button class={styles.button}>Login</button>
 		</div>
 	);
 };

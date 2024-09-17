@@ -14,3 +14,8 @@
 		width: 100%;
 	}
 }
+
+.button {
+	width: 100%;
+	margin-top: map.get(styles.$spacing, "2");
+}

@@ -50,3 +50,41 @@ input {
 		font-family: "Nutty Nure", sans-serif;
 	}
 }
+
+button {
+	cursor: pointer;
+
+	color: var(--gray-12);
+	background: var(--gray-03);
+
+	padding-top: map.get($spacing, "1.5");
+	padding-bottom: map.get($spacing, "1.5");
+	padding-left: map.get($spacing, "2");
+	padding-right: map.get($spacing, "2");
+
+	border: 2px solid var(--gray-07);
+	border-radius: map.get($spacing, "1");
+
+	font-family: "Nutty Nure", sans-serif;
+	font-weight: 500 !important;
+	font-feature-settings: 'smcp' 1, 'c2sc' 1 !important;
+	font-variant: all-small-caps !important;
+	font-variant-caps: all-small-caps !important;
+	letter-spacing: 0.5px;
+	text-align: center;
+
+	transition: letter-spacing 0.4s ease;
+
+	&:active {
+		letter-spacing: 4px !important;
+	}
+
+	&:hover {
+		background: var(--gray-04);
+		border-color: var(--gray-08);
+	}
+
+	&:focus {
+		border-color: var(--gray-08);
+	}
+}
