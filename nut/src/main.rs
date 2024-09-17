@@ -21,9 +21,11 @@ use axum_keycloak_auth::{
 	instance::{KeycloakAuthInstance, KeycloakConfig},
 	Url,
 };
+use http::{HeaderName, HeaderValue, Method};
 use std::{convert::Infallible, sync::Arc};
 use tokio::net::TcpListener;
 use tokio::signal::unix::{signal, SignalKind};
+use tower_http::cors::CorsLayer;
 use tower_http::services::{ServeDir, ServeFile};
 
 #[tokio::main]
@@ -92,10 +94,39 @@ async fn main() -> Result<()> {
 
 	let frontend_service = Router::new().nest_service("/", routing::get_service(frontend));
 
+	let cors_layer = {
+		let allowed_origin = if cfg!(debug_assertions) {
+			"http://localhost:3001".parse::<HeaderValue>().unwrap()
+		} else {
+			"https://nuttyver.se".parse::<HeaderValue>().unwrap()
+		};
+
+		let allowed_methods = [
+			Method::GET,
+			Method::POST,
+			Method::PUT,
+			Method::PATCH,
+			Method::DELETE,
+		];
+
+		let allowed_headers = [
+			header::CONTENT_TYPE,
+			HeaderName::from_static("b3"),
+			HeaderName::from_static("traceparent"),
+		];
+
+		CorsLayer::new()
+			.allow_origin(allowed_origin)
+			.allow_methods(allowed_methods)
+			.allow_headers(allowed_headers)
+			.allow_credentials(true)
+	};
+
 	let app = auth_service
 		.merge(fonts_service)
 		.merge(protected_service)
-		.merge(frontend_service);
+		.merge(frontend_service)
+		.layer(cors_layer);
 
 	// Spawn background tasks.
 	tokio::spawn(async move {
