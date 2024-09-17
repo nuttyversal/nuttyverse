@@ -5,16 +5,17 @@
 		"moduleResolution": "nodenext",
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
+		"exactOptionalPropertyTypes": true,
 		"strict": true,
 		"skipLibCheck": true,
-		"jsx": "react-jsx",
+		"jsx": "react-jsx"
 	},
 	"references": [
 		{
-			"path": "./blocks",
+			"path": "./blocks"
 		},
 		{
-			"path": "./city",
-		},
-	],
+			"path": "./city"
+		}
+	]
 }
