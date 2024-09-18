@@ -65,6 +65,9 @@ pub struct TokenStatusResponseAttributes {
 	/// Whether the access token is valid.
 	is_valid: bool,
 
+	/// The access token expiration time.
+	expires_at: Option<u64>,
+
 	/// The username of the user.
 	username: Option<String>,
 }
@@ -678,6 +681,7 @@ pub async fn check_token_status_handler(
 		.r#type("auth_token".to_string())
 		.attributes(TokenStatusResponseAttributes {
 			is_valid: false,
+			expires_at: None,
 			username: None,
 		})
 		.build();
@@ -702,6 +706,7 @@ pub async fn check_token_status_handler(
 							.r#type("auth_token".to_string())
 							.attributes(TokenStatusResponseAttributes {
 								is_valid: true,
+								expires_at: Some(access_token_claims.exp),
 								username: Some(access_token_claims.preferred_username),
 							})
 							.build(),
@@ -734,7 +739,7 @@ pub async fn check_token_status_handler(
 pub async fn create_jwt_handler(
 	State(state): State<Arc<KeycloakState>>,
 	Json(payload): Json<Document<TokenCreationRequestAttributes>>,
-) -> Result<(HeaderMap, Json<Document<()>>), (StatusCode, Json<Document<()>>)> {
+) -> Result<(HeaderMap, Json<Document<TokenStatusResponseAttributes>>), (StatusCode, Json<Document<()>>)> {
 	let username = payload
 		.extract_resource_object()
 		.map(|resource| &resource.attributes.username)
@@ -748,6 +753,10 @@ pub async fn create_jwt_handler(
 		.map_err(handle_auth_error)?;
 
 	let token_response = generate_jwt_with_password(state.clone(), username, password)
+		.await
+		.map_err(handle_auth_error)?;
+
+	let access_token_claims = decode_jwt_access_token(state.clone(), &token_response.access_token, true)
 		.await
 		.map_err(handle_auth_error)?;
 
@@ -768,7 +777,11 @@ pub async fn create_jwt_handler(
 
 	let resource = ResourceObject::builder()
 		.r#type("auth_token".to_string())
-		.attributes(())
+		.attributes(TokenStatusResponseAttributes {
+			is_valid: true,
+			expires_at: Some(access_token_claims.exp),
+			username: Some(access_token_claims.preferred_username),
+		})
 		.build();
 
 	Ok((

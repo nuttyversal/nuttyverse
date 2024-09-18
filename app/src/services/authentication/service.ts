@@ -1,8 +1,8 @@
 import { HttpClient, HttpClientRequest } from "@effect/platform";
-import { HttpClientResponse } from "@effect/platform/HttpClientResponse";
 import { HttpClientError } from "@effect/platform/HttpClientError";
 import { HttpBodyError } from "@effect/platform/HttpBody";
-import { Context, Effect } from "effect";
+import { ParseError } from "@effect/schema/ParseResult";
+import { Context, Effect, Option } from "effect";
 import { Scope } from "effect/Scope";
 import { Accessor, createMemo } from "solid-js";
 import { createActor, SnapshotFrom } from "xstate";
@@ -24,13 +24,13 @@ class AuthenticationService extends Context.Tag("AuthenticationService")<
 		readonly login: (
 			attributes: Login.RequestAttributes,
 		) => Effect.Effect<
-			HttpClientResponse,
-			HttpClientError | HttpBodyError,
+			Login.ResponseBody,
+			HttpClientError | HttpBodyError | ParseError,
 			HttpService | Scope | HttpClient.HttpClient.Service
 		>;
 
 		readonly logout: () => Effect.Effect<
-			HttpClientResponse,
+			void,
 			HttpClientError,
 			HttpService | Scope | HttpClient.HttpClient.Service
 		>;
@@ -70,8 +70,21 @@ function createAuthenticationService(): Context.Tag.Service<AuthenticationServic
 				.pipe(requestBodyJson);
 
 			const response = yield* httpClient.execute(request);
+			const responseJson = yield* response.json;
+			const responseBody = yield* Login.decodeResponseBody(responseJson);
 
-			if (response.status === 200) {
+			if (
+				response.status === 200 &&
+				"data" in responseBody &&
+				responseBody.data.attributes.is_valid
+			) {
+				const session = Option.some({
+					username: responseBody.data.attributes.username,
+					expiresAt: new Date(responseBody.data.attributes.expires_at),
+				});
+
+				setAuthenticationStore("session", session);
+
 				stateMachine.send({
 					type: "LOGIN_SUCCESS",
 				});
@@ -81,7 +94,7 @@ function createAuthenticationService(): Context.Tag.Service<AuthenticationServic
 				});
 			}
 
-			return response;
+			return responseBody;
 		});
 	};
 
@@ -110,8 +123,6 @@ function createAuthenticationService(): Context.Tag.Service<AuthenticationServic
 					type: "LOGOUT_FAILURE",
 				});
 			}
-
-			return response;
 		});
 	};
 

@@ -42,6 +42,7 @@ impl<T> Document<T> {
 #[derive(Serialize, Deserialize, TypedBuilder)]
 pub struct ResourceObject<T> {
 	/// A unique identifier for the resource object.
+	#[serde(skip_serializing_if = "Option::is_none")]
 	#[builder(default, setter(strip_option))]
 	pub id: Option<String>,
 

@@ -3,8 +3,8 @@ import { createStore } from "solid-js/store";
 import { useCarmackClick } from "~/components/hooks";
 import { useAuthentication } from "~/services/authentication";
 import { HttpService, useHttp } from "~/services/http";
-import styles from "./Login.module.scss";
 import { customFetchLayer } from "~/utils/api";
+import styles from "./Login.module.scss";
 
 const Login = () => {
 	const [fields, setFields] = createStore({
@@ -33,12 +33,10 @@ const Login = () => {
 
 	const onLogin = async () => {
 		await Effect.runPromise(loginEffect);
-		console.log("Logged in.");
 	};
 
 	const onLogout = async () => {
 		await Effect.runPromise(logoutEffect);
-		console.log("Logged out.");
 	};
 
 	const {
@@ -59,6 +57,7 @@ const Login = () => {
 					id="username"
 					type="text"
 					onInput={(e) => setFields("username", e.target.value)}
+					placeholder="navigator"
 					required
 				/>
 			</div>
@@ -68,9 +67,12 @@ const Login = () => {
 				<input
 					type="password"
 					onInput={(e) => setFields("password", e.target.value)}
+					placeholder="alohomora"
 					required
 				/>
 			</div>
+
+			{authenticationService.state()?.value}
 
 			<button
 				class={styles.button}

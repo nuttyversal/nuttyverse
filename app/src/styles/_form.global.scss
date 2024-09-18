@@ -41,6 +41,10 @@ input {
 		border-color: var(--gray-12);
 	}
 
+	&::placeholder {
+		color: var(--gray-10);
+	}
+
 	&[type="password"] {
 		font-family: "Nutty PragmataPro Liga", monospace;
 		letter-spacing: 0.5px !important;

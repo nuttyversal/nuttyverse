@@ -9,7 +9,7 @@ import { authenticationMachine } from "./machine";
  */
 type AuthenticationSession = {
 	username: string;
-	accessTokenExpiresAt: Date;
+	expiresAt: Date;
 };
 
 /**

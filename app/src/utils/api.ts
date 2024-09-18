@@ -46,27 +46,27 @@ const ErrorObject = Schema.Struct({
 	/**
 	 * A unique identifier for this particular occurrence of the problem.
 	 */
-	id: Schema.Option(Schema.String),
+	id: Schema.optional(Schema.String),
 
 	/**
 	 * The HTTP status code applicable to this problem, expressed as a string value.
 	 */
-	status: Schema.Option(Schema.String),
+	status: Schema.optional(Schema.String),
 
 	/**
 	 * An application-specific error code, expressed as a string value.
 	 */
-	code: Schema.Option(Schema.String),
+	code: Schema.optional(Schema.String),
 
 	/**
 	 * A short, human-readable summary of the problem.
 	 */
-	title: Schema.Option(Schema.String),
+	title: Schema.optional(Schema.String),
 
 	/**
 	 * A human-readable explanation specific to this occurrence of the problem.
 	 */
-	detail: Schema.Option(Schema.String),
+	detail: Schema.optional(Schema.String),
 });
 
 /**
