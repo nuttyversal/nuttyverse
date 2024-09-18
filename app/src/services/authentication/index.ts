@@ -1,3 +1,3 @@
-export * from "./api";
 export * from "./hook";
+export * from "./schema";
 export * from "./service";

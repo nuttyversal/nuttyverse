@@ -5,7 +5,7 @@ import { HttpBodyError } from "@effect/platform/HttpBody";
 import { Context, Effect } from "effect";
 import { Scope } from "effect/Scope";
 import { HttpService } from "~/services/http";
-import { LoginRequestAttributes, loginRequestBody } from "./api";
+import { Login } from "./schema";
 
 /**
  * A service that manages the authentication state of the application.
@@ -14,7 +14,7 @@ class AuthenticationService extends Context.Tag("AuthenticationService")<
 	AuthenticationService,
 	{
 		readonly login: (
-			attributes: LoginRequestAttributes,
+			attributes: Login.RequestAttributes,
 		) => Effect.Effect<
 			HttpClientResponse,
 			HttpClientError | HttpBodyError,
@@ -33,12 +33,12 @@ class AuthenticationService extends Context.Tag("AuthenticationService")<
  * A service that manages the authentication state of the application.
  */
 function createAuthenticationService(): Context.Tag.Service<AuthenticationService> {
-	const login = (attributes: LoginRequestAttributes) => {
+	const login = (attributes: Login.RequestAttributes) => {
 		return Effect.gen(function* () {
 			const httpService = yield* HttpService;
 			const httpClient = yield* httpService.httpClient;
 
-			const requestBody = loginRequestBody(attributes);
+			const requestBody = Login.requestBody(attributes);
 			const requestBodyJson = HttpClientRequest.bodyJson(requestBody);
 
 			const request = yield* httpService
