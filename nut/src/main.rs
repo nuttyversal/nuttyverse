@@ -96,7 +96,7 @@ async fn main() -> Result<()> {
 
 	let cors_layer = {
 		let allowed_origin = if cfg!(debug_assertions) {
-			"http://localhost:3001".parse::<HeaderValue>().unwrap()
+			"http://localhost:3000".parse::<HeaderValue>().unwrap()
 		} else {
 			"https://nuttyver.se".parse::<HeaderValue>().unwrap()
 		};

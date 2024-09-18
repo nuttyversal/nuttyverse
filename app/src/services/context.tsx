@@ -1,6 +1,16 @@
 import { Context } from "effect";
 import { ParentComponent, createContext } from "solid-js";
 import {
+	AuthenticationService,
+	createAuthenticationService,
+} from "./authentication";
+import { HttpService, createHttpService } from "./http";
+import {
+	LocalStorageService,
+	createLocalStorageService,
+	createMockLocalStorageService,
+} from "./local-storage";
+import {
 	ThemeService,
 	createThemeService,
 	createMockThemeService,
@@ -10,17 +20,14 @@ import {
 	createTransitionService,
 	createMockTransitionService,
 } from "./transition";
-import {
-	LocalStorageService,
-	createLocalStorageService,
-	createMockLocalStorageService,
-} from "./local-storage";
 
 /**
  * An exhaustive list of service implementations that can be provided
  * to components in the application.
  */
 type ServiceContextType = {
+	authenticationService: Context.Tag.Service<AuthenticationService>;
+	httpService: Context.Tag.Service<HttpService>;
 	localStorageService: Context.Tag.Service<LocalStorageService>;
 	themeService: Context.Tag.Service<ThemeService>;
 	transitionService: Context.Tag.Service<TransitionService>;
@@ -40,7 +47,11 @@ type Props = {
  * production-level service implementations to components.
  */
 const ServiceProvider: ParentComponent<Props> = (props) => {
+	const baseUrl = "http://localhost:4000/api";
+
 	const services = {
+		authenticationService: createAuthenticationService(),
+		httpService: createHttpService(baseUrl),
 		localStorageService: createLocalStorageService(),
 		themeService: createThemeService(),
 		transitionService: createTransitionService(),
@@ -60,6 +71,8 @@ const ServiceProvider: ParentComponent<Props> = (props) => {
  */
 const MockServiceProvider: ParentComponent<Props> = (props) => {
 	const services = {
+		authenticationService: createAuthenticationService(),
+		httpService: createHttpService(),
 		localStorageService: createMockLocalStorageService(),
 		themeService: createMockThemeService(),
 		transitionService: createMockTransitionService(),

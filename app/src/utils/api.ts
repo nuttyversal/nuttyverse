@@ -1,17 +1,27 @@
-import { Cookies, HttpClient, HttpClientRequest } from "@effect/platform";
+import { FetchHttpClient, HttpClientRequest } from "@effect/platform";
 import { Options } from "@effect/platform/HttpClientRequest";
 import { Schema } from "@effect/schema";
-import { Effect, Ref, pipe } from "effect";
+import { Layer, pipe } from "effect";
+
+const customFetchLayer = FetchHttpClient.layer.pipe(
+	Layer.provide(
+		Layer.succeed(FetchHttpClient.RequestInit, {
+			credentials: "include",
+		}),
+	),
+);
 
 /**
  * Represents a resource object in JSON:API.
  */
-const ResourceObject = <A, I, R>(Attributes: Schema.Schema<A, I, R>) => {
+const ResourceObject = <Type, Encoded, Context>(
+	Attributes: Schema.Schema<Type, Encoded, Context>,
+) => {
 	return Schema.Struct({
 		/**
 		 * A unique identifier for the resource object.
 		 */
-		id: Schema.String,
+		id: Schema.optional(Schema.String),
 
 		/**
 		 * Describes resource objects that share common attributes and relationships.
@@ -24,6 +34,10 @@ const ResourceObject = <A, I, R>(Attributes: Schema.Schema<A, I, R>) => {
 		attributes: Attributes,
 	});
 };
+
+type ResourceObject<Type, Encoded = Type, Context = never> = Schema.Schema.Type<
+	ReturnType<typeof ResourceObject<Type, Encoded, Context>>
+>;
 
 /**
  * Represents an error object in JSON:API.
@@ -58,24 +72,60 @@ const ErrorObject = Schema.Struct({
 /**
  * Represents a document with a single resource object in JSON:API.
  */
-const DocumentWithSingleResourceObject = <A, I, R>(
-	Attributes: Schema.Schema<A, I, R>,
+const DocumentWithSingleResourceObject = <Type, Encoded, Context>(
+	Attributes: Schema.Schema<Type, Encoded, Context>,
 ) => {
 	return Schema.Struct({
 		data: ResourceObject(Attributes),
 	});
 };
 
+type DocumentWithSingleResourceObject<
+	Type,
+	Encoded = Type,
+	Context = never,
+> = Schema.Schema.Type<
+	ReturnType<typeof DocumentWithSingleResourceObject<Type, Encoded, Context>>
+>;
+
+/**
+ * Constructs a `DocumentWithSingleResourceObject`.
+ */
+const documentWithSingleResourceObject = <Type, Encoded, Context>(
+	resourceObject: ResourceObject<Type, Encoded, Context>,
+): DocumentWithSingleResourceObject<Type, Encoded, Context> => ({
+	data: resourceObject,
+});
+
 /**
  * Represents a document with multiple resource objects in JSON:API.
  */
-const DocumentWithMultipleResourceObjects = <A, I, R>(
-	Attributes: Schema.Schema<A, I, R>,
+const DocumentWithMultipleResourceObjects = <Type, Encoded, Context>(
+	Attributes: Schema.Schema<Type, Encoded, Context>,
 ) => {
 	return Schema.Struct({
 		data: Schema.Array(ResourceObject(Attributes)),
 	});
 };
+
+type DocumentWithMultipleResourceObjects<
+	Type,
+	Encoded = Type,
+	Context = never,
+> = Schema.Schema.Type<
+	ReturnType<
+		typeof DocumentWithMultipleResourceObjects<Type, Encoded, Context>
+	>
+>;
+
+/**
+ * Constructs a `DocumentWithMultipleResourceObjects`.
+ */
+const documentWithMultipleResourceObjects = <Type, Encoded, Context>(
+	resourceObjects: ResourceObject<Type, Encoded, Context>[],
+): DocumentWithMultipleResourceObjects<Type, Encoded, Context> => ({
+	data: resourceObjects,
+});
 
 /**
  * Represents a document with errors in JSON:API.
@@ -87,23 +137,15 @@ const DocumentWithErrors = Schema.Struct({
 /**
  * Represents a JSON:API document.
  */
-const Document = <A, I, R>(Attributes: Schema.Schema<A, I, R>) => {
+const Document = <Type, Encoded, Context>(
+	Attributes: Schema.Schema<Type, Encoded, Context>,
+) => {
 	return Schema.Union(
 		DocumentWithSingleResourceObject(Attributes),
 		DocumentWithMultipleResourceObjects(Attributes),
 		DocumentWithErrors,
 	);
 };
-
-/**
- * Constructs an HTTP client with a cookie jar.
- */
-const createHttpClient = Effect.gen(function* () {
-	const cookiesRef = yield* Ref.make(Cookies.empty);
-	const httpClient = yield* HttpClient.HttpClient;
-
-	return pipe(httpClient, HttpClient.withCookiesRef(cookiesRef));
-});
 
 /**
  * Constructs an HTTP request.
@@ -120,12 +162,14 @@ const createHttpRequest =
 	};
 
 export {
+	customFetchLayer,
 	ResourceObject,
 	ErrorObject,
 	DocumentWithSingleResourceObject,
+	documentWithSingleResourceObject,
 	DocumentWithMultipleResourceObjects,
+	documentWithMultipleResourceObjects,
 	DocumentWithErrors,
 	Document,
-	createHttpClient,
 	createHttpRequest,
 };
