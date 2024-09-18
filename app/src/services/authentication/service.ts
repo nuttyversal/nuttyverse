@@ -95,7 +95,15 @@ function createAuthenticationService(): Context.Tag.Service<AuthenticationServic
 			}
 
 			return responseBody;
-		});
+		}).pipe(
+			Effect.catchAll((error) => {
+				stateMachine.send({
+					type: "LOGIN_FAILURE",
+				});
+
+				return Effect.succeed(error);
+			}),
+		);
 	};
 
 	const logout = () => {
@@ -123,7 +131,15 @@ function createAuthenticationService(): Context.Tag.Service<AuthenticationServic
 					type: "LOGOUT_FAILURE",
 				});
 			}
-		});
+		}).pipe(
+			Effect.catchAll((error) => {
+				stateMachine.send({
+					type: "LOGOUT_FAILURE",
+				});
+
+				return Effect.succeed(error);
+			}),
+		);
 	};
 
 	stateMachine.start();
