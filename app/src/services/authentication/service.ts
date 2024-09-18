@@ -96,7 +96,7 @@ function createAuthenticationService(): Context.Tag.Service<AuthenticationServic
 
 			return responseBody;
 		}).pipe(
-			Effect.catchAll((error) => {
+			Effect.tapError((error) => {
 				stateMachine.send({
 					type: "LOGIN_FAILURE",
 				});
@@ -132,9 +132,9 @@ function createAuthenticationService(): Context.Tag.Service<AuthenticationServic
 				});
 			}
 		}).pipe(
-			Effect.catchAll((error) => {
+			Effect.tapError((error) => {
 				stateMachine.send({
-					type: "LOGOUT_FAILURE",
+					type: "LOGIN_FAILURE",
 				});
 
 				return Effect.succeed(error);
