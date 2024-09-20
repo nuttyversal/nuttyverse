@@ -23,6 +23,7 @@
 		"@replit/codemirror-vim": "^6.2.1",
 		"@solidjs/router": "^0.14.1",
 		"codemirror": "^6.0.1",
+		"date-fns": "^3.6.0",
 		"effect": "^3.8.0",
 		"gsap": "^3.12.5",
 		"highlight.js": "^11.10.0",
