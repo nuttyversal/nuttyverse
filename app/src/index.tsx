@@ -2,6 +2,8 @@ import { Effect, Option } from "effect";
 import { render } from "solid-js/web";
 import { NuttyverseRouter } from "~/pages/router";
 import { ServiceProvider } from "~/services/context";
+import { NuttyverseLiveRuntime } from "~/services/layers";
+import { ThemeService } from "~/services/theme";
 import "~/styles/global.scss";
 
 /**
@@ -82,9 +84,11 @@ const renderApplication = (root: HTMLElement) => {
  * This effect queries the root element and mounts the application to it.
  */
 const main = Effect.gen(function* () {
+	const themeService = yield* ThemeService;
 	const root = yield* getRootElement;
 	const loading = yield* getLoadingElement;
 
+	yield* themeService.hydrateTheme;
 	yield* renderApplication(root);
 	yield* hideLoadingState(loading);
 });
@@ -92,7 +96,7 @@ const main = Effect.gen(function* () {
 // Run the main effect and log any errors to the console.
 // @ts-expect-error import.meta is available.
 if (import.meta.env.MODE !== "test") {
-	Effect.runPromise(main).catch((error) =>
+	NuttyverseLiveRuntime.runPromise(main).catch((error) =>
 		console.error(`Application failed to start: ${error}.`),
 	);
 }
