@@ -1,6 +1,7 @@
 import { Effect } from "effect";
 import { render } from "@solidjs/testing-library";
 import { beforeEach, describe, expect, it } from "vitest";
+import { NuttyverseLiveRuntime } from "~/services/layers";
 import { getRootElement, main } from "./index";
 
 describe("Application startup", () => {
@@ -11,7 +12,7 @@ describe("Application startup", () => {
 			</div>
 		));
 
-		await Effect.runPromise(main);
+		await NuttyverseLiveRuntime.runPromise(main);
 	});
 
 	describe("getRootElement", () => {
