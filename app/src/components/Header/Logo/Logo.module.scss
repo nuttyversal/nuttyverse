@@ -11,10 +11,12 @@
 .button {
 	width: 22rem;
 	cursor: pointer;
-	background: none;
-	border: none;
+	background: unset;
+	border: unset;
 	border-top-left-radius: map.get(styles.$spacing, "1");
 	border-top-right-radius: map.get(styles.$spacing, "1");
+	border-bottom-left-radius: map.get(styles.$spacing, "0");
+	border-bottom-right-radius: map.get(styles.$spacing, "0");
 	margin: 0;
 	padding: 0;
 	transition: transform 0.2s ease-out;
