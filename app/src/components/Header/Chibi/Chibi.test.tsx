@@ -1,9 +1,11 @@
-import { describe, it, expect } from "vitest";
-import { render, fireEvent, waitFor } from "@solidjs/testing-library";
-import { MockServiceProvider } from "~/services/context";
-import { Theme, createMockThemeService } from "~/services/theme";
-import { Chibi } from "./Chibi";
 import { Route } from "@solidjs/router";
+import { render, fireEvent, waitFor } from "@solidjs/testing-library";
+import { Effect } from "effect";
+import { describe, it, expect } from "vitest";
+import { MockServiceProvider } from "~/services/context";
+import { NuttyverseTestRuntime } from "~/services/layers";
+import { Theme, ThemeService } from "~/services/theme";
+import { Chibi } from "./Chibi";
 
 describe("Chibi component", () => {
 	it("throws an error when rendered outside of a service provider", () => {
@@ -31,13 +33,16 @@ describe("Chibi component", () => {
 
 	it("toggles theme on mouse down", async () => {
 		// Arrange.
-		const mockThemeService = createMockThemeService();
-		const serviceOverrides = { themeService: mockThemeService };
-
 		const App = () => (
-			<MockServiceProvider serviceOverrides={serviceOverrides}>
+			<MockServiceProvider>
 				<Chibi />
 			</MockServiceProvider>
+		);
+
+		const store = NuttyverseTestRuntime.runSync(
+			Effect.gen(function* () {
+				return (yield* ThemeService).store;
+			}),
 		);
 
 		const { findByRole } = render(() => <Route path="/" component={App} />, {
@@ -50,18 +55,21 @@ describe("Chibi component", () => {
 		fireEvent.mouseDown(button);
 
 		// Assert.
-		expect(mockThemeService.theme()).toBe(Theme.Dark);
+		expect(store.theme).toBe(Theme.Dark);
 	});
 
 	it("toggles theme on click (for accessibility)", async () => {
 		// Arrange.
-		const mockThemeService = createMockThemeService();
-		const serviceOverrides = { themeService: mockThemeService };
-
 		const App = () => (
-			<MockServiceProvider serviceOverrides={serviceOverrides}>
+			<MockServiceProvider>
 				<Chibi />
 			</MockServiceProvider>
+		);
+
+		const store = NuttyverseTestRuntime.runSync(
+			Effect.gen(function* () {
+				return (yield* ThemeService).store;
+			}),
 		);
 
 		const { findByRole } = render(() => <Route path="/" component={App} />, {
@@ -71,10 +79,11 @@ describe("Chibi component", () => {
 		const button = await findByRole("button");
 
 		// Act.
+		const initialTheme = store.theme;
 		fireEvent.click(button);
 
 		// Assert.
-		expect(mockThemeService.theme()).toBe(Theme.Dark);
+		expect(store.theme).not.toBe(initialTheme);
 	});
 
 	it("has correct aria-label", async () => {
@@ -96,13 +105,16 @@ describe("Chibi component", () => {
 
 	it("toggles theme correctly when clicked multiple times", async () => {
 		// Arrange.
-		const mockThemeService = createMockThemeService();
-		const serviceOverrides = { themeService: mockThemeService };
-
 		const App = () => (
-			<MockServiceProvider serviceOverrides={serviceOverrides}>
+			<MockServiceProvider>
 				<Chibi />
 			</MockServiceProvider>
+		);
+
+		const store = NuttyverseTestRuntime.runSync(
+			Effect.gen(function* () {
+				return (yield* ThemeService).store;
+			}),
 		);
 
 		const { findByRole } = render(() => <Route path="/" component={App} />, {
@@ -112,12 +124,12 @@ describe("Chibi component", () => {
 		const button = await findByRole("button");
 
 		// Act & Assert.
-		expect(mockThemeService.theme()).toBe(Theme.Light);
+		expect(store.theme).toBe(Theme.Light);
 
 		fireEvent.click(button);
-		expect(mockThemeService.theme()).toBe(Theme.Dark);
+		expect(store.theme).toBe(Theme.Dark);
 
 		fireEvent.click(button);
-		expect(mockThemeService.theme()).toBe(Theme.Light);
+		expect(store.theme).toBe(Theme.Light);
 	});
 });

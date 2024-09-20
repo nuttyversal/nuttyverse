@@ -1,4 +1,4 @@
-import { Context, Effect } from "effect";
+import { Context, Effect, Layer } from "effect";
 import { Accessor, createMemo } from "solid-js";
 import { SnapshotFrom } from "xstate";
 import { initialize, mounting, routing } from "./animation";
@@ -146,88 +146,90 @@ async function runRoutingAnimation() {
 	});
 }
 
-function createTransitionService(): Context.Tag.Service<TransitionService> {
-	transitionStore.stateMachine.start();
-
-	transitionStore.stateMachine.subscribe((snapshot) => {
-		if (
-			JSON.stringify(snapshot) ===
-			JSON.stringify(transitionStore.currentState)
-		) {
-			// No-op if state hasn't changed.
-			return;
-		}
-
-		// Update the current state.
-		setTransitionStore({
-			...transitionStore,
-			currentState: snapshot,
-		});
-
-		if (snapshot.value === "mountingAnimation") {
-			runMountingAnimation();
-		}
-
-		if (snapshot.matches({ viewChangeAnimation: "captureFirstState" })) {
-			captureFlipState();
-		}
-
-		if (snapshot.matches({ viewChangeAnimation: "captureLastState" })) {
-			runRoutingAnimation();
-		}
-	});
-
-	const transitionState = createMemo(() => {
-		return transitionStore.currentState;
-	});
-
-	const signalBeforeRouting = () => {
-		transitionStore.stateMachine.send({
-			type: "INITIATE_VIEW_CHANGE",
-		});
-	};
-
-	const signalAfterRouting = () => {
-		transitionStore.stateMachine.send({
-			type: "ROUTE_UPDATED",
-		});
-	};
-
-	return {
-		registerElement,
-		transitionState,
-		signalBeforeRouting,
-		signalAfterRouting,
-	};
-}
-
-function createMockTransitionService(): Context.Tag.Service<TransitionService> {
-	const transitionState = createMemo<SnapshotFrom<
-		typeof transitionMachine
-	> | null>(() => null);
-
-	const registerElement = () => {
-		// No-op.
-	};
-
-	const signalBeforeRouting = () => {
-		// No-op.
-	};
-
-	const signalAfterRouting = () => {
-		// No-op.
-	};
-
-	return {
-		registerElement,
-		transitionState,
-		signalBeforeRouting,
-		signalAfterRouting,
-	};
-}
-
-export {
+const TransitionLive = Layer.effect(
 	TransitionService,
-	createTransitionService,
-	createMockTransitionService,
-};
+	Effect.gen(function* () {
+		transitionStore.stateMachine.start();
+
+		transitionStore.stateMachine.subscribe((snapshot) => {
+			if (
+				JSON.stringify(snapshot) ===
+				JSON.stringify(transitionStore.currentState)
+			) {
+				// No-op if state hasn't changed.
+				return;
+			}
+
+			// Update the current state.
+			setTransitionStore({
+				...transitionStore,
+				currentState: snapshot,
+			});
+
+			if (snapshot.value === "mountingAnimation") {
+				runMountingAnimation();
+			}
+
+			if (snapshot.matches({ viewChangeAnimation: "captureFirstState" })) {
+				captureFlipState();
+			}
+
+			if (snapshot.matches({ viewChangeAnimation: "captureLastState" })) {
+				runRoutingAnimation();
+			}
+		});
+
+		const transitionState = createMemo(() => {
+			return transitionStore.currentState;
+		});
+
+		const signalBeforeRouting = () => {
+			transitionStore.stateMachine.send({
+				type: "INITIATE_VIEW_CHANGE",
+			});
+		};
+
+		const signalAfterRouting = () => {
+			transitionStore.stateMachine.send({
+				type: "ROUTE_UPDATED",
+			});
+		};
+
+		return {
+			registerElement,
+			transitionState,
+			signalBeforeRouting,
+			signalAfterRouting,
+		};
+	}),
+);
+
+const TransitionTest = Layer.effect(
+	TransitionService,
+	Effect.gen(function* () {
+		const transitionState = createMemo<SnapshotFrom<
+			typeof transitionMachine
+		> | null>(() => null);
+
+		const registerElement = () => {
+			// No-op.
+		};
+
+		const signalBeforeRouting = () => {
+			// No-op.
+		};
+
+		const signalAfterRouting = () => {
+			// No-op.
+		};
+
+		return {
+			registerElement,
+			transitionState,
+			signalBeforeRouting,
+			signalAfterRouting,
+		};
+	}),
+);
+
+export { TransitionService, TransitionLive, TransitionTest };

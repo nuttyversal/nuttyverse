@@ -1,6 +1,7 @@
 import { Effect } from "effect";
 import { useContext } from "solid-js";
 import { ServiceContext } from "../context";
+import { ThemeService } from "./service";
 
 /**
  * A hook that provides access to the color theme and theme toggling
@@ -13,27 +14,35 @@ const useTheme = () => {
 		throw new Error("Service context is not available.");
 	}
 
-	const { themeService } = services;
+	const { NuttyverseRuntime } = services;
 
-	const theme = themeService.theme;
-
-	const hydrateTheme = () => {
-		Effect.runPromise(themeService.hydrateTheme).catch((error) => {
-			console.error(`Failed to hydrate theme: ${error}.`);
-		});
-	};
+	const store = NuttyverseRuntime.runSync(
+		Effect.gen(function* () {
+			return (yield* ThemeService).store;
+		}),
+	);
 
 	const toggleTheme = () => {
-		Effect.runPromise(themeService.toggleTheme).catch((error) => {
-			console.error(`Failed to toggle theme: ${error}.`);
-		});
+		return NuttyverseRuntime.runPromise(
+			Effect.gen(function* () {
+				const themeService = yield* ThemeService;
+
+				yield* themeService.toggleTheme;
+			}),
+		);
 	};
 
-	if (!themeService.hasHydrated()) {
-		hydrateTheme();
-	}
+	NuttyverseRuntime.runSync(
+		Effect.gen(function* () {
+			const themeService = yield* ThemeService;
 
-	return { theme, toggleTheme };
+			if (!themeService.store.hasHydrated) {
+				yield* themeService.hydrateTheme;
+			}
+		}),
+	);
+
+	return { store, toggleTheme };
 };
 
 export { useTheme };

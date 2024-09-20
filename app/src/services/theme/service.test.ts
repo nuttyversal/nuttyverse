@@ -1,6 +1,7 @@
 import { Effect } from "effect";
 import { describe, it, expect, vi } from "vitest";
-import { createThemeService } from "./service";
+import { NuttyverseLiveRuntime } from "../layers";
+import { Theme, ThemeService } from "./service";
 
 /**
  * Mocks the matchMedia function to return the specified matches value.
@@ -21,27 +22,58 @@ const mockMatchMedia = (matches: boolean) => {
 describe("Theme service", () => {
 	it("should hydrate with light theme when user prefers light", async () => {
 		mockMatchMedia(false);
-		await Effect.runPromise(createThemeService().hydrateTheme);
-		expect(document.documentElement.getAttribute("data-theme")).toBe("light");
+
+		await NuttyverseLiveRuntime.runPromise(
+			Effect.gen(function* () {
+				const themeService = yield* ThemeService;
+				yield* themeService.hydrateTheme;
+			}),
+		);
+
+		expect(document.documentElement.getAttribute("data-theme")).toBe(
+			Theme.Light,
+		);
 	});
 
 	it("should hydrate with dark theme when user prefers dark", async () => {
+		// Hydrate with dark theme.
 		mockMatchMedia(true);
-		await Effect.runPromise(createThemeService().hydrateTheme);
-		expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
+
+		await NuttyverseLiveRuntime.runPromise(
+			Effect.gen(function* () {
+				const themeService = yield* ThemeService;
+				yield* themeService.hydrateTheme;
+
+				expect(document.documentElement.getAttribute("data-theme")).toBe(
+					Theme.Dark,
+				);
+			}),
+		);
 	});
 
 	it("should toggle the theme", async () => {
 		// Hydrate with light theme.
 		mockMatchMedia(false);
-		await Effect.runPromise(createThemeService().hydrateTheme);
 
-		// Toggle to dark theme.
-		await Effect.runPromise(createThemeService().toggleTheme);
-		expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
+		await NuttyverseLiveRuntime.runPromise(
+			Effect.gen(function* () {
+				const themeService = yield* ThemeService;
+				const initialTheme = themeService.store.theme;
 
-		// Toggle to light theme.
-		await Effect.runPromise(createThemeService().toggleTheme);
-		expect(document.documentElement.getAttribute("data-theme")).toBe("light");
+				// Toggle to dark theme.
+				yield* themeService.toggleTheme;
+
+				expect(
+					document.documentElement.getAttribute("data-theme"),
+				).not.toBe(initialTheme);
+
+				// Toggle to light theme.
+				yield* themeService.toggleTheme;
+
+				expect(document.documentElement.getAttribute("data-theme")).toBe(
+					initialTheme,
+				);
+			}),
+		);
 	});
 });

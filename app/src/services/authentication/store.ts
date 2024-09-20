@@ -8,7 +8,14 @@ import { authenticationMachine } from "./machine";
  * It contains the username and the access token expiration date.
  */
 type AuthenticationSession = {
+	/**
+	 * The username of the currently logged-in user.
+	 */
 	username: string;
+
+	/**
+	 * The expiration date of the access token.
+	 */
 	expiresAt: Date;
 };
 
@@ -24,14 +31,17 @@ type AuthenticationStore = {
 	/**
 	 * The current state of the authentication state machine.
 	 */
-	currentState: SnapshotFrom<typeof authenticationMachine> | null;
+	currentState: Option.Option<SnapshotFrom<typeof authenticationMachine>>;
 };
 
+/**
+ * Creates a new authentication store.
+ */
 const createAuthenticationStore = () => {
 	return createStore<AuthenticationStore>({
 		session: Option.none(),
-		currentState: null,
+		currentState: Option.none(),
 	});
 };
 
-export { AuthenticationSession, createAuthenticationStore };
+export { AuthenticationStore, createAuthenticationStore };

@@ -1,121 +1,115 @@
-import { Effect, Context } from "effect";
-import { Accessor, createMemo, createSignal } from "solid-js";
-import { Theme, setThemeStore, themeStore } from "./store";
-
-/**
- * A service that manages the color theme of the application.
- */
-class ThemeService extends Context.Tag("ThemeService")<
-	ThemeService,
-	{
-		readonly theme: Accessor<Theme>;
-		readonly hasHydrated: Accessor<boolean>;
-		readonly hydrateTheme: Effect.Effect<Theme>;
-		readonly toggleTheme: Effect.Effect<Theme>;
-	}
->() {}
+import { Effect, Context, Layer } from "effect";
+import { Store } from "solid-js/store";
+import { Theme, ThemeStore, createThemeStore } from "./store";
 
 /**
  * A service that manages the color theme of the application.
  * It is responsible for hydrating the theme based on the user's
  * operating system setting and toggling the theme.
  */
-function createThemeService(): Context.Tag.Service<ThemeService> {
-	const updateTheme = (newTheme: Theme) => {
-		return Effect.sync(() => {
-			// Set the theme on the root element.
-			document.documentElement.setAttribute("data-theme", newTheme);
-		}).pipe(
-			Effect.map(() => {
-				return setThemeStore({
-					...themeStore,
-					theme: newTheme,
-				});
-			}),
-		);
-	};
+class ThemeService extends Context.Tag("ThemeService")<
+	ThemeService,
+	{
+		readonly store: Store<ThemeStore>;
+		readonly hydrateTheme: Effect.Effect<Theme>;
+		readonly toggleTheme: Effect.Effect<Theme>;
+	}
+>() {}
 
-	const hydrateTheme = Effect.gen(function* () {
-		// Check operating system setting.
-		const prefersDark = yield* Effect.sync(
-			() => window.matchMedia("(prefers-color-scheme: dark)").matches,
-		);
+const ThemeLive = Layer.effect(
+	ThemeService,
+	Effect.gen(function* () {
+		const [store, setStore] = createThemeStore();
 
-		let newTheme: Theme;
+		const updateTheme = (newTheme: Theme) => {
+			return Effect.sync(() => {
+				// Set the theme on the root element.
+				document.documentElement.setAttribute("data-theme", newTheme);
+			}).pipe(
+				Effect.map(() => {
+					return setStore("theme", newTheme);
+				}),
+			);
+		};
 
-		if (prefersDark) {
-			newTheme = Theme.Dark;
-		} else {
-			newTheme = Theme.Light;
-		}
+		const hydrateTheme = Effect.gen(function* () {
+			// Check operating system setting.
+			const prefersDark = yield* Effect.sync(
+				() => window.matchMedia("(prefers-color-scheme: dark)").matches,
+			);
 
-		// Update the theme.
-		yield* updateTheme(newTheme);
+			let newTheme: Theme;
 
-		yield* Effect.sync(() => {
-			setThemeStore({
-				...themeStore,
-				hasHydrated: true,
+			if (prefersDark) {
+				newTheme = Theme.Dark;
+			} else {
+				newTheme = Theme.Light;
+			}
+
+			// Update the theme.
+			yield* updateTheme(newTheme);
+
+			yield* Effect.sync(() => {
+				setStore("hasHydrated", true);
 			});
+
+			return newTheme;
 		});
 
-		return newTheme;
-	});
+		const toggleTheme = Effect.gen(function* () {
+			let newTheme: Theme;
 
-	const toggleTheme = Effect.gen(function* () {
-		let newTheme: Theme;
+			if (store.theme === Theme.Light) {
+				newTheme = Theme.Dark;
+			} else {
+				newTheme = Theme.Light;
+			}
 
-		if (themeStore.theme === Theme.Light) {
-			newTheme = Theme.Dark;
-		} else {
-			newTheme = Theme.Light;
-		}
+			yield* updateTheme(newTheme);
 
-		yield* updateTheme(newTheme);
+			return newTheme;
+		});
 
-		return newTheme;
-	});
+		return {
+			store,
+			hydrateTheme,
+			toggleTheme,
+		};
+	}),
+);
 
-	return {
-		theme: createMemo(() => themeStore.theme),
-		hasHydrated: createMemo(() => themeStore.hasHydrated),
-		hydrateTheme,
-		toggleTheme,
-	};
-}
+const ThemeTest = Layer.effect(
+	ThemeService,
+	Effect.gen(function* () {
+		const [store, setStore] = createThemeStore();
 
-/**
- * A mock service that represents the currently applied color theme.
- * Intended to be used for testing purposes.
- */
-function createMockThemeService(): Context.Tag.Service<ThemeService> {
-	const [theme, setTheme] = createSignal<Theme>(Theme.Light);
-	const [hasHydrated, setHasHydrated] = createSignal<boolean>(false);
+		const hydrateTheme = Effect.sync(() => {
+			setStore("theme", Theme.Light);
+			setStore("hasHydrated", true);
 
-	const hydrateTheme = Effect.sync(() => {
-		setTheme(Theme.Light);
-		setHasHydrated(true);
-		return Theme.Light;
-	});
+			return Theme.Light;
+		});
 
-	const toggleTheme = Effect.sync(() => {
-		let newTheme: Theme;
+		const toggleTheme = Effect.sync(() => {
+			let newTheme: Theme;
 
-		if (theme() === Theme.Light) {
-			newTheme = Theme.Dark;
-		} else {
-			newTheme = Theme.Light;
-		}
+			if (store.theme === Theme.Light) {
+				newTheme = Theme.Dark;
+			} else {
+				newTheme = Theme.Light;
+			}
 
-		return setTheme(newTheme);
-	});
+			setStore("theme", newTheme);
 
-	return {
-		theme,
-		hasHydrated,
-		hydrateTheme,
-		toggleTheme,
-	};
-}
+			return newTheme;
+		});
 
-export { Theme, ThemeService, createThemeService, createMockThemeService };
+		return {
+			store,
+			hydrateTheme,
+			toggleTheme,
+		};
+	}),
+);
+
+export { Theme, ThemeService, ThemeLive, ThemeTest };

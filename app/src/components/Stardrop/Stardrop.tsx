@@ -1,8 +1,16 @@
+import { Effect } from "effect";
 import gsap from "gsap";
 import * as THREE from "three";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader";
-import { onCleanup, onMount, createEffect, createSignal } from "solid-js";
-import { Theme, useTheme } from "~/services/theme";
+import {
+	onCleanup,
+	onMount,
+	createEffect,
+	createSignal,
+	useContext,
+} from "solid-js";
+import { ServiceContext } from "~/services/context";
+import { Theme, ThemeService } from "~/services/theme";
 import { useTransition } from "~/services/transition";
 import styles from "./Stardrop.module.scss";
 
@@ -11,6 +19,14 @@ import styles from "./Stardrop.module.scss";
  * that fades in after the mounting transition is completed.
  */
 const Stardrop = () => {
+	const Context = useContext(ServiceContext);
+
+	if (!Context) {
+		throw new Error("NuttyverseRuntime is not provided");
+	}
+
+	const NuttyverseRuntime = Context.NuttyverseRuntime;
+
 	let container!: HTMLDivElement;
 
 	let scene: THREE.Scene;
@@ -27,7 +43,6 @@ const Stardrop = () => {
 	const white = "#fcfcfc";
 	const black = "#070707";
 
-	const { theme } = useTheme();
 	const { transitionState } = useTransition();
 
 	const faSparkle = `
@@ -37,22 +52,36 @@ const Stardrop = () => {
 	`;
 
 	const updateBackground = () => {
-		if (scene && renderer && camera) {
-			const color = theme() === Theme.Light ? white : black;
-			scene.background = new THREE.Color(color);
-			renderer.render(scene, camera);
-		}
+		NuttyverseRuntime.runSync(
+			Effect.gen(function* () {
+				const themeService = yield* ThemeService;
+				const store = themeService.store;
+
+				if (scene && renderer && camera) {
+					const color = store.theme === Theme.Light ? white : black;
+					scene.background = new THREE.Color(color);
+					renderer.render(scene, camera);
+				}
+			}),
+		);
 	};
 
 	const updateStarColors = () => {
-		if (starField) {
-			const color = theme() === Theme.Light ? black : white;
+		NuttyverseRuntime.runSync(
+			Effect.gen(function* () {
+				const themeService = yield* ThemeService;
+				const store = themeService.store;
 
-			starField.children.forEach((star) => {
-				const material = (star as THREE.Mesh).material;
-				(material as THREE.MeshBasicMaterial).color.set(color);
-			});
-		}
+				if (starField) {
+					const color = store.theme === Theme.Light ? black : white;
+
+					starField.children.forEach((star) => {
+						const material = (star as THREE.Mesh).material;
+						(material as THREE.MeshBasicMaterial).color.set(color);
+					});
+				}
+			}),
+		);
 	};
 
 	const createStarShape = () => {
@@ -64,36 +93,43 @@ const Stardrop = () => {
 	};
 
 	const createStarField = () => {
-		const starGeometry = createStarShape();
-		starField = new THREE.Group();
+		NuttyverseRuntime.runSync(
+			Effect.gen(function* () {
+				const themeService = yield* ThemeService;
+				const store = themeService.store;
 
-		const initialColor = theme() === Theme.Light ? black : white;
-		const starCount = 777;
-		const starFieldSize = 2222;
+				const starGeometry = createStarShape();
+				starField = new THREE.Group();
 
-		for (let i = 0; i < starCount; i++) {
-			const material = new THREE.MeshBasicMaterial({
-				color: initialColor,
-				side: THREE.DoubleSide,
-				opacity: Math.random() * 0.5 + 0.5,
-				transparent: true,
-			});
+				const initialColor = store.theme === Theme.Light ? black : white;
+				const starCount = 777;
+				const starFieldSize = 2222;
 
-			const starMesh = new THREE.Mesh(starGeometry, material);
+				for (let i = 0; i < starCount; i++) {
+					const material = new THREE.MeshBasicMaterial({
+						color: initialColor,
+						side: THREE.DoubleSide,
+						opacity: Math.random() * 0.5 + 0.5,
+						transparent: true,
+					});
 
-			starMesh.position.set(
-				(Math.random() - 0.5) * starFieldSize,
-				(Math.random() - 0.5) * starFieldSize,
-				(Math.random() - 0.5) * starFieldSize,
-			);
+					const starMesh = new THREE.Mesh(starGeometry, material);
 
-			const scale = Math.random() * 0.02;
-			starMesh.scale.set(scale, scale, scale);
+					starMesh.position.set(
+						(Math.random() - 0.5) * starFieldSize,
+						(Math.random() - 0.5) * starFieldSize,
+						(Math.random() - 0.5) * starFieldSize,
+					);
 
-			starField.add(starMesh);
-		}
+					const scale = Math.random() * 0.02;
+					starMesh.scale.set(scale, scale, scale);
 
-		scene.add(starField);
+					starField.add(starMesh);
+				}
+
+				scene.add(starField);
+			}),
+		);
 	};
 
 	function animateStarField() {
@@ -161,12 +197,18 @@ const Stardrop = () => {
 	});
 
 	createEffect(() => {
-		// When the theme changes …
-		theme();
+		NuttyverseRuntime.runSync(
+			Effect.gen(function* () {
+				const themeService = yield* ThemeService;
 
-		// … update the background and star colors.
-		updateBackground();
-		updateStarColors();
+				// When the theme changes …
+				themeService.store.theme;
+
+				// … update the background and star colors.
+				updateBackground();
+				updateStarColors();
+			}),
+		);
 	});
 
 	createEffect(() => {

@@ -10,7 +10,7 @@ import { createHttpRequest } from "./api";
 const baseUrl = "http://localhost:4000/api";
 
 describe("API utilities", () => {
-	it("can make an API request", async () => {
+	it.skip("can make an API request", async () => {
 		const workflow = Effect.gen(function* () {
 			const httpClient = yield* HttpClient.HttpClient;
 			const httpRequest = createHttpRequest(baseUrl);

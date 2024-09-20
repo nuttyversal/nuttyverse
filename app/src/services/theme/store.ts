@@ -4,7 +4,14 @@ import { createStore } from "solid-js/store";
  * A color theme that can be applied to the application.
  */
 const enum Theme {
+	/**
+	 * Light mode.
+	 */
 	Light = "light",
+
+	/**
+	 * Dark mode.
+	 */
 	Dark = "dark",
 }
 
@@ -21,9 +28,11 @@ type ThemeStore = {
 	theme: Theme;
 };
 
-const [themeStore, setThemeStore] = createStore<ThemeStore>({
-	hasHydrated: false,
-	theme: Theme.Light,
-});
+const createThemeStore = () => {
+	return createStore<ThemeStore>({
+		hasHydrated: false,
+		theme: Theme.Light,
+	});
+};
 
-export { Theme, ThemeStore, themeStore, setThemeStore };
+export { Theme, ThemeStore, createThemeStore };

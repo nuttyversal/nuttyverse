@@ -7,10 +7,12 @@ import {
 	createSignal,
 	onMount,
 	on,
+	useContext,
 } from "solid-js";
 import { ScrollContainer } from "~/components/ScrollContainer";
 import { useCarmackClick } from "~/components/hooks";
-import { LocalStorageService, useLocalStorage } from "~/services/local-storage";
+import { ServiceContext } from "~/services/context";
+import { LocalStorageService } from "~/services/local-storage";
 import styles from "./Editor.module.scss";
 import { compileMarkdownJsx } from "./compiler/compile";
 import { useEditor } from "./editor/hook";
@@ -18,9 +20,15 @@ import { useScrollSyncing } from "./sync/hook";
 import { SourceMap } from "./sync/types";
 
 const Editor: Component = () => {
-	const [sourceMap, setSourceMap] = createSignal<SourceMap>({});
+	const Context = useContext(ServiceContext);
 
-	const localStorageService = useLocalStorage();
+	if (!Context) {
+		throw new Error("NuttyverseRuntime is not provided");
+	}
+
+	const NuttyverseRuntime = Context.NuttyverseRuntime;
+
+	const [sourceMap, setSourceMap] = createSignal<SourceMap>({});
 
 	const {
 		setEditorContainer,
@@ -52,16 +60,11 @@ const Editor: Component = () => {
 		on(
 			documentContent,
 			(documentContent) => {
-				Effect.runPromise(
+				NuttyverseRuntime.runPromise(
 					Effect.gen(function* () {
 						const localStorage = yield* LocalStorageService;
 						yield* localStorage.setItem("editor", documentContent);
-					}).pipe(
-						Effect.provideService(
-							LocalStorageService,
-							localStorageService,
-						),
-					),
+					}),
 				);
 			},
 			{ defer: true },
@@ -76,14 +79,12 @@ const Editor: Component = () => {
 	});
 
 	onMount(() => {
-		Effect.runPromise(
+		NuttyverseRuntime.runPromise(
 			Effect.gen(function* () {
 				const document = yield* loadSavedDocument;
 				yield* setupEditor(document);
 				yield* setupScrollSyncing;
-			}).pipe(
-				Effect.provideService(LocalStorageService, localStorageService),
-			),
+			}),
 		);
 	});
 

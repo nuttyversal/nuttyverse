@@ -1,12 +1,22 @@
 import gsap from "gsap";
-import { onMount } from "solid-js";
+import { onMount, useContext } from "solid-js";
 import { useCarmackClick } from "~/components/hooks";
-import { useTheme } from "~/services/theme";
+import { ServiceContext } from "~/services/context";
+import { ThemeService } from "~/services/theme";
 import { useTransition } from "~/services/transition";
 import styles from "./Chibi.module.scss";
+import { Effect } from "effect";
 
 const Chibi = () => {
 	let chibi!: SVGSVGElement;
+
+	const Context = useContext(ServiceContext);
+
+	if (!Context) {
+		throw new Error("NuttyverseRuntime is not provided");
+	}
+
+	const NuttyverseRuntime = Context.NuttyverseRuntime;
 
 	const { registerElement } = useTransition();
 
@@ -28,7 +38,14 @@ const Chibi = () => {
 		}
 	});
 
-	const { toggleTheme } = useTheme();
+	const toggleTheme = () => {
+		NuttyverseRuntime.runSync(
+			Effect.gen(function* () {
+				const themeService = yield* ThemeService;
+				yield* themeService.toggleTheme;
+			}),
+		);
+	};
 
 	const {
 		handleMouseDown: toggleThemeImmediately,

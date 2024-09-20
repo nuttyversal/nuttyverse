@@ -1,9 +1,10 @@
-import { Effect } from "effect";
 import { Route } from "@solidjs/router";
-import { render, waitFor } from "@solidjs/testing-library";
+import { render } from "@solidjs/testing-library";
+import { Effect } from "effect";
 import { describe, expect, it } from "vitest";
 import { MockServiceProvider } from "~/services/context";
-import { createMockLocalStorageService } from "~/services/local-storage";
+import { NuttyverseTestRuntime } from "~/services/layers";
+import { LocalStorageService } from "~/services/local-storage";
 import { Editor } from "./Editor";
 
 describe("Editor component", () => {
@@ -27,12 +28,16 @@ describe("Editor component", () => {
 	it("hydrates the document content from local storage", async () => {
 		// Arrange.
 		const documentContent = "Hello, world!";
-		const localStorageService = createMockLocalStorageService();
 
-		Effect.runSync(localStorageService.setItem("editor", documentContent));
+		NuttyverseTestRuntime.runSync(
+			Effect.gen(function* () {
+				const localStorageService = yield* LocalStorageService;
+				yield* localStorageService.setItem("editor", documentContent);
+			}),
+		);
 
 		const App = () => (
-			<MockServiceProvider serviceOverrides={{ localStorageService }}>
+			<MockServiceProvider>
 				<Editor />
 			</MockServiceProvider>
 		);
@@ -48,12 +53,16 @@ describe("Editor component", () => {
 
 	it("enables syncing by default", async () => {
 		const documentContent = "Hello, world!\n\nAn empty block exists!";
-		const localStorageService = createMockLocalStorageService();
 
-		Effect.runSync(localStorageService.setItem("editor", documentContent));
+		NuttyverseTestRuntime.runSync(
+			Effect.gen(function* () {
+				const localStorageService = yield* LocalStorageService;
+				yield* localStorageService.setItem("editor", documentContent);
+			}),
+		);
 
 		const App = () => (
-			<MockServiceProvider serviceOverrides={{ localStorageService }}>
+			<MockServiceProvider>
 				<Editor />
 			</MockServiceProvider>
 		);

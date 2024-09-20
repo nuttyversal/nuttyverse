@@ -1,42 +1,47 @@
-import { Effect } from "effect";
+import { Effect, Option } from "effect";
 import { createStore } from "solid-js/store";
 import { useCarmackClick } from "~/components/hooks";
-import { useAuthentication } from "~/services/authentication";
-import { HttpService, useHttp } from "~/services/http";
-import { customFetchLayer } from "~/utils/api";
+import { AuthenticationService } from "~/services/authentication";
 import styles from "./Login.module.scss";
+import { ServiceContext } from "~/services/context";
+import { useContext } from "solid-js";
 
 const Login = () => {
+	const Context = useContext(ServiceContext);
+
+	if (!Context) {
+		throw new Error("NuttyverseRuntime is not provided");
+	}
+
+	const NuttyverseRuntime = Context.NuttyverseRuntime;
+
 	const [fields, setFields] = createStore({
 		username: "",
 		password: "",
 	});
 
-	const authenticationService = useAuthentication();
-	const httpService = useHttp();
+	const store = NuttyverseRuntime.runSync(
+		Effect.gen(function* () {
+			return (yield* AuthenticationService).store;
+		}),
+	);
 
 	const loginEffect = Effect.gen(function* () {
-		yield* authenticationService.login(fields);
-	}).pipe(
-		Effect.scoped,
-		Effect.provide(customFetchLayer),
-		Effect.provideService(HttpService, httpService),
-	);
+		const authenticationService = yield* AuthenticationService;
+		return yield* authenticationService.login(fields);
+	}).pipe(Effect.scoped);
 
 	const logoutEffect = Effect.gen(function* () {
-		yield* authenticationService.logout();
-	}).pipe(
-		Effect.scoped,
-		Effect.provide(customFetchLayer),
-		Effect.provideService(HttpService, httpService),
-	);
+		const authenticationService = yield* AuthenticationService;
+		return yield* authenticationService.logout;
+	}).pipe(Effect.scoped);
 
 	const onLogin = async () => {
-		await Effect.runPromise(loginEffect);
+		await NuttyverseRuntime.runPromise(loginEffect);
 	};
 
 	const onLogout = async () => {
-		await Effect.runPromise(logoutEffect);
+		await NuttyverseRuntime.runPromise(logoutEffect);
 	};
 
 	const {
@@ -72,7 +77,9 @@ const Login = () => {
 				/>
 			</div>
 
-			{authenticationService.state()?.value}
+			{Option.isSome(store.currentState)
+				? store.currentState.value.value
+				: null}
 
 			<button
 				class={styles.button}

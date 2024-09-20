@@ -1,28 +1,16 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { Context, Effect, Option } from "effect";
+import { Effect, ManagedRuntime, Option } from "effect";
 import {
+	LocalStorageLive,
 	LocalStorageService,
-	createLocalStorageService,
-	createMockLocalStorageService,
+	LocalStorageTest,
 } from "./service";
-
-/**
- * Runs an effect with the specified service implementation.
- */
-const runWithService = (
-	program: Effect.Effect<unknown, unknown, LocalStorageService>,
-	service: Context.Tag.Service<LocalStorageService>,
-) => {
-	return Effect.runPromise(
-		Effect.provideService(program, LocalStorageService, service),
-	);
-};
 
 /**
  * Tests the local storage service against a service implementation.
  */
 const testLocalStorage = (
-	service: Context.Tag.Service<LocalStorageService>,
+	runtime: ManagedRuntime.ManagedRuntime<LocalStorageService, never>,
 ) => {
 	const setAndGetItem = Effect.gen(function* () {
 		const localStorage = yield* LocalStorageService;
@@ -38,12 +26,12 @@ const testLocalStorage = (
 	});
 
 	it("should set and get an item", async () => {
-		const result = await runWithService(setAndGetItem, service);
+		const result = await runtime.runPromise(setAndGetItem);
 		expect(result).toEqual(Option.some("bar"));
 	});
 
 	it("should set and remove an item", async () => {
-		const result = await runWithService(setAndRemoveItem, service);
+		const result = await runtime.runPromise(setAndRemoveItem);
 		expect(result).toEqual(Option.none());
 	});
 };
@@ -54,10 +42,12 @@ describe("LocalStorageService", () => {
 			localStorage.clear();
 		});
 
-		testLocalStorage(createLocalStorageService());
+		const runtime = ManagedRuntime.make(LocalStorageLive);
+		testLocalStorage(runtime);
 	});
 
 	describe("mockLocalStorageService", () => {
-		testLocalStorage(createMockLocalStorageService());
+		const runtime = ManagedRuntime.make(LocalStorageTest);
+		testLocalStorage(runtime);
 	});
 });
