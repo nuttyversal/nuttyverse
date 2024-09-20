@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 import { describe, it, expect, vi } from "vitest";
-import { NuttyverseLiveRuntime } from "../layers";
+import { NuttyverseLiveRuntime } from "../runtime";
 import { Theme, ThemeService } from "./service";
 
 /**

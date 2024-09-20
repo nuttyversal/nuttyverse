@@ -3,7 +3,7 @@ import {
 	NuttyverseRuntime,
 	NuttyverseLiveRuntime,
 	NuttyverseTestRuntime,
-} from "./layers";
+} from "./runtime";
 
 /**
  * An exhaustive list of service implementations that can be provided

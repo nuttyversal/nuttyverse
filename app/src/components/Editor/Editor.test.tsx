@@ -3,7 +3,7 @@ import { render } from "@solidjs/testing-library";
 import { Effect } from "effect";
 import { describe, expect, it } from "vitest";
 import { MockServiceProvider } from "~/services/context";
-import { NuttyverseTestRuntime } from "~/services/layers";
+import { NuttyverseTestRuntime } from "~/services/runtime";
 import { LocalStorageService } from "~/services/local-storage";
 import { Editor } from "./Editor";
 

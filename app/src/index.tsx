@@ -2,7 +2,7 @@ import { Effect, Option } from "effect";
 import { render } from "solid-js/web";
 import { NuttyverseRouter } from "~/pages/router";
 import { ServiceProvider } from "~/services/context";
-import { NuttyverseLiveRuntime } from "~/services/layers";
+import { NuttyverseLiveRuntime } from "~/services/runtime";
 import { ThemeService } from "~/services/theme";
 import "~/styles/global.scss";
 

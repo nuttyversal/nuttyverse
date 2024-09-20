@@ -3,7 +3,7 @@ import { render, fireEvent, waitFor } from "@solidjs/testing-library";
 import { Effect } from "effect";
 import { describe, it, expect } from "vitest";
 import { MockServiceProvider } from "~/services/context";
-import { NuttyverseTestRuntime } from "~/services/layers";
+import { NuttyverseTestRuntime } from "~/services/runtime";
 import { Theme, ThemeService } from "~/services/theme";
 import { Chibi } from "./Chibi";
 

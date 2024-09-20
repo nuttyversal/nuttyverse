@@ -1,7 +1,7 @@
 import { Effect } from "effect";
 import { render } from "@solidjs/testing-library";
 import { beforeEach, describe, expect, it } from "vitest";
-import { NuttyverseLiveRuntime } from "~/services/layers";
+import { NuttyverseLiveRuntime } from "~/services/runtime";
 import { getRootElement, main } from "./index";
 
 describe("Application startup", () => {
