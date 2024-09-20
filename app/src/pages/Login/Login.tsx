@@ -1,4 +1,4 @@
-import { Effect } from "effect";
+import { Effect, Option } from "effect";
 import { createStore } from "solid-js/store";
 import { useCarmackClick } from "~/components/hooks";
 import { AuthenticationService } from "~/services/authentication";
@@ -29,46 +29,47 @@ const Login = () => {
 		return yield* authenticationService.logout;
 	}).pipe(Effect.scoped);
 
-	const onLogin = async () => {
-		await NuttyverseRuntime.runPromise(loginEffect);
-	};
-
-	const onLogout = async () => {
-		await NuttyverseRuntime.runPromise(logoutEffect);
-	};
+	const handleLogin = () => NuttyverseRuntime.runPromise(loginEffect);
+	const handleLogout = () => NuttyverseRuntime.runPromise(logoutEffect);
 
 	const {
 		handleMouseDown: handleLoginMouseDown,
 		handleClick: handleLoginClick,
-	} = useCarmackClick(onLogin);
+	} = useCarmackClick(handleLogin);
 
 	const {
 		handleMouseDown: handleLogoutMouseDown,
 		handleClick: handleLogoutClick,
-	} = useCarmackClick(onLogout);
+	} = useCarmackClick(handleLogout);
 
 	return (
 		<div class={styles.container}>
-			<div class={styles.field}>
-				<label for="username">Username</label>
-				<input
-					id="username"
-					type="text"
-					onInput={(e) => setFields("username", e.target.value)}
-					placeholder="navigator"
-					required
-				/>
-			</div>
+			{Option.isNone(store.session) && (
+				<>
+					<div class={styles.field}>
+						<label for="username">Username</label>
+						<input
+							id="username"
+							type="text"
+							onInput={(e) => setFields("username", e.target.value)}
+							value={fields.username}
+							placeholder="navigator"
+							required
+						/>
+					</div>
 
-			<div class={styles.field}>
-				<label for="password">Password</label>
-				<input
-					type="password"
-					onInput={(e) => setFields("password", e.target.value)}
-					placeholder="alohomora"
-					required
-				/>
-			</div>
+					<div class={styles.field}>
+						<label for="password">Password</label>
+						<input
+							type="password"
+							onInput={(e) => setFields("password", e.target.value)}
+							value={fields.password}
+							placeholder="alohomora"
+							required
+						/>
+					</div>
+				</>
+			)}
 
 			{store.snapshot.value}
 
