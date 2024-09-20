@@ -1,4 +1,4 @@
-import { Effect, Option } from "effect";
+import { Effect } from "effect";
 import { createStore } from "solid-js/store";
 import { useCarmackClick } from "~/components/hooks";
 import { AuthenticationService } from "~/services/authentication";
@@ -70,9 +70,7 @@ const Login = () => {
 				/>
 			</div>
 
-			{Option.isSome(store.currentState)
-				? store.currentState.value.value
-				: null}
+			{store.snapshot.value}
 
 			<button
 				class={styles.button}

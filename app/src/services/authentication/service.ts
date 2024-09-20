@@ -61,16 +61,15 @@ const AuthenticationLive = Layer.effect(
 		const config = yield* configService.getConfig;
 		const apiRequest = createHttpRequest(config.apiBaseUrl);
 
-		const [authenticationStore, setAuthenticationStore] =
-			createAuthenticationStore();
-
 		// Set up the authentication state machine.
 		const authenticationActor = createActor(authenticationMachine);
 		const initialSnapshot = authenticationActor.getSnapshot();
-		setAuthenticationStore("currentState", Option.some(initialSnapshot));
+
+		const [authenticationStore, setAuthenticationStore] =
+			createAuthenticationStore(initialSnapshot);
 
 		authenticationActor.subscribe((snapshot) => {
-			setAuthenticationStore("currentState", Option.some(snapshot));
+			setAuthenticationStore("snapshot", snapshot);
 		});
 
 		authenticationActor.start();
@@ -80,12 +79,7 @@ const AuthenticationLive = Layer.effect(
 
 			login: (attributes: Login.RequestAttributes) => {
 				return Effect.gen(function* () {
-					if (
-						!authenticationStore.currentState.pipe(
-							Option.map((snapshot) => snapshot.matches("loggedOut")),
-							Option.getOrElse(() => false),
-						)
-					) {
+					if (!authenticationStore.snapshot.matches("loggedOut")) {
 						// The user is already logged in.
 						yield* Effect.fail(new AlreadyLoggedInError());
 					}
@@ -147,12 +141,7 @@ const AuthenticationLive = Layer.effect(
 			},
 
 			logout: Effect.gen(function* () {
-				if (
-					!authenticationStore.currentState.pipe(
-						Option.map((snapshot) => snapshot.matches("loggedIn")),
-						Option.getOrElse(() => false),
-					)
-				) {
+				if (!authenticationStore.snapshot.matches("loggedIn")) {
 					// The user is not logged in.
 					yield* Effect.fail(new NotLoggedInError());
 				}

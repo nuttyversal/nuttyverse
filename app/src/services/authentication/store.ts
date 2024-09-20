@@ -29,18 +29,20 @@ type AuthenticationStore = {
 	session: Option.Option<AuthenticationSession>;
 
 	/**
-	 * The current state of the authentication state machine.
+	 * A snapshot of the current state of the authentication state machine.
 	 */
-	currentState: Option.Option<SnapshotFrom<typeof authenticationMachine>>;
+	snapshot: SnapshotFrom<typeof authenticationMachine>;
 };
 
 /**
  * Creates a new authentication store.
  */
-const createAuthenticationStore = () => {
+const createAuthenticationStore = (
+	initialSnapshot: AuthenticationStore["snapshot"],
+) => {
 	return createStore<AuthenticationStore>({
 		session: Option.none(),
-		currentState: Option.none(),
+		snapshot: initialSnapshot,
 	});
 };
 
