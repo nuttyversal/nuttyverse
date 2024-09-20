@@ -2,18 +2,11 @@ import { Effect, Option } from "effect";
 import { createStore } from "solid-js/store";
 import { useCarmackClick } from "~/components/hooks";
 import { AuthenticationService } from "~/services/authentication";
+import { useRuntime } from "~/services/context";
 import styles from "./Login.module.scss";
-import { ServiceContext } from "~/services/context";
-import { useContext } from "solid-js";
 
 const Login = () => {
-	const Context = useContext(ServiceContext);
-
-	if (!Context) {
-		throw new Error("NuttyverseRuntime is not provided");
-	}
-
-	const NuttyverseRuntime = Context.NuttyverseRuntime;
+	const { NuttyverseRuntime } = useRuntime();
 
 	const [fields, setFields] = createStore({
 		username: "",

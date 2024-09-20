@@ -1,7 +1,7 @@
 import { Effect, Option } from "effect";
 import { render } from "solid-js/web";
 import { NuttyverseRouter } from "~/pages/router";
-import { ServiceProvider } from "~/services/context";
+import { RuntimeProvider } from "~/services/context";
 import { NuttyverseLiveRuntime } from "~/services/runtime";
 import { ThemeService } from "~/services/theme";
 import "~/styles/global.scss";
@@ -66,9 +66,9 @@ const renderApplication = (root: HTMLElement) => {
 		try: () => {
 			return render(
 				() => (
-					<ServiceProvider>
+					<RuntimeProvider>
 						<NuttyverseRouter />
-					</ServiceProvider>
+					</RuntimeProvider>
 				),
 				root,
 			);

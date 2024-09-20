@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render } from "@solidjs/testing-library";
-import { MockServiceProvider } from "~/services/context";
+import { RuntimeTestProvider } from "~/services/context";
 import { Logo } from "./Logo";
 import { Route } from "@solidjs/router";
 
@@ -13,9 +13,9 @@ describe("Logo component", () => {
 	it("renders without crashing", async () => {
 		// Arrange.
 		const App = () => (
-			<MockServiceProvider>
+			<RuntimeTestProvider>
 				<Logo />
-			</MockServiceProvider>
+			</RuntimeTestProvider>
 		);
 
 		const { findByTestId } = render(

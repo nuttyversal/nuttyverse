@@ -2,7 +2,7 @@ import { Route } from "@solidjs/router";
 import { render } from "@solidjs/testing-library";
 import { Effect } from "effect";
 import { describe, expect, it } from "vitest";
-import { MockServiceProvider } from "~/services/context";
+import { RuntimeTestProvider } from "~/services/context";
 import { NuttyverseTestRuntime } from "~/services/runtime";
 import { LocalStorageService } from "~/services/local-storage";
 import { Editor } from "./Editor";
@@ -11,9 +11,9 @@ describe("Editor component", () => {
 	it("renders without crashing", async () => {
 		// Arrange.
 		const App = () => (
-			<MockServiceProvider>
+			<RuntimeTestProvider>
 				<Editor />
-			</MockServiceProvider>
+			</RuntimeTestProvider>
 		);
 
 		const { findByTestId } = render(
@@ -37,9 +37,9 @@ describe("Editor component", () => {
 		);
 
 		const App = () => (
-			<MockServiceProvider>
+			<RuntimeTestProvider>
 				<Editor />
-			</MockServiceProvider>
+			</RuntimeTestProvider>
 		);
 
 		const { findByText } = render(() => <Route path="/" component={App} />, {
@@ -62,9 +62,9 @@ describe("Editor component", () => {
 		);
 
 		const App = () => (
-			<MockServiceProvider>
+			<RuntimeTestProvider>
 				<Editor />
-			</MockServiceProvider>
+			</RuntimeTestProvider>
 		);
 
 		const { findByText } = render(() => <Route path="/" component={App} />, {

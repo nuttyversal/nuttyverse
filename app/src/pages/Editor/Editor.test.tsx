@@ -2,18 +2,18 @@ import { describe, it, expect } from "vitest";
 import { Route } from "@solidjs/router";
 import { fireEvent, render, waitFor } from "@solidjs/testing-library";
 import { ScrollLayout } from "~/components/ScrollLayout";
-import { ServiceProvider } from "~/services/context";
+import { RuntimeProvider } from "~/services/context";
 import { Editor } from "./Editor";
 
 describe("Editor page", () => {
 	it("renders without crashing", async () => {
 		// Arrange.
 		const App = () => (
-			<ServiceProvider>
+			<RuntimeProvider>
 				<ScrollLayout>
 					<Editor />
 				</ScrollLayout>
-			</ServiceProvider>
+			</RuntimeProvider>
 		);
 
 		const { findByTestId } = render(
@@ -28,11 +28,11 @@ describe("Editor page", () => {
 	it("can toggle syncing", async () => {
 		// Arrange.
 		const App = () => (
-			<ServiceProvider>
+			<RuntimeProvider>
 				<ScrollLayout>
 					<Editor />
 				</ScrollLayout>
-			</ServiceProvider>
+			</RuntimeProvider>
 		);
 
 		const { findByLabelText, container } = render(

@@ -7,11 +7,10 @@ import {
 	createSignal,
 	onMount,
 	on,
-	useContext,
 } from "solid-js";
 import { ScrollContainer } from "~/components/ScrollContainer";
 import { useCarmackClick } from "~/components/hooks";
-import { ServiceContext } from "~/services/context";
+import { useRuntime } from "~/services/context";
 import { LocalStorageService } from "~/services/local-storage";
 import styles from "./Editor.module.scss";
 import { compileMarkdownJsx } from "./compiler/compile";
@@ -20,13 +19,7 @@ import { useScrollSyncing } from "./sync/hook";
 import { SourceMap } from "./sync/types";
 
 const Editor: Component = () => {
-	const Context = useContext(ServiceContext);
-
-	if (!Context) {
-		throw new Error("NuttyverseRuntime is not provided");
-	}
-
-	const NuttyverseRuntime = Context.NuttyverseRuntime;
+	const { NuttyverseRuntime } = useRuntime();
 
 	const [sourceMap, setSourceMap] = createSignal<SourceMap>({});
 

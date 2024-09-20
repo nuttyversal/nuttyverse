@@ -1,16 +1,16 @@
 import { describe, it, expect } from "vitest";
 import { Route } from "@solidjs/router";
 import { render } from "@solidjs/testing-library";
-import { MockServiceProvider } from "~/services/context";
+import { RuntimeTestProvider } from "~/services/context";
 import { ScrollLayout } from "../ScrollLayout";
 
 describe("ScrollContainer component", () => {
 	it("renders without crashing", async () => {
 		// Arrange.
 		const App = () => (
-			<MockServiceProvider>
+			<RuntimeTestProvider>
 				<ScrollLayout>Page content goes here.</ScrollLayout>
-			</MockServiceProvider>
+			</RuntimeTestProvider>
 		);
 
 		const { findByText } = render(() => <Route path="/" component={App} />, {

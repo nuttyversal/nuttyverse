@@ -2,7 +2,7 @@ import { Route } from "@solidjs/router";
 import { render, fireEvent, waitFor } from "@solidjs/testing-library";
 import { Effect } from "effect";
 import { describe, it, expect } from "vitest";
-import { MockServiceProvider } from "~/services/context";
+import { RuntimeTestProvider } from "~/services/context";
 import { NuttyverseTestRuntime } from "~/services/runtime";
 import { Theme, ThemeService } from "~/services/theme";
 import { Chibi } from "./Chibi";
@@ -16,9 +16,9 @@ describe("Chibi component", () => {
 	it("renders without crashing", async () => {
 		// Arrange.
 		const App = () => (
-			<MockServiceProvider>
+			<RuntimeTestProvider>
 				<Chibi />
-			</MockServiceProvider>
+			</RuntimeTestProvider>
 		);
 
 		const { container } = render(() => <Route path="/" component={App} />, {
@@ -34,9 +34,9 @@ describe("Chibi component", () => {
 	it("toggles theme on mouse down", async () => {
 		// Arrange.
 		const App = () => (
-			<MockServiceProvider>
+			<RuntimeTestProvider>
 				<Chibi />
-			</MockServiceProvider>
+			</RuntimeTestProvider>
 		);
 
 		const store = NuttyverseTestRuntime.runSync(
@@ -61,9 +61,9 @@ describe("Chibi component", () => {
 	it("toggles theme on click (for accessibility)", async () => {
 		// Arrange.
 		const App = () => (
-			<MockServiceProvider>
+			<RuntimeTestProvider>
 				<Chibi />
-			</MockServiceProvider>
+			</RuntimeTestProvider>
 		);
 
 		const store = NuttyverseTestRuntime.runSync(
@@ -89,9 +89,9 @@ describe("Chibi component", () => {
 	it("has correct aria-label", async () => {
 		// Arrange.
 		const App = () => (
-			<MockServiceProvider>
+			<RuntimeTestProvider>
 				<Chibi />
-			</MockServiceProvider>
+			</RuntimeTestProvider>
 		);
 
 		const { findByRole } = render(() => <Route path="/" component={App} />, {
@@ -106,9 +106,9 @@ describe("Chibi component", () => {
 	it("toggles theme correctly when clicked multiple times", async () => {
 		// Arrange.
 		const App = () => (
-			<MockServiceProvider>
+			<RuntimeTestProvider>
 				<Chibi />
-			</MockServiceProvider>
+			</RuntimeTestProvider>
 		);
 
 		const store = NuttyverseTestRuntime.runSync(

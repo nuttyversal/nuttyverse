@@ -1,6 +1,5 @@
 import { Effect } from "effect";
-import { useContext } from "solid-js";
-import { ServiceContext } from "../context";
+import { useRuntime } from "../context";
 import { ThemeService } from "./service";
 
 /**
@@ -8,13 +7,7 @@ import { ThemeService } from "./service";
  * functionality. It hydrates the theme when the hook is first called.
  */
 const useTheme = () => {
-	const services = useContext(ServiceContext);
-
-	if (!services) {
-		throw new Error("Service context is not available.");
-	}
-
-	const { NuttyverseRuntime } = services;
+	const { NuttyverseRuntime } = useRuntime();
 
 	const store = NuttyverseRuntime.runSync(
 		Effect.gen(function* () {

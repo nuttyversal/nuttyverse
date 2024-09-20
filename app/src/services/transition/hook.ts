@@ -1,17 +1,11 @@
 import { Effect } from "effect";
 import { useBeforeLeave, useIsRouting } from "@solidjs/router";
-import { createEffect, useContext } from "solid-js";
-import { ServiceContext } from "../context";
+import { createEffect } from "solid-js";
+import { useRuntime } from "../context";
 import { TransitionService } from "./service";
 
 const useTransition = () => {
-	const services = useContext(ServiceContext);
-
-	if (!services) {
-		throw new Error("Service context is not available.");
-	}
-
-	const { NuttyverseRuntime } = services;
+	const { NuttyverseRuntime } = useRuntime();
 
 	const isRouting = useIsRouting();
 

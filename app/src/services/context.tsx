@@ -1,4 +1,4 @@
-import { ParentComponent, createContext } from "solid-js";
+import { ParentComponent, createContext, useContext } from "solid-js";
 import {
 	NuttyverseRuntime,
 	NuttyverseLiveRuntime,
@@ -6,54 +6,64 @@ import {
 } from "./runtime";
 
 /**
- * An exhaustive list of service implementations that can be provided
- * to components in the application.
+ * The type of the runtime context. This context provides a managed runtime
+ * to components in the application. The runtime is used to access services
+ * and satisfy dependency requirements in effectful operations.
  */
-type ServiceContextType = {
+type RuntimeContextType = {
 	NuttyverseRuntime: NuttyverseRuntime;
 };
 
 /**
- * A context that provides services to components in the application.
+ * Provides a managed runtime to components in the application.
  */
-const ServiceContext = createContext<ServiceContextType>();
-
-type Props = {
-	serviceOverrides?: Partial<ServiceContextType>;
-};
+const RuntimeContext = createContext<RuntimeContextType>();
 
 /**
  * A provider component that wraps the application and provides
- * production-level service implementations to components.
+ * a production-level managed runtime to components.
  */
-const ServiceProvider: ParentComponent<Props> = (props) => {
+const RuntimeProvider: ParentComponent = (props) => {
 	const services = {
 		NuttyverseRuntime: NuttyverseLiveRuntime,
-		...props.serviceOverrides,
 	};
 
 	return (
-		<ServiceContext.Provider value={services}>
+		<RuntimeContext.Provider value={services}>
 			{props.children}
-		</ServiceContext.Provider>
+		</RuntimeContext.Provider>
 	);
 };
 
 /**
- * A provider component that wraps the application and provides mock
- * service implementations to components. Intended for use in tests.
+ * A provider component that wraps the application and provides a mock
+ * managed runtime to components. Intended for use in tests.
  */
-const MockServiceProvider: ParentComponent<Props> = (props) => {
+const RuntimeTestProvider: ParentComponent = (props) => {
 	const services = {
 		NuttyverseRuntime: NuttyverseTestRuntime,
-		...props.serviceOverrides,
 	};
 
 	return (
-		<ServiceContext.Provider value={services}>
+		<RuntimeContext.Provider value={services}>
 			{props.children}
-		</ServiceContext.Provider>
+		</RuntimeContext.Provider>
 	);
 };
 
-export { ServiceContext, ServiceProvider, MockServiceProvider };
+/**
+ * A hook that provides access to the runtime context.
+ */
+const useRuntime = () => {
+	const runtime = useContext(RuntimeContext);
+
+	if (!runtime) {
+		throw new Error("Runtime context is not available.");
+	}
+
+	return {
+		NuttyverseRuntime: runtime.NuttyverseRuntime,
+	};
+};
+
+export { RuntimeContext, RuntimeProvider, RuntimeTestProvider, useRuntime };
