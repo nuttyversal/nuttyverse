@@ -110,7 +110,8 @@ const AuthenticationLive = Layer.effect(
 							Option.some({
 								username: responseBodyDecoded.data.attributes.username,
 								expiresAt: new Date(
-									responseBodyDecoded.data.attributes.expires_at,
+									responseBodyDecoded.data.attributes.expires_at *
+										1000,
 								),
 							}),
 						);
@@ -150,12 +151,14 @@ const AuthenticationLive = Layer.effect(
 					type: "LOGOUT_ATTEMPT",
 				});
 
-				return yield* httpClient.execute(
+				yield* httpClient.execute(
 					apiRequest({
 						method: "POST",
 						url: "/navigator/logout",
 					}),
 				);
+
+				setAuthenticationStore("session", Option.none());
 			}).pipe(
 				Effect.tapBoth({
 					onSuccess: () => {

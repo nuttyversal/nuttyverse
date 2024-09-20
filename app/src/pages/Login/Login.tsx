@@ -1,5 +1,7 @@
+import { differenceInSeconds } from "date-fns";
 import { Effect, Option } from "effect";
 import { createStore } from "solid-js/store";
+import { createSignal, onCleanup } from "solid-js";
 import { useCarmackClick } from "~/components/hooks";
 import { AuthenticationService } from "~/services/authentication";
 import { useRuntime } from "~/services/context";
@@ -18,6 +20,28 @@ const Login = () => {
 			return (yield* AuthenticationService).store;
 		}),
 	);
+
+	const [timeLeft, setTimeLeft] = createSignal("");
+
+	const formatTimeLeft = (totalSeconds: number) => {
+		if (totalSeconds <= 0) return "Expired";
+		const minutes = Math.floor(totalSeconds / 60);
+		const seconds = totalSeconds % 60;
+		return `${minutes}m ${seconds}s`;
+	};
+
+	const updateTimeLeft = () => {
+		if (Option.isSome(store.session)) {
+			const expiresAt = new Date(store.session.value.expiresAt);
+			const now = new Date();
+			const secondsLeft = differenceInSeconds(expiresAt, now);
+			setTimeLeft(formatTimeLeft(secondsLeft));
+		}
+	};
+
+	updateTimeLeft();
+	const intervalId = setInterval(updateTimeLeft, 100);
+	onCleanup(() => clearInterval(intervalId));
 
 	const loginEffect = Effect.gen(function* () {
 		const authenticationService = yield* AuthenticationService;
@@ -68,26 +92,36 @@ const Login = () => {
 							required
 						/>
 					</div>
+
+					<button
+						class={styles.button}
+						onMouseDown={handleLoginMouseDown}
+						onClick={handleLoginClick}
+					>
+						Login
+					</button>
 				</>
 			)}
 
-			{store.snapshot.value}
+			{Option.isSome(store.session) && (
+				<>
+					<ul>
+						<li>
+							Ahoy there, <code>{store.session.value.username}</code>!
+						</li>
 
-			<button
-				class={styles.button}
-				onMouseDown={handleLoginMouseDown}
-				onClick={handleLoginClick}
-			>
-				Login
-			</button>
+						<li>Your access token expires in {timeLeft()}.</li>
+					</ul>
 
-			<button
-				class={styles.button}
-				onMouseDown={handleLogoutMouseDown}
-				onClick={handleLogoutClick}
-			>
-				Logout
-			</button>
+					<button
+						class={styles.button}
+						onMouseDown={handleLogoutMouseDown}
+						onClick={handleLogoutClick}
+					>
+						Logout
+					</button>
+				</>
+			)}
 		</div>
 	);
 };
