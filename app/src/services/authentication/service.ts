@@ -8,7 +8,12 @@ import { Store } from "solid-js/store";
 import { createActor } from "xstate";
 import { ConfigService } from "~/services/config";
 import { createHttpRequest } from "~/utils/api";
-import { AlreadyLoggedInError, LoginError, NotLoggedInError } from "./errors";
+import {
+	AlreadyLoggedInError,
+	LoginError,
+	NotLoggedInError,
+	TokenRefreshError,
+} from "./errors";
 import { authenticationMachine } from "./machine";
 import { Login } from "./schema";
 import { AuthenticationStore, createAuthenticationStore } from "./store";
@@ -49,6 +54,19 @@ class AuthenticationService extends Context.Tag("AuthenticationService")<
 			NotLoggedInError | HttpClientError,
 			Scope
 		>;
+
+		/**
+		 * Attempt to refresh the user's session.
+		 */
+		readonly refresh: Effect.Effect<
+			Login.ResponseBody,
+			| NotLoggedInError
+			| TokenRefreshError
+			| HttpClientError
+			| HttpBodyError
+			| ParseError,
+			Scope
+		>;
 	}
 >() {}
 
@@ -65,21 +83,20 @@ const AuthenticationLive = Layer.effect(
 		const authenticationActor = createActor(authenticationMachine);
 		const initialSnapshot = authenticationActor.getSnapshot();
 
-		const [authenticationStore, setAuthenticationStore] =
-			createAuthenticationStore(initialSnapshot);
+		const [store, setStore] = createAuthenticationStore(initialSnapshot);
 
 		authenticationActor.subscribe((snapshot) => {
-			setAuthenticationStore("snapshot", snapshot);
+			setStore("snapshot", snapshot);
 		});
 
 		authenticationActor.start();
 
 		return {
-			store: authenticationStore,
+			store: store,
 
 			login: (attributes: Login.RequestAttributes) => {
 				return Effect.gen(function* () {
-					if (!authenticationStore.snapshot.matches("loggedOut")) {
+					if (!store.snapshot.matches("loggedOut")) {
 						// The user is already logged in.
 						yield* Effect.fail(new AlreadyLoggedInError());
 					}
@@ -105,7 +122,7 @@ const AuthenticationLive = Layer.effect(
 						"data" in responseBodyDecoded &&
 						responseBodyDecoded.data.attributes.is_valid
 					) {
-						setAuthenticationStore(
+						setStore(
 							"session",
 							Option.some({
 								username: responseBodyDecoded.data.attributes.username,
@@ -142,7 +159,7 @@ const AuthenticationLive = Layer.effect(
 			},
 
 			logout: Effect.gen(function* () {
-				if (!authenticationStore.snapshot.matches("loggedIn")) {
+				if (!store.snapshot.matches("loggedIn")) {
 					// The user is not logged in.
 					yield* Effect.fail(new NotLoggedInError());
 				}
@@ -158,7 +175,7 @@ const AuthenticationLive = Layer.effect(
 					}),
 				);
 
-				setAuthenticationStore("session", Option.none());
+				setStore("session", Option.none());
 			}).pipe(
 				Effect.tapBoth({
 					onSuccess: () => {
@@ -172,6 +189,64 @@ const AuthenticationLive = Layer.effect(
 						return Effect.succeed(
 							authenticationActor.send({
 								type: "LOGOUT_FAILURE",
+							}),
+						);
+					},
+				}),
+			),
+
+			refresh: Effect.gen(function* () {
+				if (!store.snapshot.matches("loggedIn")) {
+					// The user is not logged in.
+					yield* Effect.fail(new NotLoggedInError());
+				}
+
+				authenticationActor.send({
+					type: "REFRESH_ATTEMPT",
+				});
+
+				const request = apiRequest({
+					method: "POST",
+					url: "/navigator/token/refresh",
+				});
+
+				const response = yield* httpClient.execute(request);
+				const responseBody = yield* response.json;
+				const responseBodyDecoded =
+					yield* Login.decodeResponseBody(responseBody);
+
+				if (
+					"data" in responseBodyDecoded &&
+					responseBodyDecoded.data.attributes.is_valid
+				) {
+					setStore(
+						"session",
+						Option.some({
+							username: responseBodyDecoded.data.attributes.username,
+							expiresAt: new Date(
+								responseBodyDecoded.data.attributes.expires_at * 1000,
+							),
+						}),
+					);
+				} else {
+					// The refresh attempt failed.
+					yield* Effect.fail(new TokenRefreshError());
+				}
+
+				return responseBodyDecoded;
+			}).pipe(
+				Effect.tapBoth({
+					onSuccess: () => {
+						return Effect.succeed(
+							authenticationActor.send({
+								type: "REFRESH_SUCCESS",
+							}),
+						);
+					},
+					onFailure: () => {
+						return Effect.succeed(
+							authenticationActor.send({
+								type: "REFRESH_FAILURE",
 							}),
 						);
 					},

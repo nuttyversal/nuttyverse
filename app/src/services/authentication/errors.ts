@@ -15,10 +15,22 @@ class NotLoggedInError extends Error {
 }
 
 /**
+ * An error that is thrown when a token refresh operation fails.
+ */
+class TokenRefreshError extends Error {
+	readonly _tag = "TokenRefreshError";
+}
+
+/**
  * An error that is thrown when a login operation fails.
  */
 class LoginError extends Error {
 	readonly _tag = "LoginError";
 }
 
-export { AlreadyLoggedInError, NotLoggedInError, LoginError };
+export {
+	AlreadyLoggedInError,
+	NotLoggedInError,
+	TokenRefreshError,
+	LoginError,
+};

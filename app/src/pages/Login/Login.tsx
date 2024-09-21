@@ -53,8 +53,14 @@ const Login = () => {
 		return yield* authenticationService.logout;
 	}).pipe(Effect.scoped);
 
+	const refreshEffect = Effect.gen(function* () {
+		const authenticationService = yield* AuthenticationService;
+		return yield* authenticationService.refresh;
+	}).pipe(Effect.scoped);
+
 	const handleLogin = () => NuttyverseRuntime.runPromise(loginEffect);
 	const handleLogout = () => NuttyverseRuntime.runPromise(logoutEffect);
+	const handleRefresh = () => NuttyverseRuntime.runPromise(refreshEffect);
 
 	const {
 		handleMouseDown: handleLoginMouseDown,
@@ -65,6 +71,11 @@ const Login = () => {
 		handleMouseDown: handleLogoutMouseDown,
 		handleClick: handleLogoutClick,
 	} = useCarmackClick(handleLogout);
+
+	const {
+		handleMouseDown: handleRefreshMouseDown,
+		handleClick: handleRefreshClick,
+	} = useCarmackClick(handleRefresh);
 
 	return (
 		<div class={styles.container}>
@@ -112,6 +123,14 @@ const Login = () => {
 
 						<li>Your access token expires in {timeLeft()}.</li>
 					</ul>
+
+					<button
+						class={styles.button}
+						onMouseDown={handleRefreshMouseDown}
+						onClick={handleRefreshClick}
+					>
+						Refresh
+					</button>
 
 					<button
 						class={styles.button}

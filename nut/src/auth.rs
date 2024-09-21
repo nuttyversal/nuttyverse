@@ -799,7 +799,7 @@ pub async fn create_jwt_handler(
 pub async fn refresh_jwt_handler(
 	State(state): State<Arc<KeycloakState>>,
 	headers: HeaderMap,
-) -> Result<(HeaderMap, Json<Document<()>>), (StatusCode, Json<Document<()>>)> {
+) -> Result<(HeaderMap, Json<Document<TokenStatusResponseAttributes>>), (StatusCode, Json<Document<()>>)> {
 	let access_token = extract_access_token_from_cookie(&headers).map_err(handle_auth_error)?;
 
 	let access_token_claims = decode_jwt_access_token(state.clone(), &access_token, false)
@@ -839,6 +839,10 @@ pub async fn refresh_jwt_handler(
 		.await
 		.map_err(handle_auth_error)?;
 
+	let access_token_claims = decode_jwt_access_token(state.clone(), &token_response.access_token, true)
+		.await
+		.map_err(handle_auth_error)?;
+
 	// Store the new access token and refresh token in the Redis cache.
 	store_jwt_in_redis_cache(
 		state.clone(),
@@ -857,7 +861,11 @@ pub async fn refresh_jwt_handler(
 
 	let resource = ResourceObject::builder()
 		.r#type("auth_token".to_string())
-		.attributes(())
+		.attributes(TokenStatusResponseAttributes {
+			is_valid: true,
+			expires_at: Some(access_token_claims.exp),
+			username: Some(access_token_claims.preferred_username),
+		})
 		.build();
 
 	Ok((

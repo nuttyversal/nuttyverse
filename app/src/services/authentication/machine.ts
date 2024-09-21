@@ -12,7 +12,10 @@ const authenticationMachine = setup({
 			| { type: "LOGIN_FAILURE" }
 			| { type: "LOGOUT_ATTEMPT" }
 			| { type: "LOGOUT_SUCCESS" }
-			| { type: "LOGOUT_FAILURE" },
+			| { type: "LOGOUT_FAILURE" }
+			| { type: "REFRESH_ATTEMPT" }
+			| { type: "REFRESH_SUCCESS" }
+			| { type: "REFRESH_FAILURE" },
 	},
 }).createMachine({
 	context: {},
@@ -38,8 +41,21 @@ const authenticationMachine = setup({
 		},
 		loggedIn: {
 			on: {
+				REFRESH_ATTEMPT: {
+					target: "refreshingToken",
+				},
 				LOGOUT_ATTEMPT: {
 					target: "loggingOut",
+				},
+			},
+		},
+		refreshingToken: {
+			on: {
+				REFRESH_SUCCESS: {
+					target: "loggedIn",
+				},
+				REFRESH_FAILURE: {
+					target: "loggedOut",
 				},
 			},
 		},
