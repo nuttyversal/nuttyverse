@@ -69,13 +69,21 @@ class AuthenticationService extends Context.Tag("AuthenticationService")<
 		/**
 		 * Initializes the authentication service.
 		 */
-		readonly initialize: Effect.Effect<any, any, Scope>;
+		readonly initialize: Effect.Effect<
+			void,
+			NotLoggedInError | HttpClientError | ParseError | TokenRefreshError,
+			Scope
+		>;
 
 		/**
 		 * Starts the heartbeat that refreshes the user's access token when
 		 * it gets close to expiring to extend the session.
 		 */
-		readonly startHeartbeat: Effect.Effect<any, any, never>;
+		readonly startHeartbeat: Effect.Effect<
+			number,
+			NotLoggedInError | HttpClientError | ParseError | TokenRefreshError,
+			never
+		>;
 
 		/**
 		 * Logs in the user with the given credentials.
@@ -137,6 +145,22 @@ const AuthenticationLive = Layer.effect(
 
 		authenticationActor.start();
 
+		const isLoggedIn = () => {
+			return store.snapshot.matches("loggedIn");
+		};
+
+		const isLoggingIn = () => {
+			return store.snapshot.matches({ loggedOut: "loggingIn" });
+		};
+
+		const isLoggingOut = () => {
+			return store.snapshot.matches({ loggedIn: "loggingOut" });
+		};
+
+		const isRefreshingToken = () => {
+			return store.snapshot.matches({ loggedIn: "refreshingToken" });
+		};
+
 		const tokenLifespan = Effect.gen(function* () {
 			const now = yield* Clock.currentTimeMillis;
 
@@ -153,6 +177,160 @@ const AuthenticationLive = Layer.effect(
 			const lifespan = yield* tokenLifespan;
 			return lifespan > 0;
 		});
+
+		const initialize = Effect.gen(function* () {
+			const request = apiRequest({
+				method: "POST",
+				url: "/navigator/token/refresh",
+			});
+
+			const response = yield* httpClient.execute(request);
+			const responseBody = yield* response.json;
+			const responseBodyDecoded =
+				yield* Login.decodeResponseBody(responseBody);
+
+			if (
+				"data" in responseBodyDecoded &&
+				responseBodyDecoded.data.attributes.is_valid
+			) {
+				setStore(
+					"session",
+					Option.some({
+						username: responseBodyDecoded.data.attributes.username,
+						expiresAt: new Date(
+							responseBodyDecoded.data.attributes.expires_at * 1000,
+						),
+					}),
+				);
+			} else {
+				// The refresh attempt failed.
+				yield* Effect.fail(new TokenRefreshError());
+			}
+		}).pipe(
+			Effect.tapBoth({
+				onSuccess: () => {
+					return Effect.succeed(
+						authenticationActor.send({
+							type: "ACCESS_TOKEN_VALID",
+						}),
+					);
+				},
+				onFailure: () => {
+					return Effect.succeed(
+						authenticationActor.send({
+							type: "ACCESS_TOKEN_INVALID",
+						}),
+					);
+				},
+			}),
+			Effect.catchAll(() => Effect.void),
+		);
+
+		const login = (attributes: Login.RequestAttributes) => {
+			return Effect.gen(function* () {
+				if (!store.snapshot.matches("loggedOut")) {
+					yield* Effect.fail(new AlreadyLoggedInError());
+				}
+
+				authenticationActor.send({
+					type: "LOGIN_ATTEMPT",
+				});
+
+				const requestBody = Login.requestBody(attributes);
+				const withRequestBody = HttpClientRequest.bodyJson(requestBody);
+
+				const request = yield* apiRequest({
+					method: "POST",
+					url: "/navigator/token",
+				}).pipe(withRequestBody);
+
+				const response = yield* httpClient.execute(request);
+				const responseBody = yield* response.json;
+				const responseBodyDecoded =
+					yield* Login.decodeResponseBody(responseBody);
+
+				if (
+					"data" in responseBodyDecoded &&
+					responseBodyDecoded.data.attributes.is_valid
+				) {
+					setStore(
+						"session",
+						Option.some({
+							username: responseBodyDecoded.data.attributes.username,
+							expiresAt: new Date(
+								responseBodyDecoded.data.attributes.expires_at * 1000,
+							),
+						}),
+					);
+				} else {
+					// The login attempt failed.
+					yield* Effect.fail(new LoginError());
+				}
+
+				return responseBodyDecoded;
+			}).pipe(
+				Effect.tapBoth({
+					onSuccess: () => {
+						return Effect.succeed(
+							authenticationActor.send({
+								type: "LOGIN_SUCCESS",
+							}),
+						);
+					},
+					onFailure: (error) => {
+						if (error instanceof AlreadyLoggedInError) {
+							return Effect.succeed(undefined);
+						}
+
+						return Effect.succeed(
+							authenticationActor.send({
+								type: "LOGIN_FAILURE",
+							}),
+						);
+					},
+				}),
+			);
+		};
+
+		const logout = Effect.gen(function* () {
+			if (!store.snapshot.matches("loggedIn")) {
+				return;
+			}
+
+			setStore("session", Option.none());
+
+			authenticationActor.send({
+				type: "LOGOUT_ATTEMPT",
+			});
+
+			yield* httpClient.execute(
+				apiRequest({
+					method: "POST",
+					url: "/navigator/logout",
+				}),
+			);
+		}).pipe(
+			Effect.tapBoth({
+				onSuccess: () => {
+					return Effect.succeed(
+						authenticationActor.send({
+							type: "LOGOUT_SUCCESS",
+						}),
+					);
+				},
+				onFailure: (error) => {
+					if (error instanceof NotLoggedInError) {
+						return Effect.succeed(undefined);
+					}
+
+					return Effect.succeed(
+						authenticationActor.send({
+							type: "LOGOUT_SUCCESS",
+						}),
+					);
+				},
+			}),
+		);
 
 		const refresh = Effect.gen(function* () {
 			if (store.snapshot.matches({ loggedIn: "refreshingToken" })) {
@@ -195,7 +373,6 @@ const AuthenticationLive = Layer.effect(
 		}).pipe(
 			Effect.tapBoth({
 				onSuccess: () => {
-					console.log("Refreshed token.");
 					return Effect.succeed(
 						authenticationActor.send({
 							type: "REFRESH_SUCCESS",
@@ -203,7 +380,6 @@ const AuthenticationLive = Layer.effect(
 					);
 				},
 				onFailure: (error) => {
-					console.log("Failed to refresh token.", error);
 					return Effect.gen(function* () {
 						if (error instanceof NotLoggedInError) {
 							return;
@@ -242,186 +418,16 @@ const AuthenticationLive = Layer.effect(
 
 		return {
 			store,
-
-			isLoggedIn: () => {
-				return store.snapshot.matches("loggedIn");
-			},
-
-			isLoggingIn: () => {
-				return store.snapshot.matches({ loggedOut: "loggingIn" });
-			},
-
-			isLoggingOut: () => {
-				return store.snapshot.matches({ loggedIn: "loggingOut" });
-			},
-
-			isRefreshingToken: () => {
-				return store.snapshot.matches({ loggedIn: "refreshingToken" });
-			},
-
+			isLoggedIn,
+			isLoggingIn,
+			isLoggingOut,
+			isRefreshingToken,
 			tokenLifespan,
-
 			isTokenValid,
-
 			startHeartbeat,
-
-			initialize: Effect.gen(function* () {
-				const request = apiRequest({
-					method: "POST",
-					url: "/navigator/token/refresh",
-				});
-
-				const response = yield* httpClient.execute(request);
-				const responseBody = yield* response.json;
-				const responseBodyDecoded =
-					yield* Login.decodeResponseBody(responseBody);
-
-				if (
-					"data" in responseBodyDecoded &&
-					responseBodyDecoded.data.attributes.is_valid
-				) {
-					setStore(
-						"session",
-						Option.some({
-							username: responseBodyDecoded.data.attributes.username,
-							expiresAt: new Date(
-								responseBodyDecoded.data.attributes.expires_at * 1000,
-							),
-						}),
-					);
-				} else {
-					// The refresh attempt failed.
-					yield* Effect.fail(new TokenRefreshError());
-				}
-
-				return responseBodyDecoded;
-			}).pipe(
-				Effect.tapBoth({
-					onSuccess: () => {
-						return Effect.succeed(
-							authenticationActor.send({
-								type: "ACCESS_TOKEN_VALID",
-							}),
-						);
-					},
-					onFailure: () => {
-						return Effect.succeed(
-							authenticationActor.send({
-								type: "ACCESS_TOKEN_INVALID",
-							}),
-						);
-					},
-				}),
-				Effect.catchAll(Effect.succeed),
-			),
-
-			login: (attributes: Login.RequestAttributes) => {
-				return Effect.gen(function* () {
-					if (!store.snapshot.matches("loggedOut")) {
-						yield* Effect.fail(new AlreadyLoggedInError());
-					}
-
-					authenticationActor.send({
-						type: "LOGIN_ATTEMPT",
-					});
-
-					const requestBody = Login.requestBody(attributes);
-					const withRequestBody = HttpClientRequest.bodyJson(requestBody);
-
-					const request = yield* apiRequest({
-						method: "POST",
-						url: "/navigator/token",
-					}).pipe(withRequestBody);
-
-					const response = yield* httpClient.execute(request);
-					const responseBody = yield* response.json;
-					const responseBodyDecoded =
-						yield* Login.decodeResponseBody(responseBody);
-
-					if (
-						"data" in responseBodyDecoded &&
-						responseBodyDecoded.data.attributes.is_valid
-					) {
-						setStore(
-							"session",
-							Option.some({
-								username: responseBodyDecoded.data.attributes.username,
-								expiresAt: new Date(
-									responseBodyDecoded.data.attributes.expires_at *
-										1000,
-								),
-							}),
-						);
-					} else {
-						// The login attempt failed.
-						yield* Effect.fail(new LoginError());
-					}
-
-					return responseBodyDecoded;
-				}).pipe(
-					Effect.tapBoth({
-						onSuccess: () => {
-							return Effect.succeed(
-								authenticationActor.send({
-									type: "LOGIN_SUCCESS",
-								}),
-							);
-						},
-						onFailure: (error) => {
-							if (error instanceof AlreadyLoggedInError) {
-								return Effect.succeed(undefined);
-							}
-
-							return Effect.succeed(
-								authenticationActor.send({
-									type: "LOGIN_FAILURE",
-								}),
-							);
-						},
-					}),
-				);
-			},
-
-			logout: Effect.gen(function* () {
-				if (!store.snapshot.matches("loggedIn")) {
-					return;
-				}
-
-				setStore("session", Option.none());
-
-				authenticationActor.send({
-					type: "LOGOUT_ATTEMPT",
-				});
-
-				yield* httpClient.execute(
-					apiRequest({
-						method: "POST",
-						url: "/navigator/logout",
-					}),
-				);
-			}).pipe(
-				Effect.tapBoth({
-					onSuccess: () => {
-						return Effect.succeed(
-							authenticationActor.send({
-								type: "LOGOUT_SUCCESS",
-							}),
-						);
-					},
-					onFailure: (error) => {
-						if (error instanceof NotLoggedInError) {
-							return Effect.succeed(undefined);
-						}
-
-						return Effect.succeed(
-							authenticationActor.send({
-								type: "LOGOUT_SUCCESS",
-							}),
-						);
-					},
-				}),
-			),
-
+			initialize,
+			login,
+			logout,
 			refresh,
 		};
 	}),
