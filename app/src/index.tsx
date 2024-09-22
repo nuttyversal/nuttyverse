@@ -92,6 +92,7 @@ const main = Effect.gen(function* () {
 
 	yield* themeService.hydrateTheme;
 	yield* authenticationService.initialize;
+	yield* Effect.forkDaemon(authenticationService.startHeartbeat);
 	yield* renderApplication(root);
 	yield* hideLoadingState(loading);
 });

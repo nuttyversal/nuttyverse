@@ -2,7 +2,7 @@ import { HttpClient, HttpClientRequest } from "@effect/platform";
 import { HttpClientError } from "@effect/platform/HttpClientError";
 import { HttpBodyError } from "@effect/platform/HttpBody";
 import { ParseError } from "@effect/schema/ParseResult";
-import { Clock, Context, Effect, Layer, Option } from "effect";
+import { Clock, Context, Effect, Layer, Option, Schedule } from "effect";
 import { Scope } from "effect/Scope";
 import { Store } from "solid-js/store";
 import { createActor } from "xstate";
@@ -61,9 +61,21 @@ class AuthenticationService extends Context.Tag("AuthenticationService")<
 		readonly isTokenValid: Effect.Effect<boolean>;
 
 		/**
+		 * Derived signal that tracks the lifespan of the access token in
+		 * milliseconds (ms).
+		 */
+		readonly tokenLifespan: Effect.Effect<number>;
+
+		/**
 		 * Initializes the authentication service.
 		 */
 		readonly initialize: Effect.Effect<any, any, Scope>;
+
+		/**
+		 * Starts the heartbeat that refreshes the user's access token when
+		 * it gets close to expiring to extend the session.
+		 */
+		readonly startHeartbeat: Effect.Effect<any, any, never>;
 
 		/**
 		 * Logs in the user with the given credentials.
@@ -125,7 +137,7 @@ const AuthenticationLive = Layer.effect(
 
 		authenticationActor.start();
 
-		const isTokenValid = Effect.gen(function* () {
+		const tokenLifespan = Effect.gen(function* () {
 			const now = yield* Clock.currentTimeMillis;
 
 			const expiresAt = store.session.pipe(
@@ -134,8 +146,99 @@ const AuthenticationLive = Layer.effect(
 				Option.getOrElse(() => 0),
 			);
 
-			return expiresAt <= now;
+			return Math.max(expiresAt - now, 0);
 		});
+
+		const isTokenValid = Effect.gen(function* () {
+			const lifespan = yield* tokenLifespan;
+			return lifespan > 0;
+		});
+
+		const refresh = Effect.gen(function* () {
+			if (store.snapshot.matches({ loggedIn: "refreshingToken" })) {
+				yield* Effect.fail(new NotLoggedInError());
+			}
+
+			authenticationActor.send({
+				type: "REFRESH_ATTEMPT",
+			});
+
+			const request = apiRequest({
+				method: "POST",
+				url: "/navigator/token/refresh",
+			});
+
+			const response = yield* httpClient.execute(request);
+			const responseBody = yield* response.json;
+			const responseBodyDecoded =
+				yield* Login.decodeResponseBody(responseBody);
+
+			if (
+				"data" in responseBodyDecoded &&
+				responseBodyDecoded.data.attributes.is_valid
+			) {
+				setStore(
+					"session",
+					Option.some({
+						username: responseBodyDecoded.data.attributes.username,
+						expiresAt: new Date(
+							responseBodyDecoded.data.attributes.expires_at * 1000,
+						),
+					}),
+				);
+			} else {
+				// The refresh attempt failed.
+				yield* Effect.fail(new TokenRefreshError());
+			}
+
+			return responseBodyDecoded;
+		}).pipe(
+			Effect.tapBoth({
+				onSuccess: () => {
+					console.log("Refreshed token.");
+					return Effect.succeed(
+						authenticationActor.send({
+							type: "REFRESH_SUCCESS",
+						}),
+					);
+				},
+				onFailure: (error) => {
+					console.log("Failed to refresh token.", error);
+					return Effect.gen(function* () {
+						if (error instanceof NotLoggedInError) {
+							return;
+						}
+
+						const shouldLogout = !(yield* isTokenValid);
+
+						if (shouldLogout) {
+							setStore("session", Option.none());
+						}
+
+						authenticationActor.send({
+							type: shouldLogout
+								? "REFRESH_FAILURE"
+								: "REFRESH_FAILURE_WITH_LOGOUT",
+						});
+					});
+				},
+			}),
+		);
+
+		const heartbeat = Effect.gen(function* () {
+			const lifespan = yield* tokenLifespan;
+
+			if (store.snapshot.matches("loggedIn")) {
+				if (lifespan <= 60 * 1000) {
+					yield* refresh.pipe(Effect.scoped);
+				}
+			}
+		});
+
+		const startHeartbeat = Effect.repeat(
+			heartbeat,
+			Schedule.fixed("1 second"),
+		);
 
 		return {
 			store,
@@ -156,7 +259,11 @@ const AuthenticationLive = Layer.effect(
 				return store.snapshot.matches({ loggedIn: "refreshingToken" });
 			},
 
+			tokenLifespan,
+
 			isTokenValid,
+
+			startHeartbeat,
 
 			initialize: Effect.gen(function* () {
 				const request = apiRequest({
@@ -315,74 +422,7 @@ const AuthenticationLive = Layer.effect(
 				}),
 			),
 
-			refresh: Effect.gen(function* () {
-				if (store.snapshot.matches({ loggedIn: "refreshingToken" })) {
-					yield* Effect.fail(new NotLoggedInError());
-				}
-
-				authenticationActor.send({
-					type: "REFRESH_ATTEMPT",
-				});
-
-				const request = apiRequest({
-					method: "POST",
-					url: "/navigator/token/refresh",
-				});
-
-				const response = yield* httpClient.execute(request);
-				const responseBody = yield* response.json;
-				const responseBodyDecoded =
-					yield* Login.decodeResponseBody(responseBody);
-
-				if (
-					"data" in responseBodyDecoded &&
-					responseBodyDecoded.data.attributes.is_valid
-				) {
-					setStore(
-						"session",
-						Option.some({
-							username: responseBodyDecoded.data.attributes.username,
-							expiresAt: new Date(
-								responseBodyDecoded.data.attributes.expires_at * 1000,
-							),
-						}),
-					);
-				} else {
-					// The refresh attempt failed.
-					yield* Effect.fail(new TokenRefreshError());
-				}
-
-				return responseBodyDecoded;
-			}).pipe(
-				Effect.tapBoth({
-					onSuccess: () => {
-						return Effect.succeed(
-							authenticationActor.send({
-								type: "REFRESH_SUCCESS",
-							}),
-						);
-					},
-					onFailure: (error) => {
-						return Effect.gen(function* () {
-							if (error instanceof NotLoggedInError) {
-								return;
-							}
-
-							const shouldLogout = !(yield* isTokenValid);
-
-							if (shouldLogout) {
-								setStore("session", Option.none());
-							}
-
-							authenticationActor.send({
-								type: shouldLogout
-									? "REFRESH_FAILURE"
-									: "REFRESH_FAILURE_WITH_LOGOUT",
-							});
-						});
-					},
-				}),
-			),
+			refresh,
 		};
 	}),
 );
