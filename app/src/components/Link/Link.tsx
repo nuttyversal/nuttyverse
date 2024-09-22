@@ -1,5 +1,5 @@
 import { A, useNavigate } from "@solidjs/router";
-import { ParentComponent } from "solid-js";
+import { createSignal, ParentComponent } from "solid-js";
 import { Icon } from "~/components/Icon";
 import styles from "./Link.module.scss";
 
@@ -28,6 +28,14 @@ type Props = {
 const Link: ParentComponent<Props> = (props) => {
 	const navigate = useNavigate();
 
+	const [preventDefault, setPreventDefault] = createSignal(false);
+
+	const onClickCancelable = (event: MouseEvent) => {
+		if (preventDefault()) {
+			event.preventDefault();
+		}
+	};
+
 	// Carmack's "Act on press" UI design principle.
 	// Experimental. This might make users angry.
 	const navigateImmediately = (event: MouseEvent) => {
@@ -38,6 +46,10 @@ const Link: ParentComponent<Props> = (props) => {
 				navigate(props.href);
 			}
 		}
+
+		// Prevent the click event from firing.
+		// This is to avoid double navigations.
+		setPreventDefault(true);
 	};
 
 	const classes = {
@@ -48,8 +60,9 @@ const Link: ParentComponent<Props> = (props) => {
 	return (
 		<A
 			href={props.href}
-			target={props.newTab ? "_blank" : undefined}
-			rel={props.newTab ? "noopener noreferrer" : undefined}
+			target={props.newTab ? "_blank" : ""}
+			rel={props.newTab ? "noopener noreferrer" : ""}
+			onClick={onClickCancelable}
 			onMouseDown={navigateImmediately}
 			classList={classes}
 		>
