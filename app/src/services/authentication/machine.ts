@@ -7,65 +7,92 @@ const authenticationMachine = setup({
 	types: {
 		context: {} as {},
 		events: {} as
+			| { type: "ACCESS_TOKEN_VALID" }
+			| { type: "ACCESS_TOKEN_INVALID" }
 			| { type: "LOGIN_ATTEMPT" }
 			| { type: "LOGIN_SUCCESS" }
 			| { type: "LOGIN_FAILURE" }
 			| { type: "LOGOUT_ATTEMPT" }
 			| { type: "LOGOUT_SUCCESS" }
-			| { type: "LOGOUT_FAILURE" }
 			| { type: "REFRESH_ATTEMPT" }
 			| { type: "REFRESH_SUCCESS" }
-			| { type: "REFRESH_FAILURE" },
+			| { type: "REFRESH_FAILURE" }
+			| { type: "REFRESH_FAILURE_WITH_LOGOUT" },
 	},
 }).createMachine({
 	context: {},
 	id: "authentication",
-	initial: "loggedOut",
+	initial: "initialization",
 	states: {
-		loggedOut: {
-			on: {
-				LOGIN_ATTEMPT: {
-					target: "loggingIn",
+		initialization: {
+			initial: "checkingToken",
+			states: {
+				checkingToken: {
+					on: {
+						ACCESS_TOKEN_VALID: {
+							target: "#authentication.loggedIn.idle",
+						},
+						ACCESS_TOKEN_INVALID: {
+							target: "#authentication.loggedOut.idle",
+						},
+					},
 				},
 			},
 		},
-		loggingIn: {
-			on: {
-				LOGIN_SUCCESS: {
-					target: "loggedIn",
+		loggedOut: {
+			initial: "idle",
+			states: {
+				idle: {
+					on: {
+						LOGIN_ATTEMPT: {
+							target: "loggingIn",
+						},
+					},
 				},
-				LOGIN_FAILURE: {
-					target: "loggedOut",
+				loggingIn: {
+					on: {
+						LOGIN_SUCCESS: {
+							target: "#authentication.loggedIn.idle",
+						},
+						LOGIN_FAILURE: {
+							target: "idle",
+						},
+					},
 				},
 			},
 		},
 		loggedIn: {
-			on: {
-				REFRESH_ATTEMPT: {
-					target: "refreshingToken",
+			initial: "idle",
+			states: {
+				idle: {
+					on: {
+						REFRESH_ATTEMPT: {
+							target: "refreshingToken",
+						},
+						LOGOUT_ATTEMPT: {
+							target: "loggingOut",
+						},
+					},
 				},
-				LOGOUT_ATTEMPT: {
-					target: "loggingOut",
+				refreshingToken: {
+					on: {
+						REFRESH_SUCCESS: {
+							target: "idle",
+						},
+						REFRESH_FAILURE: {
+							target: "idle",
+						},
+						REFRESH_FAILURE_WITH_LOGOUT: {
+							target: "#authentication.loggedOut.idle",
+						},
+					},
 				},
-			},
-		},
-		refreshingToken: {
-			on: {
-				REFRESH_SUCCESS: {
-					target: "loggedIn",
-				},
-				REFRESH_FAILURE: {
-					target: "loggedOut",
-				},
-			},
-		},
-		loggingOut: {
-			on: {
-				LOGOUT_SUCCESS: {
-					target: "loggedOut",
-				},
-				LOGOUT_FAILURE: {
-					target: "loggedIn",
+				loggingOut: {
+					on: {
+						LOGOUT_SUCCESS: {
+							target: "#authentication.loggedOut.idle",
+						},
+					},
 				},
 			},
 		},

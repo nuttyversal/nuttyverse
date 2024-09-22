@@ -15,11 +15,13 @@ const Login = () => {
 		password: "",
 	});
 
-	const store = NuttyverseRuntime.runSync(
+	const authenticationService = NuttyverseRuntime.runSync(
 		Effect.gen(function* () {
-			return (yield* AuthenticationService).store;
+			return yield* AuthenticationService;
 		}),
 	);
+
+	const { store } = authenticationService;
 
 	const [timeLeft, setTimeLeft] = createSignal("");
 
@@ -35,6 +37,7 @@ const Login = () => {
 			const expiresAt = new Date(store.session.value.expiresAt);
 			const now = new Date();
 			const secondsLeft = differenceInSeconds(expiresAt, now);
+
 			setTimeLeft(formatTimeLeft(secondsLeft));
 		}
 	};
@@ -79,7 +82,7 @@ const Login = () => {
 
 	return (
 		<div class={styles.container}>
-			{Option.isNone(store.session) && (
+			{!authenticationService.isLoggedIn() && (
 				<>
 					<div class={styles.field}>
 						<label for="username">Username</label>
@@ -114,33 +117,38 @@ const Login = () => {
 				</>
 			)}
 
-			{Option.isSome(store.session) && (
-				<>
-					<ul>
-						<li>
-							Ahoy there, <code>{store.session.value.username}</code>!
-						</li>
+			{authenticationService.isLoggedIn() &&
+				Option.isSome(store.session) && (
+					<>
+						<ul>
+							<li>
+								Ahoy there, <code>{store.session.value.username}</code>!
+							</li>
 
-						<li>Your access token expires in {timeLeft()}.</li>
-					</ul>
+							<li>Your access token expires in {timeLeft()}.</li>
+						</ul>
 
-					<button
-						class={styles.button}
-						onMouseDown={handleRefreshMouseDown}
-						onClick={handleRefreshClick}
-					>
-						Refresh
-					</button>
+						<button
+							class={styles.button}
+							onMouseDown={handleRefreshMouseDown}
+							onClick={handleRefreshClick}
+						>
+							Refresh
+						</button>
 
-					<button
-						class={styles.button}
-						onMouseDown={handleLogoutMouseDown}
-						onClick={handleLogoutClick}
-					>
-						Logout
-					</button>
-				</>
-			)}
+						<button
+							class={styles.button}
+							onMouseDown={handleLogoutMouseDown}
+							onClick={handleLogoutClick}
+						>
+							Logout
+						</button>
+					</>
+				)}
+
+			<p>
+				State machine: <code>{JSON.stringify(store.snapshot.value)}</code>
+			</p>
 		</div>
 	);
 };

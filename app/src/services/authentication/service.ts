@@ -2,7 +2,7 @@ import { HttpClient, HttpClientRequest } from "@effect/platform";
 import { HttpClientError } from "@effect/platform/HttpClientError";
 import { HttpBodyError } from "@effect/platform/HttpBody";
 import { ParseError } from "@effect/schema/ParseResult";
-import { Context, Effect, Layer, Option } from "effect";
+import { Clock, Context, Effect, Layer, Option } from "effect";
 import { Scope } from "effect/Scope";
 import { Store } from "solid-js/store";
 import { createActor } from "xstate";
@@ -30,6 +30,40 @@ class AuthenticationService extends Context.Tag("AuthenticationService")<
 		 * values that can be used in Solid components.
 		 */
 		readonly store: Store<AuthenticationStore>;
+
+		/**
+		 * Derived signal that indicates whether the user is logged in.
+		 */
+		readonly isLoggedIn: () => boolean;
+
+		/**
+		 * Derived signal that indicates whether the user is attempting
+		 * to log in.
+		 */
+		readonly isLoggingIn: () => boolean;
+
+		/**
+		 * Derived signal that indicates whether the user is attempting
+		 * to log out.
+		 */
+		readonly isLoggingOut: () => boolean;
+
+		/**
+		 * Derived signal that indicates whether the user is attempting
+		 * to refresh their session token.
+		 */
+		readonly isRefreshingToken: () => boolean;
+
+		/**
+		 * Derived signal that indicates whether the user's access token
+		 * has expired.
+		 */
+		readonly isTokenValid: Effect.Effect<boolean>;
+
+		/**
+		 * Initializes the authentication service.
+		 */
+		readonly initialize: Effect.Effect<any, any, Scope>;
 
 		/**
 		 * Logs in the user with the given credentials.
@@ -91,13 +125,92 @@ const AuthenticationLive = Layer.effect(
 
 		authenticationActor.start();
 
+		const isTokenValid = Effect.gen(function* () {
+			const now = yield* Clock.currentTimeMillis;
+
+			const expiresAt = store.session.pipe(
+				Option.map((session) => session.expiresAt),
+				Option.map((expiresAt) => expiresAt.getTime()),
+				Option.getOrElse(() => 0),
+			);
+
+			return expiresAt <= now;
+		});
+
 		return {
-			store: store,
+			store,
+
+			isLoggedIn: () => {
+				return store.snapshot.matches("loggedIn");
+			},
+
+			isLoggingIn: () => {
+				return store.snapshot.matches({ loggedOut: "loggingIn" });
+			},
+
+			isLoggingOut: () => {
+				return store.snapshot.matches({ loggedIn: "loggingOut" });
+			},
+
+			isRefreshingToken: () => {
+				return store.snapshot.matches({ loggedIn: "refreshingToken" });
+			},
+
+			isTokenValid,
+
+			initialize: Effect.gen(function* () {
+				const request = apiRequest({
+					method: "POST",
+					url: "/navigator/token/refresh",
+				});
+
+				const response = yield* httpClient.execute(request);
+				const responseBody = yield* response.json;
+				const responseBodyDecoded =
+					yield* Login.decodeResponseBody(responseBody);
+
+				if (
+					"data" in responseBodyDecoded &&
+					responseBodyDecoded.data.attributes.is_valid
+				) {
+					setStore(
+						"session",
+						Option.some({
+							username: responseBodyDecoded.data.attributes.username,
+							expiresAt: new Date(
+								responseBodyDecoded.data.attributes.expires_at * 1000,
+							),
+						}),
+					);
+				} else {
+					// The refresh attempt failed.
+					yield* Effect.fail(new TokenRefreshError());
+				}
+
+				return responseBodyDecoded;
+			}).pipe(
+				Effect.tapBoth({
+					onSuccess: () => {
+						return Effect.succeed(
+							authenticationActor.send({
+								type: "ACCESS_TOKEN_VALID",
+							}),
+						);
+					},
+					onFailure: () => {
+						return Effect.succeed(
+							authenticationActor.send({
+								type: "ACCESS_TOKEN_INVALID",
+							}),
+						);
+					},
+				}),
+				Effect.catchAll(Effect.succeed),
+			),
 
 			login: (attributes: Login.RequestAttributes) => {
 				return Effect.gen(function* () {
 					if (!store.snapshot.matches("loggedOut")) {
-						// The user is already logged in.
 						yield* Effect.fail(new AlreadyLoggedInError());
 					}
 
@@ -147,7 +260,11 @@ const AuthenticationLive = Layer.effect(
 								}),
 							);
 						},
-						onFailure: () => {
+						onFailure: (error) => {
+							if (error instanceof AlreadyLoggedInError) {
+								return Effect.succeed(undefined);
+							}
+
 							return Effect.succeed(
 								authenticationActor.send({
 									type: "LOGIN_FAILURE",
@@ -160,9 +277,10 @@ const AuthenticationLive = Layer.effect(
 
 			logout: Effect.gen(function* () {
 				if (!store.snapshot.matches("loggedIn")) {
-					// The user is not logged in.
-					yield* Effect.fail(new NotLoggedInError());
+					return;
 				}
+
+				setStore("session", Option.none());
 
 				authenticationActor.send({
 					type: "LOGOUT_ATTEMPT",
@@ -174,8 +292,6 @@ const AuthenticationLive = Layer.effect(
 						url: "/navigator/logout",
 					}),
 				);
-
-				setStore("session", Option.none());
 			}).pipe(
 				Effect.tapBoth({
 					onSuccess: () => {
@@ -185,10 +301,14 @@ const AuthenticationLive = Layer.effect(
 							}),
 						);
 					},
-					onFailure: () => {
+					onFailure: (error) => {
+						if (error instanceof NotLoggedInError) {
+							return Effect.succeed(undefined);
+						}
+
 						return Effect.succeed(
 							authenticationActor.send({
-								type: "LOGOUT_FAILURE",
+								type: "LOGOUT_SUCCESS",
 							}),
 						);
 					},
@@ -196,8 +316,7 @@ const AuthenticationLive = Layer.effect(
 			),
 
 			refresh: Effect.gen(function* () {
-				if (!store.snapshot.matches("loggedIn")) {
-					// The user is not logged in.
+				if (store.snapshot.matches({ loggedIn: "refreshingToken" })) {
 					yield* Effect.fail(new NotLoggedInError());
 				}
 
@@ -243,12 +362,24 @@ const AuthenticationLive = Layer.effect(
 							}),
 						);
 					},
-					onFailure: () => {
-						return Effect.succeed(
+					onFailure: (error) => {
+						return Effect.gen(function* () {
+							if (error instanceof NotLoggedInError) {
+								return;
+							}
+
+							const shouldLogout = !(yield* isTokenValid);
+
+							if (shouldLogout) {
+								setStore("session", Option.none());
+							}
+
 							authenticationActor.send({
-								type: "REFRESH_FAILURE",
-							}),
-						);
+								type: shouldLogout
+									? "REFRESH_FAILURE"
+									: "REFRESH_FAILURE_WITH_LOGOUT",
+							});
+						});
 					},
 				}),
 			),
