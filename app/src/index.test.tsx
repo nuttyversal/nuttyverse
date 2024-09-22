@@ -12,7 +12,7 @@ describe("Application startup", () => {
 			</div>
 		));
 
-		await NuttyverseLiveRuntime.runPromise(main);
+		await NuttyverseLiveRuntime.runPromise(main.pipe(Effect.scoped));
 	});
 
 	describe("getRootElement", () => {
