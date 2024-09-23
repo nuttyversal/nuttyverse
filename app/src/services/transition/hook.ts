@@ -1,6 +1,6 @@
 import { Effect } from "effect";
 import { useBeforeLeave, useIsRouting } from "@solidjs/router";
-import { createEffect } from "solid-js";
+import { createEffect, onCleanup } from "solid-js";
 import { useRuntime } from "../context";
 import { TransitionService } from "./service";
 
@@ -23,14 +23,21 @@ const useTransition = () => {
 		}),
 	);
 
-	useBeforeLeave(() => {
+	const onBeforeLeave = () => {
 		NuttyverseRuntime.runSync(
 			Effect.gen(function* () {
 				const transitionService = yield* TransitionService;
 				transitionService.signalBeforeRouting();
 			}),
 		);
-	});
+	};
+
+	// This hook misses some browser events …
+	useBeforeLeave(onBeforeLeave);
+
+	// … so we'll also subscribe to popstate events.
+	window.addEventListener("popstate", onBeforeLeave);
+	onCleanup(() => window.removeEventListener("popstate", onBeforeLeave));
 
 	createEffect(() => {
 		if (!isRouting()) {
