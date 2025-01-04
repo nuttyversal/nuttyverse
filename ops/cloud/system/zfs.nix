@@ -7,7 +7,7 @@
 
 	boot = {
 		supportedFilesystems = [ "zfs" ];
-		kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+		# kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
 
 		loader = {
 			grub = {
